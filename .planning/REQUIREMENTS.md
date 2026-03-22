@@ -155,13 +155,97 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated during roadmap creation) | | |
+| INGEST-01 | Phase 3 | Pending |
+| INGEST-02 | Phase 3 | Pending |
+| INGEST-03 | Phase 3 | Pending |
+| INGEST-04 | Phase 3 | Pending |
+| INGEST-05 | Phase 3 | Pending |
+| INGEST-06 | Phase 3 | Pending |
+| FOLIO-01 | Phase 2 | Pending |
+| FOLIO-02 | Phase 2 | Pending |
+| FOLIO-03 | Phase 2 | Pending |
+| FOLIO-04 | Phase 2 | Pending |
+| FOLIO-05 | Phase 2 | Pending |
+| FOLIO-06 | Phase 2 | Pending |
+| FOLIO-07 | Phase 2 | Pending |
+| EXPLORE-01 | Phase 5 | Pending |
+| EXPLORE-02 | Phase 5 | Pending |
+| EXPLORE-03 | Phase 5 | Pending |
+| EXPLORE-04 | Phase 5 | Pending |
+| EXPLORE-05 | Phase 5 | Pending |
+| EXPLORE-06 | Phase 5 | Pending |
+| EXPLORE-07 | Phase 5 | Pending |
+| EXPLORE-08 | Phase 5 | Pending |
+| EXPLORE-09 | Phase 5 | Pending |
+| EXPLORE-10 | Phase 5 | Pending |
+| RESEARCH-01 | Phase 6 | Pending |
+| RESEARCH-02 | Phase 6 | Pending |
+| RESEARCH-03 | Phase 6 | Pending |
+| RESEARCH-04 | Phase 6 | Pending |
+| RESEARCH-05 | Phase 6 | Pending |
+| RESEARCH-06 | Phase 6 | Pending |
+| RESEARCH-07 | Phase 6 | Pending |
+| RESEARCH-08 | Phase 6 | Pending |
+| RESEARCH-09 | Phase 6 | Pending |
+| RESEARCH-10 | Phase 6 | Pending |
+| ANALYSIS-01 | Phase 4 | Pending |
+| ANALYSIS-02 | Phase 4 | Pending |
+| ANALYSIS-03 | Phase 4 | Pending |
+| ANALYSIS-04 | Phase 4 | Pending |
+| ANALYSIS-05 | Phase 4 | Pending |
+| ANALYSIS-06 | Phase 4 | Pending |
+| ANALYSIS-07 | Phase 4 | Pending |
+| ANALYSIS-08 | Phase 4 | Pending |
+| ANALYSIS-09 | Phase 4 | Pending |
+| ANALYSIS-10 | Phase 4 | Pending |
+| OUTPUT-01 | Phase 7 | Pending |
+| OUTPUT-02 | Phase 7 | Pending |
+| OUTPUT-03 | Phase 7 | Pending |
+| OUTPUT-04 | Phase 7 | Pending |
+| OUTPUT-05 | Phase 7 | Pending |
+| FRONTEND-01 | Phase 8 | Pending |
+| FRONTEND-02 | Phase 8 | Pending |
+| FRONTEND-03 | Phase 9 | Pending |
+| FRONTEND-04 | Phase 9 | Pending |
+| FRONTEND-05 | Phase 9 | Pending |
+| FRONTEND-06 | Phase 8 | Pending |
+| FRONTEND-07 | Phase 8 | Pending |
+| FRONTEND-08 | Phase 8 | Pending |
+| FRONTEND-09 | Phase 8 | Pending |
+| FRONTEND-10 | Phase 8 | Pending |
+| AUTONOMY-01 | Phase 10 | Pending |
+| AUTONOMY-02 | Phase 10 | Pending |
+| AUTONOMY-03 | Phase 10 | Pending |
+| AUTONOMY-04 | Phase 10 | Pending |
+| AUTONOMY-05 | Phase 10 | Pending |
+| SECURITY-01 | Phase 1 | Pending |
+| SECURITY-02 | Phase 1 | Pending |
+| SECURITY-03 | Phase 1 | Pending |
+| SECURITY-04 | Phase 1 | Pending |
+| SECURITY-05 | Phase 1 | Pending |
+| SECURITY-06 | Phase 1 | Pending |
+| SECURITY-07 | Phase 1 | Pending |
+| SECURITY-08 | Phase 1 | Pending |
+| SECURITY-09 | Phase 1 | Pending |
+| SECURITY-10 | Phase 1 | Pending |
+| DEPLOY-01 | Phase 1 | Pending |
+| DEPLOY-02 | Phase 11 | Pending |
+| DEPLOY-03 | Phase 11 | Pending |
+| DEPLOY-04 | Phase 1 | Pending |
+| DEPLOY-05 | Phase 11 | Pending |
+| DEPLOY-06 | Phase 11 | Pending |
+| INTEGRATE-01 | Phase 11 | Pending |
+| INTEGRATE-02 | Phase 11 | Pending |
+| INTEGRATE-03 | Phase 11 | Pending |
+| INTEGRATE-04 | Phase 1 | Pending |
+| INTEGRATE-05 | Phase 6 | Pending |
+| INTEGRATE-06 | Phase 7 | Pending |
 
 **Coverage:**
-- v1 requirements: 76 total
-- Mapped to phases: 0
-- Unmapped: 76
+- v1 requirements: 85 total
+- Mapped to phases: 85
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-22*
-*Last updated: 2026-03-22 after initial definition*
+*Last updated: 2026-03-22 after roadmap creation*
