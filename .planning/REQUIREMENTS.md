@@ -1,0 +1,167 @@
+# Requirements: ALEA Intake
+
+**Defined:** 2026-03-22
+**Core Value:** When a person describes a legal situation, the system must correctly identify all relevant legal issues — including ones the person doesn't know to mention — and produce a structured analysis mapping their facts to claims, elements, and authorities across applicable jurisdictions.
+
+## v1 Requirements
+
+Requirements for initial release. Each maps to roadmap phases.
+
+### Input & Narrative Capture
+
+- [ ] **INGEST-01**: Consumer can submit narrative text via conversational chat interface
+- [ ] **INGEST-02**: Consumer can record voice input that is transcribed via pluggable ASR (local Whisper or cloud providers)
+- [ ] **INGEST-03**: Consumer can upload documents (PDF, DOCX, images) for text extraction and analysis
+- [ ] **INGEST-04**: Professional can enter notes on behalf of a consumer
+- [ ] **INGEST-05**: System normalizes all input modalities into a common text representation for analysis
+- [ ] **INGEST-06**: System extracts atomic factual assertions from narrative (parties, dates, locations, amounts, events)
+
+### FOLIO Ontology Integration
+
+- [ ] **FOLIO-01**: System loads FOLIO ontology via folio-python and uses IRIs as canonical identifiers for all legal concepts
+- [ ] **FOLIO-02**: System maps consumer facts to FOLIO Objectives (Claims, Defenses) via LLM + ontology matching
+- [ ] **FOLIO-03**: System identifies applicable Areas of Law from FOLIO taxonomy
+- [ ] **FOLIO-04**: System identifies applicable Legal Authorities types from FOLIO taxonomy
+- [ ] **FOLIO-05**: System determines applicable Jurisdictions from FOLIO Location branch
+- [ ] **FOLIO-06**: System gracefully handles concepts not in FOLIO (flags as "unmapped" rather than dropping)
+- [ ] **FOLIO-07**: System uses FOLIO ontology relationships (OWL object properties) to discover adjacent legal concepts
+
+### Pre-Research Exploration & Safety
+
+- [ ] **EXPLORE-01**: System performs pre-research exploration between issue-spotting and research phases
+- [ ] **EXPLORE-02**: Exploration uses three layers: FOLIO ontology relationships, curated screening protocols, and LLM reasoning
+- [ ] **EXPLORE-03**: Organizations can define mandatory safety screening protocols that run before analysis proceeds
+- [ ] **EXPLORE-04**: Safety screening is continuous throughout the conversation, not just at intake start
+- [ ] **EXPLORE-05**: Exploration depth is configurable per organization (1 round to "until stable")
+- [ ] **EXPLORE-06**: System explains why it's asking exploration questions (configurable transparency per org)
+- [ ] **EXPLORE-07**: Open screening protocol library allows community-contributed protocols across organizations
+- [ ] **EXPLORE-08**: Organizations can create private screening protocols not shared with the library
+- [ ] **EXPLORE-09**: Default DV screening protocol ships with the system for family law matters
+- [ ] **EXPLORE-10**: Exploration can surface entirely new legal issues not in the initial issue-spotting (e.g., DV in custody cases)
+
+### Legal Research & Verification
+
+- [ ] **RESEARCH-01**: System queries pluggable legal research tools via MCP tool registry and HTTP adapters
+- [ ] **RESEARCH-02**: Organizations configure which research tools they have access to (CourtListener, Westlaw, Clio Library, Midpage, Descrybe)
+- [ ] **RESEARCH-03**: System integrates with folio-insights for advocacy knowledge (elements, best practices, pitfalls)
+- [ ] **RESEARCH-04**: System integrates with folio-enrich for document annotation and concept extraction
+- [ ] **RESEARCH-05**: For each identified claim, system researches required legal elements per jurisdiction
+- [ ] **RESEARCH-06**: System finds relevant case law, statutes, regulations, and constitutional provisions
+- [ ] **RESEARCH-07**: Ground truth verification: LLM suggestions verified against known databases before presentation
+- [ ] **RESEARCH-08**: Each authority gets a verified/unverified flag with verification source
+- [ ] **RESEARCH-09**: Admin-configurable knowledge base with RAG over curated legal documents
+- [ ] **RESEARCH-10**: Organizations can upload custom documents to their knowledge base
+
+### Analysis Engine
+
+- [ ] **ANALYSIS-01**: System performs iterative analysis loop: issue-spot → research → fact-map → gap-analyze → question → loop
+- [ ] **ANALYSIS-02**: System maps facts to claims and elements in a many-to-many relationship with confidence scores
+- [ ] **ANALYSIS-03**: System identifies gaps: unsupported elements, unexplored claims, weak mappings, procedural requirements
+- [ ] **ANALYSIS-04**: System generates prioritized, consumer-friendly follow-up questions to fill gaps
+- [ ] **ANALYSIS-05**: Questions are grouped by topic to reduce consumer fatigue
+- [ ] **ANALYSIS-06**: Multi-signal loop termination: coverage %, confidence plateau, iteration count, user fatigue, diminishing gaps
+- [ ] **ANALYSIS-07**: Termination weights and thresholds are configurable per organization
+- [ ] **ANALYSIS-08**: System performs parallel multi-jurisdictional analysis when facts span jurisdictions
+- [ ] **ANALYSIS-09**: Analysis state is checkpointed after every stage for pause/resume across sessions
+- [ ] **ANALYSIS-10**: Full audit trail: every stage records what was analyzed, what sources were consulted, what confidence was assigned
+
+### Output & Export
+
+- [ ] **OUTPUT-01**: System generates structured case memos mapping facts → claims → elements → authorities → jurisdictions
+- [ ] **OUTPUT-02**: System generates triage/routing recommendations (which practice area, which attorney, which program)
+- [ ] **OUTPUT-03**: System generates action items (documents to gather, follow-up steps, referrals)
+- [ ] **OUTPUT-04**: Output format is configurable per deployment (law firms get memos, legal aid gets triage, courts get self-help routing)
+- [ ] **OUTPUT-05**: Output includes gap analysis showing what evidence is missing and what questions remain
+
+### Frontend Visualization
+
+- [ ] **FRONTEND-01**: React frontend with conversational chat interface for intake
+- [ ] **FRONTEND-02**: Real-time analysis progress via WebSocket/SSE streaming
+- [ ] **FRONTEND-03**: Graph fact-mapping view: force-directed visualization of facts, claims, elements, and their relationships
+- [ ] **FRONTEND-04**: Matrix fact-mapping view: fact × element completeness matrix showing coverage
+- [ ] **FRONTEND-05**: Narrative-anchored fact-mapping view: consumer's original narrative with overlaid analysis annotations
+- [ ] **FRONTEND-06**: Intake dashboard listing all intakes with status and progress
+- [ ] **FRONTEND-07**: Output display with export capabilities
+- [ ] **FRONTEND-08**: Admin configuration interface for org settings, research tools, KB management, screening protocols
+- [ ] **FRONTEND-09**: Mobile-responsive design
+- [ ] **FRONTEND-10**: Voice recording UI component for voice input
+
+### Autonomy & Configuration
+
+- [ ] **AUTONOMY-01**: Chatbot mode: AI runs all steps autonomously, presents questions directly to consumer
+- [ ] **AUTONOMY-02**: Professional mode: AI suggests at each stage, human professional approves before proceeding
+- [ ] **AUTONOMY-03**: Agent mode: AI orchestrates autonomously, pauses at configurable checkpoints for human review
+- [ ] **AUTONOMY-04**: Autonomy level is configurable per organization
+- [ ] **AUTONOMY-05**: Per-org configuration of which analysis stages require human approval in agent mode
+
+### Security & Privacy
+
+- [ ] **SECURITY-01**: JWT authentication with refresh tokens
+- [ ] **SECURITY-02**: Role-based access control: admin, professional (attorney/paralegal), consumer
+- [ ] **SECURITY-03**: AES-256 encryption at rest, TLS 1.3 in transit
+- [ ] **SECURITY-04**: Field-level encryption for PII data
+- [ ] **SECURITY-05**: Immutable audit log of all actions, AI decisions, human overrides, and data access
+- [ ] **SECURITY-06**: Attorney-client privilege awareness: all data treated as potentially privileged
+- [ ] **SECURITY-07**: Consent capture before AI processing begins, with granular consent options
+- [ ] **SECURITY-08**: Right-to-delete with cascade deletion and anonymized audit trail preservation
+- [ ] **SECURITY-09**: No case data sent to LLM training endpoints; configurable data residency
+- [ ] **SECURITY-10**: Multi-tenant data isolation (beyond RLS alone)
+
+### Deployment & Infrastructure
+
+- [ ] **DEPLOY-01**: Configurable database backend: PostgreSQL+pgvector (default) and SQLite+FAISS (lightweight)
+- [ ] **DEPLOY-02**: Multi-tenant cloud deployment with org-scoped data isolation
+- [ ] **DEPLOY-03**: Single-tenant self-hosted deployment option
+- [ ] **DEPLOY-04**: Docker containers for backend and frontend
+- [ ] **DEPLOY-05**: Configurable persistence: ephemeral (privacy-first), persistent (case tracking), CMS-integrated
+- [ ] **DEPLOY-06**: Health check and monitoring endpoints
+
+### Integration
+
+- [ ] **INTEGRATE-01**: CMS sync connector for Clio
+- [ ] **INTEGRATE-02**: CMS sync connector for MyCase
+- [ ] **INTEGRATE-03**: CMS sync connector for Legal Server
+- [ ] **INTEGRATE-04**: LLM integration via alea-llm-client supporting multiple providers
+- [ ] **INTEGRATE-05**: folio-mcp integration for LLM agent tool-use during analysis
+- [ ] **INTEGRATE-06**: Export formats: PDF, DOCX, JSON
+
+## v2 Requirements
+
+Deferred to future release. Tracked but not in current roadmap.
+
+### Extended Features
+
+- **LANG-01**: Multi-language support (Spanish first, then extensible)
+- **LANG-02**: Multilingual ASR configuration
+- **GOV-01**: Full protocol library governance (versioning, review workflows, quality scoring)
+- **PREDICT-01**: Strength-of-claim scoring based on element coverage and authority support
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Legal advice generation | UPL liability; system provides legal information and analysis, not advice |
+| Autonomous case filing | Malpractice liability; procedural errors have severe consequences |
+| Real-time collaborative editing | CRDT/OT complexity for minimal value at intake stage |
+| Predictive case outcome analysis | Unreliable, creates false confidence |
+| Video conferencing | Commoditized (Zoom/Teams); support transcript import instead |
+| Payment processing / billing | CMS handles billing; adds PCI compliance burden |
+| Marketing automation / lead scoring | Not aligned with access-to-justice mission |
+| Social media / public records scraping | Privacy law violations, ethical concerns |
+| Replacing case management systems | Integrate with CMS, never replace |
+| Urgency-gated research depth | Research all issues equally; urgency affects output, not thoroughness |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| (Populated during roadmap creation) | | |
+
+**Coverage:**
+- v1 requirements: 76 total
+- Mapped to phases: 0
+- Unmapped: 76
+
+---
+*Requirements defined: 2026-03-22*
+*Last updated: 2026-03-22 after initial definition*
