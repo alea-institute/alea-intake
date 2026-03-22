@@ -36,14 +36,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Every action (login, data access, AI decision) is recorded in an immutable audit log that administrators can review
   4. A consumer completes a granular consent flow before any AI processing begins, and can exercise right-to-delete with full cascade
   5. Multi-tenant data isolation prevents any cross-tenant data leakage, and no case data is sent to LLM training endpoints
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
-- [ ] 01-04: TBD
-- [ ] 01-05: TBD
+- [ ] 01-01-PLAN.md — Project scaffolding, config, DB engine, models, tenant isolation, and test harness
+- [ ] 01-02-PLAN.md — JWT authentication with refresh tokens and role-based access control
+- [ ] 01-03-PLAN.md — AES-256-GCM envelope encryption and field-level PII encryption
+- [ ] 01-04-PLAN.md — Audit logging, consent management, and right-to-delete cascade
+- [ ] 01-05-PLAN.md — LLM service integration, organization endpoints, Docker, and frontend scaffold
 
 ### Phase 2: FOLIO Ontology Integration
 **Goal**: The system can load the FOLIO ontology, resolve consumer facts to canonical FOLIO concept IRIs, traverse ontology relationships for adjacency discovery, and gracefully handle unmapped concepts
@@ -225,7 +225,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Security | 0/5 | Not started | - |
+| 1. Foundation & Security | 0/5 | Planned | - |
 | 2. FOLIO Ontology Integration | 0/3 | Not started | - |
 | 3. Input & Narrative Capture | 0/3 | Not started | - |
 | 4. Core Analysis Pipeline | 0/5 | Not started | - |
