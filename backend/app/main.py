@@ -14,6 +14,7 @@ from app.core.exceptions import (
     TenantNotFoundError,
 )
 from app.db.engine import dispose_engine, get_engine
+from app.middleware.tenant import TenantMiddleware
 
 
 @asynccontextmanager
@@ -32,7 +33,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS
+# Middleware (order matters: CORS first, then tenant resolution)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -40,6 +41,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(TenantMiddleware)
 
 
 # Exception handlers
