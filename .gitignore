@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.venv/
+venv/
+dist/
+build/
+
+# Node
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data
+data/
+
+# Alembic versions (keep __init__ only)
+backend/alembic/versions/*.py
+!backend/alembic/versions/__init__.py
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+
+# ruff
+.ruff_cache/
+
+# uv
+uv.lock
