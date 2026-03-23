@@ -133,9 +133,29 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
         await conn.run_sync(_shared_meta.create_all)
         await conn.run_sync(_tenant_meta.create_all)
 
+    # Seed a test Organization so auth and admin endpoints can look it up
+    from app.models.shared import Organization
+
+    async with test_engine.connect() as conn:
+        conn = await conn.execution_options(
+            schema_translate_map={"tenant": None, "shared": None}
+        )
+        async with AsyncSession(bind=conn, expire_on_commit=False) as seed_session:
+            seed_session.add(
+                Organization(
+                    name="Test Legal Aid",
+                    slug="test-legal-aid",
+                    auth_mode="email_password",
+                    llm_data_policy="cloud_optout",
+                    consent_mode="granular",
+                    deletion_policy="anonymize",
+                )
+            )
+            await seed_session.commit()
+
     # Patch get_settings in all modules that import it locally
     patched_modules: list[tuple] = []
-    for mod_name in ["app.core.permissions", "app.services.auth_service", "app.routers.auth"]:
+    for mod_name in ["app.core.permissions", "app.services.auth_service", "app.routers.auth", "app.middleware.consent"]:
         try:
             import importlib
             mod = importlib.import_module(mod_name)

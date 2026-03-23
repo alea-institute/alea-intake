@@ -15,9 +15,12 @@ from app.core.exceptions import (
 )
 from app.db.engine import dispose_engine, get_engine
 from app.middleware.audit import AuditMiddleware
+from app.middleware.consent import ConsentMiddleware
 from app.middleware.tenant import TenantMiddleware
+from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 from app.routers.audit import router as audit_router
+from app.routers.consent import router as consent_router
 from app.routers.organizations import router as organizations_router
 from app.routers.users import router as users_router
 
@@ -38,9 +41,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Middleware (order matters -- last added = first executed):
-# Execution order: CORS -> AuditMiddleware -> TenantMiddleware
-# (Starlette reverses the add_middleware order)
+# Middleware (order matters -- last added = outermost/first executed):
+# Execution order: CORS -> Audit -> Tenant -> Consent -> route handler
+app.add_middleware(ConsentMiddleware)
 app.add_middleware(TenantMiddleware)
 app.add_middleware(AuditMiddleware)
 app.add_middleware(
@@ -78,6 +81,8 @@ app.include_router(auth_router)
 app.include_router(organizations_router)
 app.include_router(users_router)
 app.include_router(audit_router)
+app.include_router(consent_router)
+app.include_router(admin_router)
 
 
 # Health endpoint
