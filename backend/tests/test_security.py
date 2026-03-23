@@ -78,10 +78,8 @@ class TestDecodeToken:
 
         token = create_access_token(
             user_id=1, org_id=1, role="consumer", secret_key="test-key",
-            expires_delta=timedelta(seconds=0),
+            expires_delta=timedelta(seconds=-1),
         )
-        # Wait briefly for token to expire
-        time.sleep(1)
         with pytest.raises(jwt.ExpiredSignatureError):
             decode_token(token, "test-key")
 

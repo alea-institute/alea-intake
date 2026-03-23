@@ -3,6 +3,7 @@
 from app.models.audit import AuditLog
 from app.models.consent import ConsentRecord, ConsentTemplate
 from app.models.organization import OrganizationConfig
+from app.models.refresh_token import RefreshToken
 from app.models.shared import Organization
 from app.models.user import Role, User
 
@@ -12,6 +13,7 @@ __all__ = [
     "ConsentTemplate",
     "Organization",
     "OrganizationConfig",
+    "RefreshToken",
     "Role",
     "User",
 ]
