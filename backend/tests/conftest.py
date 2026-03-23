@@ -1,10 +1,14 @@
 """Test fixtures for async database and FastAPI test client.
 
-Uses aiosqlite in-memory database for fast, isolated tests.
+Uses aiosqlite database for fast, isolated tests.
+The async_client fixture uses a temp file-based SQLite (for multi-connection
+support by audit middleware); async_session uses in-memory for speed.
 Overrides get_settings() to use SQLite backend with test credentials.
 """
 
 import asyncio
+import os
+import tempfile
 from collections.abc import AsyncGenerator
 
 import pytest
@@ -73,16 +77,14 @@ async def async_engine() -> AsyncGenerator[AsyncEngine, None]:
 
 @pytest.fixture
 async def async_session(async_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, None]:
-    """Yield an AsyncSession against the test engine."""
-    session_factory = async_sessionmaker(
-        bind=async_engine,
-        class_=AsyncSession,
-        expire_on_commit=False,
-    )
-
-    async with session_factory() as session:
-        yield session
-        await session.rollback()
+    """Yield an AsyncSession against the test engine with schema_translate_map for SQLite."""
+    async with async_engine.connect() as conn:
+        conn = await conn.execution_options(
+            schema_translate_map={"tenant": None, "shared": None}
+        )
+        async with AsyncSession(bind=conn, expire_on_commit=False) as session:
+            yield session
+            await session.rollback()
 
 
 @pytest.fixture
@@ -102,8 +104,16 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
     get_settings.cache_clear()
     app.config.get_settings = get_test_settings  # type: ignore[assignment]
 
-    # Create a test engine directly and inject it into the engine module
-    test_engine = create_async_engine("sqlite+aiosqlite://", echo=False)
+    # Create a temp-file SQLite engine (not in-memory) so the audit middleware's
+    # separate DB connection can access the same database. In-memory SQLite with
+    # StaticPool only has one raw connection, causing isolation issues.
+    _tmp_db_fd, _tmp_db_path = tempfile.mkstemp(suffix=".db")
+    os.close(_tmp_db_fd)
+
+    test_engine = create_async_engine(
+        f"sqlite+aiosqlite:///{_tmp_db_path}",
+        echo=False,
+    )
     engine_module._engine = test_engine
 
     # Import all models so they register with metadata
@@ -141,12 +151,16 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         yield client
 
-    # Cleanup tables (use the same schemaless metadata)
+    # Cleanup tables and temp file
     async with test_engine.begin() as conn:
         await conn.run_sync(_tenant_meta.drop_all)
         await conn.run_sync(_shared_meta.drop_all)
     await test_engine.dispose()
     engine_module._engine = None
+    try:
+        os.unlink(_tmp_db_path)
+    except OSError:
+        pass
 
     # Restore originals
     app.config.get_settings = original_config_get_settings  # type: ignore[assignment]

@@ -148,7 +148,7 @@ async def test_audit_log_created_on_login(async_client: AsyncClient):
     admin_tokens = await _make_admin(async_client, "audit_admin@example.com")
 
     resp = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         headers={
             "Authorization": f"Bearer {admin_tokens['access_token']}",
             "X-Tenant-Slug": "test-legal-aid",
@@ -170,7 +170,7 @@ async def test_audit_log_has_request_id(async_client: AsyncClient):
     admin_tokens = await _make_admin(async_client, "reqid_admin@example.com")
 
     resp = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         headers={
             "Authorization": f"Bearer {admin_tokens['access_token']}",
             "X-Tenant-Slug": "test-legal-aid",
@@ -191,7 +191,7 @@ async def test_audit_log_has_ip_address(async_client: AsyncClient):
     admin_tokens = await _make_admin(async_client, "ip_admin@example.com")
 
     resp = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         headers={
             "Authorization": f"Bearer {admin_tokens['access_token']}",
             "X-Tenant-Slug": "test-legal-aid",
@@ -210,7 +210,7 @@ async def test_admin_can_query_audit_logs(async_client: AsyncClient):
     admin_tokens = await _make_admin(async_client, "admin_query@example.com")
 
     resp = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         headers={
             "Authorization": f"Bearer {admin_tokens['access_token']}",
             "X-Tenant-Slug": "test-legal-aid",
@@ -226,7 +226,7 @@ async def test_consumer_cannot_query_audit_logs(async_client: AsyncClient):
     consumer_tokens = await _register_and_login(async_client, "consumer_audit@example.com")
 
     resp = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         headers={
             "Authorization": f"Bearer {consumer_tokens['access_token']}",
             "X-Tenant-Slug": "test-legal-aid",
@@ -246,7 +246,7 @@ async def test_audit_log_filter_by_action(async_client: AsyncClient):
 
     # Filter by login action
     resp = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         params={"action": "auth.login"},
         headers={
             "Authorization": f"Bearer {admin_tokens['access_token']}",
@@ -270,7 +270,7 @@ async def test_audit_log_filter_by_date_range(async_client: AsyncClient):
     end = (now + timedelta(minutes=5)).isoformat()
 
     resp = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         params={"start_date": start, "end_date": end},
         headers={
             "Authorization": f"Bearer {admin_tokens['access_token']}",
@@ -283,7 +283,7 @@ async def test_audit_log_filter_by_date_range(async_client: AsyncClient):
     future_start = (now + timedelta(days=1)).isoformat()
     future_end = (now + timedelta(days=2)).isoformat()
     resp2 = await async_client.get(
-        "/api/v1/audit",
+        "/api/v1/audit/",
         params={"start_date": future_start, "end_date": future_end},
         headers={
             "Authorization": f"Bearer {admin_tokens['access_token']}",
