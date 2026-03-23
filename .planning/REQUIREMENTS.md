@@ -100,10 +100,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SECURITY-02**: Role-based access control: admin, professional (attorney/paralegal), consumer
 - [x] **SECURITY-03**: AES-256 encryption at rest, TLS 1.3 in transit
 - [x] **SECURITY-04**: Field-level encryption for PII data
-- [ ] **SECURITY-05**: Immutable audit log of all actions, AI decisions, human overrides, and data access
+- [x] **SECURITY-05**: Immutable audit log of all actions, AI decisions, human overrides, and data access
 - [x] **SECURITY-06**: Attorney-client privilege awareness: all data treated as potentially privileged
-- [ ] **SECURITY-07**: Consent capture before AI processing begins, with granular consent options
-- [ ] **SECURITY-08**: Right-to-delete with cascade deletion and anonymized audit trail preservation
+- [x] **SECURITY-07**: Consent capture before AI processing begins, with granular consent options
+- [x] **SECURITY-08**: Right-to-delete with cascade deletion and anonymized audit trail preservation
 - [x] **SECURITY-09**: No case data sent to LLM training endpoints; configurable data residency
 - [x] **SECURITY-10**: Multi-tenant data isolation (beyond RLS alone)
 
@@ -222,10 +222,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | SECURITY-02 | Phase 1 | Complete |
 | SECURITY-03 | Phase 1 | Complete |
 | SECURITY-04 | Phase 1 | Complete |
-| SECURITY-05 | Phase 1 | Pending |
+| SECURITY-05 | Phase 1 | Complete |
 | SECURITY-06 | Phase 1 | Complete |
-| SECURITY-07 | Phase 1 | Pending |
-| SECURITY-08 | Phase 1 | Pending |
+| SECURITY-07 | Phase 1 | Complete |
+| SECURITY-08 | Phase 1 | Complete |
 | SECURITY-09 | Phase 1 | Complete |
 | SECURITY-10 | Phase 1 | Complete |
 | DEPLOY-01 | Phase 1 | Complete |

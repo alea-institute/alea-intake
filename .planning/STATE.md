@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-05-PLAN.md
-last_updated: "2026-03-23T00:24:17.000Z"
-last_activity: 2026-03-23 -- Completed Plan 01-05 (LLM service, Docker, frontend scaffold) -- Phase 1 complete
+status: completed
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-03-23T00:33:29.797Z"
+last_activity: 2026-03-23 -- Completed Plan 01-04 (audit logging, consent management, right-to-delete cascade) -- all Phase 1 plans done
 progress:
   total_phases: 11
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 Phase: 1 of 11 (Foundation & Security) -- COMPLETE
 Plan: 5 of 5 in current phase
 Status: Phase Complete
-Last activity: 2026-03-23 -- Completed Plan 01-05 (LLM service, Docker, frontend scaffold)
+Last activity: 2026-03-23 -- Completed Plan 01-04 (audit logging, consent management, right-to-delete cascade) -- all Phase 1 plans done
 
 Progress: [██████████████████████████████████████████████████]  100%
 
@@ -43,7 +43,7 @@ Progress: [███████████████████████
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation-security | 5 | 25min | 5min |
+| 01-foundation-security | 5 | 37min | 7min |
 
 **Recent Trend:**
 - Last 5 plans: 5min, 3min, 5min, 6min, 6min
@@ -51,6 +51,7 @@ Progress: [███████████████████████
 
 *Updated after each plan completion*
 | Phase 01 P02 | 11min | 2 tasks | 15 files |
+| Phase 01 P04 | 12min | 2 tasks | 13 files |
 | Phase 01 P05 | 6min | 2 tasks | 18 files |
 
 ## Accumulated Context
@@ -78,6 +79,11 @@ Recent decisions affecting current work:
 - [Phase 01-05]: Three-level training opt-out: API-tier access, provider headers, local_only policy enforcement
 - [Phase 01-05]: Organization CRUD uses shared session (orgs are in shared schema, not tenant schemas)
 - [Phase 01-05]: Frontend uses Tailwind 3.x (not 4.x) for PostCSS compatibility
+- [Phase 01-04]: Audit middleware uses separate DB session (engine.begin()) for transaction isolation
+- [Phase 01-04]: Temp-file SQLite for async_client fixture (in-memory doesn't support multi-connection audit middleware)
+- [Phase 01-04]: ConsentMiddleware decodes JWT independently for user_id (not relying on request.state from auth dependency)
+- [Phase 01-04]: Deletion preview hash uses SHA-256 of preview data for stale-detection confirmation
+- [Phase 01-04]: Seeded Organization in async_client fixture for admin endpoint testing
 
 ### Pending Todos
 
@@ -89,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T00:24:17.000Z
-Stopped at: Completed 01-05-PLAN.md -- Phase 1 (Foundation & Security) complete
+Last session: 2026-03-23T00:33:29.796Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
