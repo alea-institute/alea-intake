@@ -105,11 +105,11 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **SECURITY-07**: Consent capture before AI processing begins, with granular consent options
 - [ ] **SECURITY-08**: Right-to-delete with cascade deletion and anonymized audit trail preservation
 - [ ] **SECURITY-09**: No case data sent to LLM training endpoints; configurable data residency
-- [ ] **SECURITY-10**: Multi-tenant data isolation (beyond RLS alone)
+- [x] **SECURITY-10**: Multi-tenant data isolation (beyond RLS alone)
 
 ### Deployment & Infrastructure
 
-- [ ] **DEPLOY-01**: Configurable database backend: PostgreSQL+pgvector (default) and SQLite+FAISS (lightweight)
+- [x] **DEPLOY-01**: Configurable database backend: PostgreSQL+pgvector (default) and SQLite+FAISS (lightweight)
 - [ ] **DEPLOY-02**: Multi-tenant cloud deployment with org-scoped data isolation
 - [ ] **DEPLOY-03**: Single-tenant self-hosted deployment option
 - [ ] **DEPLOY-04**: Docker containers for backend and frontend
@@ -227,8 +227,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | SECURITY-07 | Phase 1 | Pending |
 | SECURITY-08 | Phase 1 | Pending |
 | SECURITY-09 | Phase 1 | Pending |
-| SECURITY-10 | Phase 1 | Pending |
-| DEPLOY-01 | Phase 1 | Pending |
+| SECURITY-10 | Phase 1 | Complete |
+| DEPLOY-01 | Phase 1 | Complete |
 | DEPLOY-02 | Phase 11 | Pending |
 | DEPLOY-03 | Phase 11 | Pending |
 | DEPLOY-04 | Phase 1 | Pending |
