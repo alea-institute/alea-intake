@@ -3,6 +3,7 @@
 Uses PyJWT for JWT operations and pwdlib with Argon2 for password hashing.
 """
 
+import uuid
 from datetime import datetime, timedelta, timezone
 
 import jwt
@@ -84,6 +85,7 @@ def create_refresh_token(
         "family": token_family,
         "exp": expire,
         "type": "refresh",
+        "jti": uuid.uuid4().hex,
     }
     return jwt.encode(payload, secret_key, algorithm="HS256")
 

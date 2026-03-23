@@ -9,6 +9,7 @@ from collections.abc import AsyncGenerator
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
 from app.config import Settings, get_settings
@@ -43,17 +44,29 @@ async def async_engine() -> AsyncGenerator[AsyncEngine, None]:
         echo=False,
     )
 
-    # Create all tables from both bases (SQLite ignores schema names)
+    # Import all models so they register with metadata
+    import app.models  # noqa: F401
+
+    # Create schemaless table copies (SQLite doesn't support named schemas)
+    from app.db.base import convention
+
+    _tenant_meta = MetaData(naming_convention=convention)
+    _shared_meta = MetaData(naming_convention=convention)
+    for table in TenantBase.metadata.tables.values():
+        table.to_metadata(_tenant_meta, schema=None)
+    for table in SharedBase.metadata.tables.values():
+        table.to_metadata(_shared_meta, schema=None)
+
     async with engine.begin() as conn:
-        await conn.run_sync(SharedBase.metadata.create_all)
-        await conn.run_sync(TenantBase.metadata.create_all)
+        await conn.run_sync(_shared_meta.create_all)
+        await conn.run_sync(_tenant_meta.create_all)
 
     yield engine
 
     # Cleanup
     async with engine.begin() as conn:
-        await conn.run_sync(TenantBase.metadata.drop_all)
-        await conn.run_sync(SharedBase.metadata.drop_all)
+        await conn.run_sync(_tenant_meta.drop_all)
+        await conn.run_sync(_shared_meta.drop_all)
 
     await engine.dispose()
 
@@ -74,18 +87,53 @@ async def async_session(async_engine: AsyncEngine) -> AsyncGenerator[AsyncSessio
 
 @pytest.fixture
 async def async_client() -> AsyncGenerator[AsyncClient, None]:
-    """Create an httpx AsyncClient with the FastAPI app using ASGITransport."""
-    # Override settings before importing the app
-    get_settings.cache_clear()
+    """Create an httpx AsyncClient with the FastAPI app using ASGITransport.
 
+    Sets up an in-memory SQLite database with all tables created,
+    overrides settings and engine for test isolation.
+    """
     import app.config
-
-    app.config.get_settings = get_test_settings  # type: ignore[assignment]
-
-    # Reset the engine module state
     import app.db.engine as engine_module
 
-    engine_module._engine = None
+    # Save originals
+    original_config_get_settings = app.config.get_settings
+
+    # Override get_settings at the source module
+    get_settings.cache_clear()
+    app.config.get_settings = get_test_settings  # type: ignore[assignment]
+
+    # Create a test engine directly and inject it into the engine module
+    test_engine = create_async_engine("sqlite+aiosqlite://", echo=False)
+    engine_module._engine = test_engine
+
+    # Import all models so they register with metadata
+    import app.models  # noqa: F401
+
+    # Create schemaless table copies (SQLite doesn't support named schemas)
+    from app.db.base import convention
+
+    _tenant_meta = MetaData(naming_convention=convention)
+    _shared_meta = MetaData(naming_convention=convention)
+    for table in TenantBase.metadata.tables.values():
+        table.to_metadata(_tenant_meta, schema=None)
+    for table in SharedBase.metadata.tables.values():
+        table.to_metadata(_shared_meta, schema=None)
+
+    async with test_engine.begin() as conn:
+        await conn.run_sync(_shared_meta.create_all)
+        await conn.run_sync(_tenant_meta.create_all)
+
+    # Patch get_settings in all modules that import it locally
+    patched_modules: list[tuple] = []
+    for mod_name in ["app.core.permissions", "app.services.auth_service", "app.routers.auth"]:
+        try:
+            import importlib
+            mod = importlib.import_module(mod_name)
+            if hasattr(mod, "get_settings"):
+                patched_modules.append((mod, mod.get_settings))
+                mod.get_settings = get_test_settings  # type: ignore[assignment]
+        except ImportError:
+            pass
 
     from app.main import app as fastapi_app
 
@@ -93,8 +141,17 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         yield client
 
-    # Restore original
-    app.config.get_settings = get_settings  # type: ignore[assignment]
+    # Cleanup tables (use the same schemaless metadata)
+    async with test_engine.begin() as conn:
+        await conn.run_sync(_tenant_meta.drop_all)
+        await conn.run_sync(_shared_meta.drop_all)
+    await test_engine.dispose()
+    engine_module._engine = None
+
+    # Restore originals
+    app.config.get_settings = original_config_get_settings  # type: ignore[assignment]
+    for mod, original_fn in patched_modules:
+        mod.get_settings = original_fn  # type: ignore[assignment]
     get_settings.cache_clear()
 
 

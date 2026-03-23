@@ -7,18 +7,14 @@ get_shared_session: Creates sessions against the shared schema for cross-tenant 
 from collections.abc import AsyncGenerator
 
 from fastapi import Request
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.engine import get_engine
 
 
-def _make_session_factory() -> async_sessionmaker[AsyncSession]:
-    """Create a session factory bound to the current engine."""
-    return async_sessionmaker(
-        bind=get_engine(),
-        class_=AsyncSession,
-        expire_on_commit=False,
-    )
+def _is_sqlite() -> bool:
+    """Check if the current engine is SQLite (no schema support)."""
+    return "sqlite" in str(get_engine().url)
 
 
 async def get_tenant_session(request: Request) -> AsyncGenerator[AsyncSession, None]:
@@ -26,32 +22,47 @@ async def get_tenant_session(request: Request) -> AsyncGenerator[AsyncSession, N
 
     Reads the tenant schema from request.state.tenant_schema, set by TenantMiddleware.
     Maps the logical 'tenant' schema name to the actual tenant_{org_slug} schema.
+    For SQLite, schemas are mapped to None (default schema).
     """
     tenant_schema = getattr(request.state, "tenant_schema", None)
-    session_factory = _make_session_factory()
+    engine = get_engine()
 
-    async with session_factory(
-        execution_options={"schema_translate_map": {"tenant": tenant_schema}}
-    ) as session:
-        try:
-            yield session
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
+    # SQLite doesn't support named schemas; map to None (default schema)
+    if _is_sqlite():
+        schema_map = {"tenant": None, "shared": None}
+    else:
+        schema_map = {"tenant": tenant_schema}
+
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map=schema_map)
+        async with AsyncSession(bind=conn, expire_on_commit=False) as session:
+            try:
+                yield session
+                await session.commit()
+            except Exception:
+                await session.rollback()
+                raise
 
 
 async def get_shared_session() -> AsyncGenerator[AsyncSession, None]:
     """Yield an AsyncSession against the shared schema (no translation needed).
 
     Used for Organization CRUD and other cross-tenant operations.
+    For SQLite, schemas are mapped to None.
     """
-    session_factory = _make_session_factory()
+    engine = get_engine()
 
-    async with session_factory() as session:
-        try:
-            yield session
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
+    if _is_sqlite():
+        schema_map = {"tenant": None, "shared": None}
+    else:
+        schema_map = {"shared": "shared"}
+
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map=schema_map)
+        async with AsyncSession(bind=conn, expire_on_commit=False) as session:
+            try:
+                yield session
+                await session.commit()
+            except Exception:
+                await session.rollback()
+                raise

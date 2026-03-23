@@ -174,15 +174,34 @@ class TestEndpointRBAC:
         )
         tokens = reg_response.json()
 
-        # Decode token to get user_id, create admin token
+        # Decode token to get user_id
         from app.core.security import decode_token, create_access_token
 
         payload = decode_token(
             tokens["access_token"],
             "test-secret-key-for-testing-only-not-production",
         )
+        user_id = int(payload["sub"])
+
+        # Update user role to admin directly in DB
+        from sqlalchemy import text, update
+        from app.db.engine import get_engine
+        from sqlalchemy.ext.asyncio import AsyncSession
+        from app.models.user import User
+
+        engine = get_engine()
+        async with engine.connect() as conn:
+            conn = await conn.execution_options(
+                schema_translate_map={"tenant": None, "shared": None}
+            )
+            await conn.execute(
+                update(User).where(User.id == user_id).values(role="admin")
+            )
+            await conn.commit()
+
+        # Create admin token matching the DB role
         admin_token = create_access_token(
-            user_id=int(payload["sub"]),
+            user_id=user_id,
             org_id=int(payload["org"]),
             role="admin",
             secret_key="test-secret-key-for-testing-only-not-production",

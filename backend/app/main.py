@@ -15,6 +15,8 @@ from app.core.exceptions import (
 )
 from app.db.engine import dispose_engine, get_engine
 from app.middleware.tenant import TenantMiddleware
+from app.routers.auth import router as auth_router
+from app.routers.users import router as users_router
 
 
 @asynccontextmanager
@@ -63,6 +65,11 @@ async def consent_required_handler(request: Request, exc: ConsentRequiredError):
 @app.exception_handler(InsufficientPermissionsError)
 async def insufficient_permissions_handler(request: Request, exc: InsufficientPermissionsError):
     return JSONResponse(status_code=403, content={"detail": exc.message})
+
+
+# Routers
+app.include_router(auth_router)
+app.include_router(users_router)
 
 
 # Health endpoint
