@@ -54,12 +54,12 @@ Plans:
   2. Given a consumer's factual description, the system identifies applicable FOLIO Objectives (claims/defenses), Areas of Law, Legal Authority types, and Jurisdictions
   3. The system traverses FOLIO OWL object properties to discover adjacent legal concepts related to an identified issue
   4. When the system encounters a legal concept not in FOLIO, it flags it as "unmapped" and continues analysis rather than dropping it
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md — FOLIO singleton loader, OWL cache with ETag freshness, OWL update manager, DB models, term expansions, and lifespan integration
+- [ ] 02-02-PLAN.md — Embedding service (dual pgvector/FAISS backend) and multi-stage concept resolution pipeline
+- [ ] 02-03-PLAN.md — Unmapped concept handling, adjacency discovery with graph persistence, and FOLIO admin API
 
 ### Phase 3: Input & Narrative Capture
 **Goal**: Consumers and professionals can provide information through any supported modality (text, voice, documents, professional notes), and the system normalizes all input into a common representation with extracted factual assertions
