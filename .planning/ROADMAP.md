@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Every action (login, data access, AI decision) is recorded in an immutable audit log that administrators can review
   4. A consumer completes a granular consent flow before any AI processing begins, and can exercise right-to-delete with full cascade
   5. Multi-tenant data isolation prevents any cross-tenant data leakage, and no case data is sent to LLM training endpoints
-**Plans:** 5 plans
+**Plans:** 4/5 plans executed
 
 Plans:
 - [ ] 01-01-PLAN.md — Project scaffolding, config, DB engine, models, tenant isolation, and test harness
@@ -225,7 +225,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Security | 1/5 | In Progress | - |
+| 1. Foundation & Security | 4/5 | In Progress|  |
 | 2. FOLIO Ontology Integration | 0/3 | Not started | - |
 | 3. Input & Narrative Capture | 0/3 | Not started | - |
 | 4. Core Analysis Pipeline | 0/5 | Not started | - |

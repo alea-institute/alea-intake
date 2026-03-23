@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-23T00:16:48.937Z"
-last_activity: 2026-03-23 -- Completed Plan 01-03 (AES-256-GCM encryption, key management, EncryptionContext)
+stopped_at: Completed 01-05-PLAN.md
+last_updated: "2026-03-23T00:24:17.000Z"
+last_activity: 2026-03-23 -- Completed Plan 01-05 (LLM service, Docker, frontend scaffold) -- Phase 1 complete
 progress:
   total_phases: 11
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 3
-  percent: 40
+  completed_plans: 5
+  percent: 100
 ---
 
 # Project State
@@ -25,32 +25,33 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Position
 
-Phase: 1 of 11 (Foundation & Security)
-Plan: 3 of 5 in current phase
-Status: Executing
-Last activity: 2026-03-23 -- Completed Plan 01-03 (AES-256-GCM encryption, key management, EncryptionContext)
+Phase: 1 of 11 (Foundation & Security) -- COMPLETE
+Plan: 5 of 5 in current phase
+Status: Phase Complete
+Last activity: 2026-03-23 -- Completed Plan 01-05 (LLM service, Docker, frontend scaffold)
 
-Progress: [████████████████████............................]  40%
+Progress: [██████████████████████████████████████████████████]  100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 4min
-- Total execution time: 0.13 hours
+- Total plans completed: 5
+- Average duration: 5min
+- Total execution time: 0.42 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation-security | 2 | 8min | 4min |
+| 01-foundation-security | 5 | 25min | 5min |
 
 **Recent Trend:**
-- Last 5 plans: 5min, 3min
-- Trend: improving
+- Last 5 plans: 5min, 3min, 5min, 6min, 6min
+- Trend: stable
 
 *Updated after each plan completion*
 | Phase 01 P02 | 11min | 2 tasks | 15 files |
+| Phase 01 P05 | 6min | 2 tasks | 18 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,10 @@ Recent decisions affecting current work:
 - [Phase 01]: Added jti claim to refresh tokens for uniqueness across same-second rotations
 - [Phase 01]: Fixed SQLite schema_translate_map: schemaless table copies for DDL, connection-level execution_options for DML
 - [Phase 01]: require_role checks DB user.role (authoritative) not JWT role claim (informational)
+- [Phase 01-05]: LLMService uses _PROVIDER_MODEL_MAP for provider-to-class resolution (openai, anthropic, google, vllm)
+- [Phase 01-05]: Three-level training opt-out: API-tier access, provider headers, local_only policy enforcement
+- [Phase 01-05]: Organization CRUD uses shared session (orgs are in shared schema, not tenant schemas)
+- [Phase 01-05]: Frontend uses Tailwind 3.x (not 4.x) for PostCSS compatibility
 
 ### Pending Todos
 
@@ -84,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T00:16:48.935Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-03-23T00:24:17.000Z
+Stopped at: Completed 01-05-PLAN.md -- Phase 1 (Foundation & Security) complete
 Resume file: None

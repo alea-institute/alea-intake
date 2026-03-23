@@ -104,7 +104,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SECURITY-06**: Attorney-client privilege awareness: all data treated as potentially privileged
 - [ ] **SECURITY-07**: Consent capture before AI processing begins, with granular consent options
 - [ ] **SECURITY-08**: Right-to-delete with cascade deletion and anonymized audit trail preservation
-- [ ] **SECURITY-09**: No case data sent to LLM training endpoints; configurable data residency
+- [x] **SECURITY-09**: No case data sent to LLM training endpoints; configurable data residency
 - [x] **SECURITY-10**: Multi-tenant data isolation (beyond RLS alone)
 
 ### Deployment & Infrastructure
@@ -112,7 +112,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DEPLOY-01**: Configurable database backend: PostgreSQL+pgvector (default) and SQLite+FAISS (lightweight)
 - [ ] **DEPLOY-02**: Multi-tenant cloud deployment with org-scoped data isolation
 - [ ] **DEPLOY-03**: Single-tenant self-hosted deployment option
-- [ ] **DEPLOY-04**: Docker containers for backend and frontend
+- [x] **DEPLOY-04**: Docker containers for backend and frontend
 - [ ] **DEPLOY-05**: Configurable persistence: ephemeral (privacy-first), persistent (case tracking), CMS-integrated
 - [ ] **DEPLOY-06**: Health check and monitoring endpoints
 
@@ -121,7 +121,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **INTEGRATE-01**: CMS sync connector for Clio
 - [ ] **INTEGRATE-02**: CMS sync connector for MyCase
 - [ ] **INTEGRATE-03**: CMS sync connector for Legal Server
-- [ ] **INTEGRATE-04**: LLM integration via alea-llm-client supporting multiple providers
+- [x] **INTEGRATE-04**: LLM integration via alea-llm-client supporting multiple providers
 - [ ] **INTEGRATE-05**: folio-mcp integration for LLM agent tool-use during analysis
 - [ ] **INTEGRATE-06**: Export formats: PDF, DOCX, JSON
 
@@ -226,18 +226,18 @@ Deferred to future release. Tracked but not in current roadmap.
 | SECURITY-06 | Phase 1 | Complete |
 | SECURITY-07 | Phase 1 | Pending |
 | SECURITY-08 | Phase 1 | Pending |
-| SECURITY-09 | Phase 1 | Pending |
+| SECURITY-09 | Phase 1 | Complete |
 | SECURITY-10 | Phase 1 | Complete |
 | DEPLOY-01 | Phase 1 | Complete |
 | DEPLOY-02 | Phase 11 | Pending |
 | DEPLOY-03 | Phase 11 | Pending |
-| DEPLOY-04 | Phase 1 | Pending |
+| DEPLOY-04 | Phase 1 | Complete |
 | DEPLOY-05 | Phase 11 | Pending |
 | DEPLOY-06 | Phase 11 | Pending |
 | INTEGRATE-01 | Phase 11 | Pending |
 | INTEGRATE-02 | Phase 11 | Pending |
 | INTEGRATE-03 | Phase 11 | Pending |
-| INTEGRATE-04 | Phase 1 | Pending |
+| INTEGRATE-04 | Phase 1 | Complete |
 | INTEGRATE-05 | Phase 6 | Pending |
 | INTEGRATE-06 | Phase 7 | Pending |
 

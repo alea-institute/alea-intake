@@ -8,9 +8,11 @@ __pycache__/
 venv/
 dist/
 build/
+frontend/dist/
 
 # Node
 node_modules/
+*.tsbuildinfo
 
 # Environment
 .env
