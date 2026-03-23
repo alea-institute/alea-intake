@@ -125,14 +125,14 @@ class TestLLMServiceConnectionCheck:
 
     async def test_llm_service_check_connection_success(self):
         """check_connection returns status dict on success."""
-        from app.services.llm_service import LLMService
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
 
         org_config = _make_org_config(provider="openai", model="gpt-4")
         service = LLMService(org_config=org_config)
 
-        # Mock the alea-llm-client to avoid actual API calls
-        with patch("app.services.llm_service.OpenAIModel") as mock_model_cls:
-            mock_model_cls.return_value = MagicMock()
+        # Mock the provider model class in the lookup map
+        mock_model_cls = MagicMock()
+        with patch.dict(_PROVIDER_MODEL_MAP, {"openai": mock_model_cls}):
             result = await service.check_connection()
 
         assert result["status"] == "connected"
@@ -141,12 +141,13 @@ class TestLLMServiceConnectionCheck:
 
     async def test_llm_service_check_connection_failure(self):
         """check_connection returns error status on failure."""
-        from app.services.llm_service import LLMService
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
 
         org_config = _make_org_config(provider="openai", model="gpt-4")
         service = LLMService(org_config=org_config)
 
-        with patch("app.services.llm_service.OpenAIModel", side_effect=Exception("Connection refused")):
+        mock_model_cls = MagicMock(side_effect=Exception("Connection refused"))
+        with patch.dict(_PROVIDER_MODEL_MAP, {"openai": mock_model_cls}):
             result = await service.check_connection()
 
         assert result["status"] == "error"
@@ -154,20 +155,21 @@ class TestLLMServiceConnectionCheck:
 
     async def test_llm_service_no_case_data_in_check(self):
         """check_connection does not send any PII or case data."""
-        from app.services.llm_service import LLMService
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
 
         org_config = _make_org_config(provider="openai", model="gpt-4")
         service = LLMService(org_config=org_config)
 
-        with patch("app.services.llm_service.OpenAIModel") as mock_model_cls:
-            mock_instance = MagicMock()
-            mock_model_cls.return_value = mock_instance
+        mock_model_cls = MagicMock()
+        mock_instance = MagicMock()
+        mock_model_cls.return_value = mock_instance
+        with patch.dict(_PROVIDER_MODEL_MAP, {"openai": mock_model_cls}):
             await service.check_connection()
 
-            # Verify no generate/completion methods were called
-            mock_instance.generate.assert_not_called()
-            if hasattr(mock_instance, "complete"):
-                mock_instance.complete.assert_not_called()
+        # Verify no generate/completion methods were called (no case data sent)
+        mock_instance.generate.assert_not_called()
+        if hasattr(mock_instance, "complete"):
+            mock_instance.complete.assert_not_called()
 
 
 class TestGetLLMServiceFactory:

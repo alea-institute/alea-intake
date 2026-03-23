@@ -14,8 +14,11 @@ from app.core.exceptions import (
     TenantNotFoundError,
 )
 from app.db.engine import dispose_engine, get_engine
+from app.middleware.audit import AuditMiddleware
 from app.middleware.tenant import TenantMiddleware
 from app.routers.auth import router as auth_router
+from app.routers.audit import router as audit_router
+from app.routers.organizations import router as organizations_router
 from app.routers.users import router as users_router
 
 
@@ -35,7 +38,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Middleware (order matters: CORS first, then tenant resolution)
+# Middleware (order matters -- last added = first executed):
+# Execution order: CORS -> AuditMiddleware -> TenantMiddleware
+# (Starlette reverses the add_middleware order)
+app.add_middleware(TenantMiddleware)
+app.add_middleware(AuditMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -43,7 +50,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(TenantMiddleware)
 
 
 # Exception handlers
@@ -69,7 +75,9 @@ async def insufficient_permissions_handler(request: Request, exc: InsufficientPe
 
 # Routers
 app.include_router(auth_router)
+app.include_router(organizations_router)
 app.include_router(users_router)
+app.include_router(audit_router)
 
 
 # Health endpoint
