@@ -96,8 +96,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Security & Privacy
 
-- [ ] **SECURITY-01**: JWT authentication with refresh tokens
-- [ ] **SECURITY-02**: Role-based access control: admin, professional (attorney/paralegal), consumer
+- [x] **SECURITY-01**: JWT authentication with refresh tokens
+- [x] **SECURITY-02**: Role-based access control: admin, professional (attorney/paralegal), consumer
 - [x] **SECURITY-03**: AES-256 encryption at rest, TLS 1.3 in transit
 - [x] **SECURITY-04**: Field-level encryption for PII data
 - [ ] **SECURITY-05**: Immutable audit log of all actions, AI decisions, human overrides, and data access
@@ -218,8 +218,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | AUTONOMY-03 | Phase 10 | Pending |
 | AUTONOMY-04 | Phase 10 | Pending |
 | AUTONOMY-05 | Phase 10 | Pending |
-| SECURITY-01 | Phase 1 | Pending |
-| SECURITY-02 | Phase 1 | Pending |
+| SECURITY-01 | Phase 1 | Complete |
+| SECURITY-02 | Phase 1 | Complete |
 | SECURITY-03 | Phase 1 | Complete |
 | SECURITY-04 | Phase 1 | Complete |
 | SECURITY-05 | Phase 1 | Pending |

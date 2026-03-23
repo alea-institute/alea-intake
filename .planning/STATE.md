@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-03-23T00:08:09.482Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-23T00:16:48.937Z"
 last_activity: 2026-03-23 -- Completed Plan 01-03 (AES-256-GCM encryption, key management, EncryptionContext)
 progress:
   total_phases: 11
   completed_phases: 0
   total_plans: 5
-  completed_plans: 2
+  completed_plans: 3
   percent: 40
 ---
 
@@ -50,6 +50,7 @@ Progress: [████████████████████.........
 - Trend: improving
 
 *Updated after each plan completion*
+| Phase 01 P02 | 11min | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - [Phase 01-03]: AES-256-GCM via AESGCM primitive, not Fernet (Fernet is AES-128-CBC)
 - [Phase 01-03]: Standalone functions + EncryptionContext instead of SQLAlchemy TypeDecorator for request-scoped DEK support
 - [Phase 01-03]: Key auto-generation with 0o600 permissions for zero-config dev setup
+- [Phase 01]: Added jti claim to refresh tokens for uniqueness across same-second rotations
+- [Phase 01]: Fixed SQLite schema_translate_map: schemaless table copies for DDL, connection-level execution_options for DML
+- [Phase 01]: require_role checks DB user.role (authoritative) not JWT role claim (informational)
 
 ### Pending Todos
 
@@ -80,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T00:08:09.481Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-03-23T00:16:48.935Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
