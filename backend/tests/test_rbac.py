@@ -1,13 +1,14 @@
 """Tests for RBAC permission sets and FastAPI dependencies.
 
-TDD RED: These tests define the expected behavior of backend/app/core/permissions.py
-before the implementation exists.
+Includes both unit tests (permission sets, dependency factories)
+and integration tests (endpoint-level RBAC enforcement).
 """
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
 from fastapi import HTTPException
+from httpx import AsyncClient
 
 
 class TestRolePermissions:
@@ -116,3 +117,118 @@ class TestRequirePermission:
         with pytest.raises(HTTPException) as exc_info:
             await dep(mock_user)
         assert exc_info.value.status_code == 403
+
+
+class TestEndpointRBAC:
+    """Integration tests for RBAC enforcement at the endpoint level."""
+
+    @pytest.fixture
+    async def admin_token(self, async_client: AsyncClient):
+        """Register an admin user and return access token."""
+        # Register as consumer first, then we'll need to handle role.
+        # For integration testing, register a user then manually set role.
+        # The auth service defaults to consumer, so we test admin via direct token creation.
+        from app.core.security import create_access_token
+
+        # We need an actual admin user in the DB for get_current_user to work.
+        # Register a user first, then create a token for them with the admin role.
+        response = await async_client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "admin@example.com",
+                "password": "AdminPass123!",
+                "full_name": "Admin User",
+            },
+            headers={"X-Tenant-Slug": "test-legal-aid"},
+        )
+        data = response.json()
+        return data["access_token"]
+
+    @pytest.fixture
+    async def consumer_token(self, async_client: AsyncClient):
+        """Register a consumer user and return access token."""
+        response = await async_client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "consumer@example.com",
+                "password": "ConsumerPass123!",
+                "full_name": "Consumer User",
+            },
+            headers={"X-Tenant-Slug": "test-legal-aid"},
+        )
+        data = response.json()
+        return data["access_token"]
+
+    @pytest.mark.asyncio
+    async def test_admin_can_list_users(self, async_client: AsyncClient):
+        """Admin should be able to access GET /api/v1/users."""
+        # Register user, then update their role to admin in the DB
+        reg_response = await async_client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "admin-list@example.com",
+                "password": "AdminPass123!",
+                "full_name": "Admin Lister",
+            },
+            headers={"X-Tenant-Slug": "test-legal-aid"},
+        )
+        tokens = reg_response.json()
+
+        # Decode token to get user_id, create admin token
+        from app.core.security import decode_token, create_access_token
+
+        payload = decode_token(
+            tokens["access_token"],
+            "test-secret-key-for-testing-only-not-production",
+        )
+        admin_token = create_access_token(
+            user_id=int(payload["sub"]),
+            org_id=int(payload["org"]),
+            role="admin",
+            secret_key="test-secret-key-for-testing-only-not-production",
+        )
+
+        response = await async_client.get(
+            "/api/v1/users",
+            headers={
+                "Authorization": f"Bearer {admin_token}",
+                "X-Tenant-Slug": "test-legal-aid",
+            },
+        )
+        assert response.status_code == 200
+
+    @pytest.mark.asyncio
+    async def test_consumer_cannot_list_users(self, async_client: AsyncClient, consumer_token):
+        """Consumer should get 403 on GET /api/v1/users."""
+        response = await async_client.get(
+            "/api/v1/users",
+            headers={
+                "Authorization": f"Bearer {consumer_token}",
+                "X-Tenant-Slug": "test-legal-aid",
+            },
+        )
+        assert response.status_code == 403
+        assert response.json()["detail"] == "Insufficient permissions for this action"
+
+    @pytest.mark.asyncio
+    async def test_consumer_can_read_own_profile(self, async_client: AsyncClient, consumer_token):
+        """Consumer should access GET /api/v1/users/me."""
+        response = await async_client.get(
+            "/api/v1/users/me",
+            headers={
+                "Authorization": f"Bearer {consumer_token}",
+                "X-Tenant-Slug": "test-legal-aid",
+            },
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["email"] == "consumer@example.com"
+
+    @pytest.mark.asyncio
+    async def test_unauthenticated_request_rejected(self, async_client: AsyncClient):
+        """No token should return 401 on protected endpoints."""
+        response = await async_client.get(
+            "/api/v1/users/me",
+            headers={"X-Tenant-Slug": "test-legal-aid"},
+        )
+        assert response.status_code == 401
