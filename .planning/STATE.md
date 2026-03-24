@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-03-24T13:50:52.370Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-24T13:51:08.337Z"
 last_activity: 2026-03-24 -- Completed Plan 02-03 (unmapped concepts, adjacency, admin API)
 progress:
   total_phases: 11
@@ -56,6 +56,7 @@ Progress: [███████████████████████
 | Phase 01 P05 | 6min | 2 tasks | 18 files |
 | Phase 02 P01 | 9min | 2 tasks | 14 files |
 | Phase 02 P03 | 10min | 2 tasks | 8 files |
+| Phase 02 P02 | 10min | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,10 @@ Recent decisions affecting current work:
 - [Phase 02-03]: Adjacency returns graph structure {nodes, edges} not flat list
 - [Phase 02-03]: Unmapped concept adjacency uses nearest mapped concepts as traversal anchors
 - [Phase 02-03]: Admin endpoints use router-level Depends(require_role(Role.ADMIN))
+- [Phase 02-02]: FAISSBackend uses IndexFlatIP on normalized vectors for cosine similarity
+- [Phase 02-02]: Concept resolution weights: embedding=0.3, label=0.3, LLM=0.4; single-stage penalty=0.7
+- [Phase 02-02]: High-confidence embedding match (>0.85) skips LLM stage to save cost/latency
+- [Phase 02-02]: Lifespan calls build_index(folio) between FOLIO load and periodic updater start
 
 ### Pending Todos
 
@@ -106,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T13:48:23Z
-Stopped at: Completed 02-03-PLAN.md
-Resume file: .planning/phases/02-folio-ontology-integration/02-03-SUMMARY.md
+Last session: 2026-03-24T13:51:08.336Z
+Stopped at: Completed 02-02-PLAN.md
+Resume file: None

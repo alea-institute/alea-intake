@@ -19,10 +19,10 @@ Requirements for initial release. Each maps to roadmap phases.
 ### FOLIO Ontology Integration
 
 - [x] **FOLIO-01**: System loads FOLIO ontology via folio-python and uses IRIs as canonical identifiers for all legal concepts
-- [ ] **FOLIO-02**: System maps consumer facts to FOLIO Objectives (Claims, Defenses) via LLM + ontology matching
-- [ ] **FOLIO-03**: System identifies applicable Areas of Law from FOLIO taxonomy
-- [ ] **FOLIO-04**: System identifies applicable Legal Authorities types from FOLIO taxonomy
-- [ ] **FOLIO-05**: System determines applicable Jurisdictions from FOLIO Location branch
+- [x] **FOLIO-02**: System maps consumer facts to FOLIO Objectives (Claims, Defenses) via LLM + ontology matching
+- [x] **FOLIO-03**: System identifies applicable Areas of Law from FOLIO taxonomy
+- [x] **FOLIO-04**: System identifies applicable Legal Authorities types from FOLIO taxonomy
+- [x] **FOLIO-05**: System determines applicable Jurisdictions from FOLIO Location branch
 - [x] **FOLIO-06**: System gracefully handles concepts not in FOLIO (flags as "unmapped" rather than dropping)
 - [x] **FOLIO-07**: System uses FOLIO ontology relationships (OWL object properties) to discover adjacent legal concepts
 
@@ -162,10 +162,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | INGEST-05 | Phase 3 | Pending |
 | INGEST-06 | Phase 3 | Pending |
 | FOLIO-01 | Phase 2 | Complete |
-| FOLIO-02 | Phase 2 | Pending |
-| FOLIO-03 | Phase 2 | Pending |
-| FOLIO-04 | Phase 2 | Pending |
-| FOLIO-05 | Phase 2 | Pending |
+| FOLIO-02 | Phase 2 | Complete |
+| FOLIO-03 | Phase 2 | Complete |
+| FOLIO-04 | Phase 2 | Complete |
+| FOLIO-05 | Phase 2 | Complete |
 | FOLIO-06 | Phase 2 | Complete |
 | FOLIO-07 | Phase 2 | Complete |
 | EXPLORE-01 | Phase 5 | Pending |
