@@ -54,7 +54,7 @@ Plans:
   2. Given a consumer's factual description, the system identifies applicable FOLIO Objectives (claims/defenses), Areas of Law, Legal Authority types, and Jurisdictions
   3. The system traverses FOLIO OWL object properties to discover adjacent legal concepts related to an identified issue
   4. When the system encounters a legal concept not in FOLIO, it flags it as "unmapped" and continues analysis rather than dropping it
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 02-01-PLAN.md — FOLIO singleton loader, OWL cache with ETag freshness, OWL update manager, DB models, term expansions, and lifespan integration
@@ -226,7 +226,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Security | 4/5 | In Progress|  |
-| 2. FOLIO Ontology Integration | 0/3 | Not started | - |
+| 2. FOLIO Ontology Integration | 1/3 | In Progress|  |
 | 3. Input & Narrative Capture | 0/3 | Not started | - |
 | 4. Core Analysis Pipeline | 0/5 | Not started | - |
 | 5. Pre-Research Exploration & Safety | 0/4 | Not started | - |

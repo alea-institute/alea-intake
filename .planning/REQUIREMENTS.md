@@ -18,7 +18,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### FOLIO Ontology Integration
 
-- [ ] **FOLIO-01**: System loads FOLIO ontology via folio-python and uses IRIs as canonical identifiers for all legal concepts
+- [x] **FOLIO-01**: System loads FOLIO ontology via folio-python and uses IRIs as canonical identifiers for all legal concepts
 - [ ] **FOLIO-02**: System maps consumer facts to FOLIO Objectives (Claims, Defenses) via LLM + ontology matching
 - [ ] **FOLIO-03**: System identifies applicable Areas of Law from FOLIO taxonomy
 - [ ] **FOLIO-04**: System identifies applicable Legal Authorities types from FOLIO taxonomy
@@ -161,7 +161,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | INGEST-04 | Phase 3 | Pending |
 | INGEST-05 | Phase 3 | Pending |
 | INGEST-06 | Phase 3 | Pending |
-| FOLIO-01 | Phase 2 | Pending |
+| FOLIO-01 | Phase 2 | Complete |
 | FOLIO-02 | Phase 2 | Pending |
 | FOLIO-03 | Phase 2 | Pending |
 | FOLIO-04 | Phase 2 | Pending |
