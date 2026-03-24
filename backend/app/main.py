@@ -22,8 +22,10 @@ from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
+from app.routers.folio_admin import router as folio_admin_router
 from app.routers.organizations import router as organizations_router
 from app.routers.users import router as users_router
+from app.services.embedding.service import EmbeddingService
 from app.services.folio.folio_service import get_folio
 from app.services.folio.owl_cache import ensure_owl_fresh
 from app.services.folio.owl_updater import OWLUpdateManager, _periodic_owl_check
@@ -41,13 +43,18 @@ async def lifespan(app: FastAPI):
     # Step 2: Load FOLIO singleton (sync OWL parsing in executor)
     await loop.run_in_executor(None, get_folio)
 
-    # Step 3: Start periodic OWL update checker
+    # Step 3: Build embedding index from FOLIO concepts
+    folio = get_folio()  # already loaded in step 2
+    emb_service = EmbeddingService.get_instance()
+    await loop.run_in_executor(None, emb_service.build_index, folio)
+
+    # Step 4: Start periodic OWL update checker
     update_manager = OWLUpdateManager.get_instance()
     update_task = asyncio.create_task(
         _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
     )
 
-    # Step 4: Initialize DB engine
+    # Step 5: Initialize DB engine
     get_engine()
 
     yield
@@ -111,6 +118,7 @@ app.include_router(users_router)
 app.include_router(audit_router)
 app.include_router(consent_router)
 app.include_router(admin_router)
+app.include_router(folio_admin_router)
 
 
 # Health endpoint

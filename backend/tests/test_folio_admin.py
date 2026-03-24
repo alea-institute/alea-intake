@@ -287,6 +287,7 @@ async def test_folio_admin_router_is_registered(async_client: AsyncClient):
     resp = await async_client.get("/health")
     assert resp.status_code == 200
 
-    # Admin endpoint should return 401 (not 404) when no auth -- proves route exists
+    # Admin endpoint should NOT return 404 when hit without auth -- proves route exists
+    # May return 400 (missing tenant slug) or 401 (no auth), both prove route is registered
     resp = await async_client.get("/api/v1/admin/folio/owl/status")
-    assert resp.status_code == 401, "Expected 401 (no auth), got 404 means route not registered"
+    assert resp.status_code != 404, "Got 404 -- folio_admin_router not registered in app"
