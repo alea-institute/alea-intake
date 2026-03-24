@@ -71,12 +71,13 @@ Plans:
   3. A consumer can upload PDF, DOCX, or image documents that are processed for text extraction
   4. A professional can enter notes on behalf of a consumer, and those notes enter the same analysis pipeline as consumer-provided input
   5. All input modalities produce a common normalized text representation from which atomic factual assertions (parties, dates, locations, amounts, events) are extracted
-**Plans:** 3 plans
+**Plans:** 4 plans
 
 Plans:
 - [ ] 03-01-PLAN.md — Intake DB models, config settings, message normalization pipeline, and WebSocket chat system
-- [ ] 03-02-PLAN.md — Pluggable ASR service with provider architecture and document processing with PDF/DOCX/OCR extractors
-- [ ] 03-03-PLAN.md — Professional intake router and LLM-driven fact extraction with source spans
+- [ ] 03-02-PLAN.md — Pluggable ASR service with provider architecture and voice WebSocket routing
+- [ ] 03-03-PLAN.md — Document processing service with PDF, DOCX, and OCR extractors
+- [ ] 03-04-PLAN.md — Professional intake router and LLM-driven fact extraction with ConceptResolver wiring
 
 ### Phase 4: Core Analysis Pipeline
 **Goal**: The system performs iterative analysis -- issue-spotting, fact-to-claim mapping, gap analysis, follow-up questioning, and convergence detection -- producing a complete mapping of consumer facts to legal claims, elements, and identified gaps
@@ -227,7 +228,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 |-------|----------------|--------|-----------|
 | 1. Foundation & Security | 4/5 | In Progress|  |
 | 2. FOLIO Ontology Integration | 1/3 | In Progress|  |
-| 3. Input & Narrative Capture | 0/3 | Not started | - |
+| 3. Input & Narrative Capture | 0/4 | Not started | - |
 | 4. Core Analysis Pipeline | 0/5 | Not started | - |
 | 5. Pre-Research Exploration & Safety | 0/4 | Not started | - |
 | 6. Legal Research & Verification | 0/5 | Not started | - |
