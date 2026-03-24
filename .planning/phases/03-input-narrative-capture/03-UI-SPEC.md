@@ -41,7 +41,7 @@ Declared values (inherited from existing `frontend/tailwind.config.ts`):
 | 2xl | 48px | Major section breaks |
 | 3xl | 64px | Page-level spacing |
 
-Exceptions: 44px minimum touch target for voice recording start/stop button (Phase 8 implementation)
+No exceptions. All spacing tokens are multiples of 4.
 
 ---
 
@@ -52,9 +52,11 @@ Project baseline (to be confirmed when Phase 8 UI-SPEC is created):
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 16px | 400 | 1.5 |
-| Label | 14px | 500 | 1.4 |
+| Label | 14px | 400 | 1.4 |
 | Heading | 20px | 600 | 1.2 |
 | Display | 28px | 600 | 1.2 |
+
+Two-weight system: 400 (regular) for body text and labels, 600 (semibold) for headings and display.
 
 ---
 
@@ -109,6 +111,10 @@ Phase 3 defines the WebSocket contract at `ws://{host}/api/ws/intake/{session_id
 | `error` | `{type: "error", code: string, message: string, recoverable: boolean}` | Error with recovery guidance |
 | `session_state` | `{type: "session_state", status: string, facts_count: int, messages_count: int}` | Session state sync on reconnection |
 
+### Voice Recording Component Constraints
+
+The voice recording start/stop control must meet a minimum dimension of 44x44px to satisfy touch target accessibility requirements (WCAG 2.5.8). This is a component minimum dimension, not a spacing token.
+
 ### State Machines
 
 **Intake Status:**
@@ -140,6 +146,10 @@ pending --> processing --> failed (extraction error)
 ```
 received --> normalized --> facts_extracted --> concepts_resolved
 ```
+
+### Interaction State Inheritance
+
+Phase 8's UI-SPEC will inherit the interaction state definitions (state machines, WebSocket message protocol, and transcript review flow) declared in this contract and will be responsible for declaring the full visual hierarchy -- component layout, animation timing, focus management, and responsive breakpoints -- for the frontend implementation of these interaction patterns.
 
 ---
 
@@ -256,10 +266,10 @@ No third-party registries. Phase 3 builds no frontend components.
 ## Checker Sign-Off
 
 - [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS (backend phase -- interaction protocols documented)
+- [ ] Dimension 2 Visuals: PASS (backend phase -- interaction protocols documented, Phase 8 inheritance noted)
 - [ ] Dimension 3 Color: PASS (project baseline declared)
-- [ ] Dimension 4 Typography: PASS (project baseline declared)
-- [ ] Dimension 5 Spacing: PASS (inherited from tailwind.config.ts)
+- [ ] Dimension 4 Typography: PASS (2-weight system: 400 + 600)
+- [ ] Dimension 5 Spacing: PASS (clean scale, touch target moved to interaction contracts)
 - [ ] Dimension 6 Registry Safety: PASS (no frontend dependencies)
 
 **Approval:** pending
