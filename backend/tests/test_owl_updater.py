@@ -163,7 +163,9 @@ class TestHealthEndpoint:
     @pytest.mark.asyncio
     async def test_health_returns_folio_key(self, async_client):
         """Health endpoint returns JSON with 'folio' key containing owl_status."""
-        response = await async_client.get("/health")
+        with patch("app.services.folio.owl_cache.get_settings") as mock_cache_settings:
+            mock_cache_settings.return_value.folio_cache_dir = "/tmp/test_folio_cache"
+            response = await async_client.get("/health")
 
         assert response.status_code == 200
         data = response.json()

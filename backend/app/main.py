@@ -1,5 +1,6 @@
 """ALEA Intake API - FastAPI application entry point."""
 
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -23,13 +24,40 @@ from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
 from app.routers.organizations import router as organizations_router
 from app.routers.users import router as users_router
+from app.services.folio.folio_service import get_folio
+from app.services.folio.owl_cache import ensure_owl_fresh
+from app.services.folio.owl_updater import OWLUpdateManager, _periodic_owl_check
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan: initialize engine on startup, dispose on shutdown."""
+    """Application lifespan: initialize engine, load FOLIO, start update checker."""
+    settings = get_settings()
+    loop = asyncio.get_event_loop()
+
+    # Step 1: Ensure OWL cache is fresh (sync httpx call in executor)
+    await loop.run_in_executor(None, ensure_owl_fresh)
+
+    # Step 2: Load FOLIO singleton (sync OWL parsing in executor)
+    await loop.run_in_executor(None, get_folio)
+
+    # Step 3: Start periodic OWL update checker
+    update_manager = OWLUpdateManager.get_instance()
+    update_task = asyncio.create_task(
+        _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
+    )
+
+    # Step 4: Initialize DB engine
     get_engine()
+
     yield
+
+    # Shutdown
+    update_task.cancel()
+    try:
+        await update_task
+    except asyncio.CancelledError:
+        pass
     await dispose_engine()
 
 
@@ -88,5 +116,12 @@ app.include_router(admin_router)
 # Health endpoint
 @app.get("/health")
 async def health():
-    """Health check endpoint."""
-    return {"status": "healthy", "version": "0.1.0"}
+    """Health check endpoint with FOLIO OWL cache status."""
+    from app.services.folio.owl_cache import get_owl_status
+
+    owl_status = get_owl_status()
+    return {
+        "status": "healthy",
+        "version": "0.1.0",
+        "folio": owl_status,
+    }
