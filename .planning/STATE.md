@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-24T13:34:29Z"
-last_activity: 2026-03-24 -- Completed Plan 02-01 (FOLIO ontology loading infrastructure)
+status: executing
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-03-24T13:50:52.370Z"
+last_activity: 2026-03-24 -- Completed Plan 02-03 (unmapped concepts, adjacency, admin API)
 progress:
   total_phases: 11
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 8
-  completed_plans: 6
-  percent: 75
+  completed_plans: 8
+  percent: 87
 ---
 
 # Project State
@@ -26,28 +26,28 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 2 of 11 (FOLIO Ontology Integration)
-Plan: 1 of 3 in current phase -- COMPLETE
+Plan: 3 of 3 in current phase -- COMPLETE
 Status: In Progress
-Last activity: 2026-03-24 -- Completed Plan 02-01 (FOLIO ontology loading infrastructure)
+Last activity: 2026-03-24 -- Completed Plan 02-03 (unmapped concepts, adjacency, admin API)
 
-Progress: [█████████████████████████████████████░░░░░░░░░░░░░░]  75%
+Progress: [███████████████████████████████████████████░░░░░░░]  87%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 6min
-- Total execution time: 0.57 hours
+- Total plans completed: 7
+- Average duration: 7min
+- Total execution time: 0.73 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-security | 5 | 37min | 7min |
-| 02-folio-ontology-integration | 1 | 9min | 9min |
+| 02-folio-ontology-integration | 2 | 19min | 10min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 5min, 6min, 6min, 9min
+- Last 5 plans: 5min, 6min, 6min, 9min, 10min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -55,6 +55,7 @@ Progress: [███████████████████████
 | Phase 01 P04 | 12min | 2 tasks | 13 files |
 | Phase 01 P05 | 6min | 2 tasks | 18 files |
 | Phase 02 P01 | 9min | 2 tasks | 14 files |
+| Phase 02 P03 | 10min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,10 @@ Recent decisions affecting current work:
 - [Phase 02-01]: OWL cache uses standalone cache_dir (./data/folio_cache) not folio-python's ~/.folio/cache
 - [Phase 02-01]: ensure_owl_fresh returns bool (not raises) for graceful degradation on network errors
 - [Phase 02-01]: EmbeddingService.rebuild_index call guarded by ImportError for forward compatibility with Plan 02-02
+- [Phase 02-03]: Unmapped confidence formula: 1-(best_match/threshold) clamped [0,1]
+- [Phase 02-03]: Adjacency returns graph structure {nodes, edges} not flat list
+- [Phase 02-03]: Unmapped concept adjacency uses nearest mapped concepts as traversal anchors
+- [Phase 02-03]: Admin endpoints use router-level Depends(require_role(Role.ADMIN))
 
 ### Pending Todos
 
@@ -101,6 +106,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T13:34:29Z
-Stopped at: Completed 02-01-PLAN.md
-Resume file: .planning/phases/02-folio-ontology-integration/02-01-SUMMARY.md
+Last session: 2026-03-24T13:48:23Z
+Stopped at: Completed 02-03-PLAN.md
+Resume file: .planning/phases/02-folio-ontology-integration/02-03-SUMMARY.md

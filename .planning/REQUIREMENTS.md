@@ -23,8 +23,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **FOLIO-03**: System identifies applicable Areas of Law from FOLIO taxonomy
 - [ ] **FOLIO-04**: System identifies applicable Legal Authorities types from FOLIO taxonomy
 - [ ] **FOLIO-05**: System determines applicable Jurisdictions from FOLIO Location branch
-- [ ] **FOLIO-06**: System gracefully handles concepts not in FOLIO (flags as "unmapped" rather than dropping)
-- [ ] **FOLIO-07**: System uses FOLIO ontology relationships (OWL object properties) to discover adjacent legal concepts
+- [x] **FOLIO-06**: System gracefully handles concepts not in FOLIO (flags as "unmapped" rather than dropping)
+- [x] **FOLIO-07**: System uses FOLIO ontology relationships (OWL object properties) to discover adjacent legal concepts
 
 ### Pre-Research Exploration & Safety
 
@@ -166,8 +166,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOLIO-03 | Phase 2 | Pending |
 | FOLIO-04 | Phase 2 | Pending |
 | FOLIO-05 | Phase 2 | Pending |
-| FOLIO-06 | Phase 2 | Pending |
-| FOLIO-07 | Phase 2 | Pending |
+| FOLIO-06 | Phase 2 | Complete |
+| FOLIO-07 | Phase 2 | Complete |
 | EXPLORE-01 | Phase 5 | Pending |
 | EXPLORE-02 | Phase 5 | Pending |
 | EXPLORE-03 | Phase 5 | Pending |
