@@ -184,19 +184,26 @@ class TestLifespan:
 
         mock_app = FastAPI()
 
+        async def noop_periodic(*args, **kwargs):
+            await asyncio.sleep(3600)
+
         with (
             patch("app.main.ensure_owl_fresh") as mock_ensure,
             patch("app.main.get_folio") as mock_get,
             patch("app.main.OWLUpdateManager") as mock_mgr_cls,
+            patch("app.main.EmbeddingService") as mock_emb_cls,
+            patch("app.main._periodic_owl_check", side_effect=noop_periodic),
             patch("app.main.get_engine"),
             patch("app.main.dispose_engine", new_callable=AsyncMock),
             patch("app.main.get_settings") as mock_settings,
         ):
             mock_settings.return_value.folio_update_interval_hours = 24
             mock_mgr_cls.get_instance.return_value = MagicMock()
+            mock_emb_cls.get_instance.return_value = MagicMock()
 
             async with lifespan(mock_app):
                 pass
 
             mock_ensure.assert_called_once()
-            mock_get.assert_called_once()
+            # get_folio is called twice: once in executor for initial load, once to retrieve instance
+            assert mock_get.call_count == 2

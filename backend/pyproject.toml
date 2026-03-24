@@ -40,6 +40,9 @@ dev = [
 asyncio_mode = "auto"
 timeout = 30
 testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
 
 [tool.ruff]
 target-version = "py312"

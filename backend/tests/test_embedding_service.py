@@ -223,11 +223,22 @@ class TestLifespanEmbeddingIndex:
     @pytest.mark.asyncio
     async def test_lifespan_builds_embedding_index(self):
         """Lifespan calls EmbeddingService.get_instance().build_index(folio)."""
+        import os
+
+        # Ensure ALEA_SECRET_KEY is set so app.main can import cleanly
+        os.environ.setdefault("ALEA_SECRET_KEY", "test-secret-key-for-testing-only")
+
+        from app.main import app, lifespan
+
+        async def noop_periodic(*args, **kwargs):
+            """Fake periodic check that just sleeps forever (will be cancelled)."""
+            await asyncio.sleep(3600)
+
         with (
             patch("app.main.ensure_owl_fresh"),
             patch("app.main.get_folio") as mock_get_folio,
             patch("app.main.OWLUpdateManager") as mock_updater_cls,
-            patch("app.main._periodic_owl_check", new_callable=lambda: lambda *a, **k: AsyncMock()),
+            patch("app.main._periodic_owl_check", side_effect=noop_periodic),
             patch("app.main.get_engine"),
             patch("app.main.dispose_engine", new_callable=AsyncMock),
             patch("app.main.EmbeddingService") as mock_emb_cls,
@@ -240,12 +251,6 @@ class TestLifespanEmbeddingIndex:
 
             mock_updater = MagicMock()
             mock_updater_cls.get_instance.return_value = mock_updater
-
-            # Mock _periodic_owl_check to be a coroutine that immediately completes
-            async def noop_periodic(*args, **kwargs):
-                await asyncio.sleep(0)
-
-            from app.main import app, lifespan
 
             async with lifespan(app):
                 pass
