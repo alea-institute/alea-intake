@@ -280,14 +280,16 @@ async def test_folio_config_returns_settings(async_client: AsyncClient):
 # ── Router Wiring Tests ─────────────────────────────────────────────────────
 
 
-@pytest.mark.asyncio
-async def test_folio_admin_router_is_registered(async_client: AsyncClient):
-    """The folio_admin_router is wired into the FastAPI app."""
-    # Health check should work (verifies app is running)
-    resp = await async_client.get("/health")
-    assert resp.status_code == 200
+def test_folio_admin_router_is_registered():
+    """The folio_admin_router is wired into the FastAPI app via include_router."""
+    from app.main import app as fastapi_app
 
-    # Admin endpoint should NOT return 404 when hit without auth -- proves route exists
-    # May return 400 (missing tenant slug) or 401 (no auth), both prove route is registered
-    resp = await async_client.get("/api/v1/admin/folio/owl/status")
-    assert resp.status_code != 404, "Got 404 -- folio_admin_router not registered in app"
+    # Verify the folio admin routes are in the app's routes
+    route_paths = [route.path for route in fastapi_app.routes]
+    assert "/api/v1/admin/folio/owl/status" in route_paths, (
+        "folio_admin_router not registered -- /api/v1/admin/folio/owl/status missing from routes"
+    )
+    assert "/api/v1/admin/folio/owl/update" in route_paths
+    assert "/api/v1/admin/folio/owl/rollback" in route_paths
+    assert "/api/v1/admin/folio/unmapped" in route_paths
+    assert "/api/v1/admin/folio/config" in route_paths
