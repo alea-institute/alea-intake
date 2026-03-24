@@ -71,12 +71,12 @@ Plans:
   3. A consumer can upload PDF, DOCX, or image documents that are processed for text extraction
   4. A professional can enter notes on behalf of a consumer, and those notes enter the same analysis pipeline as consumer-provided input
   5. All input modalities produce a common normalized text representation from which atomic factual assertions (parties, dates, locations, amounts, events) are extracted
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
+- [ ] 03-01-PLAN.md — Intake DB models, config settings, message normalization pipeline, and WebSocket chat system
+- [ ] 03-02-PLAN.md — Pluggable ASR service with provider architecture and document processing with PDF/DOCX/OCR extractors
+- [ ] 03-03-PLAN.md — Professional intake router and LLM-driven fact extraction with source spans
 
 ### Phase 4: Core Analysis Pipeline
 **Goal**: The system performs iterative analysis -- issue-spotting, fact-to-claim mapping, gap analysis, follow-up questioning, and convergence detection -- producing a complete mapping of consumer facts to legal claims, elements, and identified gaps
