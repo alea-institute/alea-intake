@@ -46,6 +46,13 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
 
+    # FOLIO ontology
+    folio_owl_branch: str = "main"
+    folio_update_interval_hours: int = 24
+    folio_cache_dir: str = "./data/folio_cache"
+    folio_confidence_threshold: float = 0.5
+    folio_traversal_depth: int = 2
+
     # CORS
     cors_origins: list[str] = ["http://localhost:5173"]
 

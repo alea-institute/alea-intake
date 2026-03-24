@@ -24,7 +24,7 @@ class TestGetFolio:
 
         mock_folio = MagicMock()
         with patch("app.services.folio.folio_service.FOLIO", return_value=mock_folio):
-            result = get_folio()
+            result = get_folio(branch="main")
 
         assert result is mock_folio
 
@@ -34,8 +34,8 @@ class TestGetFolio:
 
         mock_folio = MagicMock()
         with patch("app.services.folio.folio_service.FOLIO", return_value=mock_folio):
-            first = get_folio()
-            second = get_folio()
+            first = get_folio(branch="main")
+            second = get_folio(branch="main")
 
         assert first is second
 
@@ -47,14 +47,14 @@ class TestGetFolio:
         mock_folio_2 = MagicMock()
 
         with patch("app.services.folio.folio_service.FOLIO", return_value=mock_folio_1):
-            first = get_folio()
+            first = get_folio(branch="main")
 
         assert first is mock_folio_1
 
         reload_folio(mock_folio_2)
 
         with patch("app.services.folio.folio_service.FOLIO", return_value=mock_folio_1):
-            current = get_folio()
+            current = get_folio(branch="main")
 
         assert current is mock_folio_2
 

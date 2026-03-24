@@ -21,6 +21,10 @@ dependencies = [
     "psycopg[binary]>=3.3.0",
     "aiosqlite>=0.22.0",
     "pgvector>=0.4.0",
+    "folio-python[search]>=0.2.1",
+    "faiss-cpu>=1.13.0",
+    "sentence-transformers>=5.0.0",
+    "lxml>=5.0.0",
 ]
 
 [dependency-groups]

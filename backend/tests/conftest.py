@@ -190,6 +190,133 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture
+def mock_folio():
+    """Create a MagicMock mimicking the FOLIO API surface for unit tests."""
+    from unittest.mock import MagicMock
+
+    folio = MagicMock()
+
+    # Sample OWLClass-like mock objects from different branches
+    def _make_concept(iri: str, label: str, branch: str = "", sub_class_of: list | None = None):
+        concept = MagicMock()
+        concept.iri = iri
+        concept.label = label
+        concept.sub_class_of = sub_class_of or []
+        concept.parent_class_of = []
+        concept.alternative_labels = []
+        concept.definition = f"Definition of {label}"
+        concept.examples = []
+        return concept
+
+    # Build a sample classes dict
+    sample_classes = {
+        "https://folio.openlegalstandard.org/objective001": _make_concept(
+            "https://folio.openlegalstandard.org/objective001", "Wrongful Termination Claim", "Objectives"
+        ),
+        "https://folio.openlegalstandard.org/objective002": _make_concept(
+            "https://folio.openlegalstandard.org/objective002", "Breach of Contract", "Objectives"
+        ),
+        "https://folio.openlegalstandard.org/areaoflaw001": _make_concept(
+            "https://folio.openlegalstandard.org/areaoflaw001", "Employment Law", "Area of Law"
+        ),
+        "https://folio.openlegalstandard.org/areaoflaw002": _make_concept(
+            "https://folio.openlegalstandard.org/areaoflaw002", "Family Law", "Area of Law"
+        ),
+        "https://folio.openlegalstandard.org/authority001": _make_concept(
+            "https://folio.openlegalstandard.org/authority001", "Title VII", "Legal Authorities"
+        ),
+        "https://folio.openlegalstandard.org/location001": _make_concept(
+            "https://folio.openlegalstandard.org/location001", "California", "Location"
+        ),
+        "https://folio.openlegalstandard.org/actor001": _make_concept(
+            "https://folio.openlegalstandard.org/actor001", "Plaintiff", "Actor-Player"
+        ),
+        "https://folio.openlegalstandard.org/event001": _make_concept(
+            "https://folio.openlegalstandard.org/event001", "Termination Event", "Event"
+        ),
+        "https://folio.openlegalstandard.org/entity001": _make_concept(
+            "https://folio.openlegalstandard.org/entity001", "Corporation", "Legal Entity"
+        ),
+        "https://folio.openlegalstandard.org/doc001": _make_concept(
+            "https://folio.openlegalstandard.org/doc001", "Employment Contract", "Document-Artifact"
+        ),
+        "https://folio.openlegalstandard.org/service001": _make_concept(
+            "https://folio.openlegalstandard.org/service001", "Legal Representation", "Service"
+        ),
+        "https://folio.openlegalstandard.org/forum001": _make_concept(
+            "https://folio.openlegalstandard.org/forum001", "Federal Court", "Forums and Venues"
+        ),
+    }
+    folio.classes = sample_classes
+
+    # search_by_label: simple label substring match
+    def _search_by_label(label, limit=10, **kwargs):
+        return [
+            c for c in sample_classes.values()
+            if label.lower() in c.label.lower()
+        ][:limit]
+    folio.search_by_label = _search_by_label
+
+    # search_by_prefix: prefix match on IRI
+    def _search_by_prefix(prefix, **kwargs):
+        return [c for c in sample_classes.values() if c.iri.startswith(prefix)]
+    folio.search_by_prefix = _search_by_prefix
+
+    # get_children: return a fixed list of mock children
+    child1 = _make_concept("https://folio.openlegalstandard.org/child001", "Child Concept 1")
+    child2 = _make_concept("https://folio.openlegalstandard.org/child002", "Child Concept 2")
+    folio.get_children = MagicMock(return_value=[child1, child2])
+
+    # get_parents: return a fixed parent
+    parent1 = _make_concept("https://folio.openlegalstandard.org/parent001", "Parent Concept 1")
+    folio.get_parents = MagicMock(return_value=[parent1])
+
+    # find_connections: return tuples of (subject, property, object)
+    prop_mock = MagicMock()
+    prop_mock.iri = "https://folio.openlegalstandard.org/prop001"
+    prop_mock.label = "relates_to"
+    prop_mock.domain = []
+    prop_mock.range = []
+    folio.find_connections = MagicMock(return_value=[
+        (sample_classes["https://folio.openlegalstandard.org/objective001"], prop_mock,
+         sample_classes["https://folio.openlegalstandard.org/areaoflaw001"]),
+    ])
+
+    # Branch accessors
+    folio.get_objectives = MagicMock(return_value=[
+        sample_classes["https://folio.openlegalstandard.org/objective001"],
+        sample_classes["https://folio.openlegalstandard.org/objective002"],
+    ])
+    folio.get_areas_of_law = MagicMock(return_value=[
+        sample_classes["https://folio.openlegalstandard.org/areaoflaw001"],
+        sample_classes["https://folio.openlegalstandard.org/areaoflaw002"],
+    ])
+    folio.get_legal_authorities = MagicMock(return_value=[
+        sample_classes["https://folio.openlegalstandard.org/authority001"],
+    ])
+    folio.get_locations = MagicMock(return_value=[
+        sample_classes["https://folio.openlegalstandard.org/location001"],
+    ])
+
+    # Object properties dict
+    folio.object_properties = {
+        prop_mock.iri: prop_mock,
+    }
+
+    return folio
+
+
+@pytest.fixture(scope="session")
+def real_folio():
+    """Load the actual FOLIO ontology for integration tests.
+
+    Skips if folio-python is not installed or FOLIO can't load.
+    """
+    folio_mod = pytest.importorskip("folio")
+    return folio_mod.FOLIO(github_repo_branch="main")
+
+
+@pytest.fixture
 async def test_org(async_session: AsyncSession):
     """Create a test Organization record."""
     from app.models.shared import Organization

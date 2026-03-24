@@ -31,7 +31,7 @@ class TestEnsureOwlFresh:
             mock_client.head.return_value = mock_response
             mock_client_cls.return_value = mock_client
 
-            result = ensure_owl_fresh(cache_dir=cache_dir)
+            result = ensure_owl_fresh(branch="main", cache_dir=cache_dir)
 
         assert result is False
 
@@ -61,7 +61,7 @@ class TestEnsureOwlFresh:
             mock_client.get.return_value = mock_get_resp
             mock_client_cls.return_value = mock_client
 
-            result = ensure_owl_fresh(cache_dir=cache_dir)
+            result = ensure_owl_fresh(branch="main", cache_dir=cache_dir)
 
         assert result is True
         owl_file = cache_dir / "folio.owl"
@@ -97,7 +97,7 @@ class TestEnsureOwlFresh:
             mock_client.get.return_value = mock_get_resp
             mock_client_cls.return_value = mock_client
 
-            ensure_owl_fresh(cache_dir=cache_dir)
+            ensure_owl_fresh(branch="main", cache_dir=cache_dir)
 
         previous_file = cache_dir / "folio.owl.previous"
         assert previous_file.exists()
