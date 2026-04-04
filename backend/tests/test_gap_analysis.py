@@ -512,3 +512,365 @@ async def test_gaps_persisted_to_db(
         )
         assert gap.iteration_found == analysis_iteration.iteration_number
         assert gap.status == "open"
+
+
+# ---------------------------------------------------------------------------
+# QuestionGenStage Tests
+# ---------------------------------------------------------------------------
+
+from app.services.analysis.stages.question_gen import QuestionGenStage
+
+
+@pytest.fixture
+async def seeded_gaps(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+) -> list[AnalysisGap]:
+    """Create a set of open gaps for question generation testing."""
+    gap1 = AnalysisGap(
+        run_id=analysis_run.id,
+        gap_type="unsupported_element",
+        claim_id=1,
+        element_id=1,
+        description="Element 'Employment Relationship' is not yet supported by any facts",
+        priority=90,
+        status="open",
+        iteration_found=1,
+    )
+    gap2 = AnalysisGap(
+        run_id=analysis_run.id,
+        gap_type="unexplored_claim",
+        claim_id=2,
+        element_id=None,
+        description="Potential claim 'Breach of Contract' has not been explored",
+        priority=50,
+        status="open",
+        iteration_found=1,
+    )
+    gap3 = AnalysisGap(
+        run_id=analysis_run.id,
+        gap_type="weak_mapping",
+        claim_id=1,
+        element_id=2,
+        description="Weak mapping (confidence=0.30) for claim 'Wrongful Termination' / element 'Damages'",
+        priority=70,
+        status="open",
+        iteration_found=1,
+    )
+    async_session.add_all([gap1, gap2, gap3])
+    await async_session.flush()
+    return [gap1, gap2, gap3]
+
+
+def _make_question_gen_llm_response(with_rationale: bool = True):
+    """Build a mock LLM response for QuestionGenStage."""
+    from app.services.analysis.schemas import QuestionGenResult, QuestionGroup, QuestionSchema
+
+    return QuestionGenResult(
+        groups=[
+            QuestionGroup(
+                topic="About your employment",
+                questions=[
+                    QuestionSchema(
+                        question_text="Can you describe the nature of your work relationship with the company?",
+                        rationale="We need to establish whether an employment relationship existed" if with_rationale else None,
+                        priority=90,
+                        gap_description="Element 'Employment Relationship' is not yet supported by any facts",
+                    ),
+                    QuestionSchema(
+                        question_text="Were there specific damages or losses you experienced?",
+                        rationale="Strengthening the evidence for financial impact" if with_rationale else None,
+                        priority=70,
+                        gap_description="Weak mapping (confidence=0.30) for claim 'Wrongful Termination' / element 'Damages'",
+                    ),
+                ],
+            ),
+            QuestionGroup(
+                topic="About the contract",
+                questions=[
+                    QuestionSchema(
+                        question_text="Did you have a written or verbal agreement with the company?",
+                        rationale="Exploring potential breach of contract claim" if with_rationale else None,
+                        priority=50,
+                        gap_description="Potential claim 'Breach of Contract' has not been explored",
+                    ),
+                ],
+            ),
+        ],
+        total_questions=3,
+    )
+
+
+@pytest.mark.asyncio
+async def test_question_gen_generates_from_gaps(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """QuestionGenStage.execute() generates questions from gap list."""
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response()
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+        question_transparency=True,
+    )
+    result = await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+        consumer_context="I was fired from my job.",
+    )
+
+    assert result["questions_generated"] == 3
+    assert result["total_questions"] == 3
+    mock_llm_service.json_async.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_question_topic_grouping(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """Questions are grouped by topic (D-10)."""
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response()
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+    )
+    result = await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+    )
+
+    assert "About your employment" in result["topic_groups"]
+    assert "About the contract" in result["topic_groups"]
+    assert len(result["topic_groups"]) == 2
+
+
+@pytest.mark.asyncio
+async def test_question_priority_ordering(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """Questions are ranked by priority (highest-impact gaps first)."""
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response()
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+    )
+    await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+    )
+
+    # Verify questions in DB are ordered correctly
+    stmt = (
+        select(FollowUpQuestion)
+        .where(FollowUpQuestion.run_id == analysis_run.id)
+        .order_by(FollowUpQuestion.priority.desc())
+    )
+    db_result = await async_session.execute(stmt)
+    questions = db_result.scalars().all()
+
+    priorities = [q.priority for q in questions]
+    assert priorities == sorted(priorities, reverse=True)
+
+
+@pytest.mark.asyncio
+async def test_question_transparency_enabled(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """When question_transparency=True, rationale is included (D-12)."""
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response(with_rationale=True)
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+        question_transparency=True,
+    )
+    await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+    )
+
+    stmt = select(FollowUpQuestion).where(FollowUpQuestion.run_id == analysis_run.id)
+    db_result = await async_session.execute(stmt)
+    questions = db_result.scalars().all()
+
+    for q in questions:
+        assert q.rationale is not None
+        assert len(q.rationale) > 0
+
+
+@pytest.mark.asyncio
+async def test_question_transparency_disabled(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """When question_transparency=False, rationale is None."""
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response(with_rationale=True)
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+        question_transparency=False,
+    )
+    await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+    )
+
+    stmt = select(FollowUpQuestion).where(FollowUpQuestion.run_id == analysis_run.id)
+    db_result = await async_session.execute(stmt)
+    questions = db_result.scalars().all()
+
+    for q in questions:
+        assert q.rationale is None
+
+
+@pytest.mark.asyncio
+async def test_question_persistence(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """Questions persisted as FollowUpQuestion records with gap_id, topic_group, priority, iteration_asked."""
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response()
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+    )
+    await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+    )
+
+    stmt = select(FollowUpQuestion).where(FollowUpQuestion.run_id == analysis_run.id)
+    db_result = await async_session.execute(stmt)
+    questions = db_result.scalars().all()
+
+    assert len(questions) == 3
+    for q in questions:
+        assert q.run_id == analysis_run.id
+        assert q.topic_group in ("About your employment", "About the contract")
+        assert q.priority > 0
+        assert q.iteration_asked == analysis_iteration.iteration_number
+        assert q.status == "pending"
+
+
+@pytest.mark.asyncio
+async def test_all_gaps_produce_questions(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """All gaps produce at least one question (D-11)."""
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response()
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+    )
+    result = await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+    )
+
+    # 3 gaps should produce at least 3 questions
+    assert result["questions_generated"] >= len(seeded_gaps)
+
+
+@pytest.mark.asyncio
+async def test_answered_questions_not_regenerated(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    seeded_gaps: list[AnalysisGap],
+    mock_llm_service: MagicMock,
+):
+    """Previously answered questions (status='answered') not re-generated."""
+    # Create an existing answered question
+    existing_q = FollowUpQuestion(
+        run_id=analysis_run.id,
+        gap_id=seeded_gaps[0].id,
+        question_text="Can you describe the nature of your work relationship with the company?",
+        topic_group="About your employment",
+        priority=90,
+        rationale="We need to establish whether an employment relationship existed",
+        status="answered",
+        answer_message_id=42,
+        iteration_asked=0,
+    )
+    async_session.add(existing_q)
+    await async_session.flush()
+
+    mock_llm_service.json_async = AsyncMock(
+        return_value=_make_question_gen_llm_response()
+    )
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+    )
+    result = await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        gaps=seeded_gaps,
+        existing_questions=[existing_q],
+    )
+
+    # Should skip the already-answered question
+    stmt = select(FollowUpQuestion).where(
+        FollowUpQuestion.run_id == analysis_run.id,
+        FollowUpQuestion.iteration_asked == analysis_iteration.iteration_number,
+    )
+    db_result = await async_session.execute(stmt)
+    new_questions = db_result.scalars().all()
+
+    # The already-answered question should not be re-created
+    answered_texts = {existing_q.question_text}
+    for q in new_questions:
+        assert q.question_text not in answered_texts
