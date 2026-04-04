@@ -10,11 +10,19 @@ from app.models.folio_concepts import (
 )
 from app.models.organization import OrganizationConfig
 from app.models.refresh_token import RefreshToken
+from app.models.research import (
+    Authority,
+    CitationVerification,
+    ResearchResult,
+    ResearchToolConfig,
+)
 from app.models.shared import Organization
 from app.models.user import Role, User
 
 __all__ = [
     "AuditLog",
+    "Authority",
+    "CitationVerification",
     "ConceptGraphEdge",
     "ConceptGraphNode",
     "ConceptMapping",
@@ -23,6 +31,8 @@ __all__ = [
     "Organization",
     "OrganizationConfig",
     "RefreshToken",
+    "ResearchResult",
+    "ResearchToolConfig",
     "Role",
     "UnmappedConceptRecord",
     "User",

@@ -53,6 +53,11 @@ class Settings(BaseSettings):
     folio_confidence_threshold: float = 0.5
     folio_traversal_depth: int = 2
 
+    # Research tools
+    courtlistener_base_url: str = "https://www.courtlistener.com/api/rest/v4"
+    research_timeout_seconds: int = 30
+    research_max_results_per_query: int = 20
+
     # CORS
     cors_origins: list[str] = ["http://localhost:5173"]
 
