@@ -36,6 +36,12 @@ from app.services.document import DocumentService
 from app.services.intake.conversation import ConversationService
 from app.services.intake.message_pipeline import normalize_text, process_message
 from app.services.intake.session_service import IntakeSessionService
+from app.services.screening.middleware import (
+    build_safety_alert_message,
+    persist_screening_event,
+    queue_elevated_screening,
+    screen_message_fast,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -481,9 +487,33 @@ async def _handle_text_message(
     data: dict,
     engine,
 ) -> None:
-    """Handle an incoming text_message: store, normalize, ack, generate LLM response."""
+    """Handle an incoming text_message: screen, store, normalize, ack, generate LLM response.
+
+    Per-message screening (EXPLORE-04) runs before message storage. Critical
+    triggers send immediate safety_alert via WebSocket. Screening never blocks
+    the message flow — errors are logged and swallowed.
+    """
     content = data.get("content", "")
     party_id = data.get("party_id")
+
+    # --- Per-message screening (EXPLORE-04) ---
+    try:
+        screening_result = await screen_message_fast(
+            content, session_id=session_id, user_id=user_id
+        )
+        if screening_result and screening_result.has_critical:
+            alert_msg = build_safety_alert_message(screening_result)
+            await websocket.send_json(alert_msg)
+        if screening_result and screening_result.has_elevated:
+            await queue_elevated_screening(
+                session_id,
+                [tp for tp in screening_result.triggered_protocols if tp.tier == "elevated"],
+            )
+    except Exception:
+        logger.warning(
+            "Per-message screening failed for session %d; continuing",
+            session_id, exc_info=True,
+        )
 
     async with engine.connect() as conn:
         conn = await conn.execution_options(
