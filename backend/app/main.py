@@ -1,7 +1,10 @@
 """ALEA Intake API - FastAPI application entry point."""
 
 import asyncio
+import logging
 from contextlib import asynccontextmanager
+
+logger = logging.getLogger(__name__)
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -99,12 +102,30 @@ async def lifespan(app: FastAPI):
     # Step 6: Initialize DB engine
     get_engine()
 
-    # Step 6: Seed screening protocols (idempotent)
+    # Step 7: Seed screening protocols (idempotent)
     await _seed_screening_protocols()
+
+    # Step 8: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
+    folio_mcp_client = None
+    try:
+        from app.services.mcp.folio_mcp_client import FolioMCPClient
+
+        folio_mcp_client = FolioMCPClient.get_instance()
+        await folio_mcp_client.connect()
+        app.state.folio_mcp_client = folio_mcp_client
+    except Exception:
+        logger.warning("FolioMCPClient connection failed; folio-mcp unavailable", exc_info=True)
+        folio_mcp_client = None
 
     yield
 
     # Shutdown
+    if folio_mcp_client is not None:
+        try:
+            await folio_mcp_client.close()
+        except Exception:
+            logger.warning("Error closing FolioMCPClient", exc_info=True)
+
     update_task.cancel()
     try:
         await update_task

@@ -1,8 +1,9 @@
-"""Research stub stage -- FOLIO-based element discovery placeholder for Phase 6.
+"""DEPRECATED: Replaced by research_stage.py in Phase 6. Kept for reference.
 
+Research stub stage -- FOLIO-based element discovery placeholder.
 Uses FOLIO adjacency traversal to discover related concepts and potential
-elements for each claim. This is a placeholder -- Phase 6 replaces it with
-full legal research tool queries (CourtListener, Westlaw, etc.).
+elements for each claim. Phase 6 replaces this with ResearchStage which
+integrates full legal research tool queries (CourtListener, Westlaw, etc.).
 """
 
 from __future__ import annotations

@@ -71,6 +71,7 @@ class AnalysisOrchestrator:
         self._embedding_service = embedding_service
         self._org_config = org_config or {}
         self._max_iterations = max_iterations
+        self._org_id: int = self._org_config.get("org_id", 0)
 
         # Parse analysis config from org settings
         self._analysis_config = AnalysisConfig(
@@ -498,7 +499,7 @@ class AnalysisOrchestrator:
         from app.services.analysis.stages.gap_analyze import GapAnalyzeStage
         from app.services.analysis.stages.issue_spot import IssueSpotStage
         from app.services.analysis.stages.question_gen import QuestionGenStage
-        from app.services.analysis.stages.research_stub import ResearchStubStage
+        from app.services.research.research_stage import ResearchStage
 
         if stage_name == "issue_spot":
             return IssueSpotStage(
@@ -518,9 +519,10 @@ class AnalysisOrchestrator:
                 org_config=self._org_config,
             )
         elif stage_name == "research":
-            return ResearchStubStage(
+            return ResearchStage(
                 db_session=self._session,
-                folio=self._folio,
+                llm_service=self._llm,
+                org_id=self._org_id,
             )
         elif stage_name == "fact_map":
             return FactMapStage(
