@@ -105,9 +105,31 @@ class FactExtractionService:
         messages.append({"role": "user", "content": text})
 
         config = self._llm.get_client_config()
-        # In a real implementation, this would call the LLM API
-        # For now, return empty result (will be mocked in tests)
-        return {"facts": [], "entities": []}
+
+        from alea_llm_client import AnthropicModel, GoogleModel, OpenAIModel, VLLMModel
+
+        _provider_map = {
+            "openai": OpenAIModel,
+            "anthropic": AnthropicModel,
+            "google": GoogleModel,
+            "vllm": VLLMModel,
+        }
+
+        model_cls = _provider_map.get(config["provider"])
+        if model_cls is None:
+            logger.error("Unknown LLM provider: %s", config["provider"])
+            return {"facts": [], "entities": []}
+
+        init_kwargs: dict[str, Any] = {
+            "api_key": config.get("api_key"),
+            "model": config.get("model"),
+        }
+        if "endpoint" in config:
+            init_kwargs["endpoint"] = config["endpoint"]
+
+        model = model_cls(**init_kwargs)
+        response = await model.json_async(*messages)
+        return response.data
 
     async def extract_facts(
         self,

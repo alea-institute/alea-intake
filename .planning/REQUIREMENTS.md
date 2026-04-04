@@ -11,10 +11,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **INGEST-01**: Consumer can submit narrative text via conversational chat interface
 - [x] **INGEST-02**: Consumer can record voice input that is transcribed via pluggable ASR (local Whisper or cloud providers)
-- [ ] **INGEST-03**: Consumer can upload documents (PDF, DOCX, images) for text extraction and analysis
-- [ ] **INGEST-04**: Professional can enter notes on behalf of a consumer
+- [x] **INGEST-03**: Consumer can upload documents (PDF, DOCX, images) for text extraction and analysis
+- [x] **INGEST-04**: Professional can enter notes on behalf of a consumer
 - [x] **INGEST-05**: System normalizes all input modalities into a common text representation for analysis
-- [ ] **INGEST-06**: System extracts atomic factual assertions from narrative (parties, dates, locations, amounts, events)
+- [x] **INGEST-06**: System extracts atomic factual assertions from narrative (parties, dates, locations, amounts, events)
 
 ### FOLIO Ontology Integration
 
@@ -157,10 +157,10 @@ Deferred to future release. Tracked but not in current roadmap.
 |-------------|-------|--------|
 | INGEST-01 | Phase 3 | Complete |
 | INGEST-02 | Phase 3 | Complete |
-| INGEST-03 | Phase 3 | Pending |
-| INGEST-04 | Phase 3 | Pending |
+| INGEST-03 | Phase 3 | Complete |
+| INGEST-04 | Phase 3 | Complete |
 | INGEST-05 | Phase 3 | Complete |
-| INGEST-06 | Phase 3 | Pending |
+| INGEST-06 | Phase 3 | Complete |
 | FOLIO-01 | Phase 2 | Complete |
 | FOLIO-02 | Phase 2 | Complete |
 | FOLIO-03 | Phase 2 | Complete |
