@@ -374,11 +374,11 @@ async def _register_and_login(
     return resp.json()
 
 
-async def _make_admin(client: AsyncClient, email: str) -> dict:
+async def _make_admin(client: AsyncClient, email: str, password: str = "StrongPass123!") -> dict:
     """Register user, promote to admin, re-login."""
     from app.models.user import User
 
-    await _register_and_login(client, email)
+    await _register_and_login(client, email, password)
 
     import app.db.engine as engine_module
 
