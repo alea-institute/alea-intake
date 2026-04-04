@@ -32,6 +32,8 @@ from app.routers.intake import ws_router as intake_ws_router
 from app.routers.intake_professional import router as intake_professional_router
 from app.routers.organizations import router as organizations_router
 from app.routers.research import router as research_router
+from app.routers.kb_admin import router as kb_admin_router
+from app.routers.research_admin import router as research_admin_router
 from app.routers.screening_admin import router as screening_admin_router
 from app.routers.users import router as users_router
 from app.services.embedding.service import EmbeddingService
@@ -190,6 +192,8 @@ app.include_router(intake_ws_router)
 app.include_router(intake_professional_router)
 app.include_router(analysis_router)
 app.include_router(research_router)
+app.include_router(research_admin_router)
+app.include_router(kb_admin_router)
 app.include_router(screening_admin_router)
 
 
