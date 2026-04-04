@@ -24,6 +24,7 @@ from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
 from app.routers.folio_admin import router as folio_admin_router
 from app.routers.organizations import router as organizations_router
+from app.routers.research import router as research_router
 from app.routers.users import router as users_router
 from app.services.embedding.service import EmbeddingService
 from app.services.folio.folio_service import get_folio
@@ -129,6 +130,7 @@ app.include_router(audit_router)
 app.include_router(consent_router)
 app.include_router(admin_router)
 app.include_router(folio_admin_router)
+app.include_router(research_router)
 
 
 # Health endpoint
