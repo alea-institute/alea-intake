@@ -241,10 +241,17 @@ class TestLayerFolioAdjacency:
             "https://folio.openlegalstandard.org/objective002": MagicMock(label="BC"),
         }
 
-        with patch("app.services.exploration.layers.discover_adjacent_concepts") as mock_discover:
-            mock_discover.return_value = _make_adjacency_result(
-                "https://folio.openlegalstandard.org/child001", "Child Concept", depth=1,
-            )
+        # Mock discover_adjacent_concepts by patching it after lazy import
+        adj_result = _make_adjacency_result(
+            "https://folio.openlegalstandard.org/child001", "Child Concept", depth=1,
+        )
+
+        import sys
+        # Pre-import the adjacency module so patch works
+        import importlib
+        adj_mod = importlib.import_module("app.services.folio.adjacency")
+
+        with patch.object(adj_mod, "discover_adjacent_concepts", return_value=adj_result) as mock_discover:
             config = ExplorationConfig()
             results = await layer_folio_adjacency(mock_folio, sample_claims, config)
 
@@ -286,7 +293,7 @@ class TestLayerProtocolMatch:
         version._severity_tier = "critical"
 
         active_protocols = [(activation, version)]
-        facts_text = "My husband has been abusing me and the children"
+        facts_text = "My husband has committed domestic violence against me and the children"
 
         results = await layer_protocol_match(active_protocols, facts_text)
         assert len(results) > 0
