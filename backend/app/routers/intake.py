@@ -497,40 +497,42 @@ async def _handle_text_message(
     content = data.get("content", "")
     party_id = data.get("party_id")
 
-    # --- Per-message screening (EXPLORE-04) ---
-    try:
-        screening_result = await screen_message_fast(
-            content, session_id=session_id, user_id=user_id
-        )
-        if screening_result and screening_result.has_critical:
-            alert_msg = build_safety_alert_message(screening_result)
-            await websocket.send_json(alert_msg)
-            for tp in screening_result.triggered_protocols:
-                if getattr(tp, "tier", None) == "critical" or (isinstance(tp, dict) and tp.get("tier") == "critical"):
-                    await persist_screening_event(
-                        session_id, tp, content
-                    )
-        if screening_result and screening_result.has_elevated:
-            await queue_elevated_screening(
-                session_id,
-                [tp for tp in screening_result.triggered_protocols if getattr(tp, "tier", None) == "elevated" or (isinstance(tp, dict) and tp.get("tier") == "elevated")],
-            )
-        if screening_result and screening_result.has_advisory:
-            await add_to_exploration_queue(
-                session_id,
-                [tp for tp in screening_result.triggered_protocols if getattr(tp, "tier", None) == "advisory" or (isinstance(tp, dict) and tp.get("tier") == "advisory")],
-            )
-    except Exception:
-        logger.warning(
-            "Per-message screening failed for session %d; continuing",
-            session_id, exc_info=True,
-        )
-
     async with engine.connect() as conn:
         conn = await conn.execution_options(
             schema_translate_map={"tenant": None, "shared": None}
         )
         async with AsyncSession(bind=conn, expire_on_commit=False) as db_session:
+            # --- Per-message screening (EXPLORE-04) ---
+            try:
+                screening_result = await screen_message_fast(
+                    content, session_id, db_session
+                )
+                if screening_result and screening_result.has_critical:
+                    alert_msg = build_safety_alert_message(screening_result)
+                    await websocket.send_json(alert_msg)
+                    for tp in screening_result.triggered_protocols:
+                        if isinstance(tp, dict) and tp.get("severity_tier") == "critical":
+                            await persist_screening_event(
+                                db_session, session_id, tp, "immediate_alert"
+                            )
+                if screening_result and screening_result.has_elevated:
+                    await queue_elevated_screening(
+                        db_session, session_id,
+                        [tp for tp in screening_result.triggered_protocols
+                         if isinstance(tp, dict) and tp.get("severity_tier") == "elevated"],
+                    )
+                if screening_result and screening_result.has_advisory:
+                    await add_to_exploration_queue(
+                        db_session, session_id,
+                        [tp for tp in screening_result.triggered_protocols
+                         if isinstance(tp, dict) and tp.get("severity_tier") == "advisory"],
+                    )
+            except Exception:
+                logger.warning(
+                    "Per-message screening failed for session %d; continuing",
+                    session_id, exc_info=True,
+                )
+
             svc = IntakeSessionService(db_session)
 
             # Store the consumer's message
@@ -728,11 +730,16 @@ async def _handle_transcript_approve(
             # --- Per-message screening on approved transcript (D-08) ---
             try:
                 screening_result = await screen_message_fast(
-                    approved_text, session_id=session_id, user_id=user_id
+                    approved_text, session_id, db_session
                 )
                 if screening_result and screening_result.has_critical:
                     alert_msg = build_safety_alert_message(screening_result)
                     await websocket.send_json(alert_msg)
+                    for tp in screening_result.triggered_protocols:
+                        if isinstance(tp, dict) and tp.get("severity_tier") == "critical":
+                            await persist_screening_event(
+                                db_session, session_id, tp, "immediate_alert"
+                            )
             except Exception:
                 logger.warning("Transcript screening failed for session %d; continuing", session_id, exc_info=True)
 
