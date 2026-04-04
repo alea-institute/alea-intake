@@ -59,8 +59,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **ANALYSIS-03**: System identifies gaps: unsupported elements, unexplored claims, weak mappings, procedural requirements
 - [ ] **ANALYSIS-04**: System generates prioritized, consumer-friendly follow-up questions to fill gaps
 - [ ] **ANALYSIS-05**: Questions are grouped by topic to reduce consumer fatigue
-- [ ] **ANALYSIS-06**: Multi-signal loop termination: coverage %, confidence plateau, iteration count, user fatigue, diminishing gaps
-- [ ] **ANALYSIS-07**: Termination weights and thresholds are configurable per organization
+- [x] **ANALYSIS-06**: Multi-signal loop termination: coverage %, confidence plateau, iteration count, user fatigue, diminishing gaps
+- [x] **ANALYSIS-07**: Termination weights and thresholds are configurable per organization
 - [ ] **ANALYSIS-08**: System performs parallel multi-jurisdictional analysis when facts span jurisdictions
 - [ ] **ANALYSIS-09**: Analysis state is checkpointed after every stage for pause/resume across sessions
 - [ ] **ANALYSIS-10**: Full audit trail: every stage records what was analyzed, what sources were consulted, what confidence was assigned
@@ -193,8 +193,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | ANALYSIS-03 | Phase 4 | Pending |
 | ANALYSIS-04 | Phase 4 | Pending |
 | ANALYSIS-05 | Phase 4 | Pending |
-| ANALYSIS-06 | Phase 4 | Pending |
-| ANALYSIS-07 | Phase 4 | Pending |
+| ANALYSIS-06 | Phase 4 | Complete |
+| ANALYSIS-07 | Phase 4 | Complete |
 | ANALYSIS-08 | Phase 4 | Pending |
 | ANALYSIS-09 | Phase 4 | Pending |
 | ANALYSIS-10 | Phase 4 | Pending |
