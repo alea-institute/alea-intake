@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-04-04T15:13:53Z"
-last_activity: 2026-04-04 -- Completed Plan 04-01 (analysis data layer)
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-04-04T15:26:16.269Z"
+last_activity: 2026-04-04
 progress:
   total_phases: 11
   completed_phases: 3
   total_plans: 17
-  completed_plans: 13
+  completed_plans: 15
   percent: 88
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 4 of 11 (core analysis pipeline)
-Plan: 1 of 5 in current phase -- COMPLETE
-Status: In Progress
-Last activity: 2026-04-04 -- Completed Plan 04-01 (analysis data layer)
+Plan: 2 of 5 in current phase -- COMPLETE
+Status: Ready to execute
+Last activity: 2026-04-04
 
 Progress: [████████████████████████████████████████████░░░░░░]  88%
 
@@ -62,6 +62,7 @@ Progress: [███████████████████████
 | Phase 03 P01 | 8min | 2 tasks | 13 files |
 | Phase 03 P02 | 10min | 2 tasks | 12 files |
 | Phase 04 P01 | 5min | 2 tasks | 7 files |
+| Phase 04 P04 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,9 @@ Recent decisions affecting current work:
 - [Phase 04-01]: FactClaimMapping stores composite confidence with llm/concept/fact sub-scores per D-05
 - [Phase 04-01]: ConvergenceWeights defaults sum to 1.0 (coverage=0.30, plateau=0.20, cap=0.10, fatigue=0.15, gaps=0.25)
 - [Phase 04-01]: AnalysisConfig stored as JSON column in OrganizationConfig for schema-free org customization
+- [Phase 04]: All existing gaps included in dedup signature set to prevent re-detection of addressed gaps
+- [Phase 04]: Gap priority varies by type: unsupported_element = claim.confidence*100, unexplored_claim = 50, weak_mapping = (1-confidence)*100
+- [Phase 04]: Question transparency is boolean toggle: rationale included or None (no partial)
 
 ### Pending Todos
 
@@ -128,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T15:13:53Z
-Stopped at: Completed 04-01-PLAN.md
-Resume file: .planning/phases/04-core-analysis-pipeline/04-02-PLAN.md
+Last session: 2026-04-04T15:26:16.267Z
+Stopped at: Completed 04-04-PLAN.md
+Resume file: None
