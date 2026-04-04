@@ -516,3 +516,361 @@ async def test_research_stub_graceful_without_folio(
 
     assert result["elements_discovered"] == 0
     assert "deferred" in result["research_notes"].lower() or "unavailable" in result["research_notes"].lower()
+
+
+# ---- Fact-Mapping Stage Tests ----
+
+
+from app.services.analysis.stages.fact_map import FactMapStage
+from app.services.analysis.schemas import ConfidenceWeights
+
+
+@pytest.fixture
+async def claims_with_elements(stage_session, analysis_run):
+    """Create AnalysisClaim records with ClaimElement children for fact-mapping tests."""
+    run, iteration = analysis_run
+
+    claim1 = AnalysisClaim(
+        run_id=run.id,
+        claim_name="Wrongful Termination",
+        claim_type="identified",
+        folio_iri="https://folio.openlegalstandard.org/objective001",
+        jurisdiction="California",
+        confidence=0.85,
+        rationale="Facts indicate termination from employment",
+        iteration_discovered=1,
+    )
+    stage_session.add(claim1)
+    await stage_session.flush()
+
+    elem1 = ClaimElement(
+        claim_id=claim1.id,
+        element_name="Employment relationship",
+        element_description="Must prove employment existed",
+        jurisdiction="California",
+    )
+    elem2 = ClaimElement(
+        claim_id=claim1.id,
+        element_name="Wrongful act",
+        element_description="Termination violated law or policy",
+        jurisdiction="California",
+    )
+    stage_session.add(elem1)
+    stage_session.add(elem2)
+
+    claim2 = AnalysisClaim(
+        run_id=run.id,
+        claim_name="Breach of Contract",
+        claim_type="discovered",
+        folio_iri="https://folio.openlegalstandard.org/objective002",
+        jurisdiction="California",
+        confidence=0.7,
+        rationale="Employment contract mentioned",
+        is_potential=True,
+        iteration_discovered=1,
+    )
+    stage_session.add(claim2)
+    await stage_session.flush()
+
+    elem3 = ClaimElement(
+        claim_id=claim2.id,
+        element_name="Valid contract",
+        element_description="Enforceable employment contract existed",
+        jurisdiction="California",
+    )
+    stage_session.add(elem3)
+    await stage_session.flush()
+
+    return [claim1, claim2], [elem1, elem2, elem3]
+
+
+@pytest.mark.asyncio
+async def test_fact_map_creates_mappings(
+    stage_session, analysis_run, sample_facts, claims_with_elements, mock_llm_service
+):
+    """FactMapStage.execute() with mocked LLM creates FactClaimMapping records."""
+    run, iteration = analysis_run
+    claims, elements = claims_with_elements
+    await stage_session.flush()
+
+    llm_response = {
+        "mappings": [
+            {
+                "fact_id": sample_facts[0].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Wrongful act",
+                "llm_confidence": 0.9,
+                "mapping_rationale": "Firing event directly supports wrongful act element",
+            },
+            {
+                "fact_id": sample_facts[1].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Employment relationship",
+                "llm_confidence": 0.85,
+                "mapping_rationale": "Contract proves employment existed",
+            },
+        ],
+        "unmapped_facts": [sample_facts[2].id],
+    }
+
+    stage = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result = await stage.execute(run, iteration, sample_facts, claims)
+
+    assert result["mappings_created"] == 2
+    mappings = (await stage_session.execute(select(FactClaimMapping))).scalars().all()
+    assert len(mappings) == 2
+
+
+@pytest.mark.asyncio
+async def test_fact_map_composite_confidence(
+    stage_session, analysis_run, sample_facts, claims_with_elements, mock_llm_service
+):
+    """Each mapping has composite confidence from compute_composite_confidence (D-05)."""
+    run, iteration = analysis_run
+    claims, elements = claims_with_elements
+    await stage_session.flush()
+
+    llm_response = {
+        "mappings": [
+            {
+                "fact_id": sample_facts[0].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Wrongful act",
+                "llm_confidence": 0.9,
+                "mapping_rationale": "Direct support",
+            },
+        ],
+        "unmapped_facts": [],
+    }
+
+    stage = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result = await stage.execute(run, iteration, sample_facts, claims)
+
+    mappings = (await stage_session.execute(select(FactClaimMapping))).scalars().all()
+    assert len(mappings) == 1
+    m = mappings[0]
+    # Composite confidence should be calculated from the three signals
+    assert m.confidence > 0
+    assert m.llm_confidence == 0.9
+    assert m.fact_confidence == sample_facts[0].confidence  # 0.9
+    assert m.concept_confidence is not None
+
+
+@pytest.mark.asyncio
+async def test_fact_map_many_to_many(
+    stage_session, analysis_run, sample_facts, claims_with_elements, mock_llm_service
+):
+    """Mappings are many-to-many: one fact can map to multiple claims/elements."""
+    run, iteration = analysis_run
+    claims, elements = claims_with_elements
+    await stage_session.flush()
+
+    # Same fact maps to two different claims
+    llm_response = {
+        "mappings": [
+            {
+                "fact_id": sample_facts[1].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Employment relationship",
+                "llm_confidence": 0.85,
+                "mapping_rationale": "Contract proves employment",
+            },
+            {
+                "fact_id": sample_facts[1].id,
+                "claim_name": "Breach of Contract",
+                "element_name": "Valid contract",
+                "llm_confidence": 0.8,
+                "mapping_rationale": "Same contract is the breached agreement",
+            },
+        ],
+        "unmapped_facts": [],
+    }
+
+    stage = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result = await stage.execute(run, iteration, sample_facts, claims)
+
+    assert result["mappings_created"] == 2
+    mappings = (await stage_session.execute(select(FactClaimMapping))).scalars().all()
+    # Both mappings should reference the same fact_id
+    fact_ids = [m.fact_id for m in mappings]
+    assert fact_ids.count(sample_facts[1].id) == 2
+
+
+@pytest.mark.asyncio
+async def test_fact_map_tracks_unmapped_facts(
+    stage_session, analysis_run, sample_facts, claims_with_elements, mock_llm_service
+):
+    """Unmapped facts (no claim match) are tracked in result."""
+    run, iteration = analysis_run
+    claims, elements = claims_with_elements
+    await stage_session.flush()
+
+    llm_response = {
+        "mappings": [
+            {
+                "fact_id": sample_facts[0].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Wrongful act",
+                "llm_confidence": 0.9,
+                "mapping_rationale": "Direct support",
+            },
+        ],
+        "unmapped_facts": [sample_facts[1].id, sample_facts[2].id],
+    }
+
+    stage = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result = await stage.execute(run, iteration, sample_facts, claims)
+
+    assert len(result["unmapped_facts"]) == 2
+    assert sample_facts[1].id in result["unmapped_facts"]
+    assert sample_facts[2].id in result["unmapped_facts"]
+
+
+@pytest.mark.asyncio
+async def test_fact_map_custom_confidence_weights(
+    stage_session, analysis_run, sample_facts, claims_with_elements, mock_llm_service
+):
+    """Custom ConfidenceWeights change the composite score."""
+    run, iteration = analysis_run
+    claims, elements = claims_with_elements
+    await stage_session.flush()
+
+    llm_response = {
+        "mappings": [
+            {
+                "fact_id": sample_facts[0].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Wrongful act",
+                "llm_confidence": 0.9,
+                "mapping_rationale": "Direct support",
+            },
+        ],
+        "unmapped_facts": [],
+    }
+
+    # Custom weights heavily favoring LLM confidence
+    custom_weights = ConfidenceWeights(llm_weight=0.8, concept_weight=0.1, fact_weight=0.1)
+
+    stage_default = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage_default, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result_default = await stage_default.execute(run, iteration, sample_facts, claims)
+
+    # Get the default confidence
+    mappings_default = (await stage_session.execute(select(FactClaimMapping))).scalars().all()
+    default_confidence = mappings_default[0].confidence
+
+    # Clean up for next run
+    for m in mappings_default:
+        await stage_session.delete(m)
+    await stage_session.flush()
+
+    stage_custom = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+        confidence_weights=custom_weights,
+    )
+
+    with patch.object(stage_custom, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result_custom = await stage_custom.execute(run, iteration, sample_facts, claims)
+
+    mappings_custom = (await stage_session.execute(select(FactClaimMapping))).scalars().all()
+    custom_confidence = mappings_custom[0].confidence
+
+    # Custom weights should produce a different score
+    assert custom_confidence != default_confidence
+
+
+@pytest.mark.asyncio
+async def test_fact_map_persists_rationale(
+    stage_session, analysis_run, sample_facts, claims_with_elements, mock_llm_service
+):
+    """mapping_rationale is persisted from LLM output."""
+    run, iteration = analysis_run
+    claims, elements = claims_with_elements
+    await stage_session.flush()
+
+    llm_response = {
+        "mappings": [
+            {
+                "fact_id": sample_facts[0].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Wrongful act",
+                "llm_confidence": 0.9,
+                "mapping_rationale": "Firing event directly supports the wrongful termination element",
+            },
+        ],
+        "unmapped_facts": [],
+    }
+
+    stage = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        await stage.execute(run, iteration, sample_facts, claims)
+
+    mappings = (await stage_session.execute(select(FactClaimMapping))).scalars().all()
+    assert mappings[0].mapping_rationale == "Firing event directly supports the wrongful termination element"
+
+
+@pytest.mark.asyncio
+async def test_fact_map_updates_element_satisfaction(
+    stage_session, analysis_run, sample_facts, claims_with_elements, mock_llm_service
+):
+    """ClaimElement.is_satisfied is updated when mapping confidence > 0.5."""
+    run, iteration = analysis_run
+    claims, elements = claims_with_elements
+    await stage_session.flush()
+
+    llm_response = {
+        "mappings": [
+            {
+                "fact_id": sample_facts[0].id,
+                "claim_name": "Wrongful Termination",
+                "element_name": "Wrongful act",
+                "llm_confidence": 0.9,
+                "mapping_rationale": "Strong support",
+            },
+        ],
+        "unmapped_facts": [],
+    }
+
+    stage = FactMapStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        await stage.execute(run, iteration, sample_facts, claims)
+
+    # Check that the "Wrongful act" element is now satisfied
+    all_elements = (await stage_session.execute(select(ClaimElement))).scalars().all()
+    wrongful_act = [e for e in all_elements if e.element_name == "Wrongful act"][0]
+    assert wrongful_act.is_satisfied is True
+    assert wrongful_act.satisfaction_confidence is not None
+    assert wrongful_act.satisfaction_confidence > 0.5
