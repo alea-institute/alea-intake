@@ -230,7 +230,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 2. FOLIO Ontology Integration | 1/3 | In Progress|  |
 | 3. Input & Narrative Capture | 0/4 | Not started | - |
 | 4. Core Analysis Pipeline | 0/5 | Not started | - |
-| 5. Pre-Research Exploration & Safety | 0/4 | Not started | - |
+| 5. Pre-Research Exploration & Safety | 1/4 | In Progress |  |
 | 6. Legal Research & Verification | 0/5 | Not started | - |
 | 7. Output & Export | 0/3 | Not started | - |
 | 8. Frontend Application | 0/4 | Not started | - |
