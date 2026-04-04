@@ -2,8 +2,8 @@
 phase: 04
 slug: core-analysis-pipeline
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-04-03
 ---
 
@@ -19,7 +19,7 @@ created: 2026-04-03
 |----------|-------|
 | **Framework** | pytest 7.x with pytest-asyncio |
 | **Config file** | backend/pyproject.toml |
-| **Quick run command** | `.venv/bin/python -m pytest tests/test_analysis*.py -q --tb=short` |
+| **Quick run command** | `.venv/bin/python -m pytest tests/test_analysis*.py tests/test_convergence.py tests/test_scoring.py tests/test_gap_analysis.py -q --tb=short` |
 | **Full suite command** | `.venv/bin/python -m pytest --tb=short -q` |
 | **Estimated runtime** | ~20 seconds |
 
@@ -27,8 +27,8 @@ created: 2026-04-03
 
 ## Sampling Rate
 
-- **After every task commit:** Run `.venv/bin/python -m pytest tests/test_analysis*.py -q --tb=short`
-- **After every plan wave:** Run `.venv/bin/python -m pytest --tb=short -q`
+- **After every task commit:** Run quick command (phase-specific tests)
+- **After every plan wave:** Run full suite command
 - **Before `/gsd:verify-work`:** Full suite must be green
 - **Max feedback latency:** 20 seconds
 
@@ -36,13 +36,16 @@ created: 2026-04-03
 
 ## Per-Task Verification Map
 
-| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 04-01-01 | 01 | 1 | ANALYSIS-01, ANALYSIS-09 | unit+integration | `pytest tests/test_analysis_loop.py` | ❌ W0 | ⬜ pending |
-| 04-01-02 | 01 | 1 | ANALYSIS-10 | unit | `pytest tests/test_analysis_audit.py` | ❌ W0 | ⬜ pending |
-| 04-02-01 | 02 | 1 | ANALYSIS-02, ANALYSIS-08 | unit | `pytest tests/test_claim_mapping.py` | ❌ W0 | ⬜ pending |
-| 04-03-01 | 03 | 2 | ANALYSIS-03, ANALYSIS-04, ANALYSIS-05 | unit | `pytest tests/test_gap_analysis.py` | ❌ W0 | ⬜ pending |
-| 04-04-01 | 04 | 2 | ANALYSIS-06, ANALYSIS-07 | unit | `pytest tests/test_convergence.py` | ❌ W0 | ⬜ pending |
+| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | Status |
+|---------|------|------|-------------|-----------|-------------------|--------|
+| 04-01-01 | 01 | 1 | ANALYSIS-02, ANALYSIS-09, ANALYSIS-10 | unit | `pytest tests/test_analysis_models.py` | ⬜ pending |
+| 04-01-02 | 01 | 1 | ANALYSIS-07 | unit | `pytest tests/test_analysis_schemas.py` | ⬜ pending |
+| 04-02-01 | 02 | 1 | ANALYSIS-06, ANALYSIS-07 | unit | `pytest tests/test_convergence.py` | ⬜ pending |
+| 04-02-02 | 02 | 1 | ANALYSIS-02 | unit | `pytest tests/test_scoring.py` | ⬜ pending |
+| 04-03-01 | 03 | 2 | ANALYSIS-01, ANALYSIS-02, ANALYSIS-08 | unit | `pytest tests/test_analysis_stages.py` | ⬜ pending |
+| 04-04-01 | 04 | 2 | ANALYSIS-03, ANALYSIS-04, ANALYSIS-05 | unit | `pytest tests/test_gap_analysis.py` | ⬜ pending |
+| 04-05-01 | 05 | 3 | ANALYSIS-01, ANALYSIS-08, ANALYSIS-09, ANALYSIS-10 | integration | `pytest tests/test_analysis_orchestrator.py` | ⬜ pending |
+| 04-05-02 | 05 | 3 | ANALYSIS-01 | unit | `pytest tests/test_analysis_trigger.py` | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -50,13 +53,9 @@ created: 2026-04-03
 
 ## Wave 0 Requirements
 
-- [ ] `tests/test_analysis_loop.py` — stubs for analysis orchestrator loop
-- [ ] `tests/test_claim_mapping.py` — stubs for fact-to-claim mapping
-- [ ] `tests/test_gap_analysis.py` — stubs for gap detection and question generation
-- [ ] `tests/test_convergence.py` — stubs for convergence evaluator
-- [ ] `tests/test_analysis_audit.py` — stubs for audit trail
+Plans 01-04 create test files via TDD (test-first commits). Plan 05 also creates its own test files. No separate Wave 0 needed — all test files are created inline by plan tasks.
 
-*Existing test infrastructure (pytest-asyncio, conftest.py, aiosqlite fixtures) covers framework needs.*
+*Existing infrastructure (pytest-asyncio, conftest.py, aiosqlite fixtures) covers all framework needs.*
 
 ---
 
@@ -71,11 +70,11 @@ created: 2026-04-03
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 20s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or inline TDD
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covered by inline TDD task structure
+- [x] No watch-mode flags
+- [x] Feedback latency < 20s
+- [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** pending
