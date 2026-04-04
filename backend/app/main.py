@@ -20,6 +20,7 @@ from app.middleware.audit import AuditMiddleware
 from app.middleware.consent import ConsentMiddleware
 from app.middleware.tenant import TenantMiddleware
 from app.routers.admin import router as admin_router
+from app.routers.analysis import router as analysis_router
 from app.routers.auth import router as auth_router
 from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
@@ -126,6 +127,7 @@ app.include_router(users_router)
 app.include_router(audit_router)
 app.include_router(consent_router)
 app.include_router(admin_router)
+app.include_router(analysis_router)
 app.include_router(folio_admin_router)
 app.include_router(intake_router)
 app.include_router(intake_ws_router)
