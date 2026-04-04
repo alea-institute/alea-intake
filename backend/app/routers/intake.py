@@ -3,13 +3,18 @@
 REST endpoints handle intake lifecycle (create, list, get messages, add party,
 create session). The WebSocket endpoint handles real-time chat with JWT
 authentication, message storage, normalization, and LLM-guided conversation.
+
+Voice modality: voice_upload -> ASR transcription -> transcript_ready for review
+-> transcript_approve/transcript_edit -> normalization pipeline -> LLM follow-up.
 """
 
 from __future__ import annotations
 
+import base64
 import json
 import logging
 from collections import defaultdict
+from datetime import datetime, timezone
 from typing import Any
 
 import jwt as pyjwt
@@ -21,10 +26,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import get_settings
 from app.core.permissions import get_current_active_user
 from app.db.session import get_tenant_session
+from app.models.audio import AudioRecording, Transcript
 from app.models.intake import Intake, IntakeParty, IntakeSession, Message
 from app.models.user import User
+from app.services.asr import ASRService, TranscriptionResult
 from app.services.intake.conversation import ConversationService
-from app.services.intake.message_pipeline import normalize_text
+from app.services.intake.message_pipeline import normalize_text, process_message
 from app.services.intake.session_service import IntakeSessionService
 
 logger = logging.getLogger(__name__)
@@ -283,6 +290,18 @@ async def intake_websocket(websocket: WebSocket, session_id: int):
                 await _handle_text_message(
                     websocket, session_id, user_id, data, engine
                 )
+            elif msg_type == "voice_upload":
+                await _handle_voice_upload(
+                    websocket, session_id, user_id, data, engine
+                )
+            elif msg_type == "transcript_approve":
+                await _handle_transcript_approve(
+                    websocket, session_id, user_id, data, engine
+                )
+            elif msg_type == "transcript_edit":
+                await _handle_transcript_edit(
+                    websocket, session_id, user_id, data, engine
+                )
             elif msg_type == "session_pause":
                 await _handle_session_pause(
                     websocket, session_id, engine
@@ -383,4 +402,273 @@ async def _handle_session_pause(
                 "status": "paused",
                 "facts_count": 0,
                 "messages_count": 0,
+            })
+
+
+async def _handle_voice_upload(
+    websocket: WebSocket,
+    session_id: int,
+    user_id: int,
+    data: dict,
+    engine,
+) -> None:
+    """Handle a voice_upload message: store recording, transcribe, send transcript_ready.
+
+    Flow:
+      1. Decode base64 audio from message
+      2. Store a Message with modality="voice" and an AudioRecording record
+      3. Transcribe via ASRService
+      4. Create a Transcript record with status="pending_review"
+      5. Send transcript_ready to client for review
+    """
+    settings = get_settings()
+    audio_b64 = data.get("audio_data", "")
+    audio_bytes = base64.b64decode(audio_b64)
+    audio_format = data.get("format", "webm")
+    party_id = data.get("party_id")
+
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(
+            schema_translate_map={"tenant": None, "shared": None}
+        )
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db_session:
+            svc = IntakeSessionService(db_session)
+
+            # Store the consumer's voice message
+            message = await svc.store_message(
+                session_id=session_id,
+                sender_type="consumer",
+                modality="voice",
+                content="[voice recording]",
+                party_id=party_id,
+            )
+
+            # Look up the intake_id from the session
+            result = await db_session.execute(
+                select(IntakeSession.intake_id).where(IntakeSession.id == session_id)
+            )
+            intake_id = result.scalar_one()
+
+            # Create AudioRecording record
+            recording = AudioRecording(
+                message_id=message.id,
+                intake_id=intake_id,
+                original_format=audio_format,
+                file_size_bytes=len(audio_bytes),
+                storage_policy=settings.asr_audio_storage_policy,
+            )
+            db_session.add(recording)
+            await db_session.flush()
+
+            # Transcribe via ASRService
+            asr_service = ASRService()
+            asr_result = await asr_service.transcribe(audio_bytes, audio_format)
+
+            # Create Transcript record with pending_review status
+            transcript = Transcript(
+                recording_id=recording.id,
+                text_encrypted=asr_result.text.encode("utf-8"),
+                status="pending_review",
+                asr_provider=asr_service.provider_name,
+                segments_json=asr_result.segments,
+                language=asr_result.language,
+                confidence=asr_result.confidence,
+            )
+            db_session.add(transcript)
+            await db_session.flush()
+
+            await db_session.commit()
+
+            # Send transcript_ready for consumer review
+            await websocket.send_json({
+                "type": "transcript_ready",
+                "recording_id": recording.id,
+                "transcript_id": transcript.id,
+                "text": asr_result.text,
+                "segments": asr_result.segments,
+                "confidence": asr_result.confidence,
+                "message_id": message.id,
+                "sequence_number": message.sequence_number,
+            })
+
+
+async def _handle_transcript_approve(
+    websocket: WebSocket,
+    session_id: int,
+    user_id: int,
+    data: dict,
+    engine,
+) -> None:
+    """Handle transcript_approve: mark as approved, normalize, generate LLM follow-up.
+
+    Flow:
+      1. Lookup Transcript by recording_id, set status="approved"
+      2. Normalize the transcript text via process_message
+      3. Generate LLM follow-up via ConversationService
+      4. Store system response message
+      5. Send message_ack + system_message
+    """
+    recording_id = data.get("recording_id")
+
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(
+            schema_translate_map={"tenant": None, "shared": None}
+        )
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db_session:
+            svc = IntakeSessionService(db_session)
+
+            # Lookup transcript by recording_id
+            result = await db_session.execute(
+                select(Transcript).where(Transcript.recording_id == recording_id)
+            )
+            transcript = result.scalar_one()
+
+            # Update status to approved
+            transcript.status = "approved"
+            transcript.reviewed_at = datetime.now(timezone.utc)
+            await db_session.flush()
+
+            # Get the approved text
+            approved_text = transcript.text_encrypted.decode("utf-8") if transcript.text_encrypted else ""
+
+            # Look up the original message for ack
+            rec_result = await db_session.execute(
+                select(AudioRecording).where(AudioRecording.id == recording_id)
+            )
+            recording = rec_result.scalar_one()
+
+            msg_result = await db_session.execute(
+                select(Message).where(Message.id == recording.message_id)
+            )
+            original_message = msg_result.scalar_one()
+
+            # Normalize the approved transcript text
+            try:
+                normalized = await process_message(
+                    "voice", approved_text, original_message.id, original_message.party_id
+                )
+            except NotImplementedError:
+                # Voice normalization falls back to text normalization
+                normalized = normalize_text(
+                    approved_text, original_message.id, original_message.party_id
+                )
+
+            # Send message_ack
+            await websocket.send_json({
+                "type": "message_ack",
+                "message_id": original_message.id,
+                "sequence_number": original_message.sequence_number,
+            })
+
+            # Generate LLM follow-up
+            conversation_svc = ConversationService()
+            llm_response = await conversation_svc.generate_response(
+                messages=[{"role": "user", "content": approved_text}]
+            )
+
+            # Store system response
+            sys_message = await svc.store_message(
+                session_id=session_id,
+                sender_type="system",
+                modality="text",
+                content=llm_response,
+            )
+
+            await db_session.commit()
+
+            # Send system_message
+            await websocket.send_json({
+                "type": "system_message",
+                "content": llm_response,
+                "message_id": sys_message.id,
+            })
+
+
+async def _handle_transcript_edit(
+    websocket: WebSocket,
+    session_id: int,
+    user_id: int,
+    data: dict,
+    engine,
+) -> None:
+    """Handle transcript_edit: update text, mark as edited, normalize, generate LLM follow-up.
+
+    Flow:
+      1. Lookup Transcript by recording_id, update text and set status="edited"
+      2. Normalize the edited text via process_message
+      3. Generate LLM follow-up via ConversationService
+      4. Store system response message
+      5. Send message_ack + system_message
+    """
+    recording_id = data.get("recording_id")
+    edited_text = data.get("edited_text", "")
+
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(
+            schema_translate_map={"tenant": None, "shared": None}
+        )
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db_session:
+            svc = IntakeSessionService(db_session)
+
+            # Lookup transcript by recording_id
+            result = await db_session.execute(
+                select(Transcript).where(Transcript.recording_id == recording_id)
+            )
+            transcript = result.scalar_one()
+
+            # Update text and status
+            transcript.text_encrypted = edited_text.encode("utf-8")
+            transcript.status = "edited"
+            transcript.reviewed_at = datetime.now(timezone.utc)
+            await db_session.flush()
+
+            # Look up the original message for ack
+            rec_result = await db_session.execute(
+                select(AudioRecording).where(AudioRecording.id == recording_id)
+            )
+            recording = rec_result.scalar_one()
+
+            msg_result = await db_session.execute(
+                select(Message).where(Message.id == recording.message_id)
+            )
+            original_message = msg_result.scalar_one()
+
+            # Normalize the edited text
+            try:
+                normalized = await process_message(
+                    "voice", edited_text, original_message.id, original_message.party_id
+                )
+            except NotImplementedError:
+                normalized = normalize_text(
+                    edited_text, original_message.id, original_message.party_id
+                )
+
+            # Send message_ack
+            await websocket.send_json({
+                "type": "message_ack",
+                "message_id": original_message.id,
+                "sequence_number": original_message.sequence_number,
+            })
+
+            # Generate LLM follow-up
+            conversation_svc = ConversationService()
+            llm_response = await conversation_svc.generate_response(
+                messages=[{"role": "user", "content": edited_text}]
+            )
+
+            # Store system response
+            sys_message = await svc.store_message(
+                session_id=session_id,
+                sender_type="system",
+                modality="text",
+                content=llm_response,
+            )
+
+            await db_session.commit()
+
+            # Send system_message
+            await websocket.send_json({
+                "type": "system_message",
+                "content": llm_response,
+                "message_id": sys_message.id,
             })

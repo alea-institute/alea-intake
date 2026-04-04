@@ -286,9 +286,11 @@ class TestProcessMessage:
         assert result.source_type == "professional_note"
 
     @pytest.mark.asyncio
-    async def test_process_voice_raises_not_implemented(self):
-        with pytest.raises(NotImplementedError):
-            await process_message("voice", "audio data", message_id=3)
+    async def test_process_voice_returns_voice_transcript(self):
+        result = await process_message("voice", "transcribed speech", message_id=3)
+        assert isinstance(result, NormalizedContent)
+        assert result.source_type == "voice_transcript"
+        assert result.text == "transcribed speech"
 
     @pytest.mark.asyncio
     async def test_process_document_raises_not_implemented(self):

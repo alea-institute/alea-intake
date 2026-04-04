@@ -15,6 +15,7 @@ import base64
 import json
 import os
 import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -111,6 +112,60 @@ FAKE_TRANSCRIPTION = TranscriptionResult(
 )
 
 
+@contextmanager
+def _voice_test_env():
+    """Set up test engine, DB tables, mocks, and clean up after."""
+    import asyncio
+    import app.config as app_config_mod
+    import app.db.engine as engine_module
+    from tests.conftest import get_test_settings
+
+    # Override settings
+    original_get_settings = app_config_mod.get_settings
+    app_config_mod.get_settings.cache_clear()
+    app_config_mod.get_settings = get_test_settings
+
+    _tmp_fd, _tmp_path = tempfile.mkstemp(suffix=".db")
+    os.close(_tmp_fd)
+
+    test_engine = create_async_engine(f"sqlite+aiosqlite:///{_tmp_path}", echo=False)
+    engine_module._engine = test_engine
+
+    loop = asyncio.new_event_loop()
+    session_id, intake_id = loop.run_until_complete(_setup_db_with_session(test_engine))
+    loop.close()
+
+    mock_asr_instance = MagicMock()
+    mock_asr_instance.transcribe = AsyncMock(return_value=FAKE_TRANSCRIPTION)
+    mock_asr_instance.provider_name = "whisper"
+
+    mock_conv_instance = MagicMock()
+    mock_conv_instance.generate_response = AsyncMock(
+        return_value="Could you tell me more about why you were fired?"
+    )
+
+    try:
+        yield {
+            "session_id": session_id,
+            "intake_id": intake_id,
+            "engine": test_engine,
+            "mock_asr": mock_asr_instance,
+            "mock_conv": mock_conv_instance,
+            "get_test_settings": get_test_settings,
+        }
+    finally:
+        loop2 = asyncio.new_event_loop()
+        loop2.run_until_complete(test_engine.dispose())
+        loop2.close()
+        engine_module._engine = None
+        app_config_mod.get_settings = original_get_settings
+        app_config_mod.get_settings.cache_clear()
+        try:
+            os.unlink(_tmp_path)
+        except OSError:
+            pass
+
+
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
@@ -120,232 +175,118 @@ class TestVoiceUploadFlow:
 
     def test_voice_upload_triggers_transcription_and_transcript_ready(self):
         """voice_upload stores AudioRecording, runs ASR, and sends transcript_ready."""
-        import app.config
-        import app.db.engine as engine_module
-        from tests.conftest import get_test_settings
+        with _voice_test_env() as env:
+            token = _make_jwt()
+            test_app = _make_ws_test_app()
 
-        # Override settings
-        original_get_settings = app.config.get_settings
-        app.config.get_settings.cache_clear()
-        app.config.get_settings = get_test_settings
+            with patch("app.routers.intake.ASRService", return_value=env["mock_asr"]), \
+                 patch("app.routers.intake.ConversationService", return_value=env["mock_conv"]), \
+                 patch("app.routers.intake.get_settings", env["get_test_settings"]):
+                with TestClient(test_app) as client:
+                    with client.websocket_connect(
+                        f"/api/ws/intake/{env['session_id']}?token={token}"
+                    ) as ws:
+                        # Read initial session_state
+                        initial = ws.receive_json()
+                        assert initial["type"] == "session_state"
 
-        _tmp_fd, _tmp_path = tempfile.mkstemp(suffix=".db")
-        os.close(_tmp_fd)
+                        # Send voice_upload
+                        ws.send_json({
+                            "type": "voice_upload",
+                            "audio_data": FAKE_AUDIO,
+                            "format": "webm",
+                            "party_id": None,
+                        })
 
-        test_engine = create_async_engine(f"sqlite+aiosqlite:///{_tmp_path}", echo=False)
-        engine_module._engine = test_engine
-
-        import asyncio
-        loop = asyncio.new_event_loop()
-        session_id, intake_id = loop.run_until_complete(_setup_db_with_session(test_engine))
-        loop.close()
-
-        token = _make_jwt()
-        app = _make_ws_test_app()
-
-        # Mock ASRService to avoid real ASR calls
-        mock_asr_instance = MagicMock()
-        mock_asr_instance.transcribe = AsyncMock(return_value=FAKE_TRANSCRIPTION)
-        mock_asr_instance.provider_name = "whisper"
-
-        # Mock ConversationService for the follow-up
-        mock_conv_instance = MagicMock()
-        mock_conv_instance.generate_response = AsyncMock(
-            return_value="Could you tell me more about why you were fired?"
-        )
-
-        with patch("app.routers.intake.ASRService", return_value=mock_asr_instance), \
-             patch("app.routers.intake.ConversationService", return_value=mock_conv_instance), \
-             patch("app.routers.intake.get_settings", get_test_settings):
-            with TestClient(app) as client:
-                with client.websocket_connect(
-                    f"/api/ws/intake/{session_id}?token={token}"
-                ) as ws:
-                    # Read initial session_state
-                    initial = ws.receive_json()
-                    assert initial["type"] == "session_state"
-
-                    # Send voice_upload
-                    ws.send_json({
-                        "type": "voice_upload",
-                        "audio_data": FAKE_AUDIO,
-                        "format": "webm",
-                        "party_id": None,
-                    })
-
-                    # Should receive transcript_ready
-                    response = ws.receive_json()
-                    assert response["type"] == "transcript_ready"
-                    assert response["text"] == FAKE_TRANSCRIPTION.text
-                    assert response["confidence"] == FAKE_TRANSCRIPTION.confidence
-                    assert "recording_id" in response
-                    assert "transcript_id" in response
-                    assert "message_id" in response
-                    assert len(response["segments"]) == 2
-
-        # Cleanup
-        loop2 = asyncio.new_event_loop()
-        loop2.run_until_complete(test_engine.dispose())
-        loop2.close()
-        engine_module._engine = None
-        app.config.get_settings = original_get_settings
-        app.config.get_settings.cache_clear()
-        try:
-            os.unlink(_tmp_path)
-        except OSError:
-            pass
+                        # Should receive transcript_ready
+                        response = ws.receive_json()
+                        assert response["type"] == "transcript_ready"
+                        assert response["text"] == FAKE_TRANSCRIPTION.text
+                        assert response["confidence"] == FAKE_TRANSCRIPTION.confidence
+                        assert "recording_id" in response
+                        assert "transcript_id" in response
+                        assert "message_id" in response
+                        assert len(response["segments"]) == 2
 
     def test_transcript_approve_creates_record_and_sends_system_message(self):
         """transcript_approve updates status to 'approved' and triggers LLM response."""
-        import app.config
-        import app.db.engine as engine_module
-        from tests.conftest import get_test_settings
+        with _voice_test_env() as env:
+            token = _make_jwt()
+            test_app = _make_ws_test_app()
 
-        original_get_settings = app.config.get_settings
-        app.config.get_settings.cache_clear()
-        app.config.get_settings = get_test_settings
+            with patch("app.routers.intake.ASRService", return_value=env["mock_asr"]), \
+                 patch("app.routers.intake.ConversationService", return_value=env["mock_conv"]), \
+                 patch("app.routers.intake.get_settings", env["get_test_settings"]):
+                with TestClient(test_app) as client:
+                    with client.websocket_connect(
+                        f"/api/ws/intake/{env['session_id']}?token={token}"
+                    ) as ws:
+                        initial = ws.receive_json()
 
-        _tmp_fd, _tmp_path = tempfile.mkstemp(suffix=".db")
-        os.close(_tmp_fd)
+                        # Step 1: voice_upload
+                        ws.send_json({
+                            "type": "voice_upload",
+                            "audio_data": FAKE_AUDIO,
+                            "format": "webm",
+                        })
+                        transcript_ready = ws.receive_json()
+                        recording_id = transcript_ready["recording_id"]
 
-        test_engine = create_async_engine(f"sqlite+aiosqlite:///{_tmp_path}", echo=False)
-        engine_module._engine = test_engine
+                        # Step 2: transcript_approve
+                        ws.send_json({
+                            "type": "transcript_approve",
+                            "recording_id": recording_id,
+                        })
 
-        import asyncio
-        loop = asyncio.new_event_loop()
-        session_id, intake_id = loop.run_until_complete(_setup_db_with_session(test_engine))
-        loop.close()
+                        # Should receive message_ack then system_message
+                        ack = ws.receive_json()
+                        assert ack["type"] == "message_ack"
 
-        token = _make_jwt()
-        app = _make_ws_test_app()
-
-        mock_asr_instance = MagicMock()
-        mock_asr_instance.transcribe = AsyncMock(return_value=FAKE_TRANSCRIPTION)
-        mock_asr_instance.provider_name = "whisper"
-
-        mock_conv_instance = MagicMock()
-        mock_conv_instance.generate_response = AsyncMock(
-            return_value="Could you tell me more about why you were fired?"
-        )
-
-        with patch("app.routers.intake.ASRService", return_value=mock_asr_instance), \
-             patch("app.routers.intake.ConversationService", return_value=mock_conv_instance), \
-             patch("app.routers.intake.get_settings", get_test_settings):
-            with TestClient(app) as client:
-                with client.websocket_connect(
-                    f"/api/ws/intake/{session_id}?token={token}"
-                ) as ws:
-                    initial = ws.receive_json()
-
-                    # Step 1: voice_upload
-                    ws.send_json({
-                        "type": "voice_upload",
-                        "audio_data": FAKE_AUDIO,
-                        "format": "webm",
-                    })
-                    transcript_ready = ws.receive_json()
-                    recording_id = transcript_ready["recording_id"]
-
-                    # Step 2: transcript_approve
-                    ws.send_json({
-                        "type": "transcript_approve",
-                        "recording_id": recording_id,
-                    })
-
-                    # Should receive message_ack then system_message
-                    ack = ws.receive_json()
-                    assert ack["type"] == "message_ack"
-
-                    sys_msg = ws.receive_json()
-                    assert sys_msg["type"] == "system_message"
-                    assert "fired" in sys_msg["content"].lower() or len(sys_msg["content"]) > 0
-
-        loop2 = asyncio.new_event_loop()
-        loop2.run_until_complete(test_engine.dispose())
-        loop2.close()
-        engine_module._engine = None
-        app.config.get_settings = original_get_settings
-        app.config.get_settings.cache_clear()
-        try:
-            os.unlink(_tmp_path)
-        except OSError:
-            pass
+                        sys_msg = ws.receive_json()
+                        assert sys_msg["type"] == "system_message"
+                        assert len(sys_msg["content"]) > 0
 
     def test_transcript_edit_updates_text_and_sends_system_message(self):
         """transcript_edit updates transcript text to edited version and triggers LLM."""
-        import app.config
-        import app.db.engine as engine_module
-        from tests.conftest import get_test_settings
+        with _voice_test_env() as env:
+            token = _make_jwt()
+            test_app = _make_ws_test_app()
 
-        original_get_settings = app.config.get_settings
-        app.config.get_settings.cache_clear()
-        app.config.get_settings = get_test_settings
+            env["mock_conv"].generate_response = AsyncMock(
+                return_value="Thank you for the correction. Tell me more."
+            )
 
-        _tmp_fd, _tmp_path = tempfile.mkstemp(suffix=".db")
-        os.close(_tmp_fd)
+            edited_text = "I was let go from my position last Wednesday"
 
-        test_engine = create_async_engine(f"sqlite+aiosqlite:///{_tmp_path}", echo=False)
-        engine_module._engine = test_engine
+            with patch("app.routers.intake.ASRService", return_value=env["mock_asr"]), \
+                 patch("app.routers.intake.ConversationService", return_value=env["mock_conv"]), \
+                 patch("app.routers.intake.get_settings", env["get_test_settings"]):
+                with TestClient(test_app) as client:
+                    with client.websocket_connect(
+                        f"/api/ws/intake/{env['session_id']}?token={token}"
+                    ) as ws:
+                        initial = ws.receive_json()
 
-        import asyncio
-        loop = asyncio.new_event_loop()
-        session_id, intake_id = loop.run_until_complete(_setup_db_with_session(test_engine))
-        loop.close()
+                        # Step 1: voice_upload
+                        ws.send_json({
+                            "type": "voice_upload",
+                            "audio_data": FAKE_AUDIO,
+                            "format": "webm",
+                        })
+                        transcript_ready = ws.receive_json()
+                        recording_id = transcript_ready["recording_id"]
 
-        token = _make_jwt()
-        app = _make_ws_test_app()
+                        # Step 2: transcript_edit
+                        ws.send_json({
+                            "type": "transcript_edit",
+                            "recording_id": recording_id,
+                            "edited_text": edited_text,
+                        })
 
-        mock_asr_instance = MagicMock()
-        mock_asr_instance.transcribe = AsyncMock(return_value=FAKE_TRANSCRIPTION)
-        mock_asr_instance.provider_name = "whisper"
+                        # Should receive message_ack then system_message
+                        ack = ws.receive_json()
+                        assert ack["type"] == "message_ack"
 
-        mock_conv_instance = MagicMock()
-        mock_conv_instance.generate_response = AsyncMock(
-            return_value="Thank you for the correction. Tell me more."
-        )
-
-        edited_text = "I was let go from my position last Wednesday"
-
-        with patch("app.routers.intake.ASRService", return_value=mock_asr_instance), \
-             patch("app.routers.intake.ConversationService", return_value=mock_conv_instance), \
-             patch("app.routers.intake.get_settings", get_test_settings):
-            with TestClient(app) as client:
-                with client.websocket_connect(
-                    f"/api/ws/intake/{session_id}?token={token}"
-                ) as ws:
-                    initial = ws.receive_json()
-
-                    # Step 1: voice_upload
-                    ws.send_json({
-                        "type": "voice_upload",
-                        "audio_data": FAKE_AUDIO,
-                        "format": "webm",
-                    })
-                    transcript_ready = ws.receive_json()
-                    recording_id = transcript_ready["recording_id"]
-
-                    # Step 2: transcript_edit
-                    ws.send_json({
-                        "type": "transcript_edit",
-                        "recording_id": recording_id,
-                        "edited_text": edited_text,
-                    })
-
-                    # Should receive message_ack then system_message
-                    ack = ws.receive_json()
-                    assert ack["type"] == "message_ack"
-
-                    sys_msg = ws.receive_json()
-                    assert sys_msg["type"] == "system_message"
-                    assert len(sys_msg["content"]) > 0
-
-        loop2 = asyncio.new_event_loop()
-        loop2.run_until_complete(test_engine.dispose())
-        loop2.close()
-        engine_module._engine = None
-        app.config.get_settings = original_get_settings
-        app.config.get_settings.cache_clear()
-        try:
-            os.unlink(_tmp_path)
-        except OSError:
-            pass
+                        sys_msg = ws.receive_json()
+                        assert sys_msg["type"] == "system_message"
+                        assert len(sys_msg["content"]) > 0

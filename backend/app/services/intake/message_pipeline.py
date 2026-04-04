@@ -96,6 +96,34 @@ def normalize_professional_note(
     )
 
 
+def normalize_voice_transcript(
+    content: str,
+    message_id: int,
+    party_id: int | None = None,
+    **kwargs,
+) -> NormalizedContent:
+    """Normalize a voice transcript into NormalizedContent.
+
+    Voice transcripts are already text (from ASR), so normalization creates
+    a single paragraph element with source_type="voice_transcript". Timestamp
+    spans from ASR segments can be attached via kwargs in a future enhancement.
+    """
+    return NormalizedContent(
+        text=content,
+        elements=[TextElement(text=content, element_type="paragraph")],
+        source_type="voice_transcript",
+        source_id=f"msg-{message_id}",
+        source_spans=[
+            SourceSpan(
+                start_char=0,
+                end_char=len(content),
+                source_message_id=message_id,
+            )
+        ],
+        party_id=party_id,
+    )
+
+
 async def process_message(
     modality: str,
     content: str,
@@ -116,15 +144,17 @@ async def process_message(
         NormalizedContent with text, elements, source_type, and source_spans.
 
     Raises:
-        NotImplementedError: For "voice" and "document" modalities (wired in Plan 02).
+        NotImplementedError: For "document" modality (wired in Plan 03).
     """
     if modality == "text":
         return normalize_text(content, message_id, party_id)
     elif modality == "professional_note":
         return normalize_professional_note(content, message_id, party_id)
-    elif modality in ("voice", "document"):
+    elif modality == "voice":
+        return normalize_voice_transcript(content, message_id, party_id, **kwargs)
+    elif modality == "document":
         raise NotImplementedError(
-            "Voice/document normalization handled by respective services"
+            "Document normalization handled by DocumentService (Plan 03)"
         )
     else:
         raise ValueError(f"Unknown modality: {modality}")
