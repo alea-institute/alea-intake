@@ -53,6 +53,19 @@ class Settings(BaseSettings):
     folio_confidence_threshold: float = 0.5
     folio_traversal_depth: int = 2
 
+    # Intake
+    intake_upload_dir: str = "./data/uploads"
+    intake_max_file_size_mb: int = 50
+    intake_max_page_count: int = 200
+    intake_max_recording_duration_sec: int = 900  # 15 minutes
+    intake_default_session_mode: str = "multi_session"
+    intake_fact_visibility: str = "internal"  # internal or consumer_visible
+
+    # ASR
+    asr_default_provider: str = "whisper"
+    whisper_endpoint: str = "http://localhost:8790"
+    asr_audio_storage_policy: str = "store_both"  # store_both, transcript_only, ephemeral
+
     # CORS
     cors_origins: list[str] = ["http://localhost:5173"]
 
