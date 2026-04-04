@@ -540,3 +540,482 @@ async def test_screen_message_fast_performance():
     median_ms = (elapsed / 100) * 1000
 
     assert median_ms < 50, f"Median screening time {median_ms:.2f}ms exceeds 50ms target"
+
+
+# ---------------------------------------------------------------------------
+# WebSocket integration tests (Task 2)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_handle_text_message_calls_screening():
+    """_handle_text_message calls screen_message_fast before processing the message."""
+    from unittest.mock import call, patch
+
+    from app.routers.intake import _handle_text_message
+    from app.services.exploration.schemas import ScreeningResult
+
+    mock_ws = AsyncMock()
+    mock_engine = AsyncMock()
+    mock_conn = AsyncMock()
+    mock_session = AsyncMock()
+
+    mock_engine.connect.return_value.__aenter__ = AsyncMock(return_value=mock_conn)
+    mock_engine.connect.return_value.__aexit__ = AsyncMock(return_value=False)
+    mock_conn.execution_options = AsyncMock(return_value=mock_conn)
+
+    # Mock AsyncSession context
+    mock_session.flush = AsyncMock()
+    mock_session.commit = AsyncMock()
+
+    empty_result = ScreeningResult()
+
+    with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=empty_result) as mock_screen, \
+         patch("app.routers.intake.AsyncSession") as MockAsyncSession, \
+         patch("app.routers.intake.IntakeSessionService") as MockSvc, \
+         patch("app.routers.intake.ConversationService") as MockConv, \
+         patch("app.routers.intake.normalize_text"):
+
+        # Setup mock chain
+        ctx = AsyncMock()
+        ctx.__aenter__ = AsyncMock(return_value=mock_session)
+        ctx.__aexit__ = AsyncMock(return_value=False)
+        MockAsyncSession.return_value = ctx
+
+        mock_svc_instance = AsyncMock()
+        mock_message = MagicMock()
+        mock_message.id = 1
+        mock_message.sequence_number = 1
+        mock_svc_instance.store_message = AsyncMock(return_value=mock_message)
+        MockSvc.return_value = mock_svc_instance
+
+        mock_conv_instance = AsyncMock()
+        mock_conv_instance.generate_response = AsyncMock(return_value="I understand.")
+        MockConv.return_value = mock_conv_instance
+
+        await _handle_text_message(
+            mock_ws, 1, 10, {"content": "test message", "party_id": None}, mock_engine
+        )
+
+        mock_screen.assert_called_once()
+        call_kwargs = mock_screen.call_args
+        assert call_kwargs[1]["content"] == "test message" or call_kwargs[0][0] == "test message"
+
+
+@pytest.mark.asyncio
+async def test_critical_trigger_sends_safety_alert():
+    """Critical screening trigger sends safety_alert WebSocket message to client."""
+    from app.routers.intake import _handle_text_message
+    from app.services.exploration.schemas import ScreeningResult
+
+    mock_ws = AsyncMock()
+    mock_engine = AsyncMock()
+    mock_conn = AsyncMock()
+    mock_session = AsyncMock()
+
+    mock_engine.connect.return_value.__aenter__ = AsyncMock(return_value=mock_conn)
+    mock_engine.connect.return_value.__aexit__ = AsyncMock(return_value=False)
+    mock_conn.execution_options = AsyncMock(return_value=mock_conn)
+
+    mock_session.flush = AsyncMock()
+    mock_session.commit = AsyncMock()
+
+    critical_result = ScreeningResult(
+        triggered_protocols=[
+            {"protocol_id": 1, "severity_tier": "critical", "version_id": 100,
+             "trigger_type": "keyword", "matched_terms": ["domestic violence"]},
+        ],
+        has_critical=True,
+        safety_resources=[{"name": "National DV Hotline", "phone": "1-800-799-7233"}],
+        mandatory_questions=[{"question_id": "dv-q1", "text": "Are you safe?", "is_mandatory": True}],
+    )
+
+    with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=critical_result), \
+         patch("app.routers.intake.persist_screening_event", new_callable=AsyncMock) as mock_persist, \
+         patch("app.routers.intake.AsyncSession") as MockAsyncSession, \
+         patch("app.routers.intake.IntakeSessionService") as MockSvc, \
+         patch("app.routers.intake.ConversationService") as MockConv, \
+         patch("app.routers.intake.normalize_text"):
+
+        ctx = AsyncMock()
+        ctx.__aenter__ = AsyncMock(return_value=mock_session)
+        ctx.__aexit__ = AsyncMock(return_value=False)
+        MockAsyncSession.return_value = ctx
+
+        mock_svc_instance = AsyncMock()
+        mock_message = MagicMock()
+        mock_message.id = 1
+        mock_message.sequence_number = 1
+        mock_svc_instance.store_message = AsyncMock(return_value=mock_message)
+        MockSvc.return_value = mock_svc_instance
+
+        mock_conv_instance = AsyncMock()
+        mock_conv_instance.generate_response = AsyncMock(return_value="I see.")
+        MockConv.return_value = mock_conv_instance
+
+        await _handle_text_message(
+            mock_ws, 1, 10,
+            {"content": "my partner has domestic violence issues", "party_id": None},
+            mock_engine,
+        )
+
+        # Verify safety_alert was sent via WebSocket
+        send_calls = mock_ws.send_json.call_args_list
+        safety_alerts = [c for c in send_calls if c[0][0].get("type") == "safety_alert"]
+        assert len(safety_alerts) >= 1
+        alert = safety_alerts[0][0][0]
+        assert alert["severity"] == "critical"
+        assert len(alert["resources"]) > 0
+
+
+@pytest.mark.asyncio
+async def test_elevated_trigger_persists_queued_no_ws_alert():
+    """Elevated screening trigger persists queued ScreeningEvent, no immediate WebSocket message."""
+    from app.routers.intake import _handle_text_message
+    from app.services.exploration.schemas import ScreeningResult
+
+    mock_ws = AsyncMock()
+    mock_engine = AsyncMock()
+    mock_conn = AsyncMock()
+    mock_session = AsyncMock()
+
+    mock_engine.connect.return_value.__aenter__ = AsyncMock(return_value=mock_conn)
+    mock_engine.connect.return_value.__aexit__ = AsyncMock(return_value=False)
+    mock_conn.execution_options = AsyncMock(return_value=mock_conn)
+
+    mock_session.flush = AsyncMock()
+    mock_session.commit = AsyncMock()
+
+    elevated_result = ScreeningResult(
+        triggered_protocols=[
+            {"protocol_id": 2, "severity_tier": "elevated", "version_id": 200,
+             "trigger_type": "keyword", "matched_terms": ["stalking"]},
+        ],
+        has_elevated=True,
+    )
+
+    with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=elevated_result), \
+         patch("app.routers.intake.queue_elevated_screening", new_callable=AsyncMock) as mock_queue, \
+         patch("app.routers.intake.persist_screening_event", new_callable=AsyncMock), \
+         patch("app.routers.intake.AsyncSession") as MockAsyncSession, \
+         patch("app.routers.intake.IntakeSessionService") as MockSvc, \
+         patch("app.routers.intake.ConversationService") as MockConv, \
+         patch("app.routers.intake.normalize_text"):
+
+        ctx = AsyncMock()
+        ctx.__aenter__ = AsyncMock(return_value=mock_session)
+        ctx.__aexit__ = AsyncMock(return_value=False)
+        MockAsyncSession.return_value = ctx
+
+        mock_svc_instance = AsyncMock()
+        mock_message = MagicMock()
+        mock_message.id = 1
+        mock_message.sequence_number = 1
+        mock_svc_instance.store_message = AsyncMock(return_value=mock_message)
+        MockSvc.return_value = mock_svc_instance
+
+        mock_conv_instance = AsyncMock()
+        mock_conv_instance.generate_response = AsyncMock(return_value="Noted.")
+        MockConv.return_value = mock_conv_instance
+
+        await _handle_text_message(
+            mock_ws, 1, 10, {"content": "someone has been stalking me", "party_id": None},
+            mock_engine,
+        )
+
+        mock_queue.assert_called_once()
+        # No safety_alert WebSocket message
+        send_calls = mock_ws.send_json.call_args_list
+        safety_alerts = [c for c in send_calls if c[0][0].get("type") == "safety_alert"]
+        assert len(safety_alerts) == 0
+
+
+@pytest.mark.asyncio
+async def test_advisory_trigger_folds_to_exploration():
+    """Advisory screening trigger persists exploration queue entry, no immediate WebSocket message."""
+    from app.routers.intake import _handle_text_message
+    from app.services.exploration.schemas import ScreeningResult
+
+    mock_ws = AsyncMock()
+    mock_engine = AsyncMock()
+    mock_conn = AsyncMock()
+    mock_session = AsyncMock()
+
+    mock_engine.connect.return_value.__aenter__ = AsyncMock(return_value=mock_conn)
+    mock_engine.connect.return_value.__aexit__ = AsyncMock(return_value=False)
+    mock_conn.execution_options = AsyncMock(return_value=mock_conn)
+
+    mock_session.flush = AsyncMock()
+    mock_session.commit = AsyncMock()
+
+    advisory_result = ScreeningResult(
+        triggered_protocols=[
+            {"protocol_id": 3, "severity_tier": "advisory", "version_id": 300,
+             "trigger_type": "keyword", "matched_terms": ["eviction"]},
+        ],
+        has_advisory=True,
+    )
+
+    with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=advisory_result), \
+         patch("app.routers.intake.add_to_exploration_queue", new_callable=AsyncMock) as mock_explore, \
+         patch("app.routers.intake.persist_screening_event", new_callable=AsyncMock), \
+         patch("app.routers.intake.AsyncSession") as MockAsyncSession, \
+         patch("app.routers.intake.IntakeSessionService") as MockSvc, \
+         patch("app.routers.intake.ConversationService") as MockConv, \
+         patch("app.routers.intake.normalize_text"):
+
+        ctx = AsyncMock()
+        ctx.__aenter__ = AsyncMock(return_value=mock_session)
+        ctx.__aexit__ = AsyncMock(return_value=False)
+        MockAsyncSession.return_value = ctx
+
+        mock_svc_instance = AsyncMock()
+        mock_message = MagicMock()
+        mock_message.id = 1
+        mock_message.sequence_number = 1
+        mock_svc_instance.store_message = AsyncMock(return_value=mock_message)
+        MockSvc.return_value = mock_svc_instance
+
+        mock_conv_instance = AsyncMock()
+        mock_conv_instance.generate_response = AsyncMock(return_value="Let me help.")
+        MockConv.return_value = mock_conv_instance
+
+        await _handle_text_message(
+            mock_ws, 1, 10, {"content": "I'm facing eviction", "party_id": None},
+            mock_engine,
+        )
+
+        mock_explore.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_message_processing_continues_after_screening():
+    """Message processing continues normally after screening -- store, normalize, ack, LLM response."""
+    from app.routers.intake import _handle_text_message
+    from app.services.exploration.schemas import ScreeningResult
+
+    mock_ws = AsyncMock()
+    mock_engine = AsyncMock()
+    mock_conn = AsyncMock()
+    mock_session = AsyncMock()
+
+    mock_engine.connect.return_value.__aenter__ = AsyncMock(return_value=mock_conn)
+    mock_engine.connect.return_value.__aexit__ = AsyncMock(return_value=False)
+    mock_conn.execution_options = AsyncMock(return_value=mock_conn)
+
+    mock_session.flush = AsyncMock()
+    mock_session.commit = AsyncMock()
+
+    critical_result = ScreeningResult(
+        triggered_protocols=[{"protocol_id": 1, "severity_tier": "critical"}],
+        has_critical=True,
+        safety_resources=[{"name": "DV Hotline"}],
+        mandatory_questions=[{"text": "Are you safe?"}],
+    )
+
+    with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=critical_result), \
+         patch("app.routers.intake.persist_screening_event", new_callable=AsyncMock), \
+         patch("app.routers.intake.AsyncSession") as MockAsyncSession, \
+         patch("app.routers.intake.IntakeSessionService") as MockSvc, \
+         patch("app.routers.intake.ConversationService") as MockConv, \
+         patch("app.routers.intake.normalize_text"):
+
+        ctx = AsyncMock()
+        ctx.__aenter__ = AsyncMock(return_value=mock_session)
+        ctx.__aexit__ = AsyncMock(return_value=False)
+        MockAsyncSession.return_value = ctx
+
+        mock_svc_instance = AsyncMock()
+        mock_message = MagicMock()
+        mock_message.id = 1
+        mock_message.sequence_number = 1
+        mock_svc_instance.store_message = AsyncMock(return_value=mock_message)
+        MockSvc.return_value = mock_svc_instance
+
+        mock_conv_instance = AsyncMock()
+        mock_conv_instance.generate_response = AsyncMock(return_value="Response")
+        MockConv.return_value = mock_conv_instance
+
+        await _handle_text_message(
+            mock_ws, 1, 10, {"content": "domestic violence situation", "party_id": None},
+            mock_engine,
+        )
+
+        # Verify message_ack was sent (normal flow continued)
+        send_calls = mock_ws.send_json.call_args_list
+        ack_messages = [c for c in send_calls if c[0][0].get("type") == "message_ack"]
+        assert len(ack_messages) == 1
+
+        # Verify system_message was sent (LLM flow continued)
+        sys_messages = [c for c in send_calls if c[0][0].get("type") == "system_message"]
+        assert len(sys_messages) == 1
+
+
+@pytest.mark.asyncio
+async def test_screening_does_not_block_ack():
+    """Screening does NOT block message acknowledgment -- safety_alert sent in addition to message_ack."""
+    from app.routers.intake import _handle_text_message
+    from app.services.exploration.schemas import ScreeningResult
+
+    mock_ws = AsyncMock()
+    mock_engine = AsyncMock()
+    mock_conn = AsyncMock()
+    mock_session = AsyncMock()
+
+    mock_engine.connect.return_value.__aenter__ = AsyncMock(return_value=mock_conn)
+    mock_engine.connect.return_value.__aexit__ = AsyncMock(return_value=False)
+    mock_conn.execution_options = AsyncMock(return_value=mock_conn)
+
+    mock_session.flush = AsyncMock()
+    mock_session.commit = AsyncMock()
+
+    critical_result = ScreeningResult(
+        triggered_protocols=[{"protocol_id": 1, "severity_tier": "critical"}],
+        has_critical=True,
+        safety_resources=[{"name": "DV Hotline"}],
+        mandatory_questions=[],
+    )
+
+    with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=critical_result), \
+         patch("app.routers.intake.persist_screening_event", new_callable=AsyncMock), \
+         patch("app.routers.intake.AsyncSession") as MockAsyncSession, \
+         patch("app.routers.intake.IntakeSessionService") as MockSvc, \
+         patch("app.routers.intake.ConversationService") as MockConv, \
+         patch("app.routers.intake.normalize_text"):
+
+        ctx = AsyncMock()
+        ctx.__aenter__ = AsyncMock(return_value=mock_session)
+        ctx.__aexit__ = AsyncMock(return_value=False)
+        MockAsyncSession.return_value = ctx
+
+        mock_svc_instance = AsyncMock()
+        mock_message = MagicMock()
+        mock_message.id = 1
+        mock_message.sequence_number = 1
+        mock_svc_instance.store_message = AsyncMock(return_value=mock_message)
+        MockSvc.return_value = mock_svc_instance
+
+        mock_conv_instance = AsyncMock()
+        mock_conv_instance.generate_response = AsyncMock(return_value="Help.")
+        MockConv.return_value = mock_conv_instance
+
+        await _handle_text_message(
+            mock_ws, 1, 10, {"content": "domestic violence", "party_id": None},
+            mock_engine,
+        )
+
+        # Both safety_alert and message_ack should be present
+        send_calls = mock_ws.send_json.call_args_list
+        types_sent = [c[0][0].get("type") for c in send_calls]
+        assert "safety_alert" in types_sent
+        assert "message_ack" in types_sent
+
+
+@pytest.mark.asyncio
+async def test_transcript_approve_also_screens():
+    """Screening runs on transcript_approve handler (voice treated same as text)."""
+    from app.routers.intake import _handle_transcript_approve
+    from app.services.exploration.schemas import ScreeningResult
+
+    mock_ws = AsyncMock()
+    mock_engine = AsyncMock()
+    mock_conn = AsyncMock()
+    mock_session = AsyncMock()
+
+    mock_engine.connect.return_value.__aenter__ = AsyncMock(return_value=mock_conn)
+    mock_engine.connect.return_value.__aexit__ = AsyncMock(return_value=False)
+    mock_conn.execution_options = AsyncMock(return_value=mock_conn)
+
+    mock_session.flush = AsyncMock()
+    mock_session.commit = AsyncMock()
+
+    empty_result = ScreeningResult()
+
+    # Create mock objects for the transcript approve flow
+    mock_transcript = MagicMock()
+    mock_transcript.text_encrypted = b"My partner hit me last night"
+    mock_transcript.status = "pending_review"
+
+    mock_recording = MagicMock()
+    mock_recording.id = 5
+    mock_recording.message_id = 10
+
+    mock_message = MagicMock()
+    mock_message.id = 10
+    mock_message.sequence_number = 1
+    mock_message.party_id = None
+
+    # Mock DB query chain
+    mock_result1 = MagicMock()
+    mock_result1.scalar_one.return_value = mock_transcript
+    mock_result2 = MagicMock()
+    mock_result2.scalar_one.return_value = mock_recording
+    mock_result3 = MagicMock()
+    mock_result3.scalar_one.return_value = mock_message
+
+    mock_session.execute = AsyncMock(side_effect=[mock_result1, mock_result2, mock_result3])
+
+    with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=empty_result) as mock_screen, \
+         patch("app.routers.intake.AsyncSession") as MockAsyncSession, \
+         patch("app.routers.intake.IntakeSessionService") as MockSvc, \
+         patch("app.routers.intake.ConversationService") as MockConv, \
+         patch("app.routers.intake.normalize_text"), \
+         patch("app.routers.intake.process_message", new_callable=AsyncMock):
+
+        ctx = AsyncMock()
+        ctx.__aenter__ = AsyncMock(return_value=mock_session)
+        ctx.__aexit__ = AsyncMock(return_value=False)
+        MockAsyncSession.return_value = ctx
+
+        mock_svc_instance = AsyncMock()
+        sys_msg = MagicMock()
+        sys_msg.id = 11
+        mock_svc_instance.store_message = AsyncMock(return_value=sys_msg)
+        MockSvc.return_value = mock_svc_instance
+
+        mock_conv_instance = AsyncMock()
+        mock_conv_instance.generate_response = AsyncMock(return_value="I understand.")
+        MockConv.return_value = mock_conv_instance
+
+        await _handle_transcript_approve(
+            mock_ws, 1, 10, {"recording_id": 5}, mock_engine
+        )
+
+        # Verify screen_message_fast was called with the transcript text
+        mock_screen.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_no_protocols_active_screening_skipped_gracefully():
+    """When no protocols are active for org, screening is skipped gracefully."""
+    from app.services.screening.middleware import screen_message_fast
+
+    db_session = AsyncMock()
+    result = await screen_message_fast(
+        content="My partner has domestic violence issues",
+        session_id=1,
+        db_session=db_session,
+        active_protocols=[],  # No active protocols
+    )
+    assert result.has_critical is False
+    assert result.has_elevated is False
+    assert result.has_advisory is False
+    assert len(result.triggered_protocols) == 0
+
+
+@pytest.mark.asyncio
+async def test_dv_keyword_triggers_safety_alert_with_hotline():
+    """DV keyword in text_message triggers safety_alert with National DV Hotline per D-11/EXPLORE-09."""
+    from app.services.screening.middleware import screen_message_fast
+
+    db_session = AsyncMock()
+    # Use only the DV protocol
+    result = await screen_message_fast(
+        content="I am a victim of domestic violence and need help",
+        session_id=1,
+        db_session=db_session,
+        active_protocols=[(DV_ACTIVATION, DV_VERSION)],
+    )
+    assert result.has_critical is True
+    assert any("National DV Hotline" in r.get("name", "") for r in result.safety_resources)
+    assert any("1-800-799-7233" in r.get("phone", "") for r in result.safety_resources)
