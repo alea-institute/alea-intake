@@ -29,6 +29,8 @@ from app.services.embedding.service import EmbeddingService
 from app.services.folio.folio_service import get_folio
 from app.services.folio.owl_cache import ensure_owl_fresh
 from app.services.folio.owl_updater import OWLUpdateManager, _periodic_owl_check
+from app.services.research.courtlistener import CourtListenerAdapter
+from app.services.research.registry import ResearchToolRegistry
 
 
 @asynccontextmanager
@@ -54,7 +56,15 @@ async def lifespan(app: FastAPI):
         _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
     )
 
-    # Step 5: Initialize DB engine
+    # Step 5: Initialize research tool registry with default adapters
+    research_registry = ResearchToolRegistry.get_instance()
+    cl_adapter = CourtListenerAdapter(
+        base_url=settings.courtlistener_base_url,
+        timeout=settings.research_timeout_seconds,
+    )
+    research_registry.register(cl_adapter)
+
+    # Step 6: Initialize DB engine
     get_engine()
 
     yield
