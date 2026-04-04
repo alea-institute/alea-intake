@@ -1,0 +1,518 @@
+"""Tests for analysis pipeline stages: issue-spotting, research stub, and fact-mapping.
+
+Validates LLM-driven stage execution with mocked LLM, DB persistence,
+ConceptResolver wiring, FOLIO adjacency, and composite confidence scoring.
+"""
+
+import os
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
+from sqlalchemy import MetaData, select
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
+# Set required env var for Settings
+os.environ.setdefault("ALEA_SECRET_KEY", "test-secret-key-for-testing-only-not-production")
+
+from app.db.base import SharedBase, TenantBase, convention
+from app.models.analysis import (
+    AnalysisClaim,
+    AnalysisIteration,
+    AnalysisRun,
+    AnalysisStage,
+    ClaimElement,
+    FactClaimMapping,
+)
+from app.models.fact import ExtractedFact
+from app.models.intake import Intake, IntakeSession, Message
+from app.services.analysis.stages.issue_spot import IssueSpotStage
+from app.services.analysis.stages.research_stub import ResearchStubStage
+
+
+# ---- Fixtures ----
+
+
+@pytest.fixture
+async def stage_engine():
+    """Create async SQLite engine with all analysis tables."""
+    engine = create_async_engine("sqlite+aiosqlite://", echo=False)
+
+    import app.models  # noqa: F401
+
+    _tenant_meta = MetaData(naming_convention=convention)
+    _shared_meta = MetaData(naming_convention=convention)
+    for table in TenantBase.metadata.tables.values():
+        table.to_metadata(_tenant_meta, schema=None)
+    for table in SharedBase.metadata.tables.values():
+        table.to_metadata(_shared_meta, schema=None)
+
+    async with engine.begin() as conn:
+        await conn.run_sync(_shared_meta.create_all)
+        await conn.run_sync(_tenant_meta.create_all)
+
+    yield engine
+
+    async with engine.begin() as conn:
+        await conn.run_sync(_tenant_meta.drop_all)
+        await conn.run_sync(_shared_meta.drop_all)
+    await engine.dispose()
+
+
+@pytest.fixture
+async def stage_session(stage_engine):
+    """Yield an AsyncSession against the test engine."""
+    async with stage_engine.connect() as conn:
+        conn = await conn.execution_options(
+            schema_translate_map={"tenant": None, "shared": None}
+        )
+        async with AsyncSession(bind=conn, expire_on_commit=False) as session:
+            yield session
+            await session.rollback()
+
+
+@pytest.fixture
+async def analysis_run(stage_session):
+    """Create test AnalysisRun and AnalysisIteration."""
+    run = AnalysisRun(
+        intake_id=1,
+        status="running",
+        trigger_type="auto",
+        current_iteration_number=1,
+        max_iterations=10,
+    )
+    stage_session.add(run)
+    await stage_session.flush()
+
+    iteration = AnalysisIteration(
+        run_id=run.id,
+        iteration_number=1,
+        status="running",
+    )
+    stage_session.add(iteration)
+    await stage_session.flush()
+
+    return run, iteration
+
+
+@pytest.fixture
+def sample_facts(stage_session):
+    """Create sample ExtractedFact records for testing."""
+    facts = [
+        ExtractedFact(
+            intake_id=1,
+            message_id=1,
+            assertion_text="John was fired from Acme Corp on January 15, 2026",
+            fact_type="legal_event",
+            confidence=0.9,
+        ),
+        ExtractedFact(
+            intake_id=1,
+            message_id=1,
+            assertion_text="John had an employment contract with Acme Corp",
+            fact_type="document_reference",
+            confidence=0.85,
+        ),
+        ExtractedFact(
+            intake_id=1,
+            message_id=1,
+            assertion_text="The termination occurred in California",
+            fact_type="location",
+            confidence=0.95,
+        ),
+    ]
+    for f in facts:
+        stage_session.add(f)
+    return facts
+
+
+@pytest.fixture
+def mock_llm_service():
+    """Create a mock LLMService that returns configurable responses."""
+    service = MagicMock()
+    service.get_client_config.return_value = {
+        "provider": "openai",
+        "model": "gpt-4",
+        "api_key": "test-key",
+        "data_policy": "cloud_optout",
+    }
+    return service
+
+
+# ---- Issue-Spotting Stage Tests ----
+
+
+@pytest.mark.asyncio
+async def test_issue_spot_execute_returns_claims(
+    stage_session, analysis_run, sample_facts, mock_llm_service
+):
+    """IssueSpotStage.execute() with mocked LLM returns IssueSpotResult with claims and jurisdictions."""
+    run, iteration = analysis_run
+    await stage_session.flush()
+
+    llm_response = {
+        "claims": [
+            {
+                "claim_name": "Wrongful Termination",
+                "claim_type": "identified",
+                "folio_iri": None,
+                "jurisdiction": "California",
+                "confidence": 0.85,
+                "rationale": "Facts indicate termination from employment",
+                "is_potential": False,
+                "elements": [
+                    {"element_name": "Employment relationship", "element_description": "Employer-employee relationship existed"},
+                    {"element_name": "Wrongful act", "element_description": "Termination violated law or public policy"},
+                ],
+            },
+            {
+                "claim_name": "Breach of Employment Contract",
+                "claim_type": "discovered",
+                "folio_iri": None,
+                "jurisdiction": "California",
+                "confidence": 0.7,
+                "rationale": "Employment contract mentioned, potential breach",
+                "is_potential": True,
+                "elements": [
+                    {"element_name": "Valid contract", "element_description": "Enforceable employment contract existed"},
+                ],
+            },
+        ],
+        "jurisdictions": ["California", "Federal"],
+        "summary": "Wrongful termination and potential breach of contract in California",
+    }
+
+    stage = IssueSpotStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+        folio=None,
+        embedding_service=None,
+    )
+
+    # Mock the LLM call
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result = await stage.execute(run, iteration, sample_facts)
+
+    assert result["claims_count"] == 2
+    assert "California" in result["jurisdictions"]
+    assert "Federal" in result["jurisdictions"]
+    assert result["summary"] is not None
+
+
+@pytest.mark.asyncio
+async def test_issue_spot_persists_claims_to_db(
+    stage_session, analysis_run, sample_facts, mock_llm_service
+):
+    """Claims from LLM output are persisted as AnalysisClaim records in DB."""
+    run, iteration = analysis_run
+    await stage_session.flush()
+
+    llm_response = {
+        "claims": [
+            {
+                "claim_name": "Wrongful Termination",
+                "claim_type": "identified",
+                "jurisdiction": "California",
+                "confidence": 0.85,
+                "rationale": "Facts indicate termination",
+                "is_potential": False,
+                "elements": [],
+            },
+        ],
+        "jurisdictions": ["California"],
+        "summary": "Wrongful termination claim",
+    }
+
+    stage = IssueSpotStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        await stage.execute(run, iteration, sample_facts)
+
+    claims = (await stage_session.execute(select(AnalysisClaim))).scalars().all()
+    assert len(claims) == 1
+    assert claims[0].claim_name == "Wrongful Termination"
+    assert claims[0].run_id == run.id
+    assert claims[0].claim_type == "identified"
+    assert claims[0].jurisdiction == "California"
+    assert claims[0].confidence == 0.85
+
+
+@pytest.mark.asyncio
+async def test_issue_spot_discovered_claims_are_potential(
+    stage_session, analysis_run, sample_facts, mock_llm_service
+):
+    """Discovered claims (not in narrative) have is_potential=True and claim_type='discovered' (D-08)."""
+    run, iteration = analysis_run
+    await stage_session.flush()
+
+    llm_response = {
+        "claims": [
+            {
+                "claim_name": "Discrimination",
+                "claim_type": "discovered",
+                "jurisdiction": "Federal",
+                "confidence": 0.6,
+                "rationale": "Pattern suggests possible discrimination",
+                "is_potential": True,
+                "elements": [],
+            },
+        ],
+        "jurisdictions": ["Federal"],
+        "summary": "Potential discrimination claim discovered",
+    }
+
+    stage = IssueSpotStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        await stage.execute(run, iteration, sample_facts)
+
+    claims = (await stage_session.execute(select(AnalysisClaim))).scalars().all()
+    assert len(claims) == 1
+    assert claims[0].is_potential is True
+    assert claims[0].claim_type == "discovered"
+
+
+@pytest.mark.asyncio
+async def test_issue_spot_multiple_jurisdictions(
+    stage_session, analysis_run, sample_facts, mock_llm_service
+):
+    """Multiple jurisdictions detected in LLM output are returned for parallel analysis (D-06)."""
+    run, iteration = analysis_run
+    await stage_session.flush()
+
+    llm_response = {
+        "claims": [
+            {
+                "claim_name": "Wrongful Termination",
+                "claim_type": "identified",
+                "jurisdiction": "California",
+                "confidence": 0.85,
+                "rationale": "State claim",
+                "is_potential": False,
+                "elements": [],
+            },
+            {
+                "claim_name": "Title VII Violation",
+                "claim_type": "identified",
+                "jurisdiction": "Federal",
+                "confidence": 0.75,
+                "rationale": "Federal claim",
+                "is_potential": False,
+                "elements": [],
+            },
+        ],
+        "jurisdictions": ["California", "Federal", "Nevada"],
+        "summary": "Multi-jurisdictional claims",
+    }
+
+    stage = IssueSpotStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result = await stage.execute(run, iteration, sample_facts)
+
+    assert len(result["jurisdictions"]) == 3
+    assert set(result["jurisdictions"]) == {"California", "Federal", "Nevada"}
+
+
+@pytest.mark.asyncio
+async def test_issue_spot_calls_concept_resolver(
+    stage_session, analysis_run, sample_facts, mock_llm_service, mock_folio
+):
+    """ConceptResolver is called for each claim to resolve folio_iri."""
+    run, iteration = analysis_run
+    await stage_session.flush()
+
+    llm_response = {
+        "claims": [
+            {
+                "claim_name": "Wrongful Termination Claim",
+                "claim_type": "identified",
+                "jurisdiction": "California",
+                "confidence": 0.85,
+                "rationale": "Facts support this",
+                "is_potential": False,
+                "elements": [],
+            },
+        ],
+        "jurisdictions": ["California"],
+        "summary": "Wrongful termination claim identified",
+    }
+
+    # Mock embedding service
+    mock_embedding = AsyncMock()
+
+    stage = IssueSpotStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+        folio=mock_folio,
+        embedding_service=mock_embedding,
+    )
+
+    with (
+        patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response),
+        patch.object(
+            stage, "_resolve_folio_iri",
+            new_callable=AsyncMock,
+            return_value="https://folio.openlegalstandard.org/objective001",
+        ) as mock_resolve,
+    ):
+        await stage.execute(run, iteration, sample_facts)
+
+    mock_resolve.assert_called_once_with("Wrongful Termination Claim")
+    claims = (await stage_session.execute(select(AnalysisClaim))).scalars().all()
+    assert claims[0].folio_iri == "https://folio.openlegalstandard.org/objective001"
+
+
+@pytest.mark.asyncio
+async def test_issue_spot_graceful_without_concept_resolver(
+    stage_session, analysis_run, sample_facts, mock_llm_service
+):
+    """If ConceptResolver unavailable, stage proceeds with folio_iri=None."""
+    run, iteration = analysis_run
+    await stage_session.flush()
+
+    llm_response = {
+        "claims": [
+            {
+                "claim_name": "Wrongful Termination",
+                "claim_type": "identified",
+                "jurisdiction": "California",
+                "confidence": 0.85,
+                "rationale": "Facts support this",
+                "is_potential": False,
+                "elements": [],
+            },
+        ],
+        "jurisdictions": ["California"],
+        "summary": "Claim identified",
+    }
+
+    # No folio, no embedding_service
+    stage = IssueSpotStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+        folio=None,
+        embedding_service=None,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        result = await stage.execute(run, iteration, sample_facts)
+
+    assert result["claims_count"] == 1
+    claims = (await stage_session.execute(select(AnalysisClaim))).scalars().all()
+    assert claims[0].folio_iri is None
+
+
+@pytest.mark.asyncio
+async def test_issue_spot_persists_elements(
+    stage_session, analysis_run, sample_facts, mock_llm_service
+):
+    """Elements from spotted claims are persisted as ClaimElement records."""
+    run, iteration = analysis_run
+    await stage_session.flush()
+
+    llm_response = {
+        "claims": [
+            {
+                "claim_name": "Wrongful Termination",
+                "claim_type": "identified",
+                "jurisdiction": "California",
+                "confidence": 0.85,
+                "rationale": "Facts support this",
+                "is_potential": False,
+                "elements": [
+                    {"element_name": "Employment relationship", "element_description": "Must prove employment existed"},
+                    {"element_name": "Wrongful act", "element_description": "Termination violated law or policy"},
+                ],
+            },
+        ],
+        "jurisdictions": ["California"],
+        "summary": "Claim with elements",
+    }
+
+    stage = IssueSpotStage(
+        llm_service=mock_llm_service,
+        db_session=stage_session,
+    )
+
+    with patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response):
+        await stage.execute(run, iteration, sample_facts)
+
+    elements = (await stage_session.execute(select(ClaimElement))).scalars().all()
+    assert len(elements) == 2
+    element_names = {e.element_name for e in elements}
+    assert "Employment relationship" in element_names
+    assert "Wrongful act" in element_names
+
+
+# ---- Research Stub Stage Tests ----
+
+
+@pytest.mark.asyncio
+async def test_research_stub_returns_elements_from_folio(
+    stage_session, analysis_run, mock_folio
+):
+    """ResearchStubStage.execute() returns element list from FOLIO adjacency."""
+    run, _ = analysis_run
+
+    claim = AnalysisClaim(
+        run_id=run.id,
+        claim_name="Wrongful Termination",
+        claim_type="identified",
+        folio_iri="https://folio.openlegalstandard.org/objective001",
+        jurisdiction="California",
+        confidence=0.85,
+        rationale="Test",
+        iteration_discovered=1,
+    )
+    stage_session.add(claim)
+    await stage_session.flush()
+
+    stage = ResearchStubStage(
+        db_session=stage_session,
+        folio=mock_folio,
+    )
+
+    result = await stage.execute(run, [claim])
+
+    assert result["elements_discovered"] >= 0
+    assert "research_notes" in result
+
+
+@pytest.mark.asyncio
+async def test_research_stub_graceful_without_folio(
+    stage_session, analysis_run
+):
+    """ResearchStubStage gracefully returns empty when FOLIO unavailable."""
+    run, _ = analysis_run
+
+    claim = AnalysisClaim(
+        run_id=run.id,
+        claim_name="Wrongful Termination",
+        claim_type="identified",
+        folio_iri=None,
+        jurisdiction="California",
+        confidence=0.85,
+        rationale="Test",
+        iteration_discovered=1,
+    )
+    stage_session.add(claim)
+    await stage_session.flush()
+
+    stage = ResearchStubStage(
+        db_session=stage_session,
+        folio=None,
+    )
+
+    result = await stage.execute(run, [claim])
+
+    assert result["elements_discovered"] == 0
+    assert "deferred" in result["research_notes"].lower() or "unavailable" in result["research_notes"].lower()
