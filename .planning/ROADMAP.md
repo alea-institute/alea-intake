@@ -74,7 +74,7 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Intake DB models, config settings, message normalization pipeline, and WebSocket chat system
+- [x] 03-01-PLAN.md — Intake DB models, config settings, message normalization pipeline, and WebSocket chat system
 - [ ] 03-02-PLAN.md — Pluggable ASR service with provider architecture and voice WebSocket routing
 - [ ] 03-03-PLAN.md — Document processing service with PDF, DOCX, and OCR extractors
 - [ ] 03-04-PLAN.md — Professional intake router and LLM-driven fact extraction with ConceptResolver wiring
