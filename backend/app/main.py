@@ -28,12 +28,15 @@ from app.routers.intake import router as intake_router
 from app.routers.intake import ws_router as intake_ws_router
 from app.routers.intake_professional import router as intake_professional_router
 from app.routers.organizations import router as organizations_router
+from app.routers.research import router as research_router
 from app.routers.screening_admin import router as screening_admin_router
 from app.routers.users import router as users_router
 from app.services.embedding.service import EmbeddingService
 from app.services.folio.folio_service import get_folio
 from app.services.folio.owl_cache import ensure_owl_fresh
 from app.services.folio.owl_updater import OWLUpdateManager, _periodic_owl_check
+from app.services.research.courtlistener import CourtListenerAdapter
+from app.services.research.registry import ResearchToolRegistry
 
 
 async def _seed_screening_protocols() -> None:
@@ -85,7 +88,15 @@ async def lifespan(app: FastAPI):
         _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
     )
 
-    # Step 5: Initialize DB engine
+    # Step 5: Initialize research tool registry with default adapters
+    research_registry = ResearchToolRegistry.get_instance()
+    cl_adapter = CourtListenerAdapter(
+        base_url=settings.courtlistener_base_url,
+        timeout=settings.research_timeout_seconds,
+    )
+    research_registry.register(cl_adapter)
+
+    # Step 6: Initialize DB engine
     get_engine()
 
     # Step 6: Seed screening protocols (idempotent)
@@ -157,6 +168,7 @@ app.include_router(intake_router)
 app.include_router(intake_ws_router)
 app.include_router(intake_professional_router)
 app.include_router(analysis_router)
+app.include_router(research_router)
 app.include_router(screening_admin_router)
 
 

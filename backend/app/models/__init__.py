@@ -20,6 +20,12 @@ from app.models.folio_concepts import (
 )
 from app.models.organization import OrganizationConfig
 from app.models.refresh_token import RefreshToken
+from app.models.research import (
+    Authority,
+    CitationVerification,
+    ResearchResult,
+    ResearchToolConfig,
+)
 from app.models.screening import (
     OrgProtocolActivation,
     ProtocolVersion,
@@ -36,6 +42,8 @@ __all__ = [
     "AnalysisRun",
     "AnalysisStage",
     "AuditLog",
+    "Authority",
+    "CitationVerification",
     "ConceptGraphEdge",
     "ConceptGraphNode",
     "ConceptMapping",
@@ -49,6 +57,8 @@ __all__ = [
     "OrgProtocolActivation",
     "ProtocolVersion",
     "RefreshToken",
+    "ResearchResult",
+    "ResearchToolConfig",
     "Role",
     "ScreeningEvent",
     "ScreeningProtocol",
