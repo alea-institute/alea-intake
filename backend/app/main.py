@@ -2,6 +2,7 @@
 
 import asyncio
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,6 +24,8 @@ from app.routers.auth import router as auth_router
 from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
 from app.routers.folio_admin import router as folio_admin_router
+from app.routers.intake import router as intake_router
+from app.routers.intake_professional import router as intake_professional_router
 from app.routers.organizations import router as organizations_router
 from app.routers.users import router as users_router
 from app.services.embedding.service import EmbeddingService
@@ -54,7 +57,11 @@ async def lifespan(app: FastAPI):
         _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
     )
 
-    # Step 5: Initialize DB engine
+    # Step 5: Ensure intake upload directory exists
+    intake_upload_dir = Path(settings.intake_upload_dir)
+    intake_upload_dir.mkdir(parents=True, exist_ok=True)
+
+    # Step 6: Initialize DB engine
     get_engine()
 
     yield
@@ -119,6 +126,8 @@ app.include_router(audit_router)
 app.include_router(consent_router)
 app.include_router(admin_router)
 app.include_router(folio_admin_router)
+app.include_router(intake_router)
+app.include_router(intake_professional_router)
 
 
 # Health endpoint
