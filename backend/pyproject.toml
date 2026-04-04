@@ -25,6 +25,8 @@ dependencies = [
     "faiss-cpu>=1.13.0",
     "sentence-transformers>=5.0.0",
     "lxml>=5.0.0",
+    "mcp>=1.27.0",
+    "eyecite>=2.7.6",
 ]
 
 [dependency-groups]
