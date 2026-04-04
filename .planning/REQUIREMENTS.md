@@ -54,14 +54,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Analysis Engine
 
-- [ ] **ANALYSIS-01**: System performs iterative analysis loop: issue-spot → research → fact-map → gap-analyze → question → loop
-- [ ] **ANALYSIS-02**: System maps facts to claims and elements in a many-to-many relationship with confidence scores
+- [x] **ANALYSIS-01**: System performs iterative analysis loop: issue-spot → research → fact-map → gap-analyze → question → loop
+- [x] **ANALYSIS-02**: System maps facts to claims and elements in a many-to-many relationship with confidence scores
 - [ ] **ANALYSIS-03**: System identifies gaps: unsupported elements, unexplored claims, weak mappings, procedural requirements
 - [ ] **ANALYSIS-04**: System generates prioritized, consumer-friendly follow-up questions to fill gaps
 - [ ] **ANALYSIS-05**: Questions are grouped by topic to reduce consumer fatigue
 - [x] **ANALYSIS-06**: Multi-signal loop termination: coverage %, confidence plateau, iteration count, user fatigue, diminishing gaps
 - [x] **ANALYSIS-07**: Termination weights and thresholds are configurable per organization
-- [ ] **ANALYSIS-08**: System performs parallel multi-jurisdictional analysis when facts span jurisdictions
+- [x] **ANALYSIS-08**: System performs parallel multi-jurisdictional analysis when facts span jurisdictions
 - [ ] **ANALYSIS-09**: Analysis state is checkpointed after every stage for pause/resume across sessions
 - [ ] **ANALYSIS-10**: Full audit trail: every stage records what was analyzed, what sources were consulted, what confidence was assigned
 
@@ -188,14 +188,14 @@ Deferred to future release. Tracked but not in current roadmap.
 | RESEARCH-08 | Phase 6 | Pending |
 | RESEARCH-09 | Phase 6 | Pending |
 | RESEARCH-10 | Phase 6 | Pending |
-| ANALYSIS-01 | Phase 4 | Pending |
-| ANALYSIS-02 | Phase 4 | Pending |
+| ANALYSIS-01 | Phase 4 | Complete |
+| ANALYSIS-02 | Phase 4 | Complete |
 | ANALYSIS-03 | Phase 4 | Pending |
 | ANALYSIS-04 | Phase 4 | Pending |
 | ANALYSIS-05 | Phase 4 | Pending |
 | ANALYSIS-06 | Phase 4 | Complete |
 | ANALYSIS-07 | Phase 4 | Complete |
-| ANALYSIS-08 | Phase 4 | Pending |
+| ANALYSIS-08 | Phase 4 | Complete |
 | ANALYSIS-09 | Phase 4 | Pending |
 | ANALYSIS-10 | Phase 4 | Pending |
 | OUTPUT-01 | Phase 7 | Pending |
