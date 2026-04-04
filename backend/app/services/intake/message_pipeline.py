@@ -153,8 +153,11 @@ async def process_message(
     elif modality == "voice":
         return normalize_voice_transcript(content, message_id, party_id, **kwargs)
     elif modality == "document":
-        raise NotImplementedError(
-            "Document normalization handled by DocumentService (Plan 03)"
-        )
+        from app.services.document import DocumentService
+
+        file_path = kwargs["file_path"]
+        mime_type = kwargs["mime_type"]
+        doc_service = DocumentService()
+        return await doc_service.process_document(file_path, mime_type, message_id, party_id)
     else:
         raise ValueError(f"Unknown modality: {modality}")

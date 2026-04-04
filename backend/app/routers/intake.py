@@ -14,11 +14,12 @@ import base64
 import json
 import logging
 from collections import defaultdict
+from dataclasses import asdict
 from datetime import datetime, timezone
 from typing import Any
 
 import jwt as pyjwt
-from fastapi import APIRouter, Depends, Query, Request, WebSocket, WebSocketDisconnect, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, Request, UploadFile, WebSocket, WebSocketDisconnect, status
 from fastapi.responses import JSONResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,9 +28,11 @@ from app.config import get_settings
 from app.core.permissions import get_current_active_user
 from app.db.session import get_tenant_session
 from app.models.audio import AudioRecording, Transcript
+from app.models.document import DocumentExtraction, UploadedDocument
 from app.models.intake import Intake, IntakeParty, IntakeSession, Message
 from app.models.user import User
 from app.services.asr import ASRService, TranscriptionResult
+from app.services.document import DocumentService
 from app.services.intake.conversation import ConversationService
 from app.services.intake.message_pipeline import normalize_text, process_message
 from app.services.intake.session_service import IntakeSessionService
@@ -216,6 +219,156 @@ async def create_session(
         "id": intake_session.id,
         "intake_id": intake_session.intake_id,
         "status": intake_session.status,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Document upload endpoint (Plan 03-03)
+# ---------------------------------------------------------------------------
+
+@router.post("/{intake_id}/document", status_code=status.HTTP_201_CREATED)
+async def document_upload(
+    intake_id: int,
+    request: Request,
+    file: UploadFile = File(...),
+    session_id: int = Form(...),
+    party_id: int | None = Form(None),
+    current_user: User = Depends(get_current_active_user),
+    db_session: AsyncSession = Depends(get_tenant_session),
+):
+    """Upload a document, extract text, store records, and notify via WebSocket.
+
+    Creates a Message with modality="document", an UploadedDocument record,
+    a DocumentExtraction record, generates an LLM follow-up, and sends
+    a document_ready WebSocket notification.
+    """
+    settings = get_settings()
+    doc_service = DocumentService()
+
+    # Validate MIME type
+    supported = doc_service.get_supported_mime_types()
+    if file.content_type not in supported:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "error": f"Unsupported file type: {file.content_type}",
+                "supported_types": supported,
+            },
+        )
+
+    # Read file bytes
+    file_bytes = await file.read()
+
+    # Validate file size
+    max_bytes = settings.intake_max_file_size_mb * 1024 * 1024
+    if len(file_bytes) > max_bytes:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=f"File size exceeds maximum {settings.intake_max_file_size_mb} MB",
+        )
+
+    # Get org slug for directory structure
+    org_slug = getattr(request.state, "tenant_slug", "default")
+
+    # Store Message with modality="document"
+    svc = IntakeSessionService(db_session)
+    msg = await svc.store_message(
+        session_id=session_id,
+        sender_type="consumer",
+        modality="document",
+        content=file.filename or "document",
+        party_id=party_id,
+    )
+
+    # Save file to disk
+    file_path = await doc_service.save_upload(
+        file_bytes=file_bytes,
+        filename=file.filename or "unknown",
+        mime_type=file.content_type or "",
+        org_slug=org_slug,
+        intake_id=intake_id,
+    )
+
+    # Create UploadedDocument record
+    uploaded_doc = UploadedDocument(
+        message_id=msg.id,
+        intake_id=intake_id,
+        file_path_encrypted=str(file_path).encode("utf-8"),
+        original_filename=file.filename or "unknown",
+        mime_type=file.content_type or "",
+        file_size_bytes=len(file_bytes),
+        extraction_status="pending",
+    )
+    db_session.add(uploaded_doc)
+    await db_session.flush()
+
+    # Extract document content
+    extraction_status = "pending"
+    normalized = None
+    try:
+        normalized = await doc_service.process_document(
+            file_path, file.content_type or "", msg.id, party_id
+        )
+
+        uploaded_doc.extraction_status = "completed"
+        extraction_status = "completed"
+
+        pages = {e.page for e in normalized.elements if e.page is not None}
+        if pages:
+            uploaded_doc.page_count = max(pages)
+
+        extraction = DocumentExtraction(
+            document_id=uploaded_doc.id,
+            full_text_encrypted=normalized.text.encode("utf-8"),
+            elements_json=[asdict(e) for e in normalized.elements],
+            extraction_method=doc_service.get_extraction_method(file.content_type or ""),
+        )
+        db_session.add(extraction)
+
+        msg.normalized_text = normalized.text.encode("utf-8")
+
+        await db_session.flush()
+    except Exception as e:
+        logger.error("Document extraction failed for message %s: %s", msg.id, e)
+        uploaded_doc.extraction_status = "failed"
+        extraction_status = "failed"
+        await db_session.flush()
+
+    # Generate LLM follow-up response
+    try:
+        conversation_svc = ConversationService()
+        llm_response = await conversation_svc.generate_response(
+            messages=[{"role": "user", "content": f"[Document uploaded: {file.filename}]"}]
+        )
+        await svc.store_message(
+            session_id=session_id,
+            sender_type="system",
+            modality="text",
+            content=llm_response,
+        )
+    except Exception as e:
+        logger.error("LLM follow-up generation failed: %s", e)
+
+    # Send WebSocket notification
+    text_preview = normalized.text[:200] if normalized else ""
+    await manager.send_to_session(
+        session_id,
+        {
+            "type": "document_ready",
+            "message_id": msg.id,
+            "document_id": uploaded_doc.id,
+            "extraction_status": extraction_status,
+            "text_preview": text_preview,
+        },
+    )
+
+    return {
+        "message_id": msg.id,
+        "sequence_number": msg.sequence_number,
+        "document_id": uploaded_doc.id,
+        "extraction_status": extraction_status,
+        "filename": file.filename,
+        "mime_type": file.content_type,
     }
 
 
