@@ -125,14 +125,14 @@ Plans:
   3. Every LLM-suggested citation is verified against a known database before presentation, and each authority displays a verified/unverified flag with verification source
   4. For each identified claim, the system researches required legal elements per jurisdiction, integrating with folio-insights for advocacy knowledge and folio-enrich for document analysis
   5. Administrators can configure a knowledge base with RAG over curated legal documents, and organizations can upload custom documents to their KB
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
-- [ ] 06-03: TBD
-- [ ] 06-04: TBD
-- [ ] 06-05: TBD
+- [ ] 06-01-PLAN.md — DB models, Pydantic schemas, adapter ABC, tool registry, usage tracker
+- [ ] 06-02-PLAN.md — FolioMCPClient singleton (mcp SDK), CitationNormalizer (eyecite), new deps
+- [ ] 06-03-PLAN.md — HTTP/MCP adapters (CourtListener, Google Scholar, stubs), citation verifier, result ranker, folio-enrich client
+- [ ] 06-04-PLAN.md — Knowledge base: semantic chunker, FOLIO tagger, dual-signal retriever, InsightsService, KB admin API
+- [ ] 06-05-PLAN.md — ResearchStage replacing research_stub, orchestrator wiring, lifespan integration, research admin API
 
 ### Phase 7: Output & Export
 **Goal**: The system generates configurable output -- structured case memos, triage/routing recommendations, and action items -- in formats appropriate for each deployment type, with export to PDF, DOCX, and JSON
