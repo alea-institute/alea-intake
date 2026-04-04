@@ -61,17 +61,26 @@ class TestInsightsService:
     @pytest.mark.asyncio
     async def test_add_insight(self, service, mock_session):
         """Test 11: InsightsService.add_insight creates KB document + chunks for secondary knowledge."""
-        # Mock session add and flush
+        # Mock session add to set ID on the document object
+        added_objects = []
+
+        def mock_add(obj):
+            added_objects.append(obj)
+            # Simulate DB assigning an ID on first flush
+            if not hasattr(obj, "_id_set"):
+                obj.id = len(added_objects)
+                obj._id_set = True
+
+        mock_session.add = mock_add
         mock_session.flush = AsyncMock()
-        mock_session.add = MagicMock()
 
         doc_id = await service.add_insight(
             folio_iri="https://folio.openlegalstandard.org/lease",
             content="When negotiating a lease, always check the early termination clause.",
             source="llm",
         )
-        # Should have created a document
-        assert mock_session.add.called
+        # Should have created a document and a chunk (2 objects added)
+        assert len(added_objects) == 2
         assert isinstance(doc_id, int)
 
     @pytest.mark.asyncio

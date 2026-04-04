@@ -32,6 +32,7 @@ from app.models.screening import (
     ScreeningEvent,
     ScreeningProtocol,
 )
+from app.models.knowledge_base import KBChunk, KBDocument
 from app.models.shared import Organization
 from app.models.user import Role, User
 
@@ -52,6 +53,8 @@ __all__ = [
     "ConsentTemplate",
     "FactClaimMapping",
     "FollowUpQuestion",
+    "KBChunk",
+    "KBDocument",
     "Organization",
     "OrganizationConfig",
     "OrgProtocolActivation",
