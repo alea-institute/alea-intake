@@ -52,3 +52,4 @@ htmlcov/
 
 # uv
 uv.lock
+.claude/worktrees/
