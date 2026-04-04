@@ -107,13 +107,12 @@ Plans:
   2. Safety screening runs continuously on every consumer message throughout the conversation, not just at intake start
   3. Organizations can define mandatory safety screening protocols, and a default DV screening protocol ships with the system for family law matters
   4. Organizations can create both community-shared and private screening protocols, with configurable exploration depth and question transparency
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
-- [ ] 05-04: TBD
+- [ ] 05-01-PLAN.md — Screening protocol data layer, 16 seed protocols, TriggerMatcher, admin CRUD API, and exploration schemas
+- [ ] 05-02-PLAN.md — Three-layer exploration engine with parallel execution, deduplication, and ExploreStage orchestrator integration
+- [ ] 05-03-PLAN.md — Continuous per-message safety screening middleware with priority-based WebSocket interrupt model
 
 ### Phase 6: Legal Research & Verification
 **Goal**: The system queries pluggable legal research tools to find authorities for each identified claim, verifies all citations against known databases before presentation, and supports organization-specific knowledge bases
@@ -230,7 +229,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 2. FOLIO Ontology Integration | 1/3 | In Progress|  |
 | 3. Input & Narrative Capture | 2/4 | In Progress|  |
 | 4. Core Analysis Pipeline | 3/5 | In Progress|  |
-| 5. Pre-Research Exploration & Safety | 0/4 | Not started | - |
+| 5. Pre-Research Exploration & Safety | 0/3 | Not started | - |
 | 6. Legal Research & Verification | 0/5 | Not started | - |
 | 7. Output & Export | 0/3 | Not started | - |
 | 8. Frontend Application | 0/4 | Not started | - |
