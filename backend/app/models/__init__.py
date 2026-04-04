@@ -10,6 +10,12 @@ from app.models.folio_concepts import (
 )
 from app.models.organization import OrganizationConfig
 from app.models.refresh_token import RefreshToken
+from app.models.screening import (
+    OrgProtocolActivation,
+    ProtocolVersion,
+    ScreeningEvent,
+    ScreeningProtocol,
+)
 from app.models.shared import Organization
 from app.models.user import Role, User
 
@@ -22,8 +28,12 @@ __all__ = [
     "ConsentTemplate",
     "Organization",
     "OrganizationConfig",
+    "OrgProtocolActivation",
+    "ProtocolVersion",
     "RefreshToken",
     "Role",
+    "ScreeningEvent",
+    "ScreeningProtocol",
     "UnmappedConceptRecord",
     "User",
 ]

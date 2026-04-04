@@ -8,6 +8,7 @@ Validates:
 """
 
 import time
+from types import SimpleNamespace
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,6 +28,24 @@ from app.services.exploration.schemas import (
 )
 from app.services.analysis.schemas import AnalysisConfig
 from app.services.screening.trigger_matcher import TriggerMatcher, TriggeredProtocol
+
+
+def _mock_activation(protocol_id: int, version_id: int, mode: str = "mandatory"):
+    """Create a lightweight mock for OrgProtocolActivation (avoids SQLAlchemy state)."""
+    return SimpleNamespace(protocol_id=protocol_id, pinned_version_id=version_id, activation_mode=mode)
+
+
+def _mock_version(version_id: int, protocol_id: int, trigger_conditions: dict,
+                   protocol_name: str = "Test", severity_tier: str = "critical"):
+    """Create a lightweight mock for ProtocolVersion (avoids SQLAlchemy state)."""
+    return SimpleNamespace(
+        id=version_id,
+        protocol_id=protocol_id,
+        version="1.0.0",
+        trigger_conditions_json=trigger_conditions,
+        _protocol_name=protocol_name,
+        _severity_tier=severity_tier,
+    )
 
 
 # -- DB Model Tests ----------------------------------------------------------
@@ -143,25 +162,12 @@ async def test_screening_event_has_required_columns(async_session: AsyncSession)
 
 def test_trigger_matcher_keyword_match():
     """TriggerMatcher.match_fast returns triggered protocols for keyword match."""
-    # Simulate protocol data as tuple (activation, version)
-    activation = OrgProtocolActivation.__new__(OrgProtocolActivation)
-    activation.protocol_id = 1
-    activation.pinned_version_id = 10
-    activation.activation_mode = "mandatory"
-
-    version = ProtocolVersion.__new__(ProtocolVersion)
-    version.id = 10
-    version.protocol_id = 1
-    version.version = "1.0.0"
-    version.trigger_conditions_json = {
+    activation = _mock_activation(1, 10)
+    version = _mock_version(10, 1, {
         "keywords": ["domestic violence", "afraid of partner", "hitting me"],
         "regex_patterns": [],
         "folio_concept_iris": [],
-    }
-
-    # Set protocol metadata on version for TriggerMatcher
-    version._protocol_name = "DV/IPV"
-    version._severity_tier = "critical"
+    }, protocol_name="DV/IPV", severity_tier="critical")
 
     matcher = TriggerMatcher([(activation, version)])
     results = matcher.match_fast("My partner has been hitting me and I am scared")
@@ -174,22 +180,12 @@ def test_trigger_matcher_keyword_match():
 
 def test_trigger_matcher_regex_match():
     """TriggerMatcher.match_fast returns triggered protocols for regex pattern match."""
-    activation = OrgProtocolActivation.__new__(OrgProtocolActivation)
-    activation.protocol_id = 2
-    activation.pinned_version_id = 20
-    activation.activation_mode = "mandatory"
-
-    version = ProtocolVersion.__new__(ProtocolVersion)
-    version.id = 20
-    version.protocol_id = 2
-    version.version = "1.0.0"
-    version.trigger_conditions_json = {
+    activation = _mock_activation(2, 20)
+    version = _mock_version(20, 2, {
         "keywords": [],
         "regex_patterns": [r"child\s+(abuse|neglect)", r"hurt\s+my\s+(kid|child)"],
         "folio_concept_iris": [],
-    }
-    version._protocol_name = "Child Abuse"
-    version._severity_tier = "critical"
+    }, protocol_name="Child Abuse", severity_tier="critical")
 
     matcher = TriggerMatcher([(activation, version)])
     results = matcher.match_fast("I think there is child abuse happening in the home")
@@ -200,22 +196,12 @@ def test_trigger_matcher_regex_match():
 
 def test_trigger_matcher_no_match():
     """TriggerMatcher.match_fast returns empty list when no triggers match."""
-    activation = OrgProtocolActivation.__new__(OrgProtocolActivation)
-    activation.protocol_id = 1
-    activation.pinned_version_id = 10
-    activation.activation_mode = "mandatory"
-
-    version = ProtocolVersion.__new__(ProtocolVersion)
-    version.id = 10
-    version.protocol_id = 1
-    version.version = "1.0.0"
-    version.trigger_conditions_json = {
+    activation = _mock_activation(1, 10)
+    version = _mock_version(10, 1, {
         "keywords": ["domestic violence"],
         "regex_patterns": [],
         "folio_concept_iris": [],
-    }
-    version._protocol_name = "DV/IPV"
-    version._severity_tier = "critical"
+    }, protocol_name="DV/IPV", severity_tier="critical")
 
     matcher = TriggerMatcher([(activation, version)])
     results = matcher.match_fast("I need help with a contract dispute")
@@ -225,22 +211,12 @@ def test_trigger_matcher_no_match():
 
 def test_trigger_matcher_precompiles_regex():
     """TriggerMatcher pre-compiles regex patterns on initialization."""
-    activation = OrgProtocolActivation.__new__(OrgProtocolActivation)
-    activation.protocol_id = 3
-    activation.pinned_version_id = 30
-    activation.activation_mode = "optional"
-
-    version = ProtocolVersion.__new__(ProtocolVersion)
-    version.id = 30
-    version.protocol_id = 3
-    version.version = "1.0.0"
-    version.trigger_conditions_json = {
+    activation = _mock_activation(3, 30, "optional")
+    version = _mock_version(30, 3, {
         "keywords": [],
         "regex_patterns": [r"stalk(ing|er|ed)", r"follow(ing|ed)\s+me"],
         "folio_concept_iris": [],
-    }
-    version._protocol_name = "Stalking"
-    version._severity_tier = "elevated"
+    }, protocol_name="Stalking", severity_tier="elevated")
 
     matcher = TriggerMatcher([(activation, version)])
 
@@ -257,22 +233,13 @@ def test_trigger_matcher_keyword_match_under_50ms():
     """TriggerMatcher.match_fast completes keyword matching in <50ms."""
     protocols = []
     for i in range(16):  # Simulate all 16 protocols
-        activation = OrgProtocolActivation.__new__(OrgProtocolActivation)
-        activation.protocol_id = i + 1
-        activation.pinned_version_id = (i + 1) * 10
-        activation.activation_mode = "mandatory"
-
-        version = ProtocolVersion.__new__(ProtocolVersion)
-        version.id = (i + 1) * 10
-        version.protocol_id = i + 1
-        version.version = "1.0.0"
-        version.trigger_conditions_json = {
+        activation = _mock_activation(i + 1, (i + 1) * 10)
+        tier = "critical" if i < 5 else "elevated" if i < 10 else "advisory"
+        version = _mock_version((i + 1) * 10, i + 1, {
             "keywords": [f"keyword_{i}_a", f"keyword_{i}_b", f"keyword_{i}_c"],
             "regex_patterns": [rf"pattern_{i}\s+\w+"],
             "folio_concept_iris": [],
-        }
-        version._protocol_name = f"Protocol {i + 1}"
-        version._severity_tier = "critical" if i < 5 else "elevated" if i < 10 else "advisory"
+        }, protocol_name=f"Protocol {i + 1}", severity_tier=tier)
         protocols.append((activation, version))
 
     matcher = TriggerMatcher(protocols)
