@@ -22,7 +22,11 @@ from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
+from app.routers.analysis import router as analysis_router
 from app.routers.folio_admin import router as folio_admin_router
+from app.routers.intake import router as intake_router
+from app.routers.intake import ws_router as intake_ws_router
+from app.routers.intake_professional import router as intake_professional_router
 from app.routers.organizations import router as organizations_router
 from app.routers.screening_admin import router as screening_admin_router
 from app.routers.users import router as users_router
@@ -149,6 +153,10 @@ app.include_router(audit_router)
 app.include_router(consent_router)
 app.include_router(admin_router)
 app.include_router(folio_admin_router)
+app.include_router(intake_router)
+app.include_router(intake_ws_router)
+app.include_router(intake_professional_router)
+app.include_router(analysis_router)
 app.include_router(screening_admin_router)
 
 
