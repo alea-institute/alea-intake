@@ -6,7 +6,7 @@ shared Organization registry. This model lives in each tenant's own schema.
 
 from datetime import datetime
 
-from sqlalchemy import Boolean, Integer, LargeBinary, String, func
+from sqlalchemy import Boolean, Integer, JSON, LargeBinary, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import TenantBase
@@ -26,5 +26,6 @@ class OrganizationConfig(TenantBase):
     kiosk_audit_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
     kiosk_consent_required: Mapped[bool] = mapped_column(Boolean, default=True)
     kiosk_session_ttl_hours: Mapped[int] = mapped_column(Integer, default=24)
+    analysis_config_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())

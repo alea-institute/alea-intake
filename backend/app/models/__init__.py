@@ -1,5 +1,15 @@
 """Data models -- re-export all models for convenient importing."""
 
+from app.models.analysis import (
+    AnalysisClaim,
+    AnalysisGap,
+    AnalysisIteration,
+    AnalysisRun,
+    AnalysisStage,
+    ClaimElement,
+    FactClaimMapping,
+    FollowUpQuestion,
+)
 from app.models.audit import AuditLog
 from app.models.audio import AudioRecording, Transcript
 from app.models.consent import ConsentRecord, ConsentTemplate
@@ -18,8 +28,14 @@ from app.models.shared import Organization
 from app.models.user import Role, User
 
 __all__ = [
+    "AnalysisClaim",
+    "AnalysisGap",
+    "AnalysisIteration",
+    "AnalysisRun",
+    "AnalysisStage",
     "AuditLog",
     "AudioRecording",
+    "ClaimElement",
     "ConceptGraphEdge",
     "ConceptGraphNode",
     "ConceptMapping",
@@ -27,7 +43,9 @@ __all__ = [
     "ConsentTemplate",
     "DocumentExtraction",
     "ExtractedFact",
+    "FactClaimMapping",
     "FactSourceSpan",
+    "FollowUpQuestion",
     "Intake",
     "IntakeParty",
     "IntakeSession",
