@@ -190,6 +190,7 @@ class AnalysisConfig(BaseModel):
 
     Stored as JSON in OrganizationConfig.analysis_config_json.
     Supports round-trip JSON serialization for DB persistence.
+    Includes exploration config for pre-research exploration depth and transparency.
     """
 
     auto_trigger_enabled: bool = True
@@ -199,3 +200,13 @@ class AnalysisConfig(BaseModel):
     convergence_weights: ConvergenceWeights = Field(default_factory=ConvergenceWeights)
     confidence_weights: ConfidenceWeights = Field(default_factory=ConfidenceWeights)
     question_transparency: bool = True
+
+    # Phase 5: Pre-research exploration configuration
+    exploration: "ExplorationConfig" = Field(default_factory=lambda: ExplorationConfig())
+
+
+# Avoid circular import -- ExplorationConfig imported at end
+from app.services.exploration.schemas import ExplorationConfig  # noqa: E402
+
+# Update forward reference
+AnalysisConfig.model_rebuild()

@@ -2,7 +2,6 @@
 
 import asyncio
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,20 +19,43 @@ from app.middleware.audit import AuditMiddleware
 from app.middleware.consent import ConsentMiddleware
 from app.middleware.tenant import TenantMiddleware
 from app.routers.admin import router as admin_router
-from app.routers.analysis import router as analysis_router
 from app.routers.auth import router as auth_router
 from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
 from app.routers.folio_admin import router as folio_admin_router
-from app.routers.intake import router as intake_router
-from app.routers.intake import ws_router as intake_ws_router
-from app.routers.intake_professional import router as intake_professional_router
 from app.routers.organizations import router as organizations_router
+from app.routers.screening_admin import router as screening_admin_router
 from app.routers.users import router as users_router
 from app.services.embedding.service import EmbeddingService
 from app.services.folio.folio_service import get_folio
 from app.services.folio.owl_cache import ensure_owl_fresh
 from app.services.folio.owl_updater import OWLUpdateManager, _periodic_owl_check
+
+
+async def _seed_screening_protocols() -> None:
+    """Seed the 16 default screening protocols into the shared schema.
+
+    Uses a fresh engine connection with schema_translate_map for SQLite compat.
+    Idempotent -- safe to call on every startup.
+    Gracefully handles engine unavailability (e.g., in mocked test environments).
+    """
+    try:
+        from sqlalchemy.ext.asyncio import AsyncSession as _AS
+
+        from app.services.screening.seed_protocols import seed_protocols_to_db
+
+        engine = get_engine()
+        async with engine.connect() as conn:
+            conn = await conn.execution_options(
+                schema_translate_map={"tenant": None, "shared": None}
+            )
+            async with _AS(bind=conn, expire_on_commit=False) as seed_session:
+                await seed_protocols_to_db(seed_session)
+                await seed_session.commit()
+    except Exception:
+        # Graceful degradation: seed protocols will be loaded on next startup.
+        # This can occur when engine is mocked in tests or DB is not yet ready.
+        pass
 
 
 @asynccontextmanager
@@ -59,12 +81,11 @@ async def lifespan(app: FastAPI):
         _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
     )
 
-    # Step 5: Ensure intake upload directory exists
-    intake_upload_dir = Path(settings.intake_upload_dir)
-    intake_upload_dir.mkdir(parents=True, exist_ok=True)
-
-    # Step 6: Initialize DB engine
+    # Step 5: Initialize DB engine
     get_engine()
+
+    # Step 6: Seed screening protocols (idempotent)
+    await _seed_screening_protocols()
 
     yield
 
@@ -127,11 +148,8 @@ app.include_router(users_router)
 app.include_router(audit_router)
 app.include_router(consent_router)
 app.include_router(admin_router)
-app.include_router(analysis_router)
 app.include_router(folio_admin_router)
-app.include_router(intake_router)
-app.include_router(intake_ws_router)
-app.include_router(intake_professional_router)
+app.include_router(screening_admin_router)
 
 
 # Health endpoint

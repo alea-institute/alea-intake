@@ -30,13 +30,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **EXPLORE-01**: System performs pre-research exploration between issue-spotting and research phases
 - [ ] **EXPLORE-02**: Exploration uses three layers: FOLIO ontology relationships, curated screening protocols, and LLM reasoning
-- [ ] **EXPLORE-03**: Organizations can define mandatory safety screening protocols that run before analysis proceeds
+- [x] **EXPLORE-03**: Organizations can define mandatory safety screening protocols that run before analysis proceeds
 - [ ] **EXPLORE-04**: Safety screening is continuous throughout the conversation, not just at intake start
-- [ ] **EXPLORE-05**: Exploration depth is configurable per organization (1 round to "until stable")
-- [ ] **EXPLORE-06**: System explains why it's asking exploration questions (configurable transparency per org)
-- [ ] **EXPLORE-07**: Open screening protocol library allows community-contributed protocols across organizations
-- [ ] **EXPLORE-08**: Organizations can create private screening protocols not shared with the library
-- [ ] **EXPLORE-09**: Default DV screening protocol ships with the system for family law matters
+- [x] **EXPLORE-05**: Exploration depth is configurable per organization (1 round to "until stable")
+- [x] **EXPLORE-06**: System explains why it's asking exploration questions (configurable transparency per org)
+- [x] **EXPLORE-07**: Open screening protocol library allows community-contributed protocols across organizations
+- [x] **EXPLORE-08**: Organizations can create private screening protocols not shared with the library
+- [x] **EXPLORE-09**: Default DV screening protocol ships with the system for family law matters
 - [ ] **EXPLORE-10**: Exploration can surface entirely new legal issues not in the initial issue-spotting (e.g., DV in custody cases)
 
 ### Legal Research & Verification
@@ -170,13 +170,13 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOLIO-07 | Phase 2 | Complete |
 | EXPLORE-01 | Phase 5 | Pending |
 | EXPLORE-02 | Phase 5 | Pending |
-| EXPLORE-03 | Phase 5 | Pending |
+| EXPLORE-03 | Phase 5 | Complete |
 | EXPLORE-04 | Phase 5 | Pending |
-| EXPLORE-05 | Phase 5 | Pending |
-| EXPLORE-06 | Phase 5 | Pending |
-| EXPLORE-07 | Phase 5 | Pending |
-| EXPLORE-08 | Phase 5 | Pending |
-| EXPLORE-09 | Phase 5 | Pending |
+| EXPLORE-05 | Phase 5 | Complete |
+| EXPLORE-06 | Phase 5 | Complete |
+| EXPLORE-07 | Phase 5 | Complete |
+| EXPLORE-08 | Phase 5 | Complete |
+| EXPLORE-09 | Phase 5 | Complete |
 | EXPLORE-10 | Phase 5 | Pending |
 | RESEARCH-01 | Phase 6 | Pending |
 | RESEARCH-02 | Phase 6 | Pending |

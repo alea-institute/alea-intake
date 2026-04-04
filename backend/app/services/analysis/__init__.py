@@ -1,1 +1,1 @@
-# Analysis pipeline services
+"""Analysis pipeline services: orchestration, stages, scoring, convergence."""

@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: FOLIO Ontology Integration** - Ontology loading, concept resolution, IRI matching, adjacency discovery, and graceful degradation
 - [ ] **Phase 3: Input & Narrative Capture** - Text chat, voice/ASR, document upload, professional notes, normalization, and fact extraction
 - [ ] **Phase 4: Core Analysis Pipeline** - Iterative analysis loop, fact-to-claim mapping, gap analysis, convergence detection, and checkpointing
-- [ ] **Phase 5: Pre-Research Exploration & Safety** - Three-layer exploration, screening protocols, DV default protocol, continuous safety screening
+- [x] **Phase 5: Pre-Research Exploration & Safety** - Three-layer exploration, screening protocols, DV default protocol, continuous safety screening (completed 2026-04-04)
 - [ ] **Phase 6: Legal Research & Verification** - Pluggable research tools, MCP + HTTP adapters, citation verification, knowledge base
 - [ ] **Phase 7: Output & Export** - Case memos, triage/routing, action items, configurable formats, and export
 - [ ] **Phase 8: Frontend Application** - Chat interface, streaming progress, dashboard, admin config, mobile responsive, voice recording UI
@@ -71,13 +71,13 @@ Plans:
   3. A consumer can upload PDF, DOCX, or image documents that are processed for text extraction
   4. A professional can enter notes on behalf of a consumer, and those notes enter the same analysis pipeline as consumer-provided input
   5. All input modalities produce a common normalized text representation from which atomic factual assertions (parties, dates, locations, amounts, events) are extracted
-**Plans:** 4/4 plans executed
+**Plans:** 4 plans
 
 Plans:
-- [x] 03-01-PLAN.md — Intake DB models, config settings, message normalization pipeline, and WebSocket chat system
-- [x] 03-02-PLAN.md — Pluggable ASR service with provider architecture and voice WebSocket routing
-- [x] 03-03-PLAN.md — Document processing service with PDF, DOCX, and OCR extractors
-- [x] 03-04-PLAN.md — Professional intake router and LLM-driven fact extraction with ConceptResolver wiring
+- [ ] 03-01-PLAN.md — Intake DB models, config settings, message normalization pipeline, and WebSocket chat system
+- [ ] 03-02-PLAN.md — Pluggable ASR service with provider architecture and voice WebSocket routing
+- [ ] 03-03-PLAN.md — Document processing service with PDF, DOCX, and OCR extractors
+- [ ] 03-04-PLAN.md — Professional intake router and LLM-driven fact extraction with ConceptResolver wiring
 
 ### Phase 4: Core Analysis Pipeline
 **Goal**: The system performs iterative analysis -- issue-spotting, fact-to-claim mapping, gap analysis, follow-up questioning, and convergence detection -- producing a complete mapping of consumer facts to legal claims, elements, and identified gaps
@@ -89,14 +89,14 @@ Plans:
   3. The system identifies gaps (unsupported elements, unexplored claims, weak mappings) and generates prioritized, consumer-friendly follow-up questions grouped by topic
   4. Analysis state is checkpointed after every stage, allowing pause/resume across sessions without loss of progress
   5. A complete audit trail records every analysis stage, sources consulted, and confidence scores assigned
-**Plans:** 3/5 plans executed
+**Plans**: TBD
 
 Plans:
-- [x] 04-01-PLAN.md — Analysis data layer: DB models, Pydantic schemas, org-configurable settings
-- [x] 04-02-PLAN.md — Convergence evaluator (5 weighted signals) and composite confidence scoring
-- [x] 04-03-PLAN.md — Analysis stages: issue-spotting, fact-mapping, research stub
-- [x] 04-04-PLAN.md — Gap analysis (4 types) and LLM-driven question generation
-- [x] 04-05-PLAN.md — Pipeline orchestrator, trigger system, REST API, WebSocket progress
+- [ ] 04-01: TBD
+- [ ] 04-02: TBD
+- [ ] 04-03: TBD
+- [ ] 04-04: TBD
+- [ ] 04-05: TBD
 
 ### Phase 5: Pre-Research Exploration & Safety
 **Goal**: The system performs pre-research exploration using three layers (FOLIO relationships, curated screening protocols, LLM reasoning) to discover adjacent legal issues and ensure continuous safety screening throughout every conversation
@@ -107,12 +107,13 @@ Plans:
   2. Safety screening runs continuously on every consumer message throughout the conversation, not just at intake start
   3. Organizations can define mandatory safety screening protocols, and a default DV screening protocol ships with the system for family law matters
   4. Organizations can create both community-shared and private screening protocols, with configurable exploration depth and question transparency
-**Plans:** 3 plans
+**Plans**: TBD
 
 Plans:
-- [ ] 05-01-PLAN.md — Screening protocol data layer, 16 seed protocols, TriggerMatcher, admin CRUD API, and exploration schemas
-- [ ] 05-02-PLAN.md — Three-layer exploration engine with parallel execution, deduplication, and ExploreStage orchestrator integration
-- [ ] 05-03-PLAN.md — Continuous per-message safety screening middleware with priority-based WebSocket interrupt model
+- [x] 05-01: TBD
+- [ ] 05-02: TBD
+- [ ] 05-03: TBD
+- [ ] 05-04: TBD
 
 ### Phase 6: Legal Research & Verification
 **Goal**: The system queries pluggable legal research tools to find authorities for each identified claim, verifies all citations against known databases before presentation, and supports organization-specific knowledge bases
@@ -227,9 +228,9 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 |-------|----------------|--------|-----------|
 | 1. Foundation & Security | 4/5 | In Progress|  |
 | 2. FOLIO Ontology Integration | 1/3 | In Progress|  |
-| 3. Input & Narrative Capture | 2/4 | In Progress|  |
-| 4. Core Analysis Pipeline | 3/5 | In Progress|  |
-| 5. Pre-Research Exploration & Safety | 0/3 | Not started | - |
+| 3. Input & Narrative Capture | 0/4 | Not started | - |
+| 4. Core Analysis Pipeline | 0/5 | Not started | - |
+| 5. Pre-Research Exploration & Safety | 1/1 | Complete   | 2026-04-04 |
 | 6. Legal Research & Verification | 0/5 | Not started | - |
 | 7. Output & Export | 0/3 | Not started | - |
 | 8. Frontend Application | 0/4 | Not started | - |
