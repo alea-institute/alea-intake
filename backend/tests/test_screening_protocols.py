@@ -1,17 +1,24 @@
-"""Tests for screening protocol DB models, TriggerMatcher, and Pydantic schemas.
+"""Tests for screening protocol DB models, TriggerMatcher, Pydantic schemas,
+ProtocolService CRUD, admin API endpoints, and lifespan seed loading.
 
 Validates:
 - ScreeningProtocol, ProtocolVersion, OrgProtocolActivation, ScreeningEvent DB models
 - TriggerMatcher keyword/regex matching with <50ms performance
 - ExplorationConfig / ExplorationResult / ExplorationRoundResult schemas
 - AnalysisConfig.exploration field integration
+- ProtocolService CRUD, activation, visibility rules
+- Admin API at /api/v1/admin/screening/ with role guard
+- Seed protocol loading during app lifespan
 """
 
 import time
 from types import SimpleNamespace
 
 import pytest
+from httpx import AsyncClient
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession as AS
 
 from app.models.screening import (
     OrgProtocolActivation,
@@ -340,3 +347,406 @@ def test_screening_result_schema():
     assert result.has_critical is True
     assert len(result.triggered_protocols) == 1
     assert result.needs_deep_scan is True
+
+
+# ============================================================================
+# Task 2: ProtocolService CRUD, Admin API, and Lifespan
+# ============================================================================
+
+
+# -- Helpers (same pattern as test_folio_admin.py) ---------------------------
+
+
+async def _register_and_login(
+    client: AsyncClient, email: str, password: str = "StrongPass123!"
+) -> dict:
+    """Register a user and return tokens."""
+    await client.post(
+        "/api/v1/auth/register",
+        json={"email": email, "password": password, "full_name": "Test User"},
+        headers={"X-Tenant-Slug": "test-legal-aid"},
+    )
+    resp = await client.post(
+        "/api/v1/auth/login",
+        json={"email": email, "password": password},
+        headers={"X-Tenant-Slug": "test-legal-aid"},
+    )
+    return resp.json()
+
+
+async def _make_admin(client: AsyncClient, email: str) -> dict:
+    """Register user, promote to admin, re-login."""
+    from app.models.user import User
+
+    await _register_and_login(client, email)
+
+    import app.db.engine as engine_module
+
+    engine = engine_module._engine
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(
+            schema_translate_map={"tenant": None, "shared": None}
+        )
+        async with AS(bind=conn, expire_on_commit=False) as session:
+            await session.execute(
+                update(User).where(User.email == email).values(role="admin")
+            )
+            await session.commit()
+
+    resp = await client.post(
+        "/api/v1/auth/login",
+        json={"email": email, "password": password},
+        headers={"X-Tenant-Slug": "test-legal-aid"},
+    )
+    return resp.json()
+
+
+def _auth_headers(tokens: dict) -> dict:
+    return {
+        "Authorization": f"Bearer {tokens['access_token']}",
+        "X-Tenant-Slug": "test-legal-aid",
+    }
+
+
+# -- ProtocolService Unit Tests -----------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_create_protocol(async_session: AsyncSession):
+    """ProtocolService.create_protocol creates a ScreeningProtocol + initial ProtocolVersion."""
+    from app.services.screening.protocol_service import ProtocolService
+
+    svc = ProtocolService(async_session)
+    protocol, version = await svc.create_protocol(
+        name="Custom DV Protocol",
+        slug="custom-dv",
+        severity_tier="critical",
+        description="Org-specific DV screening",
+        owner_org_id=1,
+        is_shared=False,
+        trigger_conditions={"keywords": ["partner violence"]},
+        questions=[{"text": "Are you safe?", "is_mandatory": True, "text_transparent": "..."}],
+        escalation_actions={"mandated_reporting_flag": True},
+        safety_resources=None,
+    )
+
+    assert protocol.id is not None
+    assert protocol.slug == "custom-dv"
+    assert protocol.owner_org_id == 1
+    assert protocol.is_shared is False
+    assert version.protocol_id == protocol.id
+    assert version.version == "1.0.0"
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_create_with_shared(async_session: AsyncSession):
+    """ProtocolService.create_protocol with is_shared=True makes it visible in community pool."""
+    from app.services.screening.protocol_service import ProtocolService
+
+    svc = ProtocolService(async_session)
+    protocol, _ = await svc.create_protocol(
+        name="Shared Protocol",
+        slug="shared-test",
+        severity_tier="advisory",
+        description="Community shared",
+        owner_org_id=1,
+        is_shared=True,
+        trigger_conditions={"keywords": ["test"]},
+        questions=[{"text": "Test?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+    )
+
+    assert protocol.is_shared is True
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_list_protocols_visibility(async_session: AsyncSession):
+    """ProtocolService.list_protocols returns seed + shared + own, excludes other org's private."""
+    from app.services.screening.protocol_service import ProtocolService
+    from app.services.screening.seed_protocols import seed_protocols_to_db
+
+    # Seed the 16 system protocols
+    await seed_protocols_to_db(async_session)
+
+    svc = ProtocolService(async_session)
+
+    # Create org 1's private protocol
+    await svc.create_protocol(
+        name="Org1 Private", slug="org1-private", severity_tier="advisory",
+        owner_org_id=1, is_shared=False,
+        trigger_conditions={"keywords": ["test"]},
+        questions=[{"text": "?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+    )
+
+    # Create org 2's private protocol
+    await svc.create_protocol(
+        name="Org2 Private", slug="org2-private", severity_tier="advisory",
+        owner_org_id=2, is_shared=False,
+        trigger_conditions={"keywords": ["test"]},
+        questions=[{"text": "?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+    )
+
+    # Create org 2's shared protocol
+    await svc.create_protocol(
+        name="Org2 Shared", slug="org2-shared", severity_tier="advisory",
+        owner_org_id=2, is_shared=True,
+        trigger_conditions={"keywords": ["test"]},
+        questions=[{"text": "?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+    )
+
+    # Org 1 should see: 16 seeds + own private + org2's shared = 18
+    visible = await svc.list_protocols(org_id=1)
+    slugs = {p["slug"] for p in visible}
+
+    assert "org1-private" in slugs, "Own private protocol should be visible"
+    assert "org2-private" not in slugs, "Other org's private protocol should NOT be visible"
+    assert "org2-shared" in slugs, "Other org's shared protocol should be visible"
+    assert "dv-ipv" in slugs, "Seed protocol should be visible"
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_create_version(async_session: AsyncSession):
+    """ProtocolService.create_version creates a new ProtocolVersion with incremented semver."""
+    from app.services.screening.protocol_service import ProtocolService
+
+    svc = ProtocolService(async_session)
+    protocol, v1 = await svc.create_protocol(
+        name="Versioned Protocol", slug="versioned-test", severity_tier="elevated",
+        owner_org_id=1, is_shared=False,
+        trigger_conditions={"keywords": ["v1"]},
+        questions=[{"text": "V1?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+    )
+
+    v2 = await svc.create_version(
+        protocol_id=protocol.id,
+        trigger_conditions={"keywords": ["v2"]},
+        questions=[{"text": "V2?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+        version="1.1.0",
+    )
+
+    assert v2.version == "1.1.0"
+    assert v2.protocol_id == protocol.id
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_activate_protocol(async_session: AsyncSession):
+    """ProtocolService.activate_protocol creates OrgProtocolActivation with pinned_version_id."""
+    from app.services.screening.protocol_service import ProtocolService
+
+    svc = ProtocolService(async_session)
+    protocol, version = await svc.create_protocol(
+        name="Activate Test", slug="activate-test", severity_tier="critical",
+        owner_org_id=1, is_shared=False,
+        trigger_conditions={"keywords": ["test"]},
+        questions=[{"text": "?", "is_mandatory": True, "text_transparent": "..."}],
+        escalation_actions={"mandated_reporting_flag": True},
+    )
+
+    activation = await svc.activate_protocol(
+        protocol_id=protocol.id,
+        pinned_version_id=version.id,
+        activation_mode="mandatory",
+    )
+
+    assert activation.protocol_id == protocol.id
+    assert activation.pinned_version_id == version.id
+    assert activation.activation_mode == "mandatory"
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_deactivate(async_session: AsyncSession):
+    """ProtocolService.deactivate sets activation_mode to 'disabled'."""
+    from app.services.screening.protocol_service import ProtocolService
+
+    svc = ProtocolService(async_session)
+    protocol, version = await svc.create_protocol(
+        name="Deactivate Test", slug="deactivate-test", severity_tier="elevated",
+        owner_org_id=1, is_shared=False,
+        trigger_conditions={"keywords": ["test"]},
+        questions=[{"text": "?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+    )
+
+    await svc.activate_protocol(
+        protocol_id=protocol.id,
+        pinned_version_id=version.id,
+        activation_mode="mandatory",
+    )
+
+    await svc.deactivate(protocol_id=protocol.id)
+
+    # Check it's disabled
+    active = await svc.get_active_protocols()
+    active_ids = [a[0].protocol_id for a in active]
+    assert protocol.id not in active_ids
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_get_active_protocols(async_session: AsyncSession):
+    """ProtocolService.get_active_protocols returns only non-disabled protocols."""
+    from app.services.screening.protocol_service import ProtocolService
+
+    svc = ProtocolService(async_session)
+
+    p1, v1 = await svc.create_protocol(
+        name="Active1", slug="active1", severity_tier="critical",
+        owner_org_id=1, is_shared=False,
+        trigger_conditions={"keywords": ["test1"]},
+        questions=[{"text": "?", "is_mandatory": True, "text_transparent": "..."}],
+        escalation_actions={"mandated_reporting_flag": True},
+    )
+    p2, v2 = await svc.create_protocol(
+        name="Active2", slug="active2", severity_tier="elevated",
+        owner_org_id=1, is_shared=False,
+        trigger_conditions={"keywords": ["test2"]},
+        questions=[{"text": "?", "is_mandatory": False, "text_transparent": "..."}],
+        escalation_actions={},
+    )
+
+    await svc.activate_protocol(p1.id, v1.id, "mandatory")
+    await svc.activate_protocol(p2.id, v2.id, "disabled")
+
+    active = await svc.get_active_protocols()
+    active_ids = [a[0].protocol_id for a in active]
+    assert p1.id in active_ids
+    assert p2.id not in active_ids
+
+
+@pytest.mark.asyncio
+async def test_protocol_service_activate_defaults_for_org(async_session: AsyncSession):
+    """ProtocolService.activate_defaults_for_org activates critical as mandatory."""
+    from app.services.screening.protocol_service import ProtocolService
+    from app.services.screening.seed_protocols import seed_protocols_to_db
+
+    await seed_protocols_to_db(async_session)
+
+    svc = ProtocolService(async_session)
+    count = await svc.activate_defaults_for_org()
+
+    # 5 critical (mandatory) + 5 elevated (optional) = 10
+    assert count == 10
+
+    active = await svc.get_active_protocols()
+    mandatory = [a for a, v in active if a.activation_mode == "mandatory"]
+    optional = [a for a, v in active if a.activation_mode == "optional"]
+    assert len(mandatory) == 5
+    assert len(optional) == 5
+
+
+# -- Admin API Endpoint Tests -------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_admin_create_protocol(async_client: AsyncClient):
+    """POST /api/v1/admin/screening/protocols creates protocol (admin only)."""
+    admin_tokens = await _make_admin(async_client, "screenadmin1@test.com")
+
+    resp = await async_client.post(
+        "/api/v1/admin/screening/protocols",
+        json={
+            "name": "API Test Protocol",
+            "slug": "api-test-protocol",
+            "severity_tier": "advisory",
+            "description": "Created via API",
+            "trigger_conditions": {"keywords": ["api-test"]},
+            "questions": [{"text": "Test?", "is_mandatory": False, "text_transparent": "..."}],
+            "escalation_actions": {},
+            "is_shared": False,
+        },
+        headers=_auth_headers(admin_tokens),
+    )
+
+    assert resp.status_code in (200, 201), f"Got {resp.status_code}: {resp.text}"
+    data = resp.json()
+    assert data["slug"] == "api-test-protocol"
+
+
+@pytest.mark.asyncio
+async def test_admin_list_protocols(async_client: AsyncClient):
+    """GET /api/v1/admin/screening/protocols lists protocols visible to org."""
+    admin_tokens = await _make_admin(async_client, "screenadmin2@test.com")
+
+    resp = await async_client.get(
+        "/api/v1/admin/screening/protocols",
+        headers=_auth_headers(admin_tokens),
+    )
+
+    assert resp.status_code == 200
+    data = resp.json()
+    assert isinstance(data, list)
+
+
+@pytest.mark.asyncio
+async def test_admin_activate_protocol(async_client: AsyncClient):
+    """POST /api/v1/admin/screening/protocols/{id}/activate activates with mode."""
+    admin_tokens = await _make_admin(async_client, "screenadmin3@test.com")
+
+    # First create a protocol
+    create_resp = await async_client.post(
+        "/api/v1/admin/screening/protocols",
+        json={
+            "name": "Activate API Test",
+            "slug": "activate-api-test",
+            "severity_tier": "elevated",
+            "trigger_conditions": {"keywords": ["activate-test"]},
+            "questions": [{"text": "?", "is_mandatory": False, "text_transparent": "..."}],
+            "escalation_actions": {},
+            "is_shared": False,
+        },
+        headers=_auth_headers(admin_tokens),
+    )
+    assert create_resp.status_code in (200, 201)
+    protocol_data = create_resp.json()
+    protocol_id = protocol_data["id"]
+    version_id = protocol_data["version_id"]
+
+    # Activate it
+    resp = await async_client.post(
+        f"/api/v1/admin/screening/protocols/{protocol_id}/activate",
+        json={
+            "pinned_version_id": version_id,
+            "activation_mode": "mandatory",
+        },
+        headers=_auth_headers(admin_tokens),
+    )
+
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["activation_mode"] == "mandatory"
+
+
+@pytest.mark.asyncio
+async def test_admin_endpoints_require_admin(async_client: AsyncClient):
+    """Non-admin users get 403 on screening admin endpoints."""
+    consumer_tokens = await _register_and_login(async_client, "consumer-screen@test.com")
+    headers = _auth_headers(consumer_tokens)
+
+    endpoints = [
+        ("GET", "/api/v1/admin/screening/protocols"),
+        ("POST", "/api/v1/admin/screening/protocols"),
+    ]
+
+    for method, path in endpoints:
+        if method == "GET":
+            resp = await async_client.get(path, headers=headers)
+        else:
+            resp = await async_client.post(path, headers=headers, json={})
+        assert resp.status_code == 403, f"{method} {path} returned {resp.status_code}, expected 403"
+
+
+# -- Router Wiring Test -------------------------------------------------------
+
+
+def test_screening_admin_router_is_registered():
+    """The screening_admin_router is wired into the FastAPI app via include_router."""
+    from app.main import app as fastapi_app
+
+    route_paths = [route.path for route in fastapi_app.routes]
+    assert "/api/v1/admin/screening/protocols" in route_paths, (
+        "screening_admin_router not registered -- /api/v1/admin/screening/protocols missing"
+    )
