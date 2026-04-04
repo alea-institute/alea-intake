@@ -39,10 +39,10 @@ class NormalizedContent:
     """Common representation for all intake modalities after normalization."""
 
     text: str
-    elements: list[TextElement]
-    source_type: str  # "chat", "professional_note", "voice_transcript", "document"
-    source_id: str
-    source_spans: list[SourceSpan]
+    elements: list[TextElement] = field(default_factory=list)
+    source_type: str = "chat"
+    source_id: str = ""
+    source_spans: list[SourceSpan] = field(default_factory=list)
     party_id: int | None = None
 
 

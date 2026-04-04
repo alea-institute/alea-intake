@@ -293,6 +293,7 @@ class TestProcessMessage:
         assert result.text == "transcribed speech"
 
     @pytest.mark.asyncio
-    async def test_process_document_raises_not_implemented(self):
-        with pytest.raises(NotImplementedError):
+    async def test_process_document_requires_kwargs(self):
+        """Document modality delegates to DocumentService; requires file_path/mime_type."""
+        with pytest.raises(KeyError):
             await process_message("document", "doc data", message_id=4)

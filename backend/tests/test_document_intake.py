@@ -112,10 +112,11 @@ async def test_process_message_document_no_not_implemented(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_process_message_voice_still_raises():
-    """Test: voice modality still raises NotImplementedError (Plan 02 handles it)."""
-    with pytest.raises(NotImplementedError, match="Voice"):
-        await process_message("voice", "content", message_id=1)
+async def test_process_message_voice_normalizes():
+    """Test: voice modality normalizes via normalize_voice_transcript."""
+    result = await process_message("voice", "transcribed content", message_id=1)
+    assert result.source_type == "voice_transcript"
+    assert result.text == "transcribed content"
 
 
 # --- Document upload endpoint tests (unit-style with mocked DB) ---
