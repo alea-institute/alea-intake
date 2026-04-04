@@ -89,10 +89,10 @@ Plans:
   3. The system identifies gaps (unsupported elements, unexplored claims, weak mappings) and generates prioritized, consumer-friendly follow-up questions grouped by topic
   4. Analysis state is checkpointed after every stage, allowing pause/resume across sessions without loss of progress
   5. A complete audit trail records every analysis stage, sources consulted, and confidence scores assigned
-**Plans:** 0/5 plans executed
+**Plans:** 1/5 plans executed
 
 Plans:
-- [ ] 04-01-PLAN.md — Analysis data layer: DB models, Pydantic schemas, org-configurable settings
+- [x] 04-01-PLAN.md — Analysis data layer: DB models, Pydantic schemas, org-configurable settings
 - [ ] 04-02-PLAN.md — Convergence evaluator (5 weighted signals) and composite confidence scoring
 - [ ] 04-03-PLAN.md — Analysis stages: issue-spotting, fact-mapping, research stub
 - [ ] 04-04-PLAN.md — Gap analysis (4 types) and LLM-driven question generation
@@ -229,7 +229,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 1. Foundation & Security | 4/5 | In Progress|  |
 | 2. FOLIO Ontology Integration | 1/3 | In Progress|  |
 | 3. Input & Narrative Capture | 2/4 | In Progress|  |
-| 4. Core Analysis Pipeline | 0/5 | Not started | - |
+| 4. Core Analysis Pipeline | 1/5 | In Progress |  |
 | 5. Pre-Research Exploration & Safety | 0/4 | Not started | - |
 | 6. Legal Research & Verification | 0/5 | Not started | - |
 | 7. Output & Export | 0/3 | Not started | - |
