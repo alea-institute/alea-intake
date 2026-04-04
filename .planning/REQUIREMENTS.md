@@ -42,7 +42,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Legal Research & Verification
 
 - [x] **RESEARCH-01**: System queries pluggable legal research tools via MCP tool registry and HTTP adapters
-- [ ] **RESEARCH-02**: Organizations configure which research tools they have access to (CourtListener, Westlaw, Clio Library, Midpage, Descrybe)
+- [x] **RESEARCH-02**: Organizations configure which research tools they have access to (CourtListener, Westlaw, Clio Library, Midpage, Descrybe)
 - [x] **RESEARCH-03**: System integrates with folio-insights for advocacy knowledge (elements, best practices, pitfalls)
 - [x] **RESEARCH-04**: System integrates with folio-enrich for document annotation and concept extraction
 - [x] **RESEARCH-05**: For each identified claim, system researches required legal elements per jurisdiction
@@ -179,7 +179,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | EXPLORE-09 | Phase 5 | Complete |
 | EXPLORE-10 | Phase 5 | Complete |
 | RESEARCH-01 | Phase 6 | Complete |
-| RESEARCH-02 | Phase 6 | Pending |
+| RESEARCH-02 | Phase 6 | Complete |
 | RESEARCH-03 | Phase 6 | Complete |
 | RESEARCH-04 | Phase 6 | Complete |
 | RESEARCH-05 | Phase 6 | Complete |

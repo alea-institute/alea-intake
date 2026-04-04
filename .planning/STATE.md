@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-04-PLAN.md
-last_updated: "2026-04-04T23:25:08.225Z"
+stopped_at: Completed 06-05-PLAN.md
+last_updated: "2026-04-04T23:36:55.261Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 11
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 25
-  completed_plans: 24
+  completed_plans: 25
   percent: 89
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 6 of 11 (legal research & verification)
-Plan: 4 of 5 complete
+Plan: 5 of 5 complete
 Status: Ready to execute
 Last activity: 2026-04-04
 
@@ -64,6 +64,7 @@ Progress: [============================================------]  89%
 | Phase 06 P02 | 4min | 2 tasks | 6 files |
 | Phase 06 P03 | 6min | 2 tasks | 16 files |
 | Phase 06 P04 | 8min | 2 tasks | 12 files |
+| Phase 06 P05 | 9min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,9 @@ Recent decisions affecting current work:
 - [Phase 06]: Simple whitespace tokenization for chunk token counting (sufficient for boundary decisions)
 - [Phase 06]: FOLIO IRI boost factor 1.5x for dual-signal retrieval; insight demotion 0.5x per D-08 hierarchy
 - [Phase 06]: stdlib html.parser for HTML extraction (avoids BeautifulSoup dependency)
+- [Phase 06]: ResearchStage uses asyncio.gather with return_exceptions=True for parallel tool queries
+- [Phase 06]: UsageTracker in-memory for MVP; production persists to ResearchToolConfig DB
+- [Phase 06]: FolioMCPClient lifespan connection graceful -- unavailability doesn't block startup
 
 ### Pending Todos
 
@@ -135,6 +139,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T23:25:08.223Z
-Stopped at: Completed 06-04-PLAN.md
+Last session: 2026-04-04T23:36:55.259Z
+Stopped at: Completed 06-05-PLAN.md
 Resume file: None

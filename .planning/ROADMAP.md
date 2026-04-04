@@ -132,7 +132,7 @@ Plans:
 - [x] 06-02-PLAN.md — FolioMCPClient singleton (mcp SDK), CitationNormalizer (eyecite), new deps
 - [x] 06-03-PLAN.md — HTTP/MCP adapters (CourtListener, Google Scholar, stubs), citation verifier, result ranker, folio-enrich client
 - [x] 06-04-PLAN.md — Knowledge base: semantic chunker, FOLIO tagger, dual-signal retriever, InsightsService, KB admin API
-- [ ] 06-05-PLAN.md — ResearchStage replacing research_stub, orchestrator wiring, lifespan integration, research admin API
+- [x] 06-05-PLAN.md — ResearchStage replacing research_stub, orchestrator wiring, lifespan integration, research admin API
 
 ### Phase 7: Output & Export
 **Goal**: The system generates configurable output -- structured case memos, triage/routing recommendations, and action items -- in formats appropriate for each deployment type, with export to PDF, DOCX, and JSON
