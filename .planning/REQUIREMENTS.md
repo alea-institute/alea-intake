@@ -62,8 +62,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **ANALYSIS-06**: Multi-signal loop termination: coverage %, confidence plateau, iteration count, user fatigue, diminishing gaps
 - [x] **ANALYSIS-07**: Termination weights and thresholds are configurable per organization
 - [x] **ANALYSIS-08**: System performs parallel multi-jurisdictional analysis when facts span jurisdictions
-- [ ] **ANALYSIS-09**: Analysis state is checkpointed after every stage for pause/resume across sessions
-- [ ] **ANALYSIS-10**: Full audit trail: every stage records what was analyzed, what sources were consulted, what confidence was assigned
+- [x] **ANALYSIS-09**: Analysis state is checkpointed after every stage for pause/resume across sessions
+- [x] **ANALYSIS-10**: Full audit trail: every stage records what was analyzed, what sources were consulted, what confidence was assigned
 
 ### Output & Export
 
@@ -196,8 +196,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | ANALYSIS-06 | Phase 4 | Complete |
 | ANALYSIS-07 | Phase 4 | Complete |
 | ANALYSIS-08 | Phase 4 | Complete |
-| ANALYSIS-09 | Phase 4 | Pending |
-| ANALYSIS-10 | Phase 4 | Pending |
+| ANALYSIS-09 | Phase 4 | Complete |
+| ANALYSIS-10 | Phase 4 | Complete |
 | OUTPUT-01 | Phase 7 | Pending |
 | OUTPUT-02 | Phase 7 | Pending |
 | OUTPUT-03 | Phase 7 | Pending |

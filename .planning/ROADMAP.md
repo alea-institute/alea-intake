@@ -95,8 +95,8 @@ Plans:
 - [x] 04-01-PLAN.md — Analysis data layer: DB models, Pydantic schemas, org-configurable settings
 - [x] 04-02-PLAN.md — Convergence evaluator (5 weighted signals) and composite confidence scoring
 - [x] 04-03-PLAN.md — Analysis stages: issue-spotting, fact-mapping, research stub
-- [ ] 04-04-PLAN.md — Gap analysis (4 types) and LLM-driven question generation
-- [ ] 04-05-PLAN.md — Pipeline orchestrator, trigger system, REST API, WebSocket progress
+- [x] 04-04-PLAN.md — Gap analysis (4 types) and LLM-driven question generation
+- [x] 04-05-PLAN.md — Pipeline orchestrator, trigger system, REST API, WebSocket progress
 
 ### Phase 5: Pre-Research Exploration & Safety
 **Goal**: The system performs pre-research exploration using three layers (FOLIO relationships, curated screening protocols, LLM reasoning) to discover adjacent legal issues and ensure continuous safety screening throughout every conversation
