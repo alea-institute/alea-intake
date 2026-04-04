@@ -41,14 +41,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Legal Research & Verification
 
-- [ ] **RESEARCH-01**: System queries pluggable legal research tools via MCP tool registry and HTTP adapters
-- [ ] **RESEARCH-02**: Organizations configure which research tools they have access to (CourtListener, Westlaw, Clio Library, Midpage, Descrybe)
+- [x] **RESEARCH-01**: System queries pluggable legal research tools via MCP tool registry and HTTP adapters
+- [x] **RESEARCH-02**: Organizations configure which research tools they have access to (CourtListener, Westlaw, Clio Library, Midpage, Descrybe)
 - [ ] **RESEARCH-03**: System integrates with folio-insights for advocacy knowledge (elements, best practices, pitfalls)
 - [ ] **RESEARCH-04**: System integrates with folio-enrich for document annotation and concept extraction
-- [ ] **RESEARCH-05**: For each identified claim, system researches required legal elements per jurisdiction
-- [ ] **RESEARCH-06**: System finds relevant case law, statutes, regulations, and constitutional provisions
-- [ ] **RESEARCH-07**: Ground truth verification: LLM suggestions verified against known databases before presentation
-- [ ] **RESEARCH-08**: Each authority gets a verified/unverified flag with verification source
+- [x] **RESEARCH-05**: For each identified claim, system researches required legal elements per jurisdiction
+- [x] **RESEARCH-06**: System finds relevant case law, statutes, regulations, and constitutional provisions
+- [x] **RESEARCH-07**: Ground truth verification: LLM suggestions verified against known databases before presentation
+- [x] **RESEARCH-08**: Each authority gets a verified/unverified flag with verification source
 - [ ] **RESEARCH-09**: Admin-configurable knowledge base with RAG over curated legal documents
 - [ ] **RESEARCH-10**: Organizations can upload custom documents to their knowledge base
 
@@ -178,14 +178,14 @@ Deferred to future release. Tracked but not in current roadmap.
 | EXPLORE-08 | Phase 5 | Pending |
 | EXPLORE-09 | Phase 5 | Pending |
 | EXPLORE-10 | Phase 5 | Pending |
-| RESEARCH-01 | Phase 6 | Pending |
-| RESEARCH-02 | Phase 6 | Pending |
+| RESEARCH-01 | Phase 6 | Complete |
+| RESEARCH-02 | Phase 6 | Complete |
 | RESEARCH-03 | Phase 6 | Pending |
 | RESEARCH-04 | Phase 6 | Pending |
-| RESEARCH-05 | Phase 6 | Pending |
-| RESEARCH-06 | Phase 6 | Pending |
-| RESEARCH-07 | Phase 6 | Pending |
-| RESEARCH-08 | Phase 6 | Pending |
+| RESEARCH-05 | Phase 6 | Complete |
+| RESEARCH-06 | Phase 6 | Complete |
+| RESEARCH-07 | Phase 6 | Complete |
+| RESEARCH-08 | Phase 6 | Complete |
 | RESEARCH-09 | Phase 6 | Pending |
 | RESEARCH-10 | Phase 6 | Pending |
 | ANALYSIS-01 | Phase 4 | Pending |

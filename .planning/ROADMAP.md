@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: Input & Narrative Capture** - Text chat, voice/ASR, document upload, professional notes, normalization, and fact extraction
 - [ ] **Phase 4: Core Analysis Pipeline** - Iterative analysis loop, fact-to-claim mapping, gap analysis, convergence detection, and checkpointing
 - [ ] **Phase 5: Pre-Research Exploration & Safety** - Three-layer exploration, screening protocols, DV default protocol, continuous safety screening
-- [ ] **Phase 6: Legal Research & Verification** - Pluggable research tools, MCP + HTTP adapters, citation verification, knowledge base
+- [x] **Phase 6: Legal Research & Verification** - Pluggable research tools, MCP + HTTP adapters, citation verification, knowledge base (completed 2026-04-04)
 - [ ] **Phase 7: Output & Export** - Case memos, triage/routing, action items, configurable formats, and export
 - [ ] **Phase 8: Frontend Application** - Chat interface, streaming progress, dashboard, admin config, mobile responsive, voice recording UI
 - [ ] **Phase 9: Frontend Visualization** - Graph fact-mapping view, matrix completeness view, narrative-anchored annotation view
@@ -128,7 +128,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 06-01: TBD
+- [x] 06-01: TBD
 - [ ] 06-02: TBD
 - [ ] 06-03: TBD
 - [ ] 06-04: TBD
@@ -231,7 +231,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 3. Input & Narrative Capture | 0/4 | Not started | - |
 | 4. Core Analysis Pipeline | 0/5 | Not started | - |
 | 5. Pre-Research Exploration & Safety | 0/4 | Not started | - |
-| 6. Legal Research & Verification | 0/5 | Not started | - |
+| 6. Legal Research & Verification | 1/1 | Complete   | 2026-04-04 |
 | 7. Output & Export | 0/3 | Not started | - |
 | 8. Frontend Application | 0/4 | Not started | - |
 | 9. Frontend Visualization | 0/3 | Not started | - |
