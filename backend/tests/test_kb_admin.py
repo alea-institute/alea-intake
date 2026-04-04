@@ -133,14 +133,12 @@ class TestKBService:
             file_path=None, format="text/plain", source_type="uploaded",
             folio_iris_json=None,
         )
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = mock_doc
-        mock_session.execute.return_value = mock_result
+        # First call: select document, second call: delete chunks
+        select_result = MagicMock()
+        select_result.scalar_one_or_none.return_value = mock_doc
+        delete_result = MagicMock()
 
-        # Mock delete old chunks
-        mock_chunks_result = MagicMock()
-        mock_chunks_result.scalars.return_value.all.return_value = []
-        mock_session.execute.return_value = mock_chunks_result
+        mock_session.execute = AsyncMock(side_effect=[select_result, delete_result])
 
         updated = await service.update(
             document_id=1,
@@ -154,14 +152,15 @@ class TestKBService:
     async def test_delete_removes_chunks_and_document(self, service, mock_session):
         """Test 4: KBService.delete removes chunks from vector index + deletes DB records per D-14."""
         mock_doc = SimpleNamespace(id=1, org_id=1, status="active")
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = mock_doc
-        mock_session.execute.return_value = mock_result
-        mock_session.delete = AsyncMock()
+        select_result = MagicMock()
+        select_result.scalar_one_or_none.return_value = mock_doc
+        delete_chunks_result = MagicMock()
+        delete_doc_result = MagicMock()
+
+        mock_session.execute = AsyncMock(side_effect=[select_result, delete_chunks_result, delete_doc_result])
 
         await service.delete(document_id=1)
-        # Should have called delete
-        assert mock_session.execute.called
+        assert mock_session.execute.call_count == 3
 
     @pytest.mark.asyncio
     async def test_bulk_import_from_zip(self, service, mock_session, mock_chunker, mock_folio_tagger):
@@ -225,13 +224,11 @@ class TestKBService:
             file_path=None, format="text/plain", source_type="uploaded",
             folio_iris_json=None,
         )
-        mock_result = MagicMock()
-        mock_result.scalar_one_or_none.return_value = mock_doc
-        mock_session.execute.return_value = mock_result
+        select_result = MagicMock()
+        select_result.scalar_one_or_none.return_value = mock_doc
+        delete_result = MagicMock()
 
-        mock_chunks_result = MagicMock()
-        mock_chunks_result.scalars.return_value.all.return_value = []
-        mock_session.execute.return_value = mock_chunks_result
+        mock_session.execute = AsyncMock(side_effect=[select_result, delete_result])
 
         await service.update(document_id=1, file_content=b"New content", filename="new.txt")
         assert mock_doc.version == 4
