@@ -125,11 +125,11 @@ Plans:
   3. Every LLM-suggested citation is verified against a known database before presentation, and each authority displays a verified/unverified flag with verification source
   4. For each identified claim, the system researches required legal elements per jurisdiction, integrating with folio-insights for advocacy knowledge and folio-enrich for document analysis
   5. Administrators can configure a knowledge base with RAG over curated legal documents, and organizations can upload custom documents to their KB
-**Plans:** 5 plans
+**Plans:** 2/5 plans executed
 
 Plans:
-- [ ] 06-01-PLAN.md — DB models, Pydantic schemas, adapter ABC, tool registry, usage tracker
-- [ ] 06-02-PLAN.md — FolioMCPClient singleton (mcp SDK), CitationNormalizer (eyecite), new deps
+- [x] 06-01-PLAN.md — DB models, Pydantic schemas, adapter ABC, tool registry, usage tracker
+- [x] 06-02-PLAN.md — FolioMCPClient singleton (mcp SDK), CitationNormalizer (eyecite), new deps
 - [ ] 06-03-PLAN.md — HTTP/MCP adapters (CourtListener, Google Scholar, stubs), citation verifier, result ranker, folio-enrich client
 - [ ] 06-04-PLAN.md — Knowledge base: semantic chunker, FOLIO tagger, dual-signal retriever, InsightsService, KB admin API
 - [ ] 06-05-PLAN.md — ResearchStage replacing research_stub, orchestrator wiring, lifespan integration, research admin API
@@ -231,7 +231,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 3. Input & Narrative Capture | 0/4 | Not started | - |
 | 4. Core Analysis Pipeline | 0/5 | Not started | - |
 | 5. Pre-Research Exploration & Safety | 1/1 | Complete   | 2026-04-04 |
-| 6. Legal Research & Verification | 0/5 | Not started | - |
+| 6. Legal Research & Verification | 2/5 | In Progress|  |
 | 7. Output & Export | 0/3 | Not started | - |
 | 8. Frontend Application | 0/4 | Not started | - |
 | 9. Frontend Visualization | 0/3 | Not started | - |

@@ -47,7 +47,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **RESEARCH-04**: System integrates with folio-enrich for document annotation and concept extraction
 - [ ] **RESEARCH-05**: For each identified claim, system researches required legal elements per jurisdiction
 - [ ] **RESEARCH-06**: System finds relevant case law, statutes, regulations, and constitutional provisions
-- [ ] **RESEARCH-07**: Ground truth verification: LLM suggestions verified against known databases before presentation
+- [x] **RESEARCH-07**: Ground truth verification: LLM suggestions verified against known databases before presentation
 - [ ] **RESEARCH-08**: Each authority gets a verified/unverified flag with verification source
 - [ ] **RESEARCH-09**: Admin-configurable knowledge base with RAG over curated legal documents
 - [ ] **RESEARCH-10**: Organizations can upload custom documents to their knowledge base
@@ -122,7 +122,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **INTEGRATE-02**: CMS sync connector for MyCase
 - [ ] **INTEGRATE-03**: CMS sync connector for Legal Server
 - [x] **INTEGRATE-04**: LLM integration via alea-llm-client supporting multiple providers
-- [ ] **INTEGRATE-05**: folio-mcp integration for LLM agent tool-use during analysis
+- [x] **INTEGRATE-05**: folio-mcp integration for LLM agent tool-use during analysis
 - [ ] **INTEGRATE-06**: Export formats: PDF, DOCX, JSON
 
 ## v2 Requirements
@@ -184,7 +184,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | RESEARCH-04 | Phase 6 | Pending |
 | RESEARCH-05 | Phase 6 | Pending |
 | RESEARCH-06 | Phase 6 | Pending |
-| RESEARCH-07 | Phase 6 | Pending |
+| RESEARCH-07 | Phase 6 | Complete |
 | RESEARCH-08 | Phase 6 | Pending |
 | RESEARCH-09 | Phase 6 | Pending |
 | RESEARCH-10 | Phase 6 | Pending |
@@ -238,7 +238,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | INTEGRATE-02 | Phase 11 | Pending |
 | INTEGRATE-03 | Phase 11 | Pending |
 | INTEGRATE-04 | Phase 1 | Complete |
-| INTEGRATE-05 | Phase 6 | Pending |
+| INTEGRATE-05 | Phase 6 | Complete |
 | INTEGRATE-06 | Phase 7 | Pending |
 
 **Coverage:**
