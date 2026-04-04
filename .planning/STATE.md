@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-03-PLAN.md
-last_updated: "2026-04-04T23:14:34.579Z"
+stopped_at: Completed 06-04-PLAN.md
+last_updated: "2026-04-04T23:25:08.225Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 11
   completed_phases: 5
   total_plans: 25
-  completed_plans: 23
+  completed_plans: 24
   percent: 89
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 6 of 11 (legal research & verification)
-Plan: 3 of 5 complete
+Plan: 4 of 5 complete
 Status: Ready to execute
 Last activity: 2026-04-04
 
@@ -63,6 +63,7 @@ Progress: [============================================------]  89%
 | Phase 05 P02 | 11min | 2 tasks | 8 files |
 | Phase 06 P02 | 4min | 2 tasks | 6 files |
 | Phase 06 P03 | 6min | 2 tasks | 16 files |
+| Phase 06 P04 | 8min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,9 @@ Recent decisions affecting current work:
 - [Phase 06]: CitationVerifier uses in-memory cache with TTL (24h case law, 7d statutes) and parallel multi-source verification
 - [Phase 06]: ResultRanker uses 5 weighted signals: relevance(0.30), recency(0.20), jurisdiction(0.25), court_level(0.15), verification(0.10)
 - [Phase 06]: Binding strength: same jurisdiction+authoritative = binding, different = persuasive, secondary = secondary per D-17
+- [Phase 06]: Simple whitespace tokenization for chunk token counting (sufficient for boundary decisions)
+- [Phase 06]: FOLIO IRI boost factor 1.5x for dual-signal retrieval; insight demotion 0.5x per D-08 hierarchy
+- [Phase 06]: stdlib html.parser for HTML extraction (avoids BeautifulSoup dependency)
 
 ### Pending Todos
 
@@ -131,6 +135,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T23:14:34.577Z
-Stopped at: Completed 06-03-PLAN.md
+Last session: 2026-04-04T23:25:08.223Z
+Stopped at: Completed 06-04-PLAN.md
 Resume file: None

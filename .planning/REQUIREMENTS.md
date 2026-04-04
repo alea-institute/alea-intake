@@ -43,14 +43,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **RESEARCH-01**: System queries pluggable legal research tools via MCP tool registry and HTTP adapters
 - [ ] **RESEARCH-02**: Organizations configure which research tools they have access to (CourtListener, Westlaw, Clio Library, Midpage, Descrybe)
-- [ ] **RESEARCH-03**: System integrates with folio-insights for advocacy knowledge (elements, best practices, pitfalls)
+- [x] **RESEARCH-03**: System integrates with folio-insights for advocacy knowledge (elements, best practices, pitfalls)
 - [x] **RESEARCH-04**: System integrates with folio-enrich for document annotation and concept extraction
 - [x] **RESEARCH-05**: For each identified claim, system researches required legal elements per jurisdiction
 - [x] **RESEARCH-06**: System finds relevant case law, statutes, regulations, and constitutional provisions
 - [x] **RESEARCH-07**: Ground truth verification: LLM suggestions verified against known databases before presentation
 - [x] **RESEARCH-08**: Each authority gets a verified/unverified flag with verification source
-- [ ] **RESEARCH-09**: Admin-configurable knowledge base with RAG over curated legal documents
-- [ ] **RESEARCH-10**: Organizations can upload custom documents to their knowledge base
+- [x] **RESEARCH-09**: Admin-configurable knowledge base with RAG over curated legal documents
+- [x] **RESEARCH-10**: Organizations can upload custom documents to their knowledge base
 
 ### Analysis Engine
 
@@ -180,14 +180,14 @@ Deferred to future release. Tracked but not in current roadmap.
 | EXPLORE-10 | Phase 5 | Complete |
 | RESEARCH-01 | Phase 6 | Complete |
 | RESEARCH-02 | Phase 6 | Pending |
-| RESEARCH-03 | Phase 6 | Pending |
+| RESEARCH-03 | Phase 6 | Complete |
 | RESEARCH-04 | Phase 6 | Complete |
 | RESEARCH-05 | Phase 6 | Complete |
 | RESEARCH-06 | Phase 6 | Complete |
 | RESEARCH-07 | Phase 6 | Complete |
 | RESEARCH-08 | Phase 6 | Complete |
-| RESEARCH-09 | Phase 6 | Pending |
-| RESEARCH-10 | Phase 6 | Pending |
+| RESEARCH-09 | Phase 6 | Complete |
+| RESEARCH-10 | Phase 6 | Complete |
 | ANALYSIS-01 | Phase 4 | Complete |
 | ANALYSIS-02 | Phase 4 | Complete |
 | ANALYSIS-03 | Phase 4 | Complete |
