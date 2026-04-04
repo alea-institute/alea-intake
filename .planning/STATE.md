@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-04-04T01:53:55.182Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-04-04T02:07:59.290Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 11
   completed_phases: 2
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
   percent: 87
 ---
 
@@ -60,6 +60,7 @@ Progress: [███████████████████████
 | Phase 02 P03 | 10min | 2 tasks | 8 files |
 | Phase 02 P02 | 10min | 2 tasks | 13 files |
 | Phase 03 P01 | 8min | 2 tasks | 13 files |
+| Phase 03 P02 | 10min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,9 @@ Recent decisions affecting current work:
 - [Phase 03]: WebSocket JWT auth via query param (?token=) -- browser WS API has no custom header support
 - [Phase 03]: Separate ws_router for WebSocket to avoid REST router prefix conflict
 - [Phase 03]: Content stored as plaintext bytes in content_encrypted -- EncryptionContext wiring deferred
+- [Phase 03]: ASR provider pattern mirrors LLMService _PROVIDER_MODEL_MAP for consistency
+- [Phase 03]: Cloud ASR SDKs (Deepgram, AssemblyAI) imported lazily to avoid hard dependencies
+- [Phase 03]: Voice transcript normalization uses source_type 'voice_transcript' in message pipeline
 
 ### Pending Todos
 
@@ -118,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T01:53:55.180Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-04-04T02:07:59.288Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None

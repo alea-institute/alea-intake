@@ -10,7 +10,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Input & Narrative Capture
 
 - [x] **INGEST-01**: Consumer can submit narrative text via conversational chat interface
-- [ ] **INGEST-02**: Consumer can record voice input that is transcribed via pluggable ASR (local Whisper or cloud providers)
+- [x] **INGEST-02**: Consumer can record voice input that is transcribed via pluggable ASR (local Whisper or cloud providers)
 - [ ] **INGEST-03**: Consumer can upload documents (PDF, DOCX, images) for text extraction and analysis
 - [ ] **INGEST-04**: Professional can enter notes on behalf of a consumer
 - [x] **INGEST-05**: System normalizes all input modalities into a common text representation for analysis
@@ -156,7 +156,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | INGEST-01 | Phase 3 | Complete |
-| INGEST-02 | Phase 3 | Pending |
+| INGEST-02 | Phase 3 | Complete |
 | INGEST-03 | Phase 3 | Pending |
 | INGEST-04 | Phase 3 | Pending |
 | INGEST-05 | Phase 3 | Complete |
