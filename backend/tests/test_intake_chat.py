@@ -13,12 +13,51 @@ import json
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from httpx import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.intake import Intake, IntakeParty, IntakeSession, Message
 from app.services.intake.session_service import IntakeSessionService
 from app.services.intake.conversation import ConversationService, INTAKE_SYSTEM_PROMPT
+
+
+# ---------------------------------------------------------------------------
+# Helper: register, login, and grant consent (needed for intake endpoints)
+# ---------------------------------------------------------------------------
+
+async def _setup_authed_user(async_client: AsyncClient, email: str) -> str:
+    """Register a user, login, grant AI consent, return the access token."""
+    headers = {"X-Tenant-Slug": "test-legal-aid"}
+
+    await async_client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": email,
+            "password": "Test1234!Strong",
+            "full_name": "Intake Tester",
+        },
+        headers=headers,
+    )
+    login_resp = await async_client.post(
+        "/api/v1/auth/login",
+        json={"email": email, "password": "Test1234!Strong"},
+        headers=headers,
+    )
+    token = login_resp.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}", **headers}
+
+    # Grant AI processing consent so the ConsentMiddleware allows intake endpoints
+    await async_client.post(
+        "/api/v1/consent/grant",
+        json={
+            "consent_version": "1.0",
+            "consent_items": {"ai_processing": True, "data_sharing": False},
+        },
+        headers=auth_headers,
+    )
+
+    return token
 
 
 # ---------------------------------------------------------------------------
@@ -142,7 +181,6 @@ class TestConversationService:
     async def test_generate_response(self):
         mock_llm = AsyncMock()
         svc = ConversationService(mock_llm)
-        # Mock the generate_response to test delegation
         result = await svc.generate_response(
             messages=[{"role": "user", "content": "My landlord won't fix the plumbing"}]
         )
@@ -156,22 +194,7 @@ class TestConversationService:
 class TestIntakeRESTEndpoints:
     @pytest.mark.asyncio
     async def test_create_intake(self, async_client):
-        # Register + login to get a token
-        await async_client.post(
-            "/api/v1/auth/register",
-            json={
-                "email": "intake-test@example.com",
-                "password": "Test1234!Strong",
-                "full_name": "Intake Tester",
-            },
-            headers={"X-Tenant-Slug": "test-legal-aid"},
-        )
-        login_resp = await async_client.post(
-            "/api/v1/auth/login",
-            json={"email": "intake-test@example.com", "password": "Test1234!Strong"},
-            headers={"X-Tenant-Slug": "test-legal-aid"},
-        )
-        token = login_resp.json()["access_token"]
+        token = await _setup_authed_user(async_client, "intake-create@example.com")
 
         resp = await async_client.post(
             "/api/v1/intake/",
@@ -189,22 +212,7 @@ class TestIntakeRESTEndpoints:
 
     @pytest.mark.asyncio
     async def test_list_intakes(self, async_client):
-        # Register + login
-        await async_client.post(
-            "/api/v1/auth/register",
-            json={
-                "email": "intake-list@example.com",
-                "password": "Test1234!Strong",
-                "full_name": "List Tester",
-            },
-            headers={"X-Tenant-Slug": "test-legal-aid"},
-        )
-        login_resp = await async_client.post(
-            "/api/v1/auth/login",
-            json={"email": "intake-list@example.com", "password": "Test1234!Strong"},
-            headers={"X-Tenant-Slug": "test-legal-aid"},
-        )
-        token = login_resp.json()["access_token"]
+        token = await _setup_authed_user(async_client, "intake-list@example.com")
 
         resp = await async_client.get(
             "/api/v1/intake/",
@@ -218,76 +226,61 @@ class TestIntakeRESTEndpoints:
 
     @pytest.mark.asyncio
     async def test_get_messages(self, async_client):
-        # Register + login + create intake
-        await async_client.post(
-            "/api/v1/auth/register",
-            json={
-                "email": "intake-msg@example.com",
-                "password": "Test1234!Strong",
-                "full_name": "Message Tester",
-            },
-            headers={"X-Tenant-Slug": "test-legal-aid"},
-        )
-        login_resp = await async_client.post(
-            "/api/v1/auth/login",
-            json={"email": "intake-msg@example.com", "password": "Test1234!Strong"},
-            headers={"X-Tenant-Slug": "test-legal-aid"},
-        )
-        token = login_resp.json()["access_token"]
+        token = await _setup_authed_user(async_client, "intake-msg@example.com")
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "X-Tenant-Slug": "test-legal-aid",
+        }
 
-        create_resp = await async_client.post(
-            "/api/v1/intake/",
-            headers={
-                "Authorization": f"Bearer {token}",
-                "X-Tenant-Slug": "test-legal-aid",
-            },
-        )
+        create_resp = await async_client.post("/api/v1/intake/", headers=headers)
         data = create_resp.json()
         intake_id = data["id"]
         session_id = data["session_id"]
 
         resp = await async_client.get(
             f"/api/v1/intake/{intake_id}/messages?session_id={session_id}",
-            headers={
-                "Authorization": f"Bearer {token}",
-                "X-Tenant-Slug": "test-legal-aid",
-            },
+            headers=headers,
         )
         assert resp.status_code == 200
         assert isinstance(resp.json(), list)
 
 
 # ---------------------------------------------------------------------------
-# WebSocket tests (using starlette TestClient)
+# WebSocket tests (using lightweight Starlette app to avoid FOLIO lifespan)
 # ---------------------------------------------------------------------------
 
+def _make_ws_test_app():
+    """Create a lightweight FastAPI app with only the WS router for testing.
+
+    Avoids the heavy FOLIO lifespan that the main app uses.
+    """
+    from fastapi import FastAPI
+    from app.routers.intake import ws_router
+
+    test_app = FastAPI()
+    test_app.include_router(ws_router)
+    return test_app
+
+
 class TestWebSocketEndpoints:
-    @pytest.mark.asyncio
-    async def test_websocket_auth_reject_no_token(self, async_client):
+    def test_websocket_auth_reject_no_token(self):
         """WebSocket connect without token should close with code 4001."""
         from starlette.testclient import TestClient
-        from app.main import app
 
-        # Use sync TestClient for WebSocket tests
+        app = _make_ws_test_app()
         with TestClient(app) as client:
             with pytest.raises(Exception):
-                # Attempting to connect without token should fail
-                with client.websocket_connect(
-                    "/api/ws/intake/999",
-                    headers={"X-Tenant-Slug": "test-legal-aid"},
-                ) as ws:
+                with client.websocket_connect("/api/ws/intake/999") as ws:
                     pass
 
-    @pytest.mark.asyncio
-    async def test_websocket_auth_reject_invalid_token(self, async_client):
+    def test_websocket_auth_reject_invalid_token(self):
         """WebSocket connect with bad token should close with code 4001."""
         from starlette.testclient import TestClient
-        from app.main import app
 
+        app = _make_ws_test_app()
         with TestClient(app) as client:
             with pytest.raises(Exception):
                 with client.websocket_connect(
-                    "/api/ws/intake/999?token=invalid-jwt-token",
-                    headers={"X-Tenant-Slug": "test-legal-aid"},
+                    "/api/ws/intake/999?token=invalid-jwt-token"
                 ) as ws:
                     pass
