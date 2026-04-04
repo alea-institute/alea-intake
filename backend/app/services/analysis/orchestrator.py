@@ -54,7 +54,7 @@ class AnalysisOrchestrator:
     gap-analyze run in parallel per jurisdiction via asyncio.gather.
     """
 
-    STAGES = ["issue_spot", "research", "fact_map", "gap_analyze", "question_gen"]
+    STAGES = ["issue_spot", "explore", "research", "fact_map", "gap_analyze", "question_gen"]
 
     def __init__(
         self,
@@ -443,6 +443,8 @@ class AnalysisOrchestrator:
         try:
             if stage_name == "issue_spot":
                 result = await stage_instance.execute(run, iteration, facts)
+            elif stage_name == "explore":
+                result = await stage_instance.execute(run, iteration, claims, facts)
             elif stage_name == "research":
                 result = await stage_instance.execute(run, claims)
             elif stage_name == "fact_map":
@@ -504,6 +506,16 @@ class AnalysisOrchestrator:
                 db_session=self._session,
                 folio=self._folio,
                 embedding_service=self._embedding_service,
+            )
+        elif stage_name == "explore":
+            from app.services.analysis.stages.explore import ExploreStage
+
+            return ExploreStage(
+                llm_service=self._llm,
+                db_session=self._session,
+                folio=self._folio,
+                embedding_service=self._embedding_service,
+                org_config=self._org_config,
             )
         elif stage_name == "research":
             return ResearchStubStage(

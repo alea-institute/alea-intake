@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 class OrchestratorDecision(BaseModel):
     """LLM orchestrator output -- decides which stage to run next (D-01)."""
 
-    next_stage: Literal["issue_spot", "research", "fact_map", "gap_analyze", "question", "converge"]
+    next_stage: Literal["issue_spot", "explore", "research", "fact_map", "gap_analyze", "question", "converge"]
     reasoning: str
     skip_stages: list[str] = Field(default_factory=list)
 
