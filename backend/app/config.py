@@ -61,6 +61,13 @@ class Settings(BaseSettings):
     intake_default_session_mode: str = "multi_session"
     intake_fact_visibility: str = "internal"  # internal or consumer_visible
 
+    # Research
+    courtlistener_base_url: str = "https://www.courtlistener.com/api/rest/v4"
+    research_timeout_seconds: int = 30
+    research_max_results_per_query: int = 20
+    research_cache_ttl_case_hours: int = 24
+    research_cache_ttl_statute_hours: int = 168  # 7 days
+
     # ASR
     asr_default_provider: str = "whisper"
     whisper_endpoint: str = "http://localhost:8790"
