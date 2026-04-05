@@ -19,6 +19,7 @@ from app.models.folio_concepts import (
     UnmappedConceptRecord,
 )
 from app.models.organization import OrganizationConfig
+from app.models.output import OutputDocument
 from app.models.refresh_token import RefreshToken
 from app.models.research import (
     Authority,
@@ -57,6 +58,7 @@ __all__ = [
     "KBDocument",
     "Organization",
     "OrganizationConfig",
+    "OutputDocument",
     "OrgProtocolActivation",
     "ProtocolVersion",
     "RefreshToken",

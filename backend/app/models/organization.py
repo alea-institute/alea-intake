@@ -27,5 +27,6 @@ class OrganizationConfig(TenantBase):
     kiosk_consent_required: Mapped[bool] = mapped_column(Boolean, default=True)
     kiosk_session_ttl_hours: Mapped[int] = mapped_column(Integer, default=24)
     analysis_config_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    output_config_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
