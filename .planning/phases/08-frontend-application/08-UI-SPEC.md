@@ -146,6 +146,12 @@ Three color systems, one per theme. All three maintain the 60/30/10 contrast rat
 
 ---
 
+## Visual Hierarchy
+
+**Primary focal point (chat screen):** The active ChatInput bar + the most-recent ChatMessage. These two elements anchor the user's attention. ChatInput has elevated z-index (sticky bottom), Display-weight typography, and theme accent color on the active modality button. Most-recent message has subtle elevation (box-shadow) that older messages lack.
+
+**Icon-only button accessibility:** Modality toggle buttons (text/mic/paperclip in ChatInput) carry `aria-label` attributes (internationalized per D-28) AND a shadcn tooltip for pointer users. No text label appears in the default state — tooltip fires on hover/focus. This pattern applies to ALL icon-only controls across the app (notification bell, user menu avatar, sidebar collapse, export format buttons).
+
 ## Illustration Style
 
 Illustrated empty states (D-24) follow a shared vocabulary with per-theme tonal adjustments:
@@ -184,7 +190,7 @@ Per-theme voice mapping, with shared core messages. Copy is externalized via rea
 | Primary CTA (voice) | "Start recording" |
 | Primary CTA (document) | "Upload document" |
 | Primary CTA (dashboard) | "New intake" |
-| Primary CTA (output) | "Export" |
+| Primary CTA (output) | "Export intake" |
 | Primary CTA (login) | "Sign in" |
 
 ### Per-theme voice tuning
