@@ -10,7 +10,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:e2e": "playwright test",
-    "test:all": "vitest run && playwright test"
+    "test:all": "vitest run && playwright test",
+    "build:check": "npm run build && node scripts/check-bundle-size.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
