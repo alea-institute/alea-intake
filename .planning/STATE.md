@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 07-01-PLAN.md
-last_updated: "2026-04-05T02:25:33.093Z"
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-04-05T02:34:28.813Z"
 last_activity: 2026-04-05
 progress:
   total_phases: 11
   completed_phases: 6
   total_plans: 28
-  completed_plans: 26
+  completed_plans: 27
   percent: 89
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 07 (output-export) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-05
 
@@ -66,6 +66,7 @@ Progress: [============================================------]  89%
 | Phase 06 P04 | 8min | 2 tasks | 12 files |
 | Phase 06 P05 | 9min | 2 tasks | 8 files |
 | Phase 07 P01 | 6min | 2 tasks | 8 files |
+| Phase 07 P02 | 6min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -132,6 +133,10 @@ Recent decisions affecting current work:
 - [Phase 07]: Binding strength classification: statutes/regulations/constitutional/rules = binding, case_law = persuasive, secondary = secondary
 - [Phase 07]: Claims with jurisdiction=None grouped under 'General' key in claims_by_jurisdiction
 - [Phase 07]: Format-neutral OutputContext as single Pydantic model for all downstream rendering
+- [Phase 07]: TriageScorer weights: practice_area=0.35, jurisdiction=0.25, complexity=0.20, org_rules=0.20
+- [Phase 07]: Complexity thresholds: high if >5 claims or >10 gaps, low if <=2 claims and <=3 gaps
+- [Phase 07]: Referral generation triggers at completeness < 0.3 with >= 3 gaps in a practice area
+- [Phase 07]: LanguageAdapter._rewrite_text is the LLM integration point; stubbed for now, wired when orchestrator connects
 
 ### Pending Todos
 
@@ -143,6 +148,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-05T02:25:33.091Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-04-05T02:34:28.811Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
