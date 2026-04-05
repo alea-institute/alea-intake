@@ -4,6 +4,9 @@ import { server } from '@/test/msw/server'
 import { useAuth } from './store'
 import { apiFetch, login } from './api'
 
+// jsdom origin is http://localhost:3000 — relative /api/... paths resolve here
+const ORIGIN = 'http://localhost:3000'
+
 describe('apiFetch', () => {
   beforeEach(() => useAuth.getState().clear())
 
@@ -16,12 +19,12 @@ describe('apiFetch', () => {
     })
     let captured = ''
     server.use(
-      http.get('http://localhost/api/v1/ping', ({ request }) => {
+      http.get(`${ORIGIN}/api/v1/ping`, ({ request }) => {
         captured = request.headers.get('authorization') ?? ''
         return HttpResponse.json({ ok: true })
       })
     )
-    await apiFetch('http://localhost/api/v1/ping')
+    await apiFetch('/api/v1/ping')
     expect(captured).toBe('Bearer tok-xyz')
   })
 
@@ -34,20 +37,20 @@ describe('apiFetch', () => {
     })
     let callCount = 0
     server.use(
-      http.get('http://localhost/api/v1/protected', ({ request }) => {
+      http.get(`${ORIGIN}/api/v1/protected`, ({ request }) => {
         callCount += 1
         const auth = request.headers.get('authorization')
         if (auth === 'Bearer stale-tok') return new HttpResponse(null, { status: 401 })
         return HttpResponse.json({ ok: true })
       }),
-      http.post('http://localhost/api/v1/auth/refresh', () =>
+      http.post(`${ORIGIN}/api/v1/auth/refresh`, () =>
         HttpResponse.json({
           access_token: 'fresh-tok',
           user: { id: 'u1', email: 'a@b.c', role: 'consumer', org_id: 'o1' },
         })
       )
     )
-    const res = await apiFetch('http://localhost/api/v1/protected')
+    const res = await apiFetch('/api/v1/protected')
     expect(res.ok).toBe(true)
     expect(callCount).toBe(2)
     expect(useAuth.getState().accessToken).toBe('fresh-tok')
@@ -61,22 +64,38 @@ describe('apiFetch', () => {
       org_id: 'o1',
     })
     server.use(
-      http.get('http://localhost/api/v1/protected', () => new HttpResponse(null, { status: 401 })),
-      http.post('http://localhost/api/v1/auth/refresh', () => new HttpResponse(null, { status: 401 }))
+      http.get(`${ORIGIN}/api/v1/protected`, () => new HttpResponse(null, { status: 401 })),
+      http.post(`${ORIGIN}/api/v1/auth/refresh`, () => new HttpResponse(null, { status: 401 }))
     )
-    // Stub window.location.href assignment (jsdom throws on direct assign)
+    // Override window.location with a proxy that captures href assignments.
+    // jsdom's href setter actually navigates and throws, so we intercept here.
+    const originalLocation = window.location
     const hrefSetter = vi.fn()
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: { href: '', assign: hrefSetter },
+    const mockLocation = new Proxy(originalLocation, {
+      set(target, prop, value) {
+        if (prop === 'href') {
+          hrefSetter(value)
+          return true
+        }
+        return Reflect.set(target, prop, value)
+      },
     })
-    await expect(apiFetch('http://localhost/api/v1/protected')).rejects.toThrow('Session expired')
-    expect(useAuth.getState().accessToken).toBeNull()
+    // @ts-expect-error - jsdom allows deleting window.location in tests
+    delete window.location
+    window.location = mockLocation
+
+    try {
+      await expect(apiFetch('/api/v1/protected')).rejects.toThrow('Session expired')
+      expect(useAuth.getState().accessToken).toBeNull()
+      expect(hrefSetter).toHaveBeenCalledWith('/login')
+    } finally {
+      window.location = originalLocation
+    }
   })
 
   it('login stores token + user', async () => {
     server.use(
-      http.post('http://localhost/api/v1/auth/login', () =>
+      http.post(`${ORIGIN}/api/v1/auth/login`, () =>
         HttpResponse.json({
           access_token: 'logged-in',
           user: { id: 'u1', email: 'a@b.c', role: 'consumer', org_id: 'o1' },
@@ -87,4 +106,3 @@ describe('apiFetch', () => {
     expect(useAuth.getState().accessToken).toBe('logged-in')
   })
 })
-
