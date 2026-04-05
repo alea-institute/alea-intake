@@ -147,7 +147,7 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Output Pydantic schemas, OutputDocument DB model, DataAssembler, GapReportBuilder, and OutputProfile configuration
+- [x] 07-01-PLAN.md — Output Pydantic schemas, OutputDocument DB model, DataAssembler, GapReportBuilder, and OutputProfile configuration
 - [ ] 07-02-PLAN.md — TriageScorer, ActionItemGenerator, TemplateEngine with Jinja2 CIRAC/triage/action/gap templates, and LanguageAdapter
 - [ ] 07-03-PLAN.md — Export adapters (PDF via WeasyPrint, DOCX via python-docx, JSON), CSS legal stylesheet, output REST API, and main.py wiring
 

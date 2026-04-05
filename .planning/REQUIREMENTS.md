@@ -67,11 +67,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Output & Export
 
-- [ ] **OUTPUT-01**: System generates structured case memos mapping facts → claims → elements → authorities → jurisdictions
+- [x] **OUTPUT-01**: System generates structured case memos mapping facts → claims → elements → authorities → jurisdictions
 - [ ] **OUTPUT-02**: System generates triage/routing recommendations (which practice area, which attorney, which program)
 - [ ] **OUTPUT-03**: System generates action items (documents to gather, follow-up steps, referrals)
-- [ ] **OUTPUT-04**: Output format is configurable per deployment (law firms get memos, legal aid gets triage, courts get self-help routing)
-- [ ] **OUTPUT-05**: Output includes gap analysis showing what evidence is missing and what questions remain
+- [x] **OUTPUT-04**: Output format is configurable per deployment (law firms get memos, legal aid gets triage, courts get self-help routing)
+- [x] **OUTPUT-05**: Output includes gap analysis showing what evidence is missing and what questions remain
 
 ### Frontend Visualization
 
@@ -198,11 +198,11 @@ Deferred to future release. Tracked but not in current roadmap.
 | ANALYSIS-08 | Phase 4 | Complete |
 | ANALYSIS-09 | Phase 4 | Complete |
 | ANALYSIS-10 | Phase 4 | Complete |
-| OUTPUT-01 | Phase 7 | Pending |
+| OUTPUT-01 | Phase 7 | Complete |
 | OUTPUT-02 | Phase 7 | Pending |
 | OUTPUT-03 | Phase 7 | Pending |
-| OUTPUT-04 | Phase 7 | Pending |
-| OUTPUT-05 | Phase 7 | Pending |
+| OUTPUT-04 | Phase 7 | Complete |
+| OUTPUT-05 | Phase 7 | Complete |
 | FRONTEND-01 | Phase 8 | Pending |
 | FRONTEND-02 | Phase 8 | Pending |
 | FRONTEND-03 | Phase 9 | Pending |
