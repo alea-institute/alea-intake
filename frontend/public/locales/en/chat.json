@@ -1,0 +1,39 @@
+{
+  "welcome": {
+    "legal-professional": "Please describe your legal matter in your own words. You may type, speak, or upload documents.",
+    "modern-conversational": "Tell us what's going on in your own words. Type, talk, or share a document — whatever's easiest.",
+    "courthouse-classic": "Describe your situation in your own words. You can type your answer, record your voice, or upload documents."
+  },
+  "input": {
+    "placeholder": "Type your message…",
+    "modalityText": "Text",
+    "modalityVoice": "Voice",
+    "modalityDocument": "Document"
+  },
+  "streaming": {
+    "stop": "Stop generating"
+  },
+  "progress": {
+    "title": "Analyzing your information",
+    "stage": "Stage {{n}} of {{total}}: {{name}}"
+  },
+  "connection": {
+    "lost": {
+      "legal-professional": "Connection interrupted. Reconnecting. Your messages are preserved.",
+      "modern-conversational": "Oops — lost connection. Reconnecting now. Your answers are safe.",
+      "courthouse-classic": "Connection interrupted. Reconnecting. Your responses have been saved."
+    }
+  },
+  "emptyDashboard": {
+    "heading": {
+      "legal-professional": "No matters in progress",
+      "modern-conversational": "No intakes yet",
+      "courthouse-classic": "No matters filed"
+    },
+    "body": {
+      "legal-professional": "Open a new matter to begin capturing client information.",
+      "modern-conversational": "Start your first intake whenever you're ready. We'll walk you through it.",
+      "courthouse-classic": "Begin a new matter using the button above. We'll guide you step by step."
+    }
+  }
+}

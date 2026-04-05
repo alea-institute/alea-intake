@@ -1,0 +1,35 @@
+{
+  "orgSettings": {
+    "heading": "Organization settings",
+    "theme": "Theme",
+    "deploymentProfile": "Deployment profile",
+    "orgAccent": "Accent color (hex)",
+    "logoUrl": "Logo URL"
+  },
+  "users": {
+    "heading": "User management",
+    "inviteUser": "Invite user",
+    "role": "Role",
+    "email": "Email address",
+    "lastActive": "Last active",
+    "revokeAccess": "Revoke access"
+  },
+  "protocols": {
+    "heading": "Safety & screening protocols",
+    "createCustom": "Create custom protocol",
+    "activated": "Active",
+    "inactive": "Inactive",
+    "library": "Protocol library"
+  },
+  "kb": {
+    "heading": "Knowledge base",
+    "uploadDocument": "Upload document",
+    "emptyHeading": "No documents in your knowledge base",
+    "emptyBody": "Upload legal guides, statutes, or templates. The system will use them to inform intakes."
+  },
+  "confirmations": {
+    "revokeAccess": "Revoke {{user_name}}'s access to this organization? They will be signed out immediately.",
+    "deleteKbDocument": "Remove this document from the knowledge base? It will no longer inform future intakes.",
+    "clearChatHistory": "Clear this conversation's history? Messages will be removed but extracted facts are preserved."
+  }
+}

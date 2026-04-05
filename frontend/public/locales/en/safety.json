@@ -1,0 +1,21 @@
+{
+  "critical": {
+    "banner": "Your safety comes first. Resources are available.",
+    "drawerHeading": "Are you safe right now?",
+    "drawerBody": "If you are in immediate danger, call 911. The resources below can help you find support.",
+    "hotlines": "National Domestic Violence Hotline: 1-800-799-7233 • 988 Suicide & Crisis Lifeline • Childhelp: 1-800-422-4453"
+  },
+  "elevated": {
+    "badge": "{{count}} resource available",
+    "badge_other": "{{count}} resources available",
+    "drawerHeading": "Resources that may help"
+  },
+  "professional": {
+    "escalate": "Escalate to supervisor",
+    "markAddressed": "Mark as addressed"
+  },
+  "empty": {
+    "heading": "No alerts to review",
+    "body": "When the system detects a safety concern, you'll see it here."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "cta": {
+    "sendMessage": "Send message",
+    "startRecording": "Start recording",
+    "uploadDocument": "Upload document",
+    "newIntake": "New intake",
+    "exportIntake": "Export intake",
+    "signIn": "Sign in"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "admin": "Admin",
+    "profile": "Profile",
+    "signOut": "Sign out"
+  },
+  "errors": {
+    "networkGeneric": "We couldn't reach the server. Check your connection and try again.",
+    "websocketDisconnect": "Connection interrupted. Reconnecting… Your messages are saved.",
+    "sessionExpired": "Your session has expired. Please sign in again to continue.",
+    "formFieldGeneric": "Please check this field and try again.",
+    "fileTooLarge": "This file is too large ({{size}}MB). The maximum is {{limit}}MB. Try a smaller file or split the document.",
+    "fileTypeUnsupported": "This file type isn't supported. Please upload a PDF, DOCX, or image (JPG, PNG, TIFF).",
+    "voiceTranscribeFailed": "We couldn't transcribe this recording. Please try again or type your response instead.",
+    "llmStreamFailed": "Something went wrong generating a response. Please try again.",
+    "exportFailed": "Export failed. Please try again, or contact your administrator if the problem continues.",
+    "serverError": "Something went wrong on our end. Please try again in a moment.",
+    "crash": "Something unexpected happened. Refresh the page to continue. Your work has been saved."
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "cta": {
+    "sendMessage": "Enviar mensaje",
+    "startRecording": "Comenzar grabación",
+    "uploadDocument": "Subir documento",
+    "newIntake": "Nueva admisión",
+    "exportIntake": "Exportar admisión",
+    "signIn": "Iniciar sesión"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "chat": "Chat",
+    "admin": "Administración",
+    "profile": "Perfil",
+    "signOut": "Cerrar sesión"
+  },
+  "errors": {
+    "networkGeneric": "No pudimos conectar con el servidor. Verifique su conexión e inténtelo de nuevo.",
+    "websocketDisconnect": "Conexión interrumpida. Reconectando… Sus mensajes están guardados.",
+    "sessionExpired": "Su sesión ha expirado. Por favor, inicie sesión de nuevo para continuar.",
+    "formFieldGeneric": "Por favor, revise este campo e inténtelo de nuevo.",
+    "fileTooLarge": "Este archivo es demasiado grande ({{size}}MB). El máximo es {{limit}}MB. Intente con un archivo más pequeño o divida el documento.",
+    "fileTypeUnsupported": "Este tipo de archivo no es compatible. Por favor, suba un PDF, DOCX o imagen (JPG, PNG, TIFF).",
+    "voiceTranscribeFailed": "No pudimos transcribir esta grabación. Por favor, inténtelo de nuevo o escriba su respuesta.",
+    "llmStreamFailed": "Algo salió mal al generar una respuesta. Por favor, inténtelo de nuevo.",
+    "exportFailed": "La exportación falló. Por favor, inténtelo de nuevo o contacte a su administrador si el problema continúa.",
+    "serverError": "Algo salió mal de nuestro lado. Por favor, inténtelo de nuevo en un momento.",
+    "crash": "Ocurrió algo inesperado. Actualice la página para continuar. Su trabajo ha sido guardado."
+  },
+  "a11y": {
+    "skipToContent": "Saltar al contenido principal",
+    "closeMenu": "Cerrar menú",
+    "openMenu": "Abrir menú"
+  }
+}
