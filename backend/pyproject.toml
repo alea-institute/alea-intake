@@ -27,6 +27,8 @@ dependencies = [
     "lxml>=5.0.0",
     "mcp>=1.27.0",
     "eyecite>=2.7.6",
+    "weasyprint>=68.0",
+    "markdown-it-py>=3.0",
 ]
 
 [dependency-groups]

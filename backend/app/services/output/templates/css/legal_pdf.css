@@ -1,0 +1,330 @@
+/* Legal PDF stylesheet — CSS Paged Media for WeasyPrint.
+ *
+ * Provides professional legal document formatting with:
+ * - Letter-size pages (8.5in x 11in) with 1in margins
+ * - Running headers (matter title) and footers (page numbers, org name)
+ * - Numbered paragraph support via CSS counters
+ * - Heading hierarchy with legal-appropriate styling
+ * - Authority formatting (binding/persuasive/secondary)
+ * - Page break hints for claim sections
+ * - Org branding via CSS custom properties
+ */
+
+/* ---------------------------------------------------------------------------
+ * CSS Custom Properties (overridable by org branding)
+ * ------------------------------------------------------------------------ */
+
+:root {
+    --primary-color: #1a365d;
+    --secondary-color: #2b6cb0;
+    --body-font: "Times New Roman", "Times", Georgia, serif;
+    --heading-font: "Times New Roman", "Times", Georgia, serif;
+}
+
+/* ---------------------------------------------------------------------------
+ * @page rules
+ * ------------------------------------------------------------------------ */
+
+@page {
+    size: 8.5in 11in;
+    margin: 1in 1in 1.25in 1in;
+
+    @top-center {
+        content: string(matter-title);
+        font-size: 9pt;
+        color: #666;
+        font-family: var(--body-font);
+    }
+
+    @bottom-center {
+        content: "Page " counter(page) " of " counter(pages);
+        font-size: 9pt;
+        color: #666;
+        font-family: var(--body-font);
+    }
+
+    @bottom-right {
+        content: string(org-name);
+        font-size: 8pt;
+        color: #999;
+        font-family: var(--body-font);
+    }
+}
+
+@page :first {
+    @top-center { content: none; }
+    @bottom-center { content: none; }
+    @bottom-right { content: none; }
+}
+
+/* ---------------------------------------------------------------------------
+ * Running element string-set
+ * ------------------------------------------------------------------------ */
+
+.matter-title {
+    string-set: matter-title content();
+}
+
+.org-name {
+    string-set: org-name content();
+}
+
+/* ---------------------------------------------------------------------------
+ * Typography
+ * ------------------------------------------------------------------------ */
+
+body {
+    font-family: var(--body-font);
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #1a1a1a;
+}
+
+/* ---------------------------------------------------------------------------
+ * Headings
+ * ------------------------------------------------------------------------ */
+
+h1 {
+    font-family: var(--heading-font);
+    font-size: 18pt;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 0.5in;
+    margin-bottom: 0.25in;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-family: var(--heading-font);
+    font-size: 15pt;
+    font-weight: bold;
+    color: var(--primary-color);
+    border-top: 2px solid var(--secondary-color);
+    padding-top: 0.15in;
+    margin-top: 0.35in;
+    margin-bottom: 0.15in;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-family: var(--heading-font);
+    font-size: 13pt;
+    font-weight: bold;
+    color: var(--primary-color);
+    border-left: 3px solid var(--secondary-color);
+    padding-left: 0.15in;
+    margin-top: 0.25in;
+    margin-bottom: 0.1in;
+    page-break-after: avoid;
+}
+
+h4 {
+    font-family: var(--heading-font);
+    font-size: 12pt;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5pt;
+    margin-top: 0.2in;
+    margin-bottom: 0.08in;
+    page-break-after: avoid;
+}
+
+h5, h6 {
+    font-size: 12pt;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 0.15in;
+    margin-bottom: 0.05in;
+}
+
+/* ---------------------------------------------------------------------------
+ * Numbered paragraphs (CSS counter)
+ * ------------------------------------------------------------------------ */
+
+.numbered-para {
+    counter-increment: paragraph;
+}
+
+.numbered-para::before {
+    content: counter(paragraph) ". ";
+    font-weight: bold;
+    color: #666;
+}
+
+body {
+    counter-reset: paragraph;
+}
+
+/* ---------------------------------------------------------------------------
+ * Authority formatting
+ * ------------------------------------------------------------------------ */
+
+.authority-binding {
+    font-weight: bold;
+}
+
+.authority-persuasive {
+    font-style: italic;
+}
+
+.authority-secondary {
+    font-weight: normal;
+    font-style: normal;
+}
+
+.authority-citation {
+    color: var(--primary-color);
+}
+
+/* ---------------------------------------------------------------------------
+ * Verification badges
+ * ------------------------------------------------------------------------ */
+
+.badge-verified {
+    display: inline-block;
+    font-size: 8pt;
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    background-color: #c6f6d5;
+    color: #22543d;
+    font-weight: bold;
+    vertical-align: super;
+}
+
+.badge-unverified {
+    display: inline-block;
+    font-size: 8pt;
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    background-color: #fed7d7;
+    color: #9b2c2c;
+    font-weight: bold;
+    vertical-align: super;
+}
+
+/* ---------------------------------------------------------------------------
+ * Tables
+ * ------------------------------------------------------------------------ */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.15in;
+    margin-bottom: 0.15in;
+    font-size: 10pt;
+}
+
+th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    padding: 4pt 6pt;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+td {
+    padding: 4pt 6pt;
+    border: 1px solid #ccc;
+    vertical-align: top;
+}
+
+tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+/* ---------------------------------------------------------------------------
+ * Lists
+ * ------------------------------------------------------------------------ */
+
+ul, ol {
+    margin-left: 0.25in;
+    margin-top: 0.05in;
+    margin-bottom: 0.1in;
+}
+
+li {
+    margin-bottom: 0.03in;
+}
+
+/* ---------------------------------------------------------------------------
+ * Page break hints
+ * ------------------------------------------------------------------------ */
+
+.claim-section {
+    page-break-inside: avoid;
+}
+
+.jurisdiction-section {
+    page-break-before: always;
+}
+
+.jurisdiction-section:first-child {
+    page-break-before: auto;
+}
+
+/* ---------------------------------------------------------------------------
+ * Horizontal rules
+ * ------------------------------------------------------------------------ */
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0.25in 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Blockquotes (used for legal excerpts)
+ * ------------------------------------------------------------------------ */
+
+blockquote {
+    margin-left: 0.5in;
+    margin-right: 0.5in;
+    font-style: italic;
+    color: #444;
+    border-left: 3px solid #ccc;
+    padding-left: 0.15in;
+}
+
+/* ---------------------------------------------------------------------------
+ * Strong and emphasis
+ * ------------------------------------------------------------------------ */
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+/* ---------------------------------------------------------------------------
+ * Print-friendly overrides
+ * ------------------------------------------------------------------------ */
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.legal-document {
+    max-width: 100%;
+}
+
+/* Completeness bar (inline) */
+.completeness-bar {
+    display: inline-block;
+    width: 100pt;
+    height: 8pt;
+    background-color: #e2e8f0;
+    border-radius: 4pt;
+    overflow: hidden;
+}
+
+.completeness-fill {
+    height: 100%;
+    background-color: var(--secondary-color);
+    border-radius: 4pt;
+}
