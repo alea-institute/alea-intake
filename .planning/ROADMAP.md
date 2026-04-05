@@ -161,13 +161,15 @@ Plans:
   3. An intake dashboard lists all intakes with their status and progress, and users can click into any intake to view its output
   4. Administrators can configure organization settings, research tools, knowledge base documents, and screening protocols through a dedicated admin interface
   5. The interface is mobile-responsive and includes a voice recording component for voice input
-**Plans**: TBD
+**Plans:** 6 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
-- [ ] 08-03: TBD
-- [ ] 08-04: TBD
+- [ ] 08-01-PLAN.md — Foundation: shadcn@2.3.0 init, dependency install, Vitest+Playwright+MSW test infra, bundle-size gate
+- [ ] 08-02-PLAN.md — Shell: 3-theme CSS vars, i18n (7 LSC langs, lazy namespaces), auth store, lazy React Router routes
+- [ ] 08-03-PLAN.md — Backend SSO: Authlib Google+Microsoft OAuth, one-time-code exchange, LoginPage + SSO buttons
+- [ ] 08-04-PLAN.md — Chat: WebSocket hook (backoff+jitter), ChatMessage/ChatInput/StreamingMessage, optimistic UI, ChatPage
+- [ ] 08-05-PLAN.md — Voice+Safety+Progress: VoiceRecorder (wavesurfer.js), TranscriptReview, AnalysisProgressPanel, SafetyBanner/Drawer
+- [ ] 08-06-PLAN.md — Dashboard+Admin+Output: intake list (virtual scroll), responsive sidebar/mobile nav, admin tabs/wizard, markdown memo + export menu
 
 ### Phase 9: Frontend Visualization
 **Goal**: Users can explore the relationship between facts, claims, and elements through three specialized views -- a force-directed graph for exploration, a matrix for completeness checking, and narrative-anchored annotations for comprehension
@@ -233,7 +235,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 5. Pre-Research Exploration & Safety | 1/1 | Complete   | 2026-04-04 |
 | 6. Legal Research & Verification | 2/5 | In Progress|  |
 | 7. Output & Export | 0/3 | Not started | - |
-| 8. Frontend Application | 0/4 | Not started | - |
+| 8. Frontend Application | 0/6 | Not started | - |
 | 9. Frontend Visualization | 0/3 | Not started | - |
 | 10. Autonomy & Orchestration Modes | 0/3 | Not started | - |
 | 11. Integration & Production Deployment | 0/4 | Not started | - |
