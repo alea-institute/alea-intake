@@ -149,7 +149,7 @@ Plans:
 Plans:
 - [x] 07-01-PLAN.md — Output Pydantic schemas, OutputDocument DB model, DataAssembler, GapReportBuilder, and OutputProfile configuration
 - [x] 07-02-PLAN.md — TriageScorer, ActionItemGenerator, TemplateEngine with Jinja2 CIRAC/triage/action/gap templates, and LanguageAdapter
-- [ ] 07-03-PLAN.md — Export adapters (PDF via WeasyPrint, DOCX via python-docx, JSON), CSS legal stylesheet, output REST API, and main.py wiring
+- [x] 07-03-PLAN.md — Export adapters (PDF via WeasyPrint, DOCX via python-docx, JSON), CSS legal stylesheet, output REST API, and main.py wiring
 
 ### Phase 8: Frontend Application
 **Goal**: Users interact with the system through a responsive React frontend featuring conversational chat, real-time analysis progress, an intake dashboard, admin configuration, and voice recording

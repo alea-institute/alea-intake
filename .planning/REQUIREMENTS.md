@@ -123,7 +123,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **INTEGRATE-03**: CMS sync connector for Legal Server
 - [x] **INTEGRATE-04**: LLM integration via alea-llm-client supporting multiple providers
 - [x] **INTEGRATE-05**: folio-mcp integration for LLM agent tool-use during analysis
-- [ ] **INTEGRATE-06**: Export formats: PDF, DOCX, JSON
+- [x] **INTEGRATE-06**: Export formats: PDF, DOCX, JSON
 
 ## v2 Requirements
 
@@ -239,7 +239,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | INTEGRATE-03 | Phase 11 | Pending |
 | INTEGRATE-04 | Phase 1 | Complete |
 | INTEGRATE-05 | Phase 6 | Complete |
-| INTEGRATE-06 | Phase 7 | Pending |
+| INTEGRATE-06 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 85 total
