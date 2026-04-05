@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 08-01 (foundation: shadcn + test infra + bundle gate)"
-last_updated: "2026-04-05T19:22:43.131Z"
+stopped_at: "Completed 08-02 (app shell: themes + i18n + auth + router)"
+last_updated: "2026-04-05T22:45:40.420Z"
 last_activity: 2026-04-05
 progress:
   total_phases: 11
   completed_phases: 7
   total_plans: 34
-  completed_plans: 29
+  completed_plans: 30
   percent: 89
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 08 (frontend-application) — EXECUTING
-Plan: 2 of 6
+Plan: 3 of 6
 Status: Ready to execute
 Last activity: 2026-04-05
 
@@ -69,6 +69,7 @@ Progress: [============================================------]  89%
 | Phase 07 P02 | 6min | 2 tasks | 11 files |
 | Phase 07 P03 | 10min | 2 tasks | 11 files |
 | Phase 08 P01 | 12min | 3 tasks | 23 files |
+| Phase 08 P02 | 8min | 3 tasks | 33 files |
 
 ## Accumulated Context
 
@@ -148,6 +149,11 @@ Recent decisions affecting current work:
 - [Phase 08-01]: ui-vendor manualChunks left dynamic (Radix primitives auto-chunked by Vite heuristics)
 - [Phase 08-01]: Bundle budget enforced at 200KB gzipped main chunk (D-35); baseline 56KB
 - [Phase 08-01]: tsconfig split into app/node references with @/* path alias (shadcn+Vite standard)
+- [Phase 08-02]: ThemeProvider syncs on defaultTheme prop change (useEffect) for async org-data loading
+- [Phase 08-02]: Refresh coalescing via module-scoped refreshPromise prevents thundering-herd on concurrent 401s
+- [Phase 08-02]: apiFetch uses window.location.href='/login' hard redirect on refresh failure (no router dep)
+- [Phase 08-02]: 5-language stub files (zh/vi/ko/tl/ru) copy English to prevent Suspense hang (Pitfall 7)
+- [Phase 08-02]: jsdom origin http://localhost:3000; MSW handlers use absolute URLs matching this origin
 
 ### Pending Todos
 
@@ -159,6 +165,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-05T19:22:43.129Z
-Stopped at: Completed 08-01 (foundation: shadcn + test infra + bundle gate)
+Last session: 2026-04-05T22:45:40.418Z
+Stopped at: Completed 08-02 (app shell: themes + i18n + auth + router)
 Resume file: None
