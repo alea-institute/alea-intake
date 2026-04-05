@@ -457,11 +457,11 @@ class TestLanguageAdapter:
         ctx = _make_context(profile=LAW_FIRM_PROFILE)
         llm_service = MagicMock()
         adapter = LanguageAdapter()
-        result = await adapter.adapt(ctx, LAW_FIRM_PROFILE, llm_service)
-        # Should return context unchanged, no LLM calls
-        assert result.executive_summary == ctx.executive_summary
-        # LLM should not be called
-        assert not hasattr(llm_service, "_called") or not llm_service._called
+        with patch.object(adapter, "_rewrite_text", new_callable=AsyncMock) as mock_rewrite:
+            result = await adapter.adapt(ctx, LAW_FIRM_PROFILE, llm_service)
+            # Should return context unchanged, no LLM calls
+            assert result.executive_summary == ctx.executive_summary
+            mock_rewrite.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_adapt_rewrites_text(self):

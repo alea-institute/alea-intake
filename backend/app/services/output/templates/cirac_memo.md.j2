@@ -1,0 +1,77 @@
+{# CIRAC format case memo template per D-01.
+   Heading hierarchy: H1=title, H2=jurisdiction, H3=claim, H4=Issue/Rule/Application/Conclusion
+   Groups claims by jurisdiction with authorities showing binding strength and verification. #}
+# {{ context.matter_title }}
+
+**Generated:** {{ context.generated_at.strftime('%Y-%m-%d %H:%M UTC') }}
+**Matter ID:** {{ context.intake_id }}
+**Run ID:** {{ context.run_id }}
+**Completeness:** {{ "%.0f" | format(context.completeness_score * 100) }}%
+
+---
+
+{% for jurisdiction, claims in context.claims_by_jurisdiction.items() | sort %}
+## {{ jurisdiction }}
+
+{% for claim in claims %}
+### {{ claim.claim_name }}
+
+**Claim Type:** {{ claim.claim_type }} | **Confidence:** {{ "%.0f" | format(claim.confidence * 100) }}%
+{% if claim.folio_iri %}
+**FOLIO IRI:** {{ claim.folio_iri }}
+{% endif %}
+
+#### Issue
+
+{{ claim.issue_statement }}
+
+#### Rule
+
+{% if claim.authorities %}
+{% for auth in claim.authorities %}
+- **{{ auth.citation }}** [{{ auth.binding_strength | capitalize }}] ({{ "Verified" if auth.verified else "Unverified" }})
+  - *{{ auth.authority_type }}*{% if auth.jurisdiction %} | {{ auth.jurisdiction }}{% endif %}
+{% if auth.excerpt %}
+  - {{ auth.excerpt[:200] }}{% if auth.excerpt | length > 200 %}...{% endif %}
+{% endif %}
+{% endfor %}
+{% else %}
+*No authorities identified for this claim.*
+{% endif %}
+
+#### Application
+
+{% if claim.elements %}
+{% for elem in claim.elements %}
+- **{{ elem.element_name }}**: {{ "Supported" if elem.is_satisfied else "Unsupported" }}{% if elem.satisfaction_confidence is not none %} ({{ "%.0f" | format(elem.satisfaction_confidence * 100) }}% confidence){% endif %}
+{% if elem.element_description %}
+  - {{ elem.element_description }}
+{% endif %}
+{% for fm in elem.fact_mappings %}
+  - *Fact:* {{ fm.fact_text }} ({{ "%.0f" | format(fm.confidence * 100) }}% match)
+{% endfor %}
+{% endfor %}
+{% else %}
+*No elements defined for this claim.*
+{% endif %}
+
+{% if claim.gaps %}
+#### Gaps & Open Questions
+
+{% for gap in claim.gaps %}
+- **{{ gap.gap_type | replace("_", " ") | title }}** (Priority {{ gap.priority }}): {{ gap.description }}
+{% if gap.element_name %}
+  - Element: {{ gap.element_name }}
+{% endif %}
+{% if gap.action_item_ref %}
+  - See Action Item #{{ gap.action_item_ref }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+#### Conclusion
+
+{{ claim.conclusion }}
+
+{% endfor %}
+{% endfor %}

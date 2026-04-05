@@ -1,0 +1,35 @@
+{# Gap Report Appendix template per D-07.
+   Shows per-claim gap grouping, open questions, and completeness score. #}
+## Gap Report Appendix
+
+**Overall Completeness:** {{ "%.0f" | format(context.gap_report.completeness_score * 100) }}%
+
+{% set score_pct = (context.gap_report.completeness_score * 100) | int %}
+{% set filled = (score_pct / 5) | int %}
+{% set empty = 20 - filled %}
+`[{{ "=" * filled }}{{ "-" * empty }}]` {{ score_pct }}%
+
+---
+
+{% for claim_name, gaps in context.gap_report.per_claim.items() | sort %}
+### {{ claim_name }}
+
+{% for gap in gaps %}
+- **{{ gap.gap_type | replace("_", " ") | title }}** (Priority {{ gap.priority }}): {{ gap.description }}
+{% if gap.element_name %}
+  - Element: {{ gap.element_name }}
+{% endif %}
+{% if gap.action_item_ref %}
+  - See Action Item #{{ gap.action_item_ref }}
+{% endif %}
+{% endfor %}
+
+{% endfor %}
+
+{% if context.gap_report.open_questions %}
+### Open Questions
+
+{% for question in context.gap_report.open_questions %}
+{{ loop.index }}. {{ question }}
+{% endfor %}
+{% endif %}

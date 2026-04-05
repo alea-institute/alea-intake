@@ -1,0 +1,29 @@
+{# Triage & Routing Recommendations template per D-02.
+   Shows ranked recommendations with scores, rationale, and factor breakdown. #}
+## Triage & Routing Recommendations
+
+{% if context.triage %}
+**Primary Practice Area:** {{ context.triage.primary_practice_area or "Not determined" }}
+**Primary Jurisdiction:** {{ context.triage.primary_jurisdiction or "Not determined" }}
+**Complexity:** {{ context.triage.complexity_level | capitalize }}
+**Urgency:** {{ context.triage.urgency_level | capitalize }}
+
+---
+
+### Ranked Recommendations
+
+{% for rec in context.triage.recommendations %}
+**{{ loop.index }}. {{ rec.destination }}** (Score: {{ "%.2f" | format(rec.score) }})
+
+{{ rec.rationale }}
+
+| Factor | Score |
+|--------|-------|
+| Practice Area Match | {{ "%.0f" | format(rec.practice_area_match * 100) }}% |
+| Jurisdiction Match | {{ "%.0f" | format(rec.jurisdiction_match * 100) }}% |
+| Complexity Score | {{ "%.0f" | format(rec.complexity_score * 100) }}% |
+
+{% endfor %}
+{% else %}
+*No triage information available.*
+{% endif %}

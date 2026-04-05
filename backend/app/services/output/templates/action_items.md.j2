@@ -1,0 +1,29 @@
+{# Action Items template per D-03.
+   Grouped by category with priority indicators and checkbox format. #}
+## Action Items
+
+{% set categories = {
+    "documents_to_gather": "Documents to Gather",
+    "follow_up_steps": "Follow-up Steps",
+    "referrals": "Referrals"
+} %}
+{% for cat_key, cat_label in categories.items() %}
+{% set cat_items = context.action_items | selectattr("category", "equalto", cat_key) | list %}
+{% if cat_items %}
+### {{ cat_label }}
+
+{% for item in cat_items %}
+- [ ] **[{{ item.priority | upper }}]** {{ item.description }}
+{% if item.deadline %}
+  - **Deadline:** {{ item.deadline }}
+{% endif %}
+{% if item.claim_ref %}
+  - **Claim:** {{ item.claim_ref }}
+{% endif %}
+{% if item.element_ref %}
+  - **Element:** {{ item.element_ref }}
+{% endif %}
+{% endfor %}
+
+{% endif %}
+{% endfor %}
