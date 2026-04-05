@@ -75,16 +75,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Frontend Visualization
 
-- [ ] **FRONTEND-01**: React frontend with conversational chat interface for intake
-- [ ] **FRONTEND-02**: Real-time analysis progress via WebSocket/SSE streaming
+- [x] **FRONTEND-01**: React frontend with conversational chat interface for intake
+- [x] **FRONTEND-02**: Real-time analysis progress via WebSocket/SSE streaming
 - [ ] **FRONTEND-03**: Graph fact-mapping view: force-directed visualization of facts, claims, elements, and their relationships
 - [ ] **FRONTEND-04**: Matrix fact-mapping view: fact × element completeness matrix showing coverage
 - [ ] **FRONTEND-05**: Narrative-anchored fact-mapping view: consumer's original narrative with overlaid analysis annotations
-- [ ] **FRONTEND-06**: Intake dashboard listing all intakes with status and progress
-- [ ] **FRONTEND-07**: Output display with export capabilities
-- [ ] **FRONTEND-08**: Admin configuration interface for org settings, research tools, KB management, screening protocols
-- [ ] **FRONTEND-09**: Mobile-responsive design
-- [ ] **FRONTEND-10**: Voice recording UI component for voice input
+- [x] **FRONTEND-06**: Intake dashboard listing all intakes with status and progress
+- [x] **FRONTEND-07**: Output display with export capabilities
+- [x] **FRONTEND-08**: Admin configuration interface for org settings, research tools, KB management, screening protocols
+- [x] **FRONTEND-09**: Mobile-responsive design
+- [x] **FRONTEND-10**: Voice recording UI component for voice input
 
 ### Autonomy & Configuration
 
@@ -203,16 +203,16 @@ Deferred to future release. Tracked but not in current roadmap.
 | OUTPUT-03 | Phase 7 | Complete |
 | OUTPUT-04 | Phase 7 | Complete |
 | OUTPUT-05 | Phase 7 | Complete |
-| FRONTEND-01 | Phase 8 | Pending |
-| FRONTEND-02 | Phase 8 | Pending |
+| FRONTEND-01 | Phase 8 | Complete |
+| FRONTEND-02 | Phase 8 | Complete |
 | FRONTEND-03 | Phase 9 | Pending |
 | FRONTEND-04 | Phase 9 | Pending |
 | FRONTEND-05 | Phase 9 | Pending |
-| FRONTEND-06 | Phase 8 | Pending |
-| FRONTEND-07 | Phase 8 | Pending |
-| FRONTEND-08 | Phase 8 | Pending |
-| FRONTEND-09 | Phase 8 | Pending |
-| FRONTEND-10 | Phase 8 | Pending |
+| FRONTEND-06 | Phase 8 | Complete |
+| FRONTEND-07 | Phase 8 | Complete |
+| FRONTEND-08 | Phase 8 | Complete |
+| FRONTEND-09 | Phase 8 | Complete |
+| FRONTEND-10 | Phase 8 | Complete |
 | AUTONOMY-01 | Phase 10 | Pending |
 | AUTONOMY-02 | Phase 10 | Pending |
 | AUTONOMY-03 | Phase 10 | Pending |

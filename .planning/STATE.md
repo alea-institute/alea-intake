@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 8 UI-SPEC approved
-last_updated: "2026-04-05T17:02:43.295Z"
+status: executing
+stopped_at: "Completed 08-01 (foundation: shadcn + test infra + bundle gate)"
+last_updated: "2026-04-05T19:22:43.131Z"
 last_activity: 2026-04-05
 progress:
   total_phases: 11
   completed_phases: 7
-  total_plans: 28
-  completed_plans: 28
+  total_plans: 34
+  completed_plans: 29
   percent: 89
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** When a person describes a legal situation, the system must correctly identify all relevant legal issues -- including ones the person doesn't know to mention -- and produce a structured analysis mapping their facts to claims, elements, and authorities across applicable jurisdictions.
-**Current focus:** Phase 07 — output-export
+**Current focus:** Phase 08 — frontend-application
 
 ## Current Position
 
-Phase: 8
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 08 (frontend-application) — EXECUTING
+Plan: 2 of 6
+Status: Ready to execute
 Last activity: 2026-04-05
 
 Progress: [============================================------]  89%
@@ -68,6 +68,7 @@ Progress: [============================================------]  89%
 | Phase 07 P01 | 6min | 2 tasks | 8 files |
 | Phase 07 P02 | 6min | 2 tasks | 11 files |
 | Phase 07 P03 | 10min | 2 tasks | 11 files |
+| Phase 08 P01 | 12min | 3 tasks | 23 files |
 
 ## Accumulated Context
 
@@ -141,6 +142,12 @@ Recent decisions affecting current work:
 - [Phase 07]: WeasyPrint for PDF generation via CSS Paged Media (not reportlab or wkhtmltopdf)
 - [Phase 07]: Export render caching on OutputDocument model for subsequent requests
 - [Phase 07]: CSS custom properties for org branding injection in PDF export
+- [Phase 08-01]: Seeded components.json directly (shadcn@2.3.0 CLI prompts unavoidably) with new-york+zinc+lucide
+- [Phase 08-01]: Dev server port 8923 (md5 hash of alea-intake % 1300 + 8700) — stable across sessions
+- [Phase 08-01]: Button installed via direct write (not shadcn CLI TTY) to match new-york registry spec
+- [Phase 08-01]: ui-vendor manualChunks left dynamic (Radix primitives auto-chunked by Vite heuristics)
+- [Phase 08-01]: Bundle budget enforced at 200KB gzipped main chunk (D-35); baseline 56KB
+- [Phase 08-01]: tsconfig split into app/node references with @/* path alias (shadcn+Vite standard)
 
 ### Pending Todos
 
@@ -152,6 +159,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-05T17:02:43.293Z
-Stopped at: Phase 8 UI-SPEC approved
-Resume file: .planning/phases/08-frontend-application/08-UI-SPEC.md
+Last session: 2026-04-05T19:22:43.129Z
+Stopped at: Completed 08-01 (foundation: shadcn + test infra + bundle gate)
+Resume file: None
