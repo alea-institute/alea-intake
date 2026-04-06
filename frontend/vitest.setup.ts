@@ -18,6 +18,9 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 })
 
+// Polyfill Element.scrollIntoView for jsdom (used by MessageList auto-scroll)
+Element.prototype.scrollIntoView = () => {}
+
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 afterEach(() => {
   cleanup()
