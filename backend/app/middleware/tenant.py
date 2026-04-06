@@ -2,11 +2,16 @@
 
 Reads tenant identification from the X-Tenant-Slug header or JWT token's
 org claim and sets request.state.tenant_schema for downstream session routing.
+
+In single-tenant mode (DEPLOYMENT_MODE=single_tenant), tenant resolution is
+skipped entirely -- all requests use the public schema.
 """
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+
+from app.deployment.mode import is_multi_tenant
 
 # Routes that don't require tenant identification
 PUBLIC_ROUTES = {
@@ -36,6 +41,13 @@ class TenantMiddleware(BaseHTTPMiddleware):
         ):
             return await call_next(request)
 
+        # Single-tenant mode: skip tenant resolution entirely
+        if not is_multi_tenant():
+            request.state.tenant_schema = None
+            request.state.tenant_slug = "default"
+            return await call_next(request)
+
+        # Multi-tenant: resolve tenant from header or JWT
         # Try X-Tenant-Slug header first
         tenant_slug = request.headers.get("X-Tenant-Slug")
 
