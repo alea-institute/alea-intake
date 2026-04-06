@@ -166,7 +166,7 @@ Plans:
 Plans:
 - [x] 08-01-PLAN.md — Foundation: shadcn@2.3.0 init, dependency install, Vitest+Playwright+MSW test infra, bundle-size gate
 - [x] 08-02-PLAN.md — Shell: 3-theme CSS vars, i18n (7 LSC langs, lazy namespaces), auth store, lazy React Router routes
-- [ ] 08-03-PLAN.md — Backend SSO: Authlib Google+Microsoft OAuth, one-time-code exchange, LoginPage + SSO buttons
+- [x] 08-03-PLAN.md — Backend SSO: Authlib Google+Microsoft OAuth, one-time-code exchange, LoginPage + SSO buttons
 - [ ] 08-04-PLAN.md — Chat: WebSocket hook (backoff+jitter), ChatMessage/ChatInput/StreamingMessage, optimistic UI, ChatPage
 - [ ] 08-05-PLAN.md — Voice+Safety+Progress: VoiceRecorder (wavesurfer.js), TranscriptReview, AnalysisProgressPanel, SafetyBanner/Drawer
 - [ ] 08-06-PLAN.md — Dashboard+Admin+Output: intake list (virtual scroll), responsive sidebar/mobile nav, admin tabs/wizard, markdown memo + export menu

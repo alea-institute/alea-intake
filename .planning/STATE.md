@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 08-02 (app shell: themes + i18n + auth + router)"
-last_updated: "2026-04-05T22:45:40.420Z"
-last_activity: 2026-04-05
+stopped_at: Completed 08-03 (OAuth SSO + Login Page)
+last_updated: "2026-04-06T02:58:19.672Z"
+last_activity: 2026-04-06
 progress:
   total_phases: 11
   completed_phases: 7
   total_plans: 34
-  completed_plans: 30
+  completed_plans: 31
   percent: 89
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 08 (frontend-application) — EXECUTING
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
-Last activity: 2026-04-05
+Last activity: 2026-04-06
 
 Progress: [============================================------]  89%
 
@@ -70,6 +70,7 @@ Progress: [============================================------]  89%
 | Phase 07 P03 | 10min | 2 tasks | 11 files |
 | Phase 08 P01 | 12min | 3 tasks | 23 files |
 | Phase 08 P02 | 8min | 3 tasks | 33 files |
+| Phase 08 P03 | 8min | 2 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -154,6 +155,9 @@ Recent decisions affecting current work:
 - [Phase 08-02]: apiFetch uses window.location.href='/login' hard redirect on refresh failure (no router dep)
 - [Phase 08-02]: 5-language stub files (zh/vi/ko/tl/ru) copy English to prevent Suspense hang (Pitfall 7)
 - [Phase 08-02]: jsdom origin http://localhost:3000; MSW handlers use absolute URLs matching this origin
+- [Phase 08]: Inline token minting in OAuth callback using create_access_token/create_refresh_token directly (AuthService lacks mint_tokens_for_user)
+- [Phase 08]: In-memory nonce store for MVP; production should use Redis for multi-worker safety
+- [Phase 08]: OAuth routes exempted from TenantMiddleware via path prefix match
 
 ### Pending Todos
 
@@ -165,6 +169,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-05T22:45:40.418Z
-Stopped at: Completed 08-02 (app shell: themes + i18n + auth + router)
+Last session: 2026-04-06T02:58:19.670Z
+Stopped at: Completed 08-03 (OAuth SSO + Login Page)
 Resume file: None
