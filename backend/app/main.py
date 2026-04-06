@@ -44,6 +44,7 @@ from app.routers.kb_admin import router as kb_admin_router
 from app.routers.research_admin import router as research_admin_router
 from app.routers.autonomy import router as autonomy_router
 from app.routers.autonomy_admin import router as autonomy_admin_router
+from app.routers.cms_admin import router as cms_admin_router
 from app.routers.screening_admin import router as screening_admin_router
 from app.routers.users import router as users_router
 from app.services.embedding.service import EmbeddingService
@@ -124,11 +125,22 @@ async def lifespan(app: FastAPI):
     approval_queue = ApprovalQueue()
     set_approval_queue(approval_queue)
 
-    # Step 9: Setup observability (OTel tracing + Prometheus metrics + structlog)
+    # Step 9: Start CMS sync queue worker if CMS integration is enabled
+    cms_sync_task = None
+    if settings.cms_enabled:
+        from app.integrations.cms.sync_queue import CMSSyncQueue
+
+        cms_queue = CMSSyncQueue()
+        cms_sync_task = asyncio.create_task(
+            cms_queue.run_worker(interval_seconds=settings.cms_sync_interval_seconds)
+        )
+        logger.info("CMS sync worker started (interval=%ds)", settings.cms_sync_interval_seconds)
+
+    # Step 10: Setup observability (OTel tracing + Prometheus metrics + structlog)
     setup_telemetry(app)
     setup_logging()
 
-    # Step 10: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
+    # Step 11: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
     folio_mcp_client = None
     try:
         from app.services.mcp.folio_mcp_client import FolioMCPClient
@@ -143,6 +155,13 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
+    if cms_sync_task is not None:
+        cms_sync_task.cancel()
+        try:
+            await cms_sync_task
+        except asyncio.CancelledError:
+            pass
+
     if folio_mcp_client is not None:
         try:
             await folio_mcp_client.close()
@@ -234,6 +253,7 @@ app.include_router(kb_admin_router)
 app.include_router(screening_admin_router)
 app.include_router(autonomy_router)
 app.include_router(autonomy_admin_router)
+app.include_router(cms_admin_router)
 
 
 # Health endpoint
