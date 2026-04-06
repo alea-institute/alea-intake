@@ -88,10 +88,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Autonomy & Configuration
 
-- [ ] **AUTONOMY-01**: Chatbot mode: AI runs all steps autonomously, presents questions directly to consumer
-- [ ] **AUTONOMY-02**: Professional mode: AI suggests at each stage, human professional approves before proceeding
-- [ ] **AUTONOMY-03**: Agent mode: AI orchestrates autonomously, pauses at configurable checkpoints for human review
-- [ ] **AUTONOMY-04**: Autonomy level is configurable per organization
+- [x] **AUTONOMY-01**: Chatbot mode: AI runs all steps autonomously, presents questions directly to consumer
+- [x] **AUTONOMY-02**: Professional mode: AI suggests at each stage, human professional approves before proceeding
+- [x] **AUTONOMY-03**: Agent mode: AI orchestrates autonomously, pauses at configurable checkpoints for human review
+- [x] **AUTONOMY-04**: Autonomy level is configurable per organization
 - [ ] **AUTONOMY-05**: Per-org configuration of which analysis stages require human approval in agent mode
 
 ### Security & Privacy
@@ -213,10 +213,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | FRONTEND-08 | Phase 8 | Complete |
 | FRONTEND-09 | Phase 8 | Complete |
 | FRONTEND-10 | Phase 8 | Complete |
-| AUTONOMY-01 | Phase 10 | Pending |
-| AUTONOMY-02 | Phase 10 | Pending |
-| AUTONOMY-03 | Phase 10 | Pending |
-| AUTONOMY-04 | Phase 10 | Pending |
+| AUTONOMY-01 | Phase 10 | Complete |
+| AUTONOMY-02 | Phase 10 | Complete |
+| AUTONOMY-03 | Phase 10 | Complete |
+| AUTONOMY-04 | Phase 10 | Complete |
 | AUTONOMY-05 | Phase 10 | Pending |
 | SECURITY-01 | Phase 1 | Complete |
 | SECURITY-02 | Phase 1 | Complete |
