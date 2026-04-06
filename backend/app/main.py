@@ -131,6 +131,14 @@ async def lifespan(app: FastAPI):
 
     app.state.persistence_manager = PersistenceManager()
 
+    # Step 9b: Load SkillsRegistry with bundled skills and attach to app.state
+    from app.skills.registry import SkillsRegistry
+
+    skills_registry = SkillsRegistry()
+    skills_registry.load_bundled()
+    app.state.skills_registry = skills_registry
+    logger.info("Skills registry loaded (%d skills)", len(skills_registry.list_skills()))
+
     # Step 10: Initialize ApprovalQueue singleton for autonomy endpoints
     from app.routers.autonomy import set_approval_queue
     from app.services.analysis.autonomy.approval_queue import ApprovalQueue

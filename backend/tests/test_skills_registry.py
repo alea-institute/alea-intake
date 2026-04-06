@@ -8,6 +8,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+# Ensure required env vars are set for main.py import
+os.environ.setdefault("ALEA_SECRET_KEY", "test-secret-key-for-unit-tests")
+
 # Ensure skills bundled directory exists for registry tests
 BACKEND_DIR = Path(__file__).parent.parent
 SKILLS_BUNDLED_DIR = BACKEND_DIR / "app" / "skills" / "bundled"
@@ -99,8 +102,9 @@ class TestMarketplaceIndexFetch:
     async def test_fetch_index_returns_list(self):
         from app.skills.marketplace import MarketplaceIndex
 
-        mock_response = AsyncMock()
+        mock_response = MagicMock()
         mock_response.status_code = 200
+        mock_response.raise_for_status = MagicMock()
         mock_response.json.return_value = [
             {
                 "name": "Immigration Screening",
