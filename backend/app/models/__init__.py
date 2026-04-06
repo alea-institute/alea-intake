@@ -11,6 +11,7 @@ from app.models.analysis import (
     FollowUpQuestion,
 )
 from app.models.audit import AuditLog
+from app.models.autonomy import ApprovalRequest, AutonomyEvent
 from app.models.consent import ConsentRecord, ConsentTemplate
 from app.models.fact import ExtractedFact, FactSourceSpan
 from app.models.folio_concepts import (
@@ -45,8 +46,10 @@ __all__ = [
     "AnalysisIteration",
     "AnalysisRun",
     "AnalysisStage",
+    "ApprovalRequest",
     "AuditLog",
     "Authority",
+    "AutonomyEvent",
     "CitationVerification",
     "ConceptGraphEdge",
     "ConceptGraphNode",
