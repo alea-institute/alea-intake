@@ -73,6 +73,15 @@ class Settings(BaseSettings):
     whisper_endpoint: str = "http://localhost:8790"
     asr_audio_storage_policy: str = "store_both"  # store_both, transcript_only, ephemeral
 
+    # OAuth SSO
+    google_client_id: str = ""
+    google_client_secret: str = ""
+    microsoft_client_id: str = ""
+    microsoft_client_secret: str = ""
+    oauth_redirect_base_url: str = "http://localhost:8000"
+    frontend_base_url: str = "http://localhost:5173"
+    session_secret_key: str = ""
+
     # CORS
     cors_origins: list[str] = ["http://localhost:5173"]
 

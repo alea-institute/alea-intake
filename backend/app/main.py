@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import get_settings
 from app.core.exceptions import (
@@ -146,10 +147,17 @@ app = FastAPI(
 )
 
 # Middleware (order matters -- last added = outermost/first executed):
-# Execution order: CORS -> Audit -> Tenant -> Consent -> route handler
+# Execution order: CORS -> Session -> Audit -> Tenant -> Consent -> route handler
 app.add_middleware(ConsentMiddleware)
 app.add_middleware(TenantMiddleware)
 app.add_middleware(AuditMiddleware)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.session_secret_key or "DEV-ONLY-CHANGE-IN-PROD",
+    max_age=600,  # 10 min -- just for OAuth state
+    same_site="lax",
+    https_only=False,  # production should use True; dev needs False for localhost
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,

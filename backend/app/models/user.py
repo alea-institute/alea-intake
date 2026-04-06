@@ -7,6 +7,8 @@ that will be encrypted at the application layer (field-level encryption).
 from datetime import datetime
 from enum import Enum
 
+from typing import Optional
+
 from sqlalchemy import Boolean, Integer, LargeBinary, String, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -36,5 +38,7 @@ class User(TenantBase):
     role: Mapped[str] = mapped_column(String(20), nullable=False, default="consumer")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     org_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    sso_provider: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    sso_subject: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
