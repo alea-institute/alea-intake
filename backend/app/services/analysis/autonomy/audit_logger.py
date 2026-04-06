@@ -88,14 +88,17 @@ class AutonomyAuditLogger:
         stage_name: str,
         actor_id: int | None = None,
         guidance: str | None = None,
+        guidance_text: str | None = None,
     ) -> None:
+        # Support both 'guidance' and 'guidance_text' for backward compat
+        text = guidance_text or guidance
         await self.log_event(
             run_id=run_id,
             intake_id=intake_id,
             event_type="rejected",
             actor_id=actor_id,
             stage_name=stage_name,
-            details={"guidance": guidance},
+            details={"guidance_text": text},
         )
 
     async def log_edited(
@@ -105,14 +108,23 @@ class AutonomyAuditLogger:
         stage_name: str,
         actor_id: int | None = None,
         edits: dict | None = None,
+        original_output: dict | None = None,
+        edited_output: dict | None = None,
     ) -> None:
+        details: dict = {}
+        if edits is not None:
+            details["edits"] = edits
+        if original_output is not None:
+            details["original_output"] = original_output
+        if edited_output is not None:
+            details["edited_output"] = edited_output
         await self.log_event(
             run_id=run_id,
             intake_id=intake_id,
             event_type="edited",
             actor_id=actor_id,
             stage_name=stage_name,
-            details={"edits": edits},
+            details=details,
         )
 
     async def log_auto_proceed(
@@ -120,12 +132,17 @@ class AutonomyAuditLogger:
         run_id: int,
         intake_id: int,
         stage_name: str,
+        timeout_duration: float | None = None,
     ) -> None:
+        details: dict | None = None
+        if timeout_duration is not None:
+            details = {"timeout_duration": timeout_duration}
         await self.log_event(
             run_id=run_id,
             intake_id=intake_id,
-            event_type="auto_proceed",
+            event_type="auto_proceeded",
             stage_name=stage_name,
+            details=details,
         )
 
     async def log_stage_skip(
@@ -138,7 +155,7 @@ class AutonomyAuditLogger:
         await self.log_event(
             run_id=run_id,
             intake_id=intake_id,
-            event_type="stage_skip",
+            event_type="stage_skipped",
             stage_name=stage_name,
             details={"reason": reason},
         )
@@ -148,13 +165,18 @@ class AutonomyAuditLogger:
         run_id: int,
         intake_id: int,
         actor_id: int | None = None,
+        reason: str | None = None,
         old_config: dict | None = None,
         new_config: dict | None = None,
     ) -> None:
         await self.log_event(
             run_id=run_id,
             intake_id=intake_id,
-            event_type="mode_change",
+            event_type="mode_changed",
             actor_id=actor_id,
-            details={"old_config": old_config, "new_config": new_config},
+            details={
+                "old_config": old_config,
+                "new_config": new_config,
+                "reason": reason,
+            },
         )
