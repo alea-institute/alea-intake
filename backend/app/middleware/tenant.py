@@ -27,7 +27,12 @@ class TenantMiddleware(BaseHTTPMiddleware):
         path = request.url.path
 
         # Skip tenant resolution for public routes
-        if path in PUBLIC_ROUTES or path.startswith("/docs") or path.startswith("/redoc"):
+        if (
+            path in PUBLIC_ROUTES
+            or path.startswith("/docs")
+            or path.startswith("/redoc")
+            or path.startswith("/api/v1/auth/oauth/")
+        ):
             return await call_next(request)
 
         # Try X-Tenant-Slug header first

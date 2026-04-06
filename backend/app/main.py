@@ -24,6 +24,7 @@ from app.middleware.consent import ConsentMiddleware
 from app.middleware.tenant import TenantMiddleware
 from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
+from app.routers.oauth import router as oauth_router
 from app.routers.audit import router as audit_router
 from app.routers.consent import router as consent_router
 from app.routers.analysis import router as analysis_router
@@ -190,6 +191,7 @@ async def insufficient_permissions_handler(request: Request, exc: InsufficientPe
 
 # Routers
 app.include_router(auth_router)
+app.include_router(oauth_router)
 app.include_router(organizations_router)
 app.include_router(users_router)
 app.include_router(audit_router)
