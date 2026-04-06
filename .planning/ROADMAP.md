@@ -197,12 +197,12 @@ Plans:
   2. In professional mode, the system suggests actions at each stage and waits for a human professional to approve before proceeding
   3. In agent mode, the system orchestrates autonomously but pauses at configurable checkpoints for human review, with per-org configuration of which stages require approval
   4. Organizations can select and switch between autonomy levels through admin configuration
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 10-01: TBD
-- [ ] 10-02: TBD
-- [ ] 10-03: TBD
+- [ ] 10-01-PLAN.md — Autonomy config schema, DB models, AutonomyInterceptor, ApprovalQueue, and orchestrator wiring
+- [ ] 10-02-PLAN.md — Approval workflow REST API, admin config endpoints, autonomy audit logger
+- [ ] 10-03-PLAN.md — Frontend AutonomySettings admin tab, ApprovalCard, ReviewStatus, WebSocket event handling
 
 ### Phase 11: Integration & Production Deployment
 **Goal**: The system integrates with external case management systems, supports both multi-tenant cloud and single-tenant self-hosted deployment, and provides configurable persistence modes with production monitoring
