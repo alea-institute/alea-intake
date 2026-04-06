@@ -213,13 +213,13 @@ Plans:
   2. The system deploys as a multi-tenant cloud instance with org-scoped data isolation, and as a single-tenant self-hosted instance from the same codebase
   3. Persistence mode is configurable per organization: ephemeral (data deleted after session), persistent (full case tracking), or CMS-integrated (synced to external system)
   4. Health check and monitoring endpoints report system status, and operators can observe system health in production
-**Plans**: TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
-- [ ] 11-03: TBD
-- [ ] 11-04: TBD
+- [ ] 11-01-PLAN.md — Observability (OTel, structlog, Prometheus /metrics, extended /health), security hardening (CSP/HSTS headers, rate limiting), and all Phase 11 Settings extensions
+- [ ] 11-02-PLAN.md — CMS adapter ABC with Clio, MyCase, and LegalServer connectors, sync queue, field mapping, and CMS admin API
+- [ ] 11-03-PLAN.md — Deployment mode branching (multi-tenant/single-tenant), persistence modes (ephemeral/persistent/CMS-integrated), auto-migration, tenant provisioning
+- [ ] 11-04-PLAN.md — MIT license, Docker packaging (single-tenant + multi-tenant), Helm chart, install script, skills registry, final main.py v1.0.0 wiring
 
 ## Progress
 
