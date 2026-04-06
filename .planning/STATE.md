@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 11-03-PLAN.md
-last_updated: "2026-04-06T21:39:53.515Z"
+status: verifying
+stopped_at: Completed 11-04-PLAN.md -- FINAL PLAN OF v1.0.0 MILESTONE
+last_updated: "2026-04-06T21:52:13.757Z"
 last_activity: 2026-04-06
 progress:
   total_phases: 11
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 46
-  completed_plans: 45
+  completed_plans: 46
   percent: 89
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 Phase: 11 (integration-production-deployment) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-06
 
 Progress: [============================================------]  89%
@@ -84,6 +84,7 @@ Progress: [============================================------]  89%
 | Phase 11 P01 | 7min | 2 tasks | 14 files |
 | Phase 11 P02 | 7min | 2 tasks | 17 files |
 | Phase 11 P03 | 5min | 2 tasks | 10 files |
+| Phase 11 P04 | 10min | 2 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -214,6 +215,9 @@ Recent decisions affecting current work:
 - [Phase 11]: get_schema_translate_map is the SINGLE source of schema naming -- all code calls it
 - [Phase 11]: Ephemeral TTL starts from session completion, not creation (Pitfall 5 mitigation)
 - [Phase 11]: Ephemeral deletion anonymizes audit trail (actor_id=None) rather than deleting (D-08)
+- [Phase 11]: Helm secretKeyRef pattern with existingSecret support (Pitfall 6)
+- [Phase 11]: Skills as Markdown with YAML frontmatter; Git-based marketplace index
+- [Phase 11]: Dockerfile entrypoint.sh runs Alembic migrations before uvicorn (skippable via env var)
 
 ### Pending Todos
 
@@ -225,6 +229,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T21:39:53.513Z
-Stopped at: Completed 11-03-PLAN.md
+Last session: 2026-04-06T21:52:13.755Z
+Stopped at: Completed 11-04-PLAN.md -- FINAL PLAN OF v1.0.0 MILESTONE
 Resume file: None

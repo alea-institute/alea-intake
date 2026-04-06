@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 8: Frontend Application** - Chat interface, streaming progress, dashboard, admin config, mobile responsive, voice recording UI
 - [ ] **Phase 9: Frontend Visualization** - Graph fact-mapping view, matrix completeness view, narrative-anchored annotation view
 - [x] **Phase 10: Autonomy & Orchestration Modes** - Chatbot, professional, and agent modes with per-org configuration (completed 2026-04-06)
-- [ ] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes
+- [x] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes (completed 2026-04-06)
 
 ## Phase Details
 
@@ -213,13 +213,13 @@ Plans:
   2. The system deploys as a multi-tenant cloud instance with org-scoped data isolation, and as a single-tenant self-hosted instance from the same codebase
   3. Persistence mode is configurable per organization: ephemeral (data deleted after session), persistent (full case tracking), or CMS-integrated (synced to external system)
   4. Health check and monitoring endpoints report system status, and operators can observe system health in production
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 - [x] 11-01-PLAN.md — Observability (OTel, structlog, Prometheus /metrics, extended /health), security hardening (CSP/HSTS headers, rate limiting), and all Phase 11 Settings extensions
 - [x] 11-02-PLAN.md — CMS adapter ABC with Clio, MyCase, and LegalServer connectors, sync queue, field mapping, and CMS admin API
 - [x] 11-03-PLAN.md — Deployment mode branching (multi-tenant/single-tenant), persistence modes (ephemeral/persistent/CMS-integrated), auto-migration, tenant provisioning
-- [ ] 11-04-PLAN.md — MIT license, Docker packaging (single-tenant + multi-tenant), Helm chart, install script, skills registry, final main.py v1.0.0 wiring
+- [x] 11-04-PLAN.md — MIT license, Docker packaging (single-tenant + multi-tenant), Helm chart, install script, skills registry, final main.py v1.0.0 wiring
 
 ## Progress
 
@@ -240,4 +240,4 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 8. Frontend Application | 0/6 | Not started | - |
 | 9. Frontend Visualization | 0/5 | Not started | - |
 | 10. Autonomy & Orchestration Modes | 3/3 | Complete    | 2026-04-06 |
-| 11. Integration & Production Deployment | 3/4 | In Progress|  |
+| 11. Integration & Production Deployment | 4/4 | Complete   | 2026-04-06 |
