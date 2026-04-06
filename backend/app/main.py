@@ -118,14 +118,27 @@ async def lifespan(app: FastAPI):
     # Step 7: Seed screening protocols (idempotent)
     await _seed_screening_protocols()
 
-    # Step 8: Initialize ApprovalQueue singleton for autonomy endpoints
+    # Step 8: Run auto-migrations on startup
+    try:
+        from app.deployment.migration_runner import run_startup_migrations
+
+        await run_startup_migrations()
+    except Exception:
+        logger.warning("Auto-migration skipped or failed", exc_info=True)
+
+    # Step 9: Initialize PersistenceManager and attach to app.state
+    from app.deployment.persistence import PersistenceManager
+
+    app.state.persistence_manager = PersistenceManager()
+
+    # Step 10: Initialize ApprovalQueue singleton for autonomy endpoints
     from app.routers.autonomy import set_approval_queue
     from app.services.analysis.autonomy.approval_queue import ApprovalQueue
 
     approval_queue = ApprovalQueue()
     set_approval_queue(approval_queue)
 
-    # Step 9: Start CMS sync queue worker if CMS integration is enabled
+    # Step 11: Start CMS sync queue worker if CMS integration is enabled
     cms_sync_task = None
     if settings.cms_enabled:
         from app.integrations.cms.sync_queue import CMSSyncQueue
@@ -136,11 +149,11 @@ async def lifespan(app: FastAPI):
         )
         logger.info("CMS sync worker started (interval=%ds)", settings.cms_sync_interval_seconds)
 
-    # Step 10: Setup observability (OTel tracing + Prometheus metrics + structlog)
+    # Step 12: Setup observability (OTel tracing + Prometheus metrics + structlog)
     setup_telemetry(app)
     setup_logging()
 
-    # Step 11: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
+    # Step 13: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
     folio_mcp_client = None
     try:
         from app.services.mcp.folio_mcp_client import FolioMCPClient
