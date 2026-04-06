@@ -114,7 +114,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **DEPLOY-03**: Single-tenant self-hosted deployment option
 - [x] **DEPLOY-04**: Docker containers for backend and frontend
 - [ ] **DEPLOY-05**: Configurable persistence: ephemeral (privacy-first), persistent (case tracking), CMS-integrated
-- [ ] **DEPLOY-06**: Health check and monitoring endpoints
+- [x] **DEPLOY-06**: Health check and monitoring endpoints
 
 ### Integration
 
@@ -233,7 +233,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | DEPLOY-03 | Phase 11 | Pending |
 | DEPLOY-04 | Phase 1 | Complete |
 | DEPLOY-05 | Phase 11 | Pending |
-| DEPLOY-06 | Phase 11 | Pending |
+| DEPLOY-06 | Phase 11 | Complete |
 | INTEGRATE-01 | Phase 11 | Pending |
 | INTEGRATE-02 | Phase 11 | Pending |
 | INTEGRATE-03 | Phase 11 | Pending |
