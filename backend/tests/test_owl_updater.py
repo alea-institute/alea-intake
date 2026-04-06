@@ -169,8 +169,8 @@ class TestHealthEndpoint:
 
         assert response.status_code == 200
         data = response.json()
-        assert "folio" in data
-        assert "cached" in data["folio"]
+        assert "folio_owl" in data
+        assert "cached" in data["folio_owl"]
 
 
 class TestLifespan:
@@ -196,10 +196,43 @@ class TestLifespan:
             patch("app.main.get_engine"),
             patch("app.main.dispose_engine", new_callable=AsyncMock),
             patch("app.main.get_settings") as mock_settings,
+            patch("app.main._seed_screening_protocols", new_callable=AsyncMock),
+            patch("app.main.setup_telemetry"),
+            patch("app.main.setup_prometheus"),
+            patch("app.main.ResearchToolRegistry") as mock_registry,
+            patch("app.main.CourtListenerAdapter"),
+            patch("app.deployment.migration_runner.run_startup_migrations", new_callable=AsyncMock),
+            patch("app.services.mcp.folio_mcp_client.FolioMCPClient") as mock_mcp,
+            patch("app.integrations.cms.sync_queue.CMSSyncQueue") as mock_cms,
+            patch("app.deployment.persistence.PersistenceManager") as mock_persist,
+            patch("app.skills.registry.SkillsRegistry") as mock_skills,
         ):
-            mock_settings.return_value.folio_update_interval_hours = 24
+            mock_s = MagicMock()
+            mock_s.folio_update_interval_hours = 24
+            mock_s.courtlistener_base_url = "https://api.courtlistener.com"
+            mock_s.research_timeout_seconds = 30
+            mock_s.deployment_mode = "single_tenant"
+            mock_s.cms_sync_interval_seconds = 60
+            mock_s.persistence_mode = "persistent"
+            mock_s.skills_dir = "/tmp/skills"
+            mock_s.cors_origins = ["http://localhost:5173"]
+            mock_s.secret_key = "test-secret-key-32-characters!!"
+            mock_s.otel_exporter_endpoint = ""
+            mock_s.otel_service_name = "alea-intake"
+            mock_s.rate_limit_default = "100/minute"
+            mock_s.rate_limit_auth = "20/minute"
+            mock_settings.return_value = mock_s
             mock_mgr_cls.get_instance.return_value = MagicMock()
             mock_emb_cls.get_instance.return_value = MagicMock()
+            mock_registry.get_instance.return_value = MagicMock()
+            mock_mcp.get_instance.return_value = MagicMock(connect=AsyncMock(), close=AsyncMock())
+            mock_cms_inst = MagicMock()
+            mock_cms_inst.start = AsyncMock()
+            mock_cms_inst.stop = AsyncMock()
+            mock_cms_inst.run_worker = AsyncMock()
+            mock_cms.return_value = mock_cms_inst
+            mock_persist.return_value = MagicMock(start=AsyncMock(), stop=AsyncMock())
+            mock_skills.return_value = MagicMock(load_bundled=MagicMock())
 
             async with lifespan(mock_app):
                 pass
