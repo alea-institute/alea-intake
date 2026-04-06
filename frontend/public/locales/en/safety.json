@@ -1,16 +1,24 @@
 {
   "critical": {
-    "banner": "Your safety comes first. Resources are available.",
-    "drawerHeading": "Are you safe right now?",
-    "drawerBody": "If you are in immediate danger, call 911. The resources below can help you find support.",
-    "hotlines": "National Domestic Violence Hotline: 1-800-799-7233 • 988 Suicide & Crisis Lifeline • Childhelp: 1-800-422-4453"
+    "banner": {
+      "legal-professional": "Your safety comes first. Resources are available.",
+      "modern-conversational": "You're not alone. Help is available right now.",
+      "courthouse-classic": "Safety resources are available. Please take a moment to review them."
+    },
+    "viewResources": "View resources",
+    "drawer": {
+      "heading": "Are you safe right now?",
+      "body": "If you are in immediate danger, call 911. The resources below can help you find support.",
+      "hotlinesLabel": "Safety hotlines"
+    }
   },
   "elevated": {
-    "badge": "{{count}} resource available",
-    "badge_other": "{{count}} resources available",
-    "drawerHeading": "Resources that may help"
+    "drawerHeading": "Resources that may help",
+    "badgeLabel": "{{count}} resources available",
+    "badgeLabel_one": "{{count}} resource available",
+    "badgeLabel_other": "{{count}} resources available"
   },
-  "professional": {
+  "professionalActions": {
     "escalate": "Escalate to supervisor",
     "markAddressed": "Mark as addressed"
   },

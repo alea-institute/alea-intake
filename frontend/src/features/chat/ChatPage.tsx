@@ -7,6 +7,9 @@ import { useWSStore } from './store'
 import { MessageList } from './components/MessageList'
 import { ChatInput } from './components/ChatInput'
 import { ConnectionBanner } from './components/ConnectionBanner'
+import { AnalysisProgressPanel } from './components/AnalysisProgressPanel'
+import { SafetyBanner } from '@/features/safety/components/SafetyBanner'
+import { SafetyDrawer } from '@/features/safety/components/SafetyDrawer'
 import type { Message, Modality, WSCommand } from './types'
 
 export function ChatPage() {
@@ -62,9 +65,16 @@ export function ChatPage() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
+      <SafetyBanner sessionId={sessionId} />
       <ConnectionBanner />
-      <MessageList messages={messages} onStopStream={handleStopStream} />
-      <ChatInput onSend={handleSend} disabled={inputDisabled} />
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <MessageList messages={messages} onStopStream={handleStopStream} />
+          <ChatInput onSend={handleSend} disabled={inputDisabled} />
+        </div>
+        <AnalysisProgressPanel sessionId={sessionId} />
+      </div>
+      <SafetyDrawer sessionId={sessionId} />
     </div>
   )
 }

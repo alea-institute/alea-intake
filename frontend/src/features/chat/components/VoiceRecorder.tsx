@@ -50,8 +50,9 @@ export function VoiceRecorder({ onRecorded, onCancel, maxDurationMs = DEFAULT_MA
 
   useEffect(() => {
     if (!wavesurfer) return
+    const mime = pickMimeType()
     const record = wavesurfer.registerPlugin(
-      RecordPlugin.create({ scrollingWaveform: true, renderRecordedAudio: false }),
+      RecordPlugin.create({ scrollingWaveform: true, renderRecordedAudio: false, mimeType: mime }),
     )
     recordPluginRef.current = record
 
@@ -61,7 +62,7 @@ export function VoiceRecorder({ onRecorded, onCancel, maxDurationMs = DEFAULT_MA
     })
     record.on('record-end', (blob: Blob) => {
       setRecording(false)
-      onRecorded(blob, blob.type || pickMimeType(), elapsedRef.current)
+      onRecorded(blob, blob.type || mime, elapsedRef.current)
     })
 
     return () => {
@@ -79,8 +80,7 @@ export function VoiceRecorder({ onRecorded, onCancel, maxDurationMs = DEFAULT_MA
   const startRecording = useCallback(async () => {
     setError(null)
     try {
-      const mime = pickMimeType()
-      await recordPluginRef.current?.startRecording({ mimeType: mime })
+      await recordPluginRef.current?.startRecording()
       setRecording(true)
       setElapsedMs(0)
     } catch {
