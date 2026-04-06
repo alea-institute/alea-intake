@@ -87,22 +87,27 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     loop = asyncio.get_event_loop()
 
-    # Step 1: Ensure OWL cache is fresh (sync httpx call in executor)
-    await loop.run_in_executor(None, ensure_owl_fresh)
+    # Steps 1-4: FOLIO ontology loading (graceful — may not be available in dev)
+    update_task = None
+    try:
+        # Step 1: Ensure OWL cache is fresh (sync httpx call in executor)
+        await loop.run_in_executor(None, ensure_owl_fresh)
 
-    # Step 2: Load FOLIO singleton (sync OWL parsing in executor)
-    await loop.run_in_executor(None, get_folio)
+        # Step 2: Load FOLIO singleton (sync OWL parsing in executor)
+        await loop.run_in_executor(None, get_folio)
 
-    # Step 3: Build embedding index from FOLIO concepts
-    folio = get_folio()  # already loaded in step 2
-    emb_service = EmbeddingService.get_instance()
-    await loop.run_in_executor(None, emb_service.build_index, folio)
+        # Step 3: Build embedding index from FOLIO concepts
+        folio = get_folio()  # already loaded in step 2
+        emb_service = EmbeddingService.get_instance()
+        await loop.run_in_executor(None, emb_service.build_index, folio)
 
-    # Step 4: Start periodic OWL update checker
-    update_manager = OWLUpdateManager.get_instance()
-    update_task = asyncio.create_task(
-        _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
-    )
+        # Step 4: Start periodic OWL update checker
+        update_manager = OWLUpdateManager.get_instance()
+        update_task = asyncio.create_task(
+            _periodic_owl_check(update_manager, settings.folio_update_interval_hours)
+        )
+    except Exception:
+        logger.warning("FOLIO ontology loading failed — running without ontology support", exc_info=True)
 
     # Step 5: Initialize research tool registry with default adapters
     research_registry = ResearchToolRegistry.get_instance()
@@ -115,8 +120,11 @@ async def lifespan(app: FastAPI):
     # Step 6: Initialize DB engine
     get_engine()
 
-    # Step 7: Seed screening protocols (idempotent)
-    await _seed_screening_protocols()
+    # Step 7: Seed screening protocols (idempotent, graceful)
+    try:
+        await _seed_screening_protocols()
+    except Exception:
+        logger.warning("Screening protocol seeding failed — tables may not exist yet", exc_info=True)
 
     # Step 8: Run auto-migrations on startup
     try:
@@ -189,11 +197,12 @@ async def lifespan(app: FastAPI):
         except Exception:
             logger.warning("Error closing FolioMCPClient", exc_info=True)
 
-    update_task.cancel()
-    try:
-        await update_task
-    except asyncio.CancelledError:
-        pass
+    if update_task is not None:
+        update_task.cancel()
+        try:
+            await update_task
+        except asyncio.CancelledError:
+            pass
     await dispose_engine()
 
 
