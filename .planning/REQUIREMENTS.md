@@ -110,10 +110,10 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Deployment & Infrastructure
 
 - [x] **DEPLOY-01**: Configurable database backend: PostgreSQL+pgvector (default) and SQLite+FAISS (lightweight)
-- [ ] **DEPLOY-02**: Multi-tenant cloud deployment with org-scoped data isolation
-- [ ] **DEPLOY-03**: Single-tenant self-hosted deployment option
+- [x] **DEPLOY-02**: Multi-tenant cloud deployment with org-scoped data isolation
+- [x] **DEPLOY-03**: Single-tenant self-hosted deployment option
 - [x] **DEPLOY-04**: Docker containers for backend and frontend
-- [ ] **DEPLOY-05**: Configurable persistence: ephemeral (privacy-first), persistent (case tracking), CMS-integrated
+- [x] **DEPLOY-05**: Configurable persistence: ephemeral (privacy-first), persistent (case tracking), CMS-integrated
 - [x] **DEPLOY-06**: Health check and monitoring endpoints
 
 ### Integration
@@ -229,10 +229,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | SECURITY-09 | Phase 1 | Complete |
 | SECURITY-10 | Phase 1 | Complete |
 | DEPLOY-01 | Phase 1 | Complete |
-| DEPLOY-02 | Phase 11 | Pending |
-| DEPLOY-03 | Phase 11 | Pending |
+| DEPLOY-02 | Phase 11 | Complete |
+| DEPLOY-03 | Phase 11 | Complete |
 | DEPLOY-04 | Phase 1 | Complete |
-| DEPLOY-05 | Phase 11 | Pending |
+| DEPLOY-05 | Phase 11 | Complete |
 | DEPLOY-06 | Phase 11 | Complete |
 | INTEGRATE-01 | Phase 11 | Complete |
 | INTEGRATE-02 | Phase 11 | Complete |
