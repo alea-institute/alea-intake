@@ -32,6 +32,14 @@ export interface SafetyAlert {
   addressed?: boolean
 }
 
+export interface ReviewStatusState {
+  status: 'reviewing' | 'paused' | 'proceeding' | 'idle'
+  label: string
+  requestId?: number
+  stageName?: string
+  safetyTriggered?: boolean
+}
+
 // WebSocket events (server -> client)
 export type WSEvent =
   | { type: 'message_ack'; client_id: string; id: string; timestamp: string }
@@ -40,6 +48,9 @@ export type WSEvent =
   | { type: 'safety_alert'; tier: SafetyAlert['tier']; payload: SafetyAlert }
   | { type: 'fact_extracted'; count: number }
   | { type: 'error'; code: string; message: string }
+  | { type: 'approval_pending'; request_id: number; stage: string; safety: boolean }
+  | { type: 'approval_resolved'; request_id: number; decision: string }
+  | { type: 'review_status'; status: 'reviewing' | 'paused' | 'proceeding'; label: string }
 
 // WebSocket commands (client -> server)
 export type WSCommand =

@@ -41,6 +41,29 @@
       "courthouse-classic": "Connection interrupted. Reconnecting. Your responses have been saved."
     }
   },
+  "approval": {
+    "title": "Stage Review",
+    "approve": "Approve",
+    "reject": "Reject",
+    "edit": "Edit Output",
+    "guidance_placeholder": "Provide guidance for re-running this stage...",
+    "submit_rejection": "Submit Rejection",
+    "save_edits": "Save Edits",
+    "safety_badge": "Safety Alert",
+    "stage": {
+      "issue_spot": "Issue Spotting",
+      "explore": "Exploration",
+      "research": "Legal Research",
+      "fact_map": "Fact Mapping",
+      "gap_analyze": "Gap Analysis",
+      "question_gen": "Question Generation"
+    }
+  },
+  "review": {
+    "reviewing": "Legal professional is reviewing",
+    "paused": "Analysis paused for review",
+    "proceeding": "Proceeding with analysis"
+  },
   "emptyDashboard": {
     "heading": {
       "legal-professional": "No matters in progress",

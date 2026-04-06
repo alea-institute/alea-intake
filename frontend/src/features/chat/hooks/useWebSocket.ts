@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useWSStore } from '../store'
-import type { Message, WSEvent } from '../types'
+import type { Message, WSEvent, ReviewStatusState } from '../types'
 
 const BACKOFF_MS = [1000, 2000, 4000, 8000, 16000, 30000]
 
@@ -130,6 +130,33 @@ function handleEvent(
 
     case 'fact_extracted':
       queryClient.invalidateQueries({ queryKey: ['intake', sessionId, 'facts'] })
+      break
+
+    case 'approval_pending':
+      useWSStore.getState().setReviewStatus({
+        status: 'paused',
+        label: 'Analysis paused for review',
+        requestId: msg.request_id,
+        stageName: msg.stage,
+        safetyTriggered: msg.safety,
+      })
+      queryClient.invalidateQueries({ queryKey: ['autonomy', 'pending'] })
+      break
+
+    case 'approval_resolved':
+      useWSStore.getState().setReviewStatus({ status: 'proceeding', label: 'Proceeding with analysis' })
+      queryClient.invalidateQueries({ queryKey: ['autonomy', 'pending'] })
+      // Brief flash then reset to idle
+      setTimeout(() => {
+        useWSStore.getState().setReviewStatus({ status: 'idle', label: '' })
+      }, 2000)
+      break
+
+    case 'review_status':
+      useWSStore.getState().setReviewStatus({
+        status: msg.status,
+        label: msg.label,
+      })
       break
 
     case 'error':
