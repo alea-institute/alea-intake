@@ -9,7 +9,8 @@
     "protocols": "Screening Protocols",
     "profiles": "Output Profiles",
     "users": "Users",
-    "usage": "Usage & Budgets"
+    "usage": "Usage & Budgets",
+    "autonomy": "Autonomy"
   },
   "stub": {
     "research": "Research tool configuration -- integrates with Phase 6 admin API.",
@@ -87,6 +88,43 @@
     "uploadDocument": "Upload document",
     "emptyHeading": "No documents in your knowledge base",
     "emptyBody": "Upload legal guides, statutes, or templates. The system will use them to inform intakes."
+  },
+  "autonomy": {
+    "presets": {
+      "title": "Mode Presets",
+      "chatbot": "Chatbot (Fully Autonomous)",
+      "professional": "Professional (Full Oversight)",
+      "agent": "Agent (Selective Checkpoints)"
+    },
+    "stages": {
+      "title": "Stage Checkpoints",
+      "issue_spot": "Issue Spotting",
+      "explore": "Exploration",
+      "research": "Legal Research",
+      "fact_map": "Fact Mapping",
+      "gap_analyze": "Gap Analysis",
+      "question_gen": "Question Generation"
+    },
+    "timeout": {
+      "title": "Timeout Configuration",
+      "duration": "Timeout Duration (seconds)",
+      "behavior": "On Timeout",
+      "auto_proceed": "Auto-proceed with audit note",
+      "queue_next": "Queue for next available professional",
+      "pause_until": "Pause until approved"
+    },
+    "safety": {
+      "title": "Safety Behavior",
+      "strict": "Strict (all critical + elevated mandatory)",
+      "professional": "Professional (critical mandatory, elevated silenceable)"
+    },
+    "preview": {
+      "title": "Consumer Experience Preview"
+    },
+    "save": "Save Configuration",
+    "saving": "Saving...",
+    "saved": "Configuration saved",
+    "saveError": "Failed to save configuration"
   },
   "confirmations": {
     "revokeAccess": "Revoke {{user_name}}'s access to this organization? They will be signed out immediately.",

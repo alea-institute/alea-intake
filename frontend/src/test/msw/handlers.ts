@@ -63,4 +63,37 @@ export const handlers = [
   http.get('/api/v1/analysis/:id/visualization', () =>
     HttpResponse.json(mockVisualizationData)
   ),
+  http.get('/api/v1/autonomy/admin/config', () =>
+    HttpResponse.json({
+      stage_checkpoints: {},
+      timeout_seconds: 300,
+      timeout_behavior: 'auto_proceed',
+      safety_behavior: 'strict',
+      notify_websocket: true,
+      notify_email: false,
+      labels: {},
+    })
+  ),
+  http.get('/api/v1/autonomy/admin/stages', () =>
+    HttpResponse.json([])
+  ),
+  http.get('/api/v1/autonomy/admin/presets', () =>
+    HttpResponse.json({})
+  ),
+  http.put('/api/v1/autonomy/admin/config', async ({ request }) => {
+    const body = await request.json()
+    return HttpResponse.json(body)
+  }),
+  http.get('/api/v1/autonomy/pending', () =>
+    HttpResponse.json([])
+  ),
+  http.post('/api/v1/autonomy/requests/:id/approve', () =>
+    HttpResponse.json({ status: 'approved' })
+  ),
+  http.post('/api/v1/autonomy/requests/:id/reject', () =>
+    HttpResponse.json({ status: 'rejected' })
+  ),
+  http.post('/api/v1/autonomy/requests/:id/edit', () =>
+    HttpResponse.json({ status: 'edited' })
+  ),
 ]

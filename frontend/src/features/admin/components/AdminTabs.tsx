@@ -1,6 +1,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { useTranslation } from 'react-i18next'
 import { OrgProfileForm } from './OrgProfileForm'
+import { AutonomySettings } from './AutonomySettings'
 
 export function AdminTabs() {
   const { t } = useTranslation('admin')
@@ -27,6 +28,9 @@ export function AdminTabs() {
         </TabsTrigger>
         <TabsTrigger value="usage" className="min-h-[44px]">
           {t('tabs.usage', 'Usage & Budgets')}
+        </TabsTrigger>
+        <TabsTrigger value="autonomy" className="min-h-[44px]">
+          {t('tabs.autonomy', 'Autonomy')}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="organization" className="pt-[24px]">
@@ -79,6 +83,9 @@ export function AdminTabs() {
             'Usage tracking + budget configuration -- future milestone.'
           )}
         </p>
+      </TabsContent>
+      <TabsContent value="autonomy" className="pt-[24px]">
+        <AutonomySettings />
       </TabsContent>
     </Tabs>
   )
