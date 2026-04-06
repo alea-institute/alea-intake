@@ -9,7 +9,6 @@ import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { useExport } from './useExport'
 import { mockVisualizationData } from '@/test/fixtures/visualization'
-import type { VisualizationData } from '../types'
 import type { MatrixRow, ClaimGroup } from './useMatrixData'
 
 // ---------------------------------------------------------------------------
@@ -62,7 +61,6 @@ beforeEach(() => {
   vi.spyOn(document, 'createElement').mockImplementation((tag: string) => {
     if (tag === 'a') {
       const link = originalCreateElement('a') as HTMLAnchorElement
-      const originalClick = link.click.bind(link)
       Object.defineProperty(link, 'click', {
         value: () => {
           downloadedUrls.push({ url: link.href, filename: link.download })
@@ -196,8 +194,8 @@ describe('useExport', () => {
     expect(mockSave).toHaveBeenCalledWith('analysis-narrative-42.pdf')
 
     // Should have written title text
-    const textCalls = mockText.mock.calls.map((c: unknown[]) => c[0])
-    expect(textCalls.some((t: string) => typeof t === 'string' && t.includes('Analysis Narrative'))).toBe(true)
+    const textCalls = mockText.mock.calls.map((c: unknown[]) => c[0]) as string[]
+    expect(textCalls.some((t) => typeof t === 'string' && t.includes('Analysis Narrative'))).toBe(true)
   })
 
   it('exportMatrixCSV respects filtered data (only includes provided rows)', () => {

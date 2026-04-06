@@ -49,6 +49,13 @@ export const router = createBrowserRouter([
           return { Component: m.OutputPage }
         },
       },
+      {
+        path: 'intake/:id/visualization',
+        lazy: async () => {
+          const m = await import('@/features/visualization/VisualizationPage')
+          return { Component: m.VisualizationPage }
+        },
+      },
     ],
   },
 ])
