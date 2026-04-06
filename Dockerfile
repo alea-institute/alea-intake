@@ -21,8 +21,8 @@ WORKDIR /app
 # Install system deps (curl for healthcheck, WeasyPrint C libs, Tesseract OCR)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0 \
-    libgdk-pixbuf2.0-0 libffi-dev libcairo2 \
+    libpango1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0 \
+    libgdk-pixbuf-2.0-0 libffi8 libcairo2 \
     libgobject-2.0-0 libglib2.0-0 \
     tesseract-ocr \
     && rm -rf /var/lib/apt/lists/*
