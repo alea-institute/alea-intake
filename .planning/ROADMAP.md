@@ -169,7 +169,7 @@ Plans:
 - [x] 08-03-PLAN.md — Backend SSO: Authlib Google+Microsoft OAuth, one-time-code exchange, LoginPage + SSO buttons
 - [x] 08-04-PLAN.md — Chat: WebSocket hook (backoff+jitter), ChatMessage/ChatInput/StreamingMessage, optimistic UI, ChatPage
 - [ ] 08-05-PLAN.md — Voice+Safety+Progress: VoiceRecorder (wavesurfer.js), TranscriptReview, AnalysisProgressPanel, SafetyBanner/Drawer
-- [ ] 08-06-PLAN.md — Dashboard+Admin+Output: intake list (virtual scroll), responsive sidebar/mobile nav, admin tabs/wizard, markdown memo + export menu
+- [x] 08-06-PLAN.md — Dashboard+Admin+Output: intake list (virtual scroll), responsive sidebar/mobile nav, admin tabs/wizard, markdown memo + export menu
 
 ### Phase 9: Frontend Visualization
 **Goal**: Users can explore the relationship between facts, claims, and elements through three specialized views -- a force-directed graph for exploration, a matrix for completeness checking, and narrative-anchored annotations for comprehension

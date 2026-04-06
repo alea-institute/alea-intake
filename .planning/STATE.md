@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-04 (Chat Interface + WebSocket)
-last_updated: "2026-04-06T03:14:51.630Z"
+stopped_at: Completed 08-06 (Dashboard, Shell, Admin, Output)
+last_updated: "2026-04-06T03:32:04.226Z"
 last_activity: 2026-04-06
 progress:
   total_phases: 11
   completed_phases: 7
   total_plans: 34
-  completed_plans: 32
+  completed_plans: 33
   percent: 89
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 08 (frontend-application) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-04-06
 
@@ -72,6 +72,7 @@ Progress: [============================================------]  89%
 | Phase 08 P02 | 8min | 3 tasks | 33 files |
 | Phase 08 P03 | 8min | 2 tasks | 17 files |
 | Phase 08 P04 | 11min | 3 tasks | 27 files |
+| Phase 08 P06 | 13min | 3 tasks | 57 files |
 
 ## Accumulated Context
 
@@ -163,6 +164,11 @@ Recent decisions affecting current work:
 - [Phase 08]: ConnectionBanner uses shared common namespace error keys for copy consistency
 - [Phase 08]: ChatInput disabled when wsStatus !== connected (prevents sending into void)
 - [Phase 08]: matchMedia + scrollIntoView polyfills in vitest.setup.ts for jsdom compat
+- [Phase 08]: Extended rehype-sanitize schema for GFM table elements in MarkdownMemo
+- [Phase 08]: Tailwind spacing tokens renamed from -custom suffix to short names (sm, md, lg)
+- [Phase 08]: AppShell canonical location moved to shared/components/AppShell.tsx
+- [Phase 08]: Admin tabs: 5 of 7 are intentional stubs; Organization + SetupWizard fully functional
+- [Phase 08]: Virtual list threshold 100: below uses standard table, above uses @tanstack/react-virtual
 
 ### Pending Todos
 
@@ -174,6 +180,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T03:14:51.628Z
-Stopped at: Completed 08-04 (Chat Interface + WebSocket)
+Last session: 2026-04-06T03:32:04.224Z
+Stopped at: Completed 08-06 (Dashboard, Shell, Admin, Output)
 Resume file: None
