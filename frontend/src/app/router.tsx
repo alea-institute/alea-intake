@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { AppShell } from './App'
+import { AppShell } from '@/shared/components/AppShell'
 
 export const router = createBrowserRouter([
   {
