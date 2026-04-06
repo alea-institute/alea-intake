@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-04-06T21:21:49.290Z"
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-04-06T21:31:57.674Z"
 last_activity: 2026-04-06
 progress:
   total_phases: 11
   completed_phases: 10
   total_plans: 46
-  completed_plans: 43
+  completed_plans: 44
   percent: 89
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 11 (integration-production-deployment) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-04-06
 
@@ -82,6 +82,7 @@ Progress: [============================================------]  89%
 | Phase 10 P02 | 5min | 2 tasks | 6 files |
 | Phase 10 P03 | 6min | 2 tasks | 17 files |
 | Phase 11 P01 | 7min | 2 tasks | 14 files |
+| Phase 11 P02 | 7min | 2 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -205,6 +206,10 @@ Recent decisions affecting current work:
 - [Phase 11]: Prometheus instrumentation at app creation time (not lifespan) to avoid /metrics route registration timing issues
 - [Phase 11]: Health check returns 'degraded' not 'unhealthy' when components fail -- partial functionality still available
 - [Phase 11]: SecurityHeadersMiddleware placed between CORS and Session in middleware execution order
+- [Phase 11]: CMSAdapter ABC mirrors ResearchAdapter pattern from Phase 6 for consistency
+- [Phase 11]: Two-layer field mapping: canonical dicts first, then CMS-specific translation in each adapter
+- [Phase 11]: LegalServer uses API key auth (not OAuth); contacts are matter participants, not standalone entities
+- [Phase 11]: Sync queue MAX_RETRIES=3 with exponential backoff; in-memory connector store for MVP admin API
 
 ### Pending Todos
 
@@ -216,6 +221,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T21:21:49.288Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-04-06T21:31:57.672Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: None
