@@ -13,9 +13,26 @@
   "streaming": {
     "stop": "Stop generating"
   },
+  "voice": {
+    "waveformLabel": "Voice recording waveform",
+    "cancel": "Cancel",
+    "stop": "Stop recording",
+    "micDenied": "Microphone access was denied. Please enable microphone permission and try again.",
+    "reviewLabel": "Review and edit your transcript",
+    "lowConfHint": "Some words may be inaccurate:",
+    "playbackLabel": "Listen to your recording",
+    "audioUnsupported": "Your browser does not support audio playback.",
+    "reRecord": "Re-record",
+    "approve": "Approve and send"
+  },
+  "document": {
+    "hint": "Accepted: PDF, DOCX, JPG, PNG, TIFF — up to {{limit}}MB"
+  },
   "progress": {
     "title": "Analyzing your information",
-    "stage": "Stage {{n}} of {{total}}: {{name}}"
+    "stage": "Stage {{n}} of {{total}}: {{name}}",
+    "iteration": "Iteration",
+    "next": "Next"
   },
   "connection": {
     "lost": {
