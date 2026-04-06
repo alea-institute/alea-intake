@@ -92,7 +92,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **AUTONOMY-02**: Professional mode: AI suggests at each stage, human professional approves before proceeding
 - [x] **AUTONOMY-03**: Agent mode: AI orchestrates autonomously, pauses at configurable checkpoints for human review
 - [x] **AUTONOMY-04**: Autonomy level is configurable per organization
-- [ ] **AUTONOMY-05**: Per-org configuration of which analysis stages require human approval in agent mode
+- [x] **AUTONOMY-05**: Per-org configuration of which analysis stages require human approval in agent mode
 
 ### Security & Privacy
 
@@ -217,7 +217,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | AUTONOMY-02 | Phase 10 | Complete |
 | AUTONOMY-03 | Phase 10 | Complete |
 | AUTONOMY-04 | Phase 10 | Complete |
-| AUTONOMY-05 | Phase 10 | Pending |
+| AUTONOMY-05 | Phase 10 | Complete |
 | SECURITY-01 | Phase 1 | Complete |
 | SECURITY-02 | Phase 1 | Complete |
 | SECURITY-03 | Phase 1 | Complete |
