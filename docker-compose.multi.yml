@@ -1,0 +1,85 @@
+# ALEA Intake - Multi-Tenant Deployment
+#
+# Includes PostgreSQL (pgvector) for production multi-tenant use.
+# Optional Redis for distributed rate limiting.
+#
+# Usage: docker compose -f docker-compose.multi.yml up -d
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: ${ALEA_DB_NAME:-alea_intake}
+      POSTGRES_USER: ${ALEA_DB_USER:-alea}
+      POSTGRES_PASSWORD: ${ALEA_DB_PASSWORD:-changeme}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ALEA_DB_USER:-alea} -d ${ALEA_DB_NAME:-alea_intake}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # Optional: Redis for distributed rate limiting
+  # Uncomment to enable
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
+  #   restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    environment:
+      ALEA_DEPLOYMENT_MODE: multi_tenant
+      ALEA_DATABASE_BACKEND: postgresql
+      ALEA_DB_HOST: db
+      ALEA_DB_PORT: "5432"
+      ALEA_DB_NAME: ${ALEA_DB_NAME:-alea_intake}
+      ALEA_DB_USER: ${ALEA_DB_USER:-alea}
+      ALEA_DB_PASSWORD: ${ALEA_DB_PASSWORD:-changeme}
+      ALEA_SECRET_KEY: ${ALEA_SECRET_KEY:-CHANGE-ME-generate-a-random-key}
+      ALEA_MASTER_KEY_PATH: /app/data/master.key
+      ALEA_PERSISTENCE_MODE: persistent
+      ALEA_TENANT_SIGNUP_MODE: admin_approval
+      ALEA_LOG_LEVEL: INFO
+      ALEA_LOG_FORMAT: json
+      # Rate limiting: uncomment for Redis-backed distributed limiting
+      # ALEA_RATE_LIMIT_STORAGE: "redis://redis:6379"
+      # OpenTelemetry: set your collector endpoint
+      # ALEA_OTEL_ENDPOINT: "http://otel-collector:4318/v1/traces"
+    volumes:
+      - app_data:/app/data
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Optional: OpenTelemetry Collector
+  # Uncomment and configure with your backend (Jaeger, Grafana Tempo, etc.)
+  # otel-collector:
+  #   image: otel/opentelemetry-collector-contrib:latest
+  #   volumes:
+  #     - ./otel-config.yaml:/etc/otel/config.yaml
+  #   command: ["--config", "/etc/otel/config.yaml"]
+  #   ports:
+  #     - "4318:4318"   # OTLP HTTP
+  #     - "4317:4317"   # OTLP gRPC
+  #   restart: unless-stopped
+
+volumes:
+  pgdata:
+  app_data:

@@ -1,0 +1,16 @@
+apiVersion: v2
+name: alea-intake
+description: ALEA Intake - AI-powered legal intake system
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - legal
+  - intake
+  - ai
+  - folio
+home: https://github.com/alea/alea-intake
+sources:
+  - https://github.com/alea/alea-intake
+maintainers:
+  - name: ALEA

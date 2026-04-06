@@ -9,7 +9,19 @@ RUN pnpm build
 
 # Stage 2: Backend
 FROM python:3.12-slim AS backend
+
+LABEL org.opencontainers.image.title="alea-intake" \
+      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.description="ALEA Intake - AI-powered legal intake system" \
+      org.opencontainers.image.source="https://github.com/alea/alea-intake" \
+      org.opencontainers.image.licenses="MIT"
+
 WORKDIR /app
+
+# Install system deps (curl for healthcheck)
+RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN pip install uv
 COPY backend/pyproject.toml backend/uv.lock* ./backend/
 WORKDIR /app/backend
@@ -17,9 +29,16 @@ RUN uv sync --no-dev
 COPY backend/ ./
 COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 
+# Copy entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Create data directory for SQLite and uploads
+RUN mkdir -p /app/data
+
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-  CMD python -c "import httpx; r=httpx.get('http://localhost:8000/health'); exit(0 if r.status_code==200 else 1)"
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["/app/entrypoint.sh"]

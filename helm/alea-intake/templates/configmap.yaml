@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "alea-intake.fullname" . }}-config
+  labels:
+    {{- include "alea-intake.labels" . | nindent 4 }}
+data:
+  ALEA_DEPLOYMENT_MODE: {{ .Values.deploymentMode | quote }}
+  ALEA_DATABASE_BACKEND: {{ .Values.database.backend | quote }}
+  {{- if eq .Values.database.backend "postgresql" }}
+  ALEA_DB_HOST: {{ .Values.database.host | quote }}
+  ALEA_DB_PORT: {{ .Values.database.port | quote }}
+  ALEA_DB_NAME: {{ .Values.database.name | quote }}
+  ALEA_DB_USER: {{ .Values.database.user | quote }}
+  {{- end }}
+  ALEA_PERSISTENCE_MODE: {{ .Values.persistence.defaultMode | quote }}
+  ALEA_LOG_LEVEL: {{ .Values.observability.logLevel | quote }}
+  ALEA_LOG_FORMAT: {{ .Values.observability.logFormat | quote }}
+  {{- if .Values.observability.otelEndpoint }}
+  ALEA_OTEL_ENDPOINT: {{ .Values.observability.otelEndpoint | quote }}
+  {{- end }}
+  ALEA_RATE_LIMIT_DEFAULT: {{ .Values.security.rateLimitDefault | quote }}
+  ALEA_HSTS_MAX_AGE: {{ .Values.security.hstsMaxAge | quote }}
+  ALEA_MAX_REQUEST_SIZE_MB: {{ .Values.security.maxRequestSizeMb | quote }}

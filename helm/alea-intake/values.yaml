@@ -1,0 +1,92 @@
+# ALEA Intake - Helm Chart Values
+# Override these values for your deployment.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/alea/alea-intake
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+# Deployment mode: single_tenant or multi_tenant
+deploymentMode: multi_tenant
+
+# Database configuration
+database:
+  backend: postgresql
+  host: ""
+  port: 5432
+  name: alea_intake
+  user: alea
+  # Reference an existing Kubernetes Secret for database credentials.
+  # The secret must contain a key named "password".
+  existingSecret: ""
+  existingSecretPasswordKey: password
+
+# Application secrets
+# Reference an existing Kubernetes Secret for app secrets.
+# Must contain keys: secret-key, master-key
+appSecret:
+  existingSecret: ""
+
+# Observability
+observability:
+  otelEndpoint: ""
+  logLevel: INFO
+  logFormat: json
+  metricsEnabled: true
+
+# Security
+security:
+  rateLimitDefault: "100/minute"
+  hstsMaxAge: 31536000
+  maxRequestSizeMb: 50
+
+# Persistence
+persistence:
+  defaultMode: persistent
+  dataVolume:
+    enabled: true
+    size: 10Gi
+    storageClass: ""
+
+# Ingress
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  #  - host: alea.example.com
+  #    paths:
+  #      - path: /
+  #        pathType: Prefix
+  tls: []
+  #  - secretName: alea-tls
+  #    hosts:
+  #      - alea.example.com
+
+# Service
+service:
+  type: ClusterIP
+  port: 8000
+
+# Resource limits
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+# Autoscaling
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+# Pod configuration
+nodeSelector: {}
+tolerations: []
+affinity: {}
