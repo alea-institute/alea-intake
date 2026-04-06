@@ -40,6 +40,14 @@ export default defineConfig({
             'rehype-slug',
           ],
           'wavesurfer-vendor': ['wavesurfer.js', '@wavesurfer/react'],
+          'd3-vendor': [
+            'd3-force',
+            'd3-selection',
+            'd3-zoom',
+            'd3-drag',
+            'd3-scale',
+          ],
+          'export-vendor': ['html-to-image', 'jspdf'],
           'i18n-vendor': [
             'i18next',
             'react-i18next',

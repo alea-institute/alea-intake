@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { mockVisualizationData } from '../fixtures/visualization'
 
 export const handlers = [
   http.get('/api/v1/auth/me', () =>
@@ -58,5 +59,8 @@ export const handlers = [
       access_token: 'sso-tok',
       user: { id: 'u1', email: 'sso@example.com', role: 'consumer', org_id: '1' },
     })
+  ),
+  http.get('/api/v1/analysis/:id/visualization', () =>
+    HttpResponse.json(mockVisualizationData)
   ),
 ]
