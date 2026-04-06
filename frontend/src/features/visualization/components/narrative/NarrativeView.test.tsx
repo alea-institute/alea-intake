@@ -6,8 +6,8 @@
  * plain text segments, and responsive behavior.
  */
 
-import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, screen, fireEvent, within } from '@testing-library/react'
+import { describe, it, expect, afterEach } from 'vitest'
+import { render, screen } from '@testing-library/react'
 import { NarrativeView } from './NarrativeView'
 import { useVisualizationStore } from '@/features/visualization/store'
 import { mockVisualizationData } from '@/test/fixtures/visualization'

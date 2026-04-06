@@ -29,7 +29,7 @@ const ROW_OVERSCAN = 10
 const COL_OVERSCAN = 5
 
 export function MatrixView({ data, onCellSelect }: MatrixViewProps) {
-  const { rows, columnGroups, getCellData, totalColumns } = useMatrixData(data)
+  const { rows, columnGroups, getCellData } = useMatrixData(data)
   const setMatrixState = useVisualizationStore((s) => s.setMatrixState)
 
   // Collapse state managed locally (not in Zustand for simplicity)

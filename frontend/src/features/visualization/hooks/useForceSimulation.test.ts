@@ -4,8 +4,8 @@
  * TDD RED phase: all tests written before implementation.
  */
 
-import { describe, it, expect, vi, afterEach } from 'vitest'
-import { renderHook, act, waitFor } from '@testing-library/react'
+import { describe, it, expect, afterEach } from 'vitest'
+import { renderHook, waitFor } from '@testing-library/react'
 import { useForceSimulation } from './useForceSimulation'
 import { useGraphData } from './useGraphData'
 import { useVisualizationStore } from '@/features/visualization/store'

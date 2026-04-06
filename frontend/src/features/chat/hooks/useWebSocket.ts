@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useWSStore } from '../store'
-import type { Message, WSEvent, ReviewStatusState } from '../types'
+import type { Message, WSEvent } from '../types'
 
 const BACKOFF_MS = [1000, 2000, 4000, 8000, 16000, 30000]
 

@@ -217,7 +217,7 @@ function NarrativeText({ data }: { data: VisualizationData }) {
 
   return (
     <div className="space-y-4 text-sm" role="document">
-      {data.facts.map((fact, idx) => {
+      {data.facts.map((fact) => {
         // Find claims this fact maps to
         const relatedClaims = data.mappings
           .filter((m) => m.fact_id === fact.id)

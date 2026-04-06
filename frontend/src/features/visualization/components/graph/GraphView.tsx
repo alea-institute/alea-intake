@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useRef, useCallback, useMemo } from 'react'
-import { zoom as d3Zoom, zoomIdentity, type ZoomBehavior } from 'd3-zoom'
+import { zoom as d3Zoom, type ZoomBehavior } from 'd3-zoom'
 import { select } from 'd3-selection'
 import { useForceSimulation } from '../../hooks/useForceSimulation'
 import { GraphNode } from './GraphNode'
@@ -39,7 +39,7 @@ export function GraphView({
   const gRef = useRef<SVGGElement>(null)
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null)
 
-  const { positions, simulation } = useForceSimulation(nodes, links, width, height)
+  const { positions } = useForceSimulation(nodes, links, width, height)
 
   // Build a lookup from node ID -> positioned node
   const positionMap = useMemo(() => {

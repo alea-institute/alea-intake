@@ -37,7 +37,7 @@ export function GraphCanvas({
   const transformRef = useRef<ZoomTransform>(zoomIdentity)
   const animationRef = useRef<number>(0)
 
-  const { positions, simulation } = useForceSimulation(nodes, links, width, height)
+  const { positions } = useForceSimulation(nodes, links, width, height)
   const positionsRef = useRef(positions)
   positionsRef.current = positions
 

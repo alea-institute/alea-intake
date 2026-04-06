@@ -179,7 +179,7 @@ function MessageBlock({
       <div className="flex">
         {/* Text column */}
         <div
-          ref={(el) => el && onRefSet(msg.messageId, el)}
+          ref={(el) => { if (el) onRefSet(msg.messageId, el) }}
           className="flex-1 text-sm leading-relaxed text-foreground md:mr-36"
         >
           {msg.segments.map((seg) => {

@@ -161,7 +161,7 @@ function ElementShape({ x, y, confidence, color, selected }: ShapeProps) {
 }
 
 /** Gap: circle with dashed border (no fill) */
-function GapShape({ x, y, confidence, color, selected }: ShapeProps) {
+function GapShape({ x, y, confidence, color }: ShapeProps) {
   const r = 6 + confidence * 14
   return (
     <circle
