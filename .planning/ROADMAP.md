@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 7: Output & Export** - Case memos, triage/routing, action items, configurable formats, and export
 - [ ] **Phase 8: Frontend Application** - Chat interface, streaming progress, dashboard, admin config, mobile responsive, voice recording UI
 - [ ] **Phase 9: Frontend Visualization** - Graph fact-mapping view, matrix completeness view, narrative-anchored annotation view
-- [ ] **Phase 10: Autonomy & Orchestration Modes** - Chatbot, professional, and agent modes with per-org configuration
+- [x] **Phase 10: Autonomy & Orchestration Modes** - Chatbot, professional, and agent modes with per-org configuration (completed 2026-04-06)
 - [ ] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes
 
 ## Phase Details
@@ -197,12 +197,12 @@ Plans:
   2. In professional mode, the system suggests actions at each stage and waits for a human professional to approve before proceeding
   3. In agent mode, the system orchestrates autonomously but pauses at configurable checkpoints for human review, with per-org configuration of which stages require approval
   4. Organizations can select and switch between autonomy levels through admin configuration
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 10-01-PLAN.md — Autonomy config schema, DB models, AutonomyInterceptor, ApprovalQueue, and orchestrator wiring
 - [x] 10-02-PLAN.md — Approval workflow REST API, admin config endpoints, autonomy audit logger
-- [ ] 10-03-PLAN.md — Frontend AutonomySettings admin tab, ApprovalCard, ReviewStatus, WebSocket event handling
+- [x] 10-03-PLAN.md — Frontend AutonomySettings admin tab, ApprovalCard, ReviewStatus, WebSocket event handling
 
 ### Phase 11: Integration & Production Deployment
 **Goal**: The system integrates with external case management systems, supports both multi-tenant cloud and single-tenant self-hosted deployment, and provides configurable persistence modes with production monitoring
@@ -239,5 +239,5 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 7. Output & Export | 0/3 | Not started | - |
 | 8. Frontend Application | 0/6 | Not started | - |
 | 9. Frontend Visualization | 0/5 | Not started | - |
-| 10. Autonomy & Orchestration Modes | 2/3 | In Progress|  |
+| 10. Autonomy & Orchestration Modes | 3/3 | Complete   | 2026-04-06 |
 | 11. Integration & Production Deployment | 0/4 | Not started | - |
