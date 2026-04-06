@@ -1,4 +1,65 @@
 {
+  "heading": "Admin",
+  "switchToWizard": "Setup wizard",
+  "switchToTabs": "Tabbed view",
+  "tabs": {
+    "organization": "Organization",
+    "research": "Research Tools",
+    "kb": "Knowledge Base",
+    "protocols": "Screening Protocols",
+    "profiles": "Output Profiles",
+    "users": "Users",
+    "usage": "Usage & Budgets"
+  },
+  "stub": {
+    "research": "Research tool configuration -- integrates with Phase 6 admin API.",
+    "kb": "Knowledge base management -- integrates with Phase 6 KB admin API.",
+    "protocols": "Screening protocol management -- integrates with Phase 5 protocol admin API.",
+    "profiles": "Output profile configuration -- integrates with Phase 7 admin API.",
+    "users": "User management -- integrates with Phase 1 user admin API.",
+    "usage": "Usage tracking + budget configuration -- future milestone."
+  },
+  "org": {
+    "nameLabel": "Organization name",
+    "accentLabel": "Accent color (optional)",
+    "logoLabel": "Logo URL (optional)",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "saved": "Organization saved",
+    "saveError": "Failed to save organization"
+  },
+  "wizard": {
+    "stepLabel": "Step {{n}} of {{total}}",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish setup",
+    "steps": {
+      "profile": {
+        "title": "Organization profile",
+        "body": "Set your organization name, accent color, and logo."
+      },
+      "deployment": {
+        "title": "Deployment type",
+        "body": "Choose your deployment profile: law firm, legal aid, or court self-help."
+      },
+      "protocols": {
+        "title": "Screening protocols",
+        "body": "Activate safety and screening protocols for your organization."
+      },
+      "profiles": {
+        "title": "Output profiles",
+        "body": "Configure which output formats your organization generates."
+      },
+      "research": {
+        "title": "Research tools",
+        "body": "Connect legal research tools and configure API keys."
+      },
+      "kb": {
+        "title": "Knowledge base",
+        "body": "Upload legal guides, statutes, or templates for intake enrichment."
+      }
+    }
+  },
   "orgSettings": {
     "heading": "Organization settings",
     "theme": "Theme",

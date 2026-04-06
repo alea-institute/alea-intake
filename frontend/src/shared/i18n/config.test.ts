@@ -6,8 +6,8 @@ describe('i18n config', () => {
     expect(SUPPORTED_LANGUAGES).toEqual(['en', 'es', 'zh', 'vi', 'ko', 'tl', 'ru'])
   })
 
-  it('defines 6 namespaces', () => {
-    expect(NAMESPACES).toEqual(['common', 'chat', 'admin', 'safety', 'output', 'auth'])
+  it('defines 7 namespaces', () => {
+    expect(NAMESPACES).toEqual(['common', 'chat', 'admin', 'safety', 'output', 'auth', 'dashboard'])
   })
 
   it('initializes with fallbackLng=en', () => {

@@ -17,6 +17,36 @@ export const handlers = [
   http.get('/api/v1/intakes', () =>
     HttpResponse.json({ items: [], total: 0 })
   ),
+  http.get('/api/v1/orgs/:id', () =>
+    HttpResponse.json({
+      id: 'org1',
+      name: 'Test Org',
+      deployment_type: 'law_firm',
+    })
+  ),
+  http.put('/api/v1/orgs/:id', () =>
+    HttpResponse.json({
+      id: 'org1',
+      name: 'Updated Org',
+      deployment_type: 'law_firm',
+    })
+  ),
+  http.get('/api/v1/outputs/:id', () =>
+    HttpResponse.json({
+      profiles: [
+        {
+          profile_key: 'law_firm_memo',
+          content: '# Memo\n\nSample output.',
+          rendered_at: '2026-04-01T00:00:00Z',
+        },
+      ],
+    })
+  ),
+  http.get('/api/v1/outputs/:id/export', () =>
+    new HttpResponse(new Blob(['pdf-data']), {
+      headers: { 'Content-Type': 'application/pdf' },
+    })
+  ),
   http.post('/api/v1/auth/login', () =>
     HttpResponse.json({
       access_token: 'tok',

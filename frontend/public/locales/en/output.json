@@ -1,10 +1,17 @@
 {
-  "generating": "Preparing your {{format}} export…",
-  "documentProcessing": "Processing {{filename}}…",
-  "voiceTranscribing": "Transcribing…",
+  "heading": "Output",
+  "preparing": "Preparing your {{format}} export...",
+  "documentProcessing": "Processing {{filename}}...",
+  "voiceTranscribing": "Transcribing...",
+  "format": {
+    "pdf": "PDF",
+    "docx": "Word (DOCX)",
+    "json": "JSON",
+    "markdown": "Markdown memo"
+  },
   "empty": {
-    "heading": "No exports yet",
-    "body": "When you export a completed intake, it will appear here for quick re-download."
+    "heading": "No output yet",
+    "body": "Complete an intake conversation to generate output."
   },
   "formats": {
     "pdf": "PDF document",
