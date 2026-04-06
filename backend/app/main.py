@@ -12,6 +12,9 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.config import get_settings
+from app.observability.health import check_health
+from app.observability.logging import setup_logging
+from app.observability.telemetry import setup_prometheus, setup_telemetry
 from app.core.exceptions import (
     ConsentRequiredError,
     EncryptionError,
@@ -119,7 +122,11 @@ async def lifespan(app: FastAPI):
     approval_queue = ApprovalQueue()
     set_approval_queue(approval_queue)
 
-    # Step 9: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
+    # Step 9: Setup observability (OTel tracing + Prometheus metrics + structlog)
+    setup_telemetry(app)
+    setup_logging()
+
+    # Step 10: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
     folio_mcp_client = None
     try:
         from app.services.mcp.folio_mcp_client import FolioMCPClient
@@ -152,7 +159,7 @@ settings = get_settings()
 
 app = FastAPI(
     title="ALEA Intake API",
-    version="0.1.0",
+    version="1.0.0",
     lifespan=lifespan,
 )
 
@@ -175,6 +182,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Prometheus metrics (register /metrics route at app creation, not during lifespan)
+setup_prometheus(app)
 
 
 # Exception handlers
@@ -222,13 +232,6 @@ app.include_router(autonomy_admin_router)
 
 # Health endpoint
 @app.get("/health")
-async def health():
-    """Health check endpoint with FOLIO OWL cache status."""
-    from app.services.folio.owl_cache import get_owl_status
-
-    owl_status = get_owl_status()
-    return {
-        "status": "healthy",
-        "version": "0.1.0",
-        "folio": owl_status,
-    }
+async def health(request: Request):
+    """Extended health check with component-level status."""
+    return await check_health(request.app)

@@ -13,6 +13,21 @@ class DatabaseBackend(str, Enum):
     SQLITE = "sqlite"
 
 
+class DeploymentMode(str, Enum):
+    """Deployment topology modes."""
+
+    MULTI_TENANT = "multi_tenant"
+    SINGLE_TENANT = "single_tenant"
+
+
+class PersistenceMode(str, Enum):
+    """Data persistence strategies."""
+
+    EPHEMERAL = "ephemeral"
+    PERSISTENT = "persistent"
+    CMS_INTEGRATED = "cms_integrated"
+
+
 class LLMDataPolicy(str, Enum):
     """LLM data handling policies, org-configurable."""
 
@@ -81,6 +96,33 @@ class Settings(BaseSettings):
     oauth_redirect_base_url: str = "http://localhost:8000"
     frontend_base_url: str = "http://localhost:5173"
     session_secret_key: str = ""
+
+    # Deployment
+    deployment_mode: DeploymentMode = DeploymentMode.SINGLE_TENANT
+    persistence_mode: PersistenceMode = PersistenceMode.PERSISTENT
+    tenant_signup_mode: str = "admin_approval"
+
+    # OpenTelemetry (empty = disabled / no-op)
+    otel_endpoint: str = ""
+    otel_service_name: str = "alea-intake"
+
+    # Logging
+    log_level: str = "INFO"
+    log_format: str = "json"  # json or console
+
+    # Rate limiting
+    rate_limit_default: str = "100/minute"
+    rate_limit_key_header: str = ""  # empty = use client IP
+    rate_limit_storage: str = "memory"  # memory or redis://...
+
+    # Security headers
+    csp_script_src: str = "'self'"
+    hsts_max_age: int = 31536000
+    max_request_size_mb: int = 50
+
+    # CMS integration
+    cms_enabled: bool = False
+    cms_sync_interval_seconds: int = 300
 
     # CORS
     cors_origins: list[str] = ["http://localhost:5173"]

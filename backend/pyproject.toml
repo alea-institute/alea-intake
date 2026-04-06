@@ -31,6 +31,14 @@ dependencies = [
     "markdown-it-py>=3.0",
     "authlib>=1.6.0",
     "itsdangerous>=2.2.0",
+    "opentelemetry-api>=1.40.0",
+    "opentelemetry-sdk>=1.40.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.40.0",
+    "opentelemetry-instrumentation-fastapi>=0.61b0",
+    "structlog>=25.5.0",
+    "slowapi>=0.1.9",
+    "prometheus-client>=0.24.1",
+    "prometheus-fastapi-instrumentator>=7.1.0",
 ]
 
 [dependency-groups]

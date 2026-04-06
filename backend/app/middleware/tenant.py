@@ -11,6 +11,7 @@ from starlette.responses import JSONResponse
 # Routes that don't require tenant identification
 PUBLIC_ROUTES = {
     "/health",
+    "/metrics",
     "/docs",
     "/openapi.json",
     "/redoc",
