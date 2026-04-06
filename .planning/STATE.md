@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-03 (OAuth SSO + Login Page)
-last_updated: "2026-04-06T02:58:19.672Z"
+stopped_at: Completed 08-04 (Chat Interface + WebSocket)
+last_updated: "2026-04-06T03:14:51.630Z"
 last_activity: 2026-04-06
 progress:
   total_phases: 11
   completed_phases: 7
   total_plans: 34
-  completed_plans: 31
+  completed_plans: 32
   percent: 89
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 08 (frontend-application) — EXECUTING
-Plan: 4 of 6
+Plan: 5 of 6
 Status: Ready to execute
 Last activity: 2026-04-06
 
@@ -71,6 +71,7 @@ Progress: [============================================------]  89%
 | Phase 08 P01 | 12min | 3 tasks | 23 files |
 | Phase 08 P02 | 8min | 3 tasks | 33 files |
 | Phase 08 P03 | 8min | 2 tasks | 17 files |
+| Phase 08 P04 | 11min | 3 tasks | 27 files |
 
 ## Accumulated Context
 
@@ -158,6 +159,10 @@ Recent decisions affecting current work:
 - [Phase 08]: Inline token minting in OAuth callback using create_access_token/create_refresh_token directly (AuthService lacks mint_tokens_for_user)
 - [Phase 08]: In-memory nonce store for MVP; production should use Redis for multi-worker safety
 - [Phase 08]: OAuth routes exempted from TenantMiddleware via path prefix match
+- [Phase 08]: queueMicrotask for WebSocket mock (survives fake timers unlike setTimeout)
+- [Phase 08]: ConnectionBanner uses shared common namespace error keys for copy consistency
+- [Phase 08]: ChatInput disabled when wsStatus !== connected (prevents sending into void)
+- [Phase 08]: matchMedia + scrollIntoView polyfills in vitest.setup.ts for jsdom compat
 
 ### Pending Todos
 
@@ -169,6 +174,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T02:58:19.670Z
-Stopped at: Completed 08-03 (OAuth SSO + Login Page)
+Last session: 2026-04-06T03:14:51.628Z
+Stopped at: Completed 08-04 (Chat Interface + WebSocket)
 Resume file: None
