@@ -37,6 +37,8 @@ from app.routers.output import router as output_router
 from app.routers.research import router as research_router
 from app.routers.kb_admin import router as kb_admin_router
 from app.routers.research_admin import router as research_admin_router
+from app.routers.autonomy import router as autonomy_router
+from app.routers.autonomy_admin import router as autonomy_admin_router
 from app.routers.screening_admin import router as screening_admin_router
 from app.routers.users import router as users_router
 from app.services.embedding.service import EmbeddingService
@@ -110,7 +112,14 @@ async def lifespan(app: FastAPI):
     # Step 7: Seed screening protocols (idempotent)
     await _seed_screening_protocols()
 
-    # Step 8: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
+    # Step 8: Initialize ApprovalQueue singleton for autonomy endpoints
+    from app.routers.autonomy import set_approval_queue
+    from app.services.analysis.autonomy.approval_queue import ApprovalQueue
+
+    approval_queue = ApprovalQueue()
+    set_approval_queue(approval_queue)
+
+    # Step 9: Connect FolioMCPClient (graceful -- folio-mcp may not be available)
     folio_mcp_client = None
     try:
         from app.services.mcp.folio_mcp_client import FolioMCPClient
@@ -207,6 +216,8 @@ app.include_router(research_router)
 app.include_router(research_admin_router)
 app.include_router(kb_admin_router)
 app.include_router(screening_admin_router)
+app.include_router(autonomy_router)
+app.include_router(autonomy_admin_router)
 
 
 # Health endpoint
