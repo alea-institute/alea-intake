@@ -11,6 +11,7 @@ from app.models.analysis import (
     FollowUpQuestion,
 )
 from app.models.audit import AuditLog
+from app.models.cms import CMSConnectorConfig, CMSSyncRecord
 from app.models.autonomy import ApprovalRequest, AutonomyEvent
 from app.models.consent import ConsentRecord, ConsentTemplate
 from app.models.fact import ExtractedFact, FactSourceSpan
@@ -50,6 +51,8 @@ __all__ = [
     "AuditLog",
     "Authority",
     "AutonomyEvent",
+    "CMSConnectorConfig",
+    "CMSSyncRecord",
     "CitationVerification",
     "ConceptGraphEdge",
     "ConceptGraphNode",
