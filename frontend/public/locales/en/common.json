@@ -30,6 +30,8 @@
   "a11y": {
     "skipToContent": "Skip to main content",
     "closeMenu": "Close menu",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "primaryNav": "Primary navigation",
+    "mobileNav": "Primary mobile navigation"
   }
 }

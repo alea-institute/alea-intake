@@ -10,12 +10,12 @@ export default {
     extend: {
       spacing: {
         'xs': '4px',
-        'sm-custom': '8px',
-        'md-custom': '16px',
-        'lg-custom': '24px',
-        'xl-custom': '32px',
-        '2xl-custom': '48px',
-        '3xl-custom': '64px',
+        'sm': '8px',
+        'md': '16px',
+        'lg': '24px',
+        'xl': '32px',
+        '2xl': '48px',
+        '3xl': '64px',
       },
       colors: {
         border: 'hsl(var(--border))',

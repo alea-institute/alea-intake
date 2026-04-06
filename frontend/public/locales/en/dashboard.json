@@ -1,0 +1,35 @@
+{
+  "heading": "Intakes",
+  "col": {
+    "matterId": "Matter",
+    "consumer": "Consumer",
+    "area": "Area",
+    "jurisdiction": "Jurisdiction",
+    "status": "Status",
+    "lastActivity": "Last activity",
+    "completeness": "Complete"
+  },
+  "row": {
+    "open": "Open intake {{matter}}"
+  },
+  "filters": {
+    "heading": "Filters",
+    "search": "Search",
+    "searchPlaceholder": "Name or matter ID",
+    "status": "Status",
+    "all": "All"
+  },
+  "view": {
+    "label": "Display mode",
+    "table": "Table view",
+    "cards": "Card view"
+  },
+  "empty": {
+    "heading": {
+      "legal-professional": "No matters in progress",
+      "modern-conversational": "No intakes yet",
+      "courthouse-classic": "No matters filed"
+    },
+    "body": "Start a new intake to begin. The button above will walk you through it."
+  }
+}

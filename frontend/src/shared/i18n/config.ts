@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next'
 export const SUPPORTED_LANGUAGES = ['en', 'es', 'zh', 'vi', 'ko', 'tl', 'ru'] as const
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
 
-export const NAMESPACES = ['common', 'chat', 'admin', 'safety', 'output', 'auth'] as const
+export const NAMESPACES = ['common', 'chat', 'admin', 'safety', 'output', 'auth', 'dashboard'] as const
 export type Namespace = (typeof NAMESPACES)[number]
 
 i18n
