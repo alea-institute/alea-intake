@@ -12,12 +12,14 @@ from app.models.analysis import (
 )
 from app.models.audit import AuditLog
 from app.models.consent import ConsentRecord, ConsentTemplate
+from app.models.fact import ExtractedFact, FactSourceSpan
 from app.models.folio_concepts import (
     ConceptGraphEdge,
     ConceptGraphNode,
     ConceptMapping,
     UnmappedConceptRecord,
 )
+from app.models.intake import Intake, IntakeParty, IntakeSession, Message
 from app.models.organization import OrganizationConfig
 from app.models.output import OutputDocument
 from app.models.refresh_token import RefreshToken
@@ -52,10 +54,16 @@ __all__ = [
     "ConsentRecord",
     "ClaimElement",
     "ConsentTemplate",
+    "ExtractedFact",
     "FactClaimMapping",
+    "FactSourceSpan",
     "FollowUpQuestion",
+    "Intake",
+    "IntakeParty",
+    "IntakeSession",
     "KBChunk",
     "KBDocument",
+    "Message",
     "Organization",
     "OrganizationConfig",
     "OutputDocument",

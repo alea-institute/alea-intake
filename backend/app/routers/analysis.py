@@ -26,7 +26,19 @@ from app.models.analysis import (
     FactClaimMapping,
     FollowUpQuestion,
 )
+from app.models.fact import ExtractedFact, FactSourceSpan
+from app.models.intake import IntakeSession, Message
 from app.models.user import User
+from app.schemas.visualization import (
+    VisualizationClaim,
+    VisualizationElement,
+    VisualizationFact,
+    VisualizationGap,
+    VisualizationMapping,
+    VisualizationMessage,
+    VisualizationResponse,
+    VisualizationSourceSpan,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -325,3 +337,189 @@ async def get_audit_trail(
         "status": run.status,
         "iterations": audit_data,
     }
+
+
+@router.get("/{intake_id}/visualization", response_model=VisualizationResponse)
+async def get_visualization_data(
+    intake_id: int,
+    db: AsyncSession = Depends(get_tenant_session),
+    user: User = Depends(get_current_active_user),
+) -> VisualizationResponse:
+    """Get complete visualization payload: facts, claims, mappings, gaps, messages.
+
+    Returns all data needed by the frontend visualization views (graph, matrix,
+    narrative). Includes source spans for "trust but verify" provenance links.
+    """
+    # 1. Latest AnalysisRun for this intake
+    result = await db.execute(
+        select(AnalysisRun)
+        .where(AnalysisRun.intake_id == intake_id)
+        .order_by(AnalysisRun.created_at.desc())
+        .limit(1)
+    )
+    run = result.scalars().first()
+
+    if run is None:
+        raise HTTPException(status_code=404, detail="No analysis run found for this intake")
+
+    # 2. Active extracted facts for this intake
+    facts_result = await db.execute(
+        select(ExtractedFact).where(
+            ExtractedFact.intake_id == intake_id,
+            ExtractedFact.is_active == True,  # noqa: E712
+        )
+    )
+    facts = facts_result.scalars().all()
+    fact_ids = [f.id for f in facts]
+
+    # 3. Source spans for those facts
+    spans_by_fact: dict[int, list[VisualizationSourceSpan]] = {}
+    if fact_ids:
+        spans_result = await db.execute(
+            select(FactSourceSpan).where(FactSourceSpan.fact_id.in_(fact_ids))
+        )
+        for span in spans_result.scalars().all():
+            spans_by_fact.setdefault(span.fact_id, []).append(
+                VisualizationSourceSpan(
+                    message_id=span.message_id,
+                    start_char=span.start_char,
+                    end_char=span.end_char,
+                    page_number=span.page_number,
+                    paragraph_index=span.paragraph_index,
+                    timestamp_start_sec=span.timestamp_start_sec,
+                    timestamp_end_sec=span.timestamp_end_sec,
+                )
+            )
+
+    viz_facts = [
+        VisualizationFact(
+            id=f.id,
+            assertion_text=f.assertion_text,
+            fact_type=f.fact_type,
+            confidence=f.confidence,
+            source_spans=spans_by_fact.get(f.id, []),
+        )
+        for f in facts
+    ]
+
+    # 4. Claims for this run
+    claims_result = await db.execute(
+        select(AnalysisClaim).where(AnalysisClaim.run_id == run.id)
+    )
+    claims = claims_result.scalars().all()
+    claim_ids = [c.id for c in claims]
+
+    # 5. Elements for those claims
+    elements_by_claim: dict[int, list[VisualizationElement]] = {}
+    if claim_ids:
+        elements_result = await db.execute(
+            select(ClaimElement).where(ClaimElement.claim_id.in_(claim_ids))
+        )
+        for elem in elements_result.scalars().all():
+            elements_by_claim.setdefault(elem.claim_id, []).append(
+                VisualizationElement(
+                    id=elem.id,
+                    element_name=elem.element_name,
+                    element_description=elem.element_description,
+                    is_satisfied=elem.is_satisfied,
+                    satisfaction_confidence=elem.satisfaction_confidence,
+                )
+            )
+
+    viz_claims = [
+        VisualizationClaim(
+            id=c.id,
+            claim_name=c.claim_name,
+            claim_type=c.claim_type,
+            jurisdiction=c.jurisdiction,
+            confidence=c.confidence,
+            rationale=c.rationale,
+            elements=elements_by_claim.get(c.id, []),
+        )
+        for c in claims
+    ]
+
+    # 6. Fact-claim mappings for these facts
+    viz_mappings: list[VisualizationMapping] = []
+    if fact_ids:
+        mappings_result = await db.execute(
+            select(FactClaimMapping).where(FactClaimMapping.fact_id.in_(fact_ids))
+        )
+        viz_mappings = [
+            VisualizationMapping(
+                id=m.id,
+                fact_id=m.fact_id,
+                claim_id=m.claim_id,
+                element_id=m.element_id,
+                confidence=m.confidence,
+                mapping_rationale=m.mapping_rationale,
+            )
+            for m in mappings_result.scalars().all()
+        ]
+
+    # 7. Gaps for this run
+    gaps_result = await db.execute(
+        select(AnalysisGap).where(AnalysisGap.run_id == run.id)
+    )
+    viz_gaps = [
+        VisualizationGap(
+            id=g.id,
+            gap_type=g.gap_type,
+            claim_id=g.claim_id,
+            element_id=g.element_id,
+            description=g.description,
+            priority=g.priority,
+            status=g.status,
+        )
+        for g in gaps_result.scalars().all()
+    ]
+
+    # 8. Messages from sessions belonging to this intake
+    # Only consumer/professional sender_type messages (not system)
+    sessions_result = await db.execute(
+        select(IntakeSession.id).where(IntakeSession.intake_id == intake_id)
+    )
+    session_ids = [s for s in sessions_result.scalars().all()]
+
+    viz_messages: list[VisualizationMessage] = []
+    if session_ids:
+        messages_result = await db.execute(
+            select(Message).where(
+                Message.session_id.in_(session_ids),
+                Message.sender_type.in_(["consumer", "professional"]),
+            )
+        )
+        for msg in messages_result.scalars().all():
+            # Decode message content: normalized_text or content_encrypted are LargeBinary.
+            # For MVP visualization, decode raw bytes as UTF-8.
+            # NOTE: Production should use EncryptionContext (Phase 01-03) for proper
+            # decryption of encrypted content fields.
+            content = ""
+            if msg.normalized_text is not None:
+                try:
+                    content = msg.normalized_text.decode("utf-8") if isinstance(msg.normalized_text, bytes) else str(msg.normalized_text)
+                except (UnicodeDecodeError, AttributeError):
+                    content = ""
+            elif msg.content_encrypted is not None:
+                try:
+                    content = msg.content_encrypted.decode("utf-8") if isinstance(msg.content_encrypted, bytes) else str(msg.content_encrypted)
+                except (UnicodeDecodeError, AttributeError):
+                    content = ""
+
+            viz_messages.append(
+                VisualizationMessage(
+                    id=msg.id,
+                    content=content,
+                    sender_type=msg.sender_type,
+                )
+            )
+
+    return VisualizationResponse(
+        run_id=run.id,
+        status=run.status,
+        facts=viz_facts,
+        claims=viz_claims,
+        mappings=viz_mappings,
+        gaps=viz_gaps,
+        messages=viz_messages,
+    )
