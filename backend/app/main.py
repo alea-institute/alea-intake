@@ -24,6 +24,8 @@ from app.core.exceptions import (
 from app.db.engine import dispose_engine, get_engine
 from app.middleware.audit import AuditMiddleware
 from app.middleware.consent import ConsentMiddleware
+from app.middleware.rate_limit import setup_rate_limiting
+from app.middleware.security import SecurityHeadersMiddleware
 from app.middleware.tenant import TenantMiddleware
 from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
@@ -164,7 +166,7 @@ app = FastAPI(
 )
 
 # Middleware (order matters -- last added = outermost/first executed):
-# Execution order: CORS -> Session -> Audit -> Tenant -> Consent -> route handler
+# Execution order: CORS -> SecurityHeaders -> RateLimit -> Session -> Audit -> Tenant -> Consent -> route handler
 app.add_middleware(ConsentMiddleware)
 app.add_middleware(TenantMiddleware)
 app.add_middleware(AuditMiddleware)
@@ -175,6 +177,7 @@ app.add_middleware(
     same_site="lax",
     https_only=False,  # production should use True; dev needs False for localhost
 )
+app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -182,6 +185,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Rate limiting (adds SlowAPIMiddleware)
+setup_rate_limiting(app)
 
 # Prometheus metrics (register /metrics route at app creation, not during lifespan)
 setup_prometheus(app)
