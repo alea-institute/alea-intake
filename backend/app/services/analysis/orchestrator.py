@@ -39,6 +39,7 @@ if TYPE_CHECKING:
     from folio import FOLIO
     from sqlalchemy.ext.asyncio import AsyncSession
 
+    from app.services.analysis.autonomy.interceptor import AutonomyInterceptor
     from app.services.embedding.service import EmbeddingService
     from app.services.llm_service import LLMService
 
@@ -64,6 +65,7 @@ class AnalysisOrchestrator:
         embedding_service: EmbeddingService | None = None,
         org_config: dict | None = None,
         max_iterations: int = 10,
+        autonomy_interceptor: "AutonomyInterceptor | None" = None,
     ) -> None:
         self._session = db_session
         self._llm = llm_service
@@ -72,6 +74,7 @@ class AnalysisOrchestrator:
         self._org_config = org_config or {}
         self._max_iterations = max_iterations
         self._org_id: int = self._org_config.get("org_id", 0)
+        self._autonomy = autonomy_interceptor
 
         # Parse analysis config from org settings
         self._analysis_config = AnalysisConfig(
@@ -415,6 +418,33 @@ class AnalysisOrchestrator:
         return list(self.STAGES)
 
     async def _execute_stage(
+        self,
+        stage_name: str,
+        run: AnalysisRun,
+        iteration: AnalysisIteration,
+        ws_manager: Any | None,
+        jurisdiction: str | None = None,
+    ) -> dict:
+        """Execute a stage, optionally gated by autonomy interceptor.
+
+        If an autonomy interceptor is configured, delegates to it.
+        Otherwise calls _execute_stage_inner directly.
+        """
+        if self._autonomy is not None:
+            return await self._autonomy.execute_with_autonomy(
+                stage_name=stage_name,
+                execute_fn=lambda **kw: self._execute_stage_inner(
+                    stage_name, run, iteration, ws_manager, jurisdiction,
+                ),
+                run_id=run.id,
+                iteration_id=iteration.id,
+                intake_id=run.intake_id,
+            )
+        return await self._execute_stage_inner(
+            stage_name, run, iteration, ws_manager, jurisdiction,
+        )
+
+    async def _execute_stage_inner(
         self,
         stage_name: str,
         run: AnalysisRun,
