@@ -77,9 +77,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **FRONTEND-01**: React frontend with conversational chat interface for intake
 - [x] **FRONTEND-02**: Real-time analysis progress via WebSocket/SSE streaming
-- [ ] **FRONTEND-03**: Graph fact-mapping view: force-directed visualization of facts, claims, elements, and their relationships
-- [ ] **FRONTEND-04**: Matrix fact-mapping view: fact × element completeness matrix showing coverage
-- [ ] **FRONTEND-05**: Narrative-anchored fact-mapping view: consumer's original narrative with overlaid analysis annotations
+- [x] **FRONTEND-03**: Graph fact-mapping view: force-directed visualization of facts, claims, elements, and their relationships
+- [x] **FRONTEND-04**: Matrix fact-mapping view: fact × element completeness matrix showing coverage
+- [x] **FRONTEND-05**: Narrative-anchored fact-mapping view: consumer's original narrative with overlaid analysis annotations
 - [x] **FRONTEND-06**: Intake dashboard listing all intakes with status and progress
 - [x] **FRONTEND-07**: Output display with export capabilities
 - [x] **FRONTEND-08**: Admin configuration interface for org settings, research tools, KB management, screening protocols
@@ -205,9 +205,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | OUTPUT-05 | Phase 7 | Complete |
 | FRONTEND-01 | Phase 8 | Complete |
 | FRONTEND-02 | Phase 8 | Complete |
-| FRONTEND-03 | Phase 9 | Pending |
-| FRONTEND-04 | Phase 9 | Pending |
-| FRONTEND-05 | Phase 9 | Pending |
+| FRONTEND-03 | Phase 9 | Complete |
+| FRONTEND-04 | Phase 9 | Complete |
+| FRONTEND-05 | Phase 9 | Complete |
 | FRONTEND-06 | Phase 8 | Complete |
 | FRONTEND-07 | Phase 8 | Complete |
 | FRONTEND-08 | Phase 8 | Complete |

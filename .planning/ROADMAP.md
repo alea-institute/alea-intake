@@ -182,7 +182,7 @@ Plans:
 **Plans:** 5 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Backend visualization API endpoint, frontend types/store/palette/API hook, shared components (ViewTabs, FilterBar, DetailPanel, SourceSpanViewer), MSW fixtures
+- [x] 09-01-PLAN.md — Backend visualization API endpoint, frontend types/store/palette/API hook, shared components (ViewTabs, FilterBar, DetailPanel, SourceSpanViewer), MSW fixtures
 - [ ] 09-02-PLAN.md — Graph view: D3-force simulation hook, SVG GraphView with shaped nodes, Canvas fallback, AccessibleTable
 - [ ] 09-03-PLAN.md — Matrix view: useMatrixData transformer, MatrixView with bidirectional virtual scrolling, MatrixCell with 5-level color scale, MatrixHeader with collapsible claims
 - [ ] 09-04-PLAN.md — Narrative view: useNarrativeData sweep-line annotation builder, NarrativeView with highlights, AnnotationChip, NarrativeLegend
