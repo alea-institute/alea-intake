@@ -9,6 +9,7 @@ import { ChatPage } from './ChatPage'
 import { ConnectionBanner } from './components/ConnectionBanner'
 import { useAuth } from '@/features/auth/store'
 import { useWSStore } from './store'
+import { ThemeProvider } from '@/shared/components/ThemeProvider'
 import type { ReactNode } from 'react'
 
 // Stub WebSocket that auto-connects via microtask
@@ -37,7 +38,11 @@ function renderChatAt(sessionId: string) {
     defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
   })
   function Wrapper({ children }: { children: ReactNode }) {
-    return <QueryClientProvider client={qc}>{children}</QueryClientProvider>
+    return (
+      <ThemeProvider defaultTheme="modern-conversational">
+        <QueryClientProvider client={qc}>{children}</QueryClientProvider>
+      </ThemeProvider>
+    )
   }
   return {
     ...render(
