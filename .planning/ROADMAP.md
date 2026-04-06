@@ -179,12 +179,14 @@ Plans:
   1. The graph view renders a force-directed visualization of facts, claims, elements, and their relationships that users can pan, zoom, and click to explore
   2. The matrix view displays a fact-by-element completeness grid showing coverage with color-coded confidence indicators
   3. The narrative-anchored view overlays analysis annotations on the consumer's original narrative text, linking highlighted spans to the claims and elements they support
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 09-01: TBD
-- [ ] 09-02: TBD
-- [ ] 09-03: TBD
+- [ ] 09-01-PLAN.md — Backend visualization API endpoint, frontend types/store/palette/API hook, shared components (ViewTabs, FilterBar, DetailPanel, SourceSpanViewer), MSW fixtures
+- [ ] 09-02-PLAN.md — Graph view: D3-force simulation hook, SVG GraphView with shaped nodes, Canvas fallback, AccessibleTable
+- [ ] 09-03-PLAN.md — Matrix view: useMatrixData transformer, MatrixView with bidirectional virtual scrolling, MatrixCell with 5-level color scale, MatrixHeader with collapsible claims
+- [ ] 09-04-PLAN.md — Narrative view: useNarrativeData sweep-line annotation builder, NarrativeView with highlights, AnnotationChip, NarrativeLegend
+- [ ] 09-05-PLAN.md — VisualizationPage assembly, per-view export (SVG/PNG/CSV/PDF), route registration, bundle validation
 
 ### Phase 10: Autonomy & Orchestration Modes
 **Goal**: The system supports three configurable autonomy levels -- chatbot (fully autonomous), professional (human-guided), and agent (AI with checkpoints) -- each enforcing the appropriate level of human oversight per organization
@@ -236,6 +238,6 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 6. Legal Research & Verification | 2/5 | In Progress|  |
 | 7. Output & Export | 0/3 | Not started | - |
 | 8. Frontend Application | 0/6 | Not started | - |
-| 9. Frontend Visualization | 0/3 | Not started | - |
+| 9. Frontend Visualization | 0/5 | Not started | - |
 | 10. Autonomy & Orchestration Modes | 0/3 | Not started | - |
 | 11. Integration & Production Deployment | 0/4 | Not started | - |
