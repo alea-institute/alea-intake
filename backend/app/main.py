@@ -124,7 +124,8 @@ async def lifespan(app: FastAPI):
     try:
         from app.db.base import SharedBase, TenantBase
         # Import all models so they register on the metadata
-        import app.models  # noqa: F401
+        import importlib
+        importlib.import_module("app.models")  # noqa: F401 — don't shadow `app` param
 
         async with engine.begin() as conn:
             # Map schema names to None for SQLite compatibility
