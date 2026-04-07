@@ -127,7 +127,7 @@ async def lifespan(app: FastAPI):
         import app.models  # noqa: F401
 
         # For SQLite: strip schema prefixes since SQLite has no schema support
-        if settings.database_backend == "sqlite":
+        if settings.database_backend.value == "sqlite":
             for table in list(SharedBase.metadata.tables.values()):
                 table.schema = None
             for table in list(TenantBase.metadata.tables.values()):
