@@ -1,6 +1,8 @@
-import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/features/auth/store'
+import { apiFetch } from '@/features/auth/api'
 import { useWebSocket } from './hooks/useWebSocket'
 import { useIntakeMessages } from './hooks/useIntakeSession'
 import { useWSStore } from './store'
@@ -13,11 +15,31 @@ import { SafetyDrawer } from '@/features/safety/components/SafetyDrawer'
 import type { Message, Modality, WSCommand } from './types'
 
 export function ChatPage() {
-  const { sessionId = '' } = useParams()
+  const { sessionId: rawSessionId = '' } = useParams()
+  const navigate = useNavigate()
   const accessToken = useAuth((s) => s.accessToken)
   const queryClient = useQueryClient()
   const ws = useWSStore((s) => s.ws)
   const wsStatus = useWSStore((s) => s.status)
+  const [sessionId, setSessionId] = useState(rawSessionId === 'new' ? '' : rawSessionId)
+  const [creating, setCreating] = useState(false)
+
+  // If sessionId is "new", create an intake via API and redirect
+  useEffect(() => {
+    if (rawSessionId !== 'new' || creating || sessionId) return
+    setCreating(true)
+    apiFetch('/api/v1/intake/', { method: 'POST' })
+      .then((res) => res.json())
+      .then((data) => {
+        const sid = String(data.session_id)
+        setSessionId(sid)
+        navigate(`/chat/${sid}`, { replace: true })
+      })
+      .catch((err) => {
+        console.error('Failed to create intake:', err)
+        setCreating(false)
+      })
+  }, [rawSessionId, creating, sessionId, navigate])
 
   useWebSocket(sessionId, accessToken)
   const { data: messages = [] } = useIntakeMessages(sessionId)
@@ -61,7 +83,16 @@ export function ChatPage() {
     ws?.send(JSON.stringify(cmd))
   }
 
-  const inputDisabled = wsStatus !== 'connected' || !ws
+  const inputDisabled = wsStatus !== 'connected' || !ws || !sessionId
+
+  // Show loading while creating a new intake
+  if (!sessionId) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-background">
+        <p className="text-muted-foreground">Creating new intake…</p>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col h-screen bg-background">
