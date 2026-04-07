@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/features/auth/store'
 import { apiFetch } from '@/features/auth/api'
@@ -16,42 +16,39 @@ import type { Message, Modality, WSCommand } from './types'
 
 export function ChatPage() {
   const { sessionId: rawSessionId = '' } = useParams()
+  const navigate = useNavigate()
   const accessToken = useAuth((s) => s.accessToken)
   const queryClient = useQueryClient()
   const ws = useWSStore((s) => s.ws)
   const wsStatus = useWSStore((s) => s.status)
-  const [creating, setCreating] = useState(false)
+  const [resolvedSessionId, setResolvedSessionId] = useState(rawSessionId === 'new' ? '' : rawSessionId)
   const [createError, setCreateError] = useState('')
+  const creatingRef = useRef(false)
 
-  const isNew = rawSessionId === 'new'
-  const sessionId = isNew ? '' : rawSessionId
+  const sessionId = resolvedSessionId
 
   // If sessionId is "new", create an intake via API and redirect
   useEffect(() => {
-    if (!isNew || creating) return
-    let cancelled = false
-    setCreating(true)
+    if (rawSessionId !== 'new' || creatingRef.current || resolvedSessionId) return
+    creatingRef.current = true
     apiFetch('/api/v1/intake/', { method: 'POST' })
       .then((res) => {
         if (!res.ok) throw new Error(`Intake creation failed: ${res.status}`)
         return res.json()
       })
       .then((data: { session_id?: number; id?: number }) => {
-        if (cancelled) return
         const sid = data.session_id ?? data.id
         if (sid == null) throw new Error('No session_id in intake response')
-        // Use window.location for a full navigation so the component remounts
-        window.location.replace(`/chat/${sid}`)
+        const sidStr = String(sid)
+        setResolvedSessionId(sidStr)
+        navigate(`/chat/${sidStr}`, { replace: true })
       })
       .catch((err) => {
-        if (!cancelled) {
-          console.error('Failed to create intake:', err)
-          setCreateError(err.message || 'Failed to create intake')
-          setCreating(false)
-        }
+        console.error('Failed to create intake:', err)
+        setCreateError(err.message || 'Failed to create intake')
+        creatingRef.current = false
       })
-    return () => { cancelled = true }
-  }, [isNew, creating])
+  }, [rawSessionId, resolvedSessionId, navigate])
 
   useWebSocket(sessionId, accessToken)
   const { data: messages = [] } = useIntakeMessages(sessionId)
@@ -104,7 +101,7 @@ export function ChatPage() {
         {createError ? (
           <div className="text-center space-y-2">
             <p className="text-destructive">{createError}</p>
-            <button onClick={() => { setCreateError(''); setCreating(false) }} className="text-primary underline">Try again</button>
+            <button onClick={() => { setCreateError(''); creatingRef.current = false }} className="text-primary underline">Try again</button>
           </div>
         ) : (
           <p className="text-muted-foreground">Creating new intake…</p>
