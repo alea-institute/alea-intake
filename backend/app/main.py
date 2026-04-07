@@ -302,14 +302,20 @@ from starlette.responses import FileResponse
 
 _frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
 if _frontend_dist.is_dir():
-    # Serve static assets (JS, CSS, images) at /assets/
-    _assets_dir = _frontend_dist / "assets"
-    if _assets_dir.is_dir():
-        app.mount("/assets", StaticFiles(directory=str(_assets_dir)), name="frontend-assets")
+    # Serve static subdirectories (assets, locales, etc.)
+    for subdir in ["assets", "locales"]:
+        _sub = _frontend_dist / subdir
+        if _sub.is_dir():
+            app.mount(f"/{subdir}", StaticFiles(directory=str(_sub)), name=f"frontend-{subdir}")
 
-    # SPA fallback: any non-API, non-health, non-docs route serves index.html
+    # SPA fallback: serve static files if they exist, otherwise index.html
     @app.get("/{full_path:path}")
     async def spa_fallback(full_path: str):
+        # Check if the requested path is an actual file in dist/
+        file_path = _frontend_dist / full_path
+        if full_path and file_path.is_file() and _frontend_dist in file_path.resolve().parents:
+            return FileResponse(str(file_path))
+        # Otherwise serve index.html for SPA client-side routing
         index = _frontend_dist / "index.html"
         if index.exists():
             return FileResponse(str(index))
