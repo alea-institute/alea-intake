@@ -126,16 +126,19 @@ async def lifespan(app: FastAPI):
         # Import all models so they register on the metadata
         import app.models  # noqa: F401
 
+        # For SQLite: strip schema prefixes since SQLite has no schema support
+        if settings.database_backend == "sqlite":
+            for table in list(SharedBase.metadata.tables.values()):
+                table.schema = None
+            for table in list(TenantBase.metadata.tables.values()):
+                table.schema = None
+
         async with engine.begin() as conn:
-            # Map schema names to None for SQLite (which has no schema support)
-            conn = await conn.execution_options(
-                schema_translate_map={"tenant": None, "shared": None}
-            )
             await conn.run_sync(SharedBase.metadata.create_all)
             await conn.run_sync(TenantBase.metadata.create_all)
         logger.info("Database tables ensured (create_all)")
-    except Exception:
-        logger.warning("Table creation skipped — may already exist or DB unavailable", exc_info=True)
+    except Exception as e:
+        logger.warning("Table creation failed: %s", e, exc_info=True)
 
     # Step 7: Seed screening protocols (idempotent, graceful)
     try:
