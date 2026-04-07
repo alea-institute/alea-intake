@@ -12,8 +12,12 @@ async function getPostLoginRoute(): Promise<string> {
   try {
     const res = await apiFetch('/api/v1/consent/status')
     if (res.ok) {
-      const data: { has_active_consent?: boolean } = await res.json()
-      if (!data.has_active_consent) return '/consent'
+      const data = await res.json()
+      // API returns null when no consent, or consent record when granted
+      if (data === null || data === undefined) return '/consent'
+      if (typeof data === 'object' && data.id && !data.revoked_at) return '/dashboard'
+      if (data.has_active_consent === true) return '/dashboard'
+      return '/consent'
     }
   } catch {
     // On failure, let RequireConsent guard handle it downstream

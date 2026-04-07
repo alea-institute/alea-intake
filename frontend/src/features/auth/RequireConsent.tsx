@@ -19,15 +19,24 @@ export function RequireConsent() {
         if (!res.ok) throw new Error('consent check failed')
         return res.json()
       })
-      .then((data: { has_active_consent?: boolean }) => {
-        if (!cancelled) {
-          setState(data.has_active_consent ? 'granted' : 'required')
+      .then((data) => {
+        if (cancelled) return
+        // API returns null when no consent, or the consent record when granted
+        if (data === null || data === undefined) {
+          setState('required')
+        } else if (typeof data === 'object' && data.id) {
+          // Consent record exists — check it hasn't been revoked
+          setState(data.revoked_at ? 'required' : 'granted')
+        } else if (data.has_active_consent === true) {
+          // Alternative response format
+          setState('granted')
+        } else {
+          setState('required')
         }
       })
       .catch(() => {
-        // On error, allow through to avoid blocking — the backend will
-        // still enforce consent with 403 on intake endpoints.
-        if (!cancelled) setState('granted')
+        // On error, redirect to consent to be safe
+        if (!cancelled) setState('required')
       })
     return () => {
       cancelled = true
