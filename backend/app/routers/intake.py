@@ -495,6 +495,7 @@ async def _handle_text_message(
     the message flow — errors are logged and swallowed.
     """
     content = data.get("content", "")
+    client_id = data.get("client_id")
     party_id = data.get("party_id")
 
     async with engine.connect() as conn:
@@ -547,9 +548,12 @@ async def _handle_text_message(
             # Normalize the message
             normalized = normalize_text(content, message.id, party_id)
 
-            # Send acknowledgment
+            # Send acknowledgment (include client_id for optimistic update reconciliation)
             await websocket.send_json({
                 "type": "message_ack",
+                "id": str(message.id),
+                "client_id": client_id,
+                "timestamp": str(message.created_at) if message.created_at else datetime.now(timezone.utc).isoformat(),
                 "message_id": message.id,
                 "sequence_number": message.sequence_number,
             })

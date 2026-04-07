@@ -71,7 +71,7 @@ export function ChatPage() {
       (old = []) => [...old, optimistic],
     )
     // Send via WebSocket
-    const cmd: WSCommand = { type: 'client_message', client_id: clientId, modality, content }
+    const cmd: WSCommand = { type: 'text_message', client_id: clientId, modality, content }
     ws?.send(JSON.stringify(cmd))
     // Timeout: mark failed if no ack in 5s
     setTimeout(() => {

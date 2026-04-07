@@ -54,6 +54,6 @@ export type WSEvent =
 
 // WebSocket commands (client -> server)
 export type WSCommand =
-  | { type: 'client_message'; client_id: string; modality: Modality; content: string }
+  | { type: 'text_message'; client_id: string; modality: Modality; content: string }
   | { type: 'stream_cancel'; message_id: string }
   | { type: 'ping' }
