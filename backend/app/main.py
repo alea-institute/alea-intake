@@ -117,8 +117,25 @@ async def lifespan(app: FastAPI):
     )
     research_registry.register(cl_adapter)
 
-    # Step 6: Initialize DB engine
-    get_engine()
+    # Step 6: Initialize DB engine and create tables if needed
+    engine = get_engine()
+
+    # For fresh deployments (esp. SQLite), create all tables from models
+    try:
+        from app.db.base import SharedBase, TenantBase
+        # Import all models so they register on the metadata
+        import app.models  # noqa: F401
+
+        async with engine.begin() as conn:
+            # Map schema names to None for SQLite (which has no schema support)
+            conn = await conn.execution_options(
+                schema_translate_map={"tenant": None, "shared": None}
+            )
+            await conn.run_sync(SharedBase.metadata.create_all)
+            await conn.run_sync(TenantBase.metadata.create_all)
+        logger.info("Database tables ensured (create_all)")
+    except Exception:
+        logger.warning("Table creation skipped — may already exist or DB unavailable", exc_info=True)
 
     # Step 7: Seed screening protocols (idempotent, graceful)
     try:
