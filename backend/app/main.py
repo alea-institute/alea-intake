@@ -126,14 +126,11 @@ async def lifespan(app: FastAPI):
         # Import all models so they register on the metadata
         import app.models  # noqa: F401
 
-        # For SQLite: strip schema prefixes since SQLite has no schema support
-        if settings.database_backend.value == "sqlite":
-            for table in list(SharedBase.metadata.tables.values()):
-                table.schema = None
-            for table in list(TenantBase.metadata.tables.values()):
-                table.schema = None
-
         async with engine.begin() as conn:
+            # Map schema names to None for SQLite compatibility
+            conn = await conn.execution_options(
+                schema_translate_map={"tenant": None, "shared": None}
+            )
             await conn.run_sync(SharedBase.metadata.create_all)
             await conn.run_sync(TenantBase.metadata.create_all)
         logger.info("Database tables ensured (create_all)")
