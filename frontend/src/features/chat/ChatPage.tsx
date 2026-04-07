@@ -27,18 +27,28 @@ export function ChatPage() {
   // If sessionId is "new", create an intake via API and redirect
   useEffect(() => {
     if (rawSessionId !== 'new' || creating || sessionId) return
+    let cancelled = false
     setCreating(true)
     apiFetch('/api/v1/intake/', { method: 'POST' })
-      .then((res) => res.json())
-      .then((data) => {
-        const sid = String(data.session_id)
-        setSessionId(sid)
-        navigate(`/chat/${sid}`, { replace: true })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Intake creation failed: ${res.status}`)
+        return res.json()
+      })
+      .then((data: { session_id?: number; id?: number }) => {
+        if (cancelled) return
+        const sid = data.session_id ?? data.id
+        if (sid == null) throw new Error('No session_id in intake response')
+        const sidStr = String(sid)
+        setSessionId(sidStr)
+        navigate(`/chat/${sidStr}`, { replace: true })
       })
       .catch((err) => {
-        console.error('Failed to create intake:', err)
-        setCreating(false)
+        if (!cancelled) {
+          console.error('Failed to create intake:', err)
+          setCreating(false)
+        }
       })
+    return () => { cancelled = true }
   }, [rawSessionId, creating, sessionId, navigate])
 
   useWebSocket(sessionId, accessToken)

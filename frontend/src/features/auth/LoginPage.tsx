@@ -1,8 +1,25 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { login } from './api'
+import { login, apiFetch } from './api'
 import { SSOButtons } from './components/SSOButtons'
+
+/**
+ * After login, check consent status and route accordingly.
+ * If consent is already granted, go to dashboard; otherwise go to /consent.
+ */
+async function getPostLoginRoute(): Promise<string> {
+  try {
+    const res = await apiFetch('/api/v1/consent/status')
+    if (res.ok) {
+      const data: { has_active_consent?: boolean } = await res.json()
+      if (!data.has_active_consent) return '/consent'
+    }
+  } catch {
+    // On failure, let RequireConsent guard handle it downstream
+  }
+  return '/dashboard'
+}
 
 export function LoginPage() {
   const { t } = useTranslation(['auth', 'common'])
@@ -18,7 +35,8 @@ export function LoginPage() {
     setSubmitting(true)
     try {
       await login(email, password)
-      navigate('/dashboard')
+      const dest = await getPostLoginRoute()
+      navigate(dest)
     } catch {
       setError(
         t(

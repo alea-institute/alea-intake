@@ -84,6 +84,12 @@ export const handlers = [
     const body = await request.json()
     return HttpResponse.json(body)
   }),
+  http.get('/api/v1/consent/status', () =>
+    HttpResponse.json({ has_active_consent: true })
+  ),
+  http.post('/api/v1/consent/grant', () =>
+    HttpResponse.json({ status: 'granted' })
+  ),
   http.get('/api/v1/autonomy/pending', () =>
     HttpResponse.json([])
   ),

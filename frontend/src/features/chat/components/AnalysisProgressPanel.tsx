@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Progress } from '@/components/ui/progress'
-import { Skeleton } from '@/components/ui/skeleton'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { AnalysisProgress } from '../types'
@@ -20,14 +19,10 @@ export function AnalysisProgressPanel({ sessionId }: Props) {
     staleTime: Infinity,
   })
 
+  // Show nothing when there's no active analysis — the panel only appears
+  // once WebSocket pushes progress data for an in-flight analysis.
   if (!progress) {
-    return (
-      <aside className="bg-card border-b md:border-b-0 md:border-l border-border p-md md:min-w-[280px]" data-testid="progress-skeleton">
-        <Skeleton className="h-4 w-32 mb-sm" />
-        <Skeleton className="h-2 w-full mb-sm" />
-        <Skeleton className="h-3 w-48" />
-      </aside>
-    )
+    return null
   }
 
   const pct = Math.round((progress.completeness ?? 0) * 100)

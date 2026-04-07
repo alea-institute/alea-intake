@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from './store'
+import { apiFetch } from './api'
 
 export function OAuthFinishPage() {
   const { t } = useTranslation('auth')
@@ -31,7 +32,18 @@ export function OAuthFinishPage() {
         const { access_token, user } = await res.json()
         if (!cancelled) {
           useAuth.getState().setAuth(access_token, user)
-          navigate('/dashboard', { replace: true })
+          // Check consent status before routing
+          let dest = '/dashboard'
+          try {
+            const consentRes = await apiFetch('/api/v1/consent/status')
+            if (consentRes.ok) {
+              const data: { has_active_consent?: boolean } = await consentRes.json()
+              if (!data.has_active_consent) dest = '/consent'
+            }
+          } catch {
+            // On failure, let RequireConsent guard handle it downstream
+          }
+          navigate(dest, { replace: true })
         }
       } catch {
         if (!cancelled) {

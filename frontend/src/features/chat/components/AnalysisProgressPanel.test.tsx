@@ -18,10 +18,10 @@ function renderWithCache(data?: unknown) {
 }
 
 describe('AnalysisProgressPanel', () => {
-  it('renders skeleton when no progress data', () => {
+  it('renders nothing when no progress data', () => {
     const { container } = renderWithCache(undefined)
-    expect(container.querySelector('[data-testid="progress-skeleton"]')).toBeTruthy()
-    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0)
+    expect(container.querySelector('[data-testid="progress-skeleton"]')).toBeFalsy()
+    expect(container.querySelector('aside')).toBeFalsy()
   })
 
   it('renders progress bar, percentage, iteration, and next stage when data is loaded', () => {
