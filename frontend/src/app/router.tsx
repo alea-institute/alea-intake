@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppShell } from '@/shared/components/AppShell'
+import { RequireAuth } from '@/features/auth/RequireAuth'
 
 export const router = createBrowserRouter([
   {
@@ -7,6 +8,7 @@ export const router = createBrowserRouter([
     Component: AppShell,
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
+      // Public routes (no auth required)
       {
         path: 'login',
         lazy: async () => {
@@ -21,40 +23,46 @@ export const router = createBrowserRouter([
           return { Component: m.OAuthFinishPage }
         },
       },
+      // Protected routes (require authentication)
       {
-        path: 'chat/:sessionId',
-        lazy: async () => {
-          const m = await import('@/features/chat/ChatPage')
-          return { Component: m.ChatPage }
-        },
-      },
-      {
-        path: 'dashboard',
-        lazy: async () => {
-          const m = await import('@/features/dashboard/DashboardPage')
-          return { Component: m.DashboardPage }
-        },
-      },
-      {
-        path: 'admin/*',
-        lazy: async () => {
-          const m = await import('@/features/admin/AdminRouter')
-          return { Component: m.AdminRouter }
-        },
-      },
-      {
-        path: 'intake/:id/output',
-        lazy: async () => {
-          const m = await import('@/features/output/OutputPage')
-          return { Component: m.OutputPage }
-        },
-      },
-      {
-        path: 'intake/:id/visualization',
-        lazy: async () => {
-          const m = await import('@/features/visualization/VisualizationPage')
-          return { Component: m.VisualizationPage }
-        },
+        Component: RequireAuth,
+        children: [
+          {
+            path: 'chat/:sessionId',
+            lazy: async () => {
+              const m = await import('@/features/chat/ChatPage')
+              return { Component: m.ChatPage }
+            },
+          },
+          {
+            path: 'dashboard',
+            lazy: async () => {
+              const m = await import('@/features/dashboard/DashboardPage')
+              return { Component: m.DashboardPage }
+            },
+          },
+          {
+            path: 'admin/*',
+            lazy: async () => {
+              const m = await import('@/features/admin/AdminRouter')
+              return { Component: m.AdminRouter }
+            },
+          },
+          {
+            path: 'intake/:id/output',
+            lazy: async () => {
+              const m = await import('@/features/output/OutputPage')
+              return { Component: m.OutputPage }
+            },
+          },
+          {
+            path: 'intake/:id/visualization',
+            lazy: async () => {
+              const m = await import('@/features/visualization/VisualizationPage')
+              return { Component: m.VisualizationPage }
+            },
+          },
+        ],
       },
     ],
   },

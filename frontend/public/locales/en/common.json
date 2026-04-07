@@ -10,6 +10,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "chat": "Chat",
+    "newIntake": "New intake",
     "admin": "Admin",
     "profile": "Profile",
     "signOut": "Sign out"
