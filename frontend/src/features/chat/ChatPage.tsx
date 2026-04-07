@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/features/auth/store'
 import { apiFetch } from '@/features/auth/api'
@@ -16,17 +16,19 @@ import type { Message, Modality, WSCommand } from './types'
 
 export function ChatPage() {
   const { sessionId: rawSessionId = '' } = useParams()
-  const navigate = useNavigate()
   const accessToken = useAuth((s) => s.accessToken)
   const queryClient = useQueryClient()
   const ws = useWSStore((s) => s.ws)
   const wsStatus = useWSStore((s) => s.status)
-  const [sessionId, setSessionId] = useState(rawSessionId === 'new' ? '' : rawSessionId)
   const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState('')
+
+  const isNew = rawSessionId === 'new'
+  const sessionId = isNew ? '' : rawSessionId
 
   // If sessionId is "new", create an intake via API and redirect
   useEffect(() => {
-    if (rawSessionId !== 'new' || creating || sessionId) return
+    if (!isNew || creating) return
     let cancelled = false
     setCreating(true)
     apiFetch('/api/v1/intake/', { method: 'POST' })
@@ -38,18 +40,18 @@ export function ChatPage() {
         if (cancelled) return
         const sid = data.session_id ?? data.id
         if (sid == null) throw new Error('No session_id in intake response')
-        const sidStr = String(sid)
-        setSessionId(sidStr)
-        navigate(`/chat/${sidStr}`, { replace: true })
+        // Use window.location for a full navigation so the component remounts
+        window.location.replace(`/chat/${sid}`)
       })
       .catch((err) => {
         if (!cancelled) {
           console.error('Failed to create intake:', err)
+          setCreateError(err.message || 'Failed to create intake')
           setCreating(false)
         }
       })
     return () => { cancelled = true }
-  }, [rawSessionId, creating, sessionId, navigate])
+  }, [isNew, creating])
 
   useWebSocket(sessionId, accessToken)
   const { data: messages = [] } = useIntakeMessages(sessionId)
@@ -99,7 +101,14 @@ export function ChatPage() {
   if (!sessionId) {
     return (
       <div className="flex items-center justify-center h-screen bg-background">
-        <p className="text-muted-foreground">Creating new intake…</p>
+        {createError ? (
+          <div className="text-center space-y-2">
+            <p className="text-destructive">{createError}</p>
+            <button onClick={() => { setCreateError(''); setCreating(false) }} className="text-primary underline">Try again</button>
+          </div>
+        ) : (
+          <p className="text-muted-foreground">Creating new intake…</p>
+        )}
       </div>
     )
   }
