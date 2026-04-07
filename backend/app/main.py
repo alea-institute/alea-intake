@@ -152,6 +152,18 @@ async def lifespan(app: FastAPI):
     except Exception:
         logger.warning("Auto-migration skipped or failed", exc_info=True)
 
+    # Step 8b: Auto-promote admin user if configured
+    admin_email = getattr(settings, 'auto_admin_email', '') or ''
+    if admin_email:
+        try:
+            from sqlalchemy import text as sa_text
+            async with engine.begin() as conn:
+                conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+                await conn.execute(sa_text("UPDATE users SET role='admin' WHERE email=:email"), {"email": admin_email})
+            logger.info("Auto-promoted %s to admin", admin_email)
+        except Exception:
+            logger.warning("Admin auto-promote failed (user may not exist yet)", exc_info=True)
+
     # Step 9: Initialize PersistenceManager and attach to app.state
     from app.deployment.persistence import PersistenceManager
 

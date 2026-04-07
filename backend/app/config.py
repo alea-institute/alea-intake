@@ -76,6 +76,9 @@ class Settings(BaseSettings):
     intake_default_session_mode: str = "multi_session"
     intake_fact_visibility: str = "internal"  # internal or consumer_visible
 
+    # Admin auto-promote (set email to auto-grant admin role on startup)
+    auto_admin_email: str = ""
+
     # Research
     courtlistener_base_url: str = "https://www.courtlistener.com/api/rest/v4"
     research_timeout_seconds: int = 30
