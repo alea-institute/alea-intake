@@ -291,3 +291,26 @@ app.include_router(cms_admin_router)
 async def health(request: Request):
     """Extended health check with component-level status."""
     return await check_health(request.app)
+
+
+# Serve frontend static files (SPA fallback)
+import os
+from pathlib import Path
+
+from fastapi.staticfiles import StaticFiles
+from starlette.responses import FileResponse
+
+_frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+if _frontend_dist.is_dir():
+    # Serve static assets (JS, CSS, images) at /assets/
+    _assets_dir = _frontend_dist / "assets"
+    if _assets_dir.is_dir():
+        app.mount("/assets", StaticFiles(directory=str(_assets_dir)), name="frontend-assets")
+
+    # SPA fallback: any non-API, non-health, non-docs route serves index.html
+    @app.get("/{full_path:path}")
+    async def spa_fallback(full_path: str):
+        index = _frontend_dist / "index.html"
+        if index.exists():
+            return FileResponse(str(index))
+        return JSONResponse(status_code=404, content={"detail": "Frontend not built"})
