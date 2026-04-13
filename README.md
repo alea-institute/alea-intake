@@ -420,47 +420,369 @@ For multi-tenant deployment with PostgreSQL, see `docker-compose.multi.yml`. For
 
 ## Security
 
-<!-- Security section details will be added by Plan 04 -->
+ALEA Intake is designed with **privacy by design** and **security by design** as foundational principles. Every layer of the system -- from how data enters the platform through how it is stored, processed, and eventually deleted -- is built to protect the people whose information it handles.
+
+**This software is not certified or compliant with any specific regulatory framework.** Compliance depends on your deployment choices, data handling procedures, and applicable laws. The security features described below are designed to help implementing organizations meet their own requirements -- whether those stem from LSC regulations, state bar ethics rules, HIPAA, CJIS, court administrative orders, or other frameworks applicable to the organization's context.
 
 For responsible disclosure of security vulnerabilities, see [SECURITY.md](SECURITY.md).
 
----
+### Encryption
 
-## Configuration Reference
+#### At-Rest Encryption
 
-<!-- Full configuration reference will be added by Plan 04 -->
+All personally identifiable information (PII) is encrypted at rest using **AES-256-GCM envelope encryption**:
 
-### Platform Settings (Environment Variables)
+- **Algorithm:** AES-256 in Galois/Counter Mode (GCM) via the `cryptography` library's AESGCM primitive. Fernet is explicitly avoided because it provides only AES-128-CBC, which does not meet the AES-256 requirement.
+- **Envelope pattern:** A master **Key Encryption Key (KEK)** wraps per-tenant **Data Encryption Keys (DEKs)**. Each tenant's DEK is encrypted (wrapped) by the KEK for storage and decrypted (unwrapped) at runtime when needed.
+- **Nonces:** Each encryption operation uses a unique **12-byte random nonce** (96-bit), the NIST-recommended nonce length for AES-GCM. Nonces are prepended to the ciphertext so decryption can extract them.
+- **Field-level encryption:** Individual database columns containing PII are encrypted -- not full-disk or full-table encryption. This means that even if the database is accessed directly, PII fields are ciphertext.
+- **Key file permissions:** The master key file is stored with `0o600` permissions (owner read/write only). If the file does not exist on startup, it is auto-generated with these restrictive permissions.
 
-<!-- Platform settings table will be added by Plan 04 -->
+#### Key Management
 
-### Organization Settings (Per-Tenant)
+**Local key file backend (current):**
 
-<!-- Organization settings table will be added by Plan 04 -->
+The master KEK is loaded from a local file specified by `ALEA_MASTER_KEY_PATH`. If the file does not exist, a 32-byte (256-bit) key is auto-generated. This backend is suitable for single-server deployments where the key file can be protected by filesystem permissions and volume encryption.
 
----
+**Cloud KMS (planned):**
 
-## Scenario Walkthroughs
+The codebase accepts `ALEA_KMS_PROVIDER` (`aws` or `gcp`) and `ALEA_KMS_KEY_ID` parameters, but **cloud KMS integration is not yet implemented**. Setting these values will raise a `NotImplementedError`. Cloud KMS support (AWS KMS, GCP Cloud KMS) is on the development roadmap. For now, use `ALEA_MASTER_KEY_PATH` for the local key file backend.
 
-<!-- Scenario walkthroughs will be added by Plan 04 -->
+### Authentication and Authorization
+
+- **JWT access tokens** with configurable expiry (default 30 minutes) for API authentication.
+- **Refresh token rotation:** Each refresh operation issues a new refresh token and invalidates the previous one. Refresh tokens include a `jti` (JWT ID) claim for uniqueness, preventing replay across same-second rotations.
+- **OAuth 2.0 SSO:** Google and Microsoft identity providers are supported. OAuth callback routes are exempted from tenant middleware to allow cross-tenant authentication flows.
+- **Role-based access control (RBAC):** Three roles -- `admin`, `professional`, and `consumer`. Role checks are **DB-authoritative**: the system queries the user's role from the database on each request, not from the JWT claim. The JWT role is informational only.
+
+### Audit Logging
+
+- **Immutable, append-only audit log.** Every significant action is recorded: logins, data access events, AI-driven analysis decisions, human overrides, consent changes, and deletion operations.
+- **INSERT-only DB permissions recommended** in production deployments to enforce immutability at the database level (the application only issues INSERT statements against the audit table).
+- **Transaction isolation:** Audit events are written using a separate database session (`engine.begin()`) to ensure audit records are committed independently of the business transaction -- if the main transaction rolls back, the audit record is still preserved.
+- **Recorded fields:** timestamp, actor ID, actor role, action type, resource type, resource ID, request details (JSON), IP address, and request ID for correlation.
+
+### Consent Management
+
+- **Consent middleware** intercepts requests that require consent verification before processing can proceed.
+- **Per-organization consent templates** define what consent options are presented to the person. Templates are versioned and can be updated without invalidating existing consent records.
+- **Granular consent options** are presented before AI processing begins, so the person understands and agrees to how their information will be used.
+- **Consent records** are timestamped and linked to the user (or kiosk session) with the specific consent version and items granted. Revocation is tracked separately (`revoked_at` timestamp).
+
+### Right-to-Delete
+
+Three deletion policies give organizations control over data removal:
+
+| Policy | Behavior |
+|--------|----------|
+| `full_delete` | All records for the person are deleted, including audit log entries. Complete removal. |
+| `anonymize` | PII is deleted, but the audit trail is anonymized -- `actor_id` is set to `NULL`, preserving the record that an event occurred without identifying who was involved. |
+| `time_based` | Same as `anonymize` immediately, with the remaining anonymized records marked for scheduled future deletion. |
+
+**Preview and confirmation pattern:** Before any destructive action, the system generates a deletion preview showing exactly what will be removed (record counts by category). The preview includes a **SHA-256 hash** of the preview data. The confirmation request must include this hash. If the underlying data changes between preview and confirmation (new records created, existing records modified), the hash will not match and the deletion is rejected. This stale-detection mechanism prevents accidental deletion based on outdated previews.
+
+**Cascade deletion** covers all related records: consent records, refresh tokens, intake sessions, extracted facts, messages, and the user record itself.
+
+### LLM Data Privacy
+
+ALEA Intake implements a **three-level training opt-out** to prevent intake data from being used to train commercial LLM models:
+
+| Level | Mechanism | What it does |
+|-------|-----------|-------------|
+| 1 | **API-tier access** | All cloud LLM calls use API/commercial-tier endpoints, not consumer-tier endpoints. API-tier access contractually excludes training data usage for OpenAI, Anthropic, and Google. |
+| 2 | **Provider headers** | Provider-specific organization headers are sent where supported, providing an additional signal to the provider that data should not be used for training. |
+| 3 | **`local_only` policy** | When an organization's data policy is set to `local_only`, the system enforces that only local LLM endpoints (vLLM or other self-hosted models) are used. Any attempt to call a cloud provider raises an error. No data leaves the organization's infrastructure. |
+
+Per-organization LLM data policy is set through the admin interface:
+
+| Policy | Behavior |
+|--------|----------|
+| `cloud_optout` | Cloud providers allowed with API-tier access and opt-out headers. Default. |
+| `cloud_baa` | Cloud providers allowed with Business Associate Agreement tier (for HIPAA contexts). |
+| `local_only` | Only local/self-hosted LLM endpoints allowed. Cloud providers are blocked at the service layer. |
+
+### Tenant Isolation
+
+Multi-tenant deployments use **schema-level isolation** in PostgreSQL:
+
+- Each organization gets its own database schema named `tenant_{slug}` (e.g., `tenant_acme_legal_aid`).
+- The `TenantMiddleware` resolves the tenant from the `X-Tenant-Slug` request header or JWT claims, then sets a `schema_translate_map` for all database operations within that request's scope.
+- **Public routes** (health checks, documentation, authentication endpoints, OAuth callbacks) are exempted from tenant resolution.
+- In **single-tenant mode**, tenant resolution is skipped entirely -- all requests use the default schema.
+
+### Network Security
+
+- **Rate limiting:** Configurable per-IP and per-organization limits (default: 100 requests per minute). Backend storage is pluggable -- in-memory for single-worker deployments or Redis-backed (`redis://...` URL) for multi-worker production deployments.
+- **Security headers middleware:** Content Security Policy (CSP) with configurable `script-src` (default: `'self'`), HTTP Strict Transport Security (HSTS) with configurable `max-age` (default: 1 year / 31,536,000 seconds), `X-Content-Type-Options: nosniff`, and `X-Frame-Options: DENY`.
+- **CORS:** Configurable allowed origins (default: `http://localhost:5173` for local development). Set `ALEA_CORS_ORIGINS` to your frontend domain(s) in production.
+- **Max request size:** Configurable maximum request body size (default: 50 MB) to prevent resource exhaustion from oversized uploads.
 
 ---
 
 ## Deployment Topologies
 
-<!-- Deployment topology diagrams will be added by Plan 04 -->
+ALEA Intake supports four deployment shapes. Each is described below with a topology diagram and guidance on when to use it.
+
+### Single-Tenant Docker Compose (SQLite)
+
+The simplest deployment: a single container with SQLite for persistence. No external database dependency.
+
+```mermaid
+flowchart TD
+    subgraph Host["Docker Host"]
+        subgraph App["alea-intake container"]
+            BE[FastAPI Backend]
+            FE[Static Frontend]
+            DB[(SQLite)]
+            KEY[Master Key File]
+        end
+        VOL[(alea_data volume)]
+    end
+
+    User([User Browser]) -->|HTTP :8000| FE
+    FE --> BE
+    BE --> DB
+    BE --> KEY
+    DB --- VOL
+    KEY --- VOL
+
+    style Host fill:#f0f4ff,stroke:#4a6fa5
+    style App fill:#f0fff0,stroke:#4a8f4a
+```
+
+**When to use:** Small legal aid offices, development and testing, single-organization deployments where PostgreSQL is unnecessary overhead.
+
+**Reference:** `docker-compose.yml`
+
+```bash
+docker compose up -d
+```
+
+---
+
+### Multi-Tenant PostgreSQL
+
+Production multi-tenant deployment with PostgreSQL (pgvector extension for embeddings), optional Redis for distributed rate limiting, and optional OpenTelemetry collector.
+
+```mermaid
+flowchart TD
+    subgraph Cluster["Docker Compose Stack"]
+        subgraph AppTier["Application"]
+            BE[FastAPI Backend]
+            FE[Static Frontend]
+        end
+        subgraph DataTier["Data"]
+            PG[(PostgreSQL + pgvector)]
+        end
+        subgraph OptionalTier["Optional Services"]
+            REDIS[(Redis)]
+            OTEL[OTEL Collector]
+        end
+    end
+
+    User([User Browser]) -->|HTTP :8000| FE
+    FE --> BE
+    BE -->|SQL / schema isolation| PG
+    BE -.->|rate limit state| REDIS
+    BE -.->|traces + metrics| OTEL
+
+    style Cluster fill:#f0f4ff,stroke:#4a6fa5
+    style AppTier fill:#f0fff0,stroke:#4a8f4a
+    style DataTier fill:#fff0f0,stroke:#a54a4a
+    style OptionalTier fill:#fff8f0,stroke:#a57a4a
+```
+
+**When to use:** Hosting multiple organizations, cloud deployments, any production environment that needs tenant isolation, pgvector for semantic search, or distributed rate limiting.
+
+**Reference:** `docker-compose.multi.yml`
+
+```bash
+docker compose -f docker-compose.multi.yml up -d
+```
+
+---
+
+### Kiosk Deployment
+
+A locked-down single-tenant deployment designed for courthouse lobbies, shelter intake stations, and other walk-in environments. Runs in ephemeral mode with a local LLM (vLLM) so that no data leaves the device and no PII persists after the session window closes.
+
+```mermaid
+flowchart TD
+    subgraph Kiosk["Kiosk Device (Air-Gapped or Restricted Network)"]
+        subgraph App["alea-intake container"]
+            BE[FastAPI Backend]
+            FE[Static Frontend]
+            DB[(SQLite — ephemeral)]
+        end
+        subgraph LLM["Local LLM"]
+            VLLM[vLLM Server]
+        end
+    end
+
+    Person([Walk-In User]) -->|Touch Screen / Keyboard| FE
+    FE --> BE
+    BE --> DB
+    BE -->|local_only policy| VLLM
+
+    DB -.-|TTL expiry| DEL{{Auto-Delete}}
+
+    style Kiosk fill:#fff0f0,stroke:#a54a4a
+    style App fill:#f0fff0,stroke:#4a8f4a
+    style LLM fill:#f0f4ff,stroke:#4a6fa5
+```
+
+**When to use:** Courthouse lobbies, domestic violence shelters, legal aid walk-in intake stations -- any scenario where sessions must be ephemeral, no external network access is permitted, and PII must not persist.
+
+**Configuration highlights:**
+
+- `ALEA_PERSISTENCE_MODE=ephemeral` -- sessions auto-delete after TTL
+- `ALEA_DATABASE_BACKEND=sqlite` -- no external database
+- `ALEA_ASR_AUDIO_STORAGE_POLICY=ephemeral` -- audio is transcribed and immediately discarded
+- Organization-level: `llm_data_policy=local_only`, `kiosk_consent_required=true`, `kiosk_session_ttl_hours=2-4`
+
+---
+
+### Kubernetes with Helm
+
+Production multi-tenant cloud deployment using the included Helm chart. Deploys application pods behind an Ingress controller with PostgreSQL, Kubernetes Secrets for credentials, optional autoscaling, and configurable resource limits.
+
+```mermaid
+flowchart TD
+    subgraph K8s["Kubernetes Cluster"]
+        ING[Ingress Controller]
+        subgraph AppPods["App Deployment (1-5 replicas)"]
+            POD1[alea-intake Pod]
+            POD2[alea-intake Pod]
+        end
+        subgraph Data["Stateful Services"]
+            PG[(PostgreSQL StatefulSet)]
+            PV[(PersistentVolume)]
+        end
+        SEC[K8s Secrets]
+    end
+
+    User([User Browser]) -->|HTTPS| ING
+    ING --> POD1
+    ING --> POD2
+    POD1 --> PG
+    POD2 --> PG
+    PG --- PV
+    SEC -.-|secretKeyRef| POD1
+    SEC -.-|secretKeyRef| POD2
+    SEC -.-|existingSecret| PG
+
+    style K8s fill:#f0f4ff,stroke:#4a6fa5
+    style AppPods fill:#f0fff0,stroke:#4a8f4a
+    style Data fill:#fff0f0,stroke:#a54a4a
+```
+
+**When to use:** Production multi-tenant cloud deployments requiring autoscaling, rolling updates, and Kubernetes-native secrets management.
+
+**Reference:** `helm/alea-intake/` directory
+
+```bash
+helm install alea-intake ./helm/alea-intake \
+  --set database.host=your-db-host \
+  --set database.existingSecret=alea-db-credentials \
+  --set appSecret.existingSecret=alea-app-secrets \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host=intake.example.com
+```
+
+The Helm chart uses `existingSecret` references for all credentials -- no secrets are stored in `values.yaml`. Create your Kubernetes Secrets separately and reference them by name.
 
 ---
 
 ## Data Flow and Security Model
 
-<!-- Data flow diagram will be added by Plan 04 -->
+The following diagram shows how personally identifiable information flows through the system, which security layers are applied at each stage, and where audit events are recorded.
 
----
+```mermaid
+flowchart TD
+    subgraph Input["Consumer Input"]
+        IN[Text / Voice / Document]
+    end
 
-## Roadmap
+    subgraph Middleware["Request Middleware"]
+        TM[TenantMiddleware<br/>Resolve tenant schema]
+        CM[ConsentMiddleware<br/>Verify consent granted]
+        RL[Rate Limiter<br/>Per-IP + per-org]
+        SH[Security Headers<br/>CSP / HSTS]
+    end
 
-<!-- Roadmap section will be added by Plan 04 -->
+    subgraph Encryption["Field-Level Encryption"]
+        ENC["encrypt_field(DEK, plaintext)<br/>AES-256-GCM + 12-byte nonce"]
+        WRAP["wrapped_dek stored in DB<br/>unwrap via KEK at runtime"]
+    end
+
+    subgraph Storage["Database"]
+        DB[(Encrypted PII columns<br/>tenant_{slug} schema)]
+    end
+
+    subgraph Audit["Audit Layer"]
+        AL[AuditLog INSERT<br/>Separate DB session]
+    end
+
+    subgraph ReadPath["Read Path"]
+        UNWRAP["unwrap_dek(KEK, wrapped_dek)"]
+        DEC["decrypt_field(DEK, ciphertext)<br/>Extract nonce + decrypt"]
+        RESP[Decrypted Response]
+    end
+
+    subgraph Deletion["Right-to-Delete"]
+        PREV[Preview + SHA-256 hash]
+        CONF[Confirm with hash]
+        DEL{Deletion Policy}
+        FD[full_delete:<br/>DELETE all records]
+        AN[anonymize:<br/>actor_id = NULL]
+        TB[time_based:<br/>anonymize + schedule]
+    end
+
+    IN --> TM
+    TM --> CM
+    CM --> RL
+    RL --> SH
+    SH --> ENC
+    ENC --> WRAP
+    WRAP --> DB
+
+    DB --> UNWRAP
+    UNWRAP --> DEC
+    DEC --> RESP
+
+    PREV --> CONF
+    CONF --> DEL
+    DEL -->|full_delete| FD
+    DEL -->|anonymize| AN
+    DEL -->|time_based| TB
+
+    TM -.-|audit event| AL
+    CM -.-|audit event| AL
+    ENC -.-|audit event| AL
+    DEL -.-|audit event| AL
+
+    style Input fill:#f0f4ff,stroke:#4a6fa5
+    style Middleware fill:#fff8f0,stroke:#a57a4a
+    style Encryption fill:#f0fff0,stroke:#4a8f4a
+    style Storage fill:#fff0f0,stroke:#a54a4a
+    style Audit fill:#fff0ff,stroke:#8a4a8a
+    style ReadPath fill:#f0ffff,stroke:#4a8a8a
+    style Deletion fill:#fffff0,stroke:#8a8a4a
+```
+
+**Write path:** Consumer input enters through the middleware stack (tenant resolution, consent verification, rate limiting, security headers), then PII fields are encrypted using the tenant's DEK before storage. The DEK itself is stored in wrapped (encrypted) form using the master KEK.
+
+**Read path:** The wrapped DEK is unwrapped using the master KEK, then individual fields are decrypted. The nonce is extracted from the first 12 bytes of each ciphertext.
+
+**Audit:** Events are written at each significant stage using a separate database session, ensuring audit records survive even if the main transaction rolls back.
+
+**Deletion:** The preview-and-confirm pattern prevents stale deletions. The organization's deletion policy determines whether audit records are fully deleted, anonymized, or anonymized with scheduled future deletion.
+
+<!-- END TASK 1 SECURITY CONTENT -->
+
+## Configuration Reference
+
+<!-- Configuration reference will be added in Task 2 -->
 
 ---
 
@@ -483,5 +805,3 @@ Before contributing, please read:
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** -- how to report bugs, propose features, run tests, and submit pull requests.
 - **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** -- the Contributor Covenant code of conduct that applies to all project interactions.
 - **[SECURITY.md](SECURITY.md)** -- how to responsibly disclose security vulnerabilities (use GitHub's private vulnerability reporting, not public issues).
-
-<!-- END PLAN 03 CONTENT -->
