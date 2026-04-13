@@ -8,4 +8,4 @@ if [ "$ALEA_SKIP_MIGRATIONS" != "true" ]; then
 fi
 
 # Start the application
-exec uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+exec uv run uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
