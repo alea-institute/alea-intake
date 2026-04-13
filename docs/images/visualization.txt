@@ -1,0 +1,25 @@
+Screenshot Placeholder: Analysis Visualization
+
+This screenshot should show the analysis visualization page, which includes:
+
+- A page heading "Analysis Visualization" with Export and Table View buttons
+- View tabs for switching between three visualization modes:
+  - Graph View: D3-based force-directed graph showing facts, claims, and legal
+    elements as connected nodes with Okabe-Ito colorblind-safe palette
+  - Matrix View: Fact-to-element coverage matrix with confidence-colored cells
+  - Narrative View: Structured text narrative of the legal analysis
+- A filter bar for narrowing displayed data by claim, jurisdiction, etc.
+- A slide-out detail panel for inspecting individual nodes/cells
+- Accessible table toggle for screen reader-compatible data presentation
+- Export options: SVG/PNG for graphs, CSV/PNG for matrix, PDF for narrative
+
+The visualization page renders the FOLIO-grounded legal analysis output,
+showing the relationships between extracted facts, identified claims,
+and legal elements mapped to the FOLIO ontology.
+
+To capture this screenshot:
+1. Start both backend and frontend servers
+2. Log in with valid credentials
+3. Complete an intake conversation to generate analysis data
+4. Navigate to /intake/{id}/visualization
+5. Screenshot the page at 1280x800 resolution showing the graph view

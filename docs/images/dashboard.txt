@@ -1,0 +1,20 @@
+Screenshot Placeholder: Intake Dashboard
+
+This screenshot should show the intake dashboard page, which includes:
+
+- A page heading "Intakes" with a "New Intake" action button
+- A view toggle (table vs. card grid) for switching display modes
+- A filter sidebar on the left for narrowing intake records by status, date, etc.
+- A data table listing intake sessions with columns for status, date, and summary
+- An empty state with helpful guidance when no intakes exist yet
+- Virtual list rendering for performance when intake count exceeds 100 items
+
+The dashboard is the primary management interface for intake coordinators and
+attorneys to review, track, and manage all intake sessions.
+
+To capture this screenshot:
+1. Start both backend and frontend servers
+2. Log in with valid credentials
+3. Navigate to /dashboard
+4. Ensure at least a few intake sessions exist in the database
+5. Screenshot the page at 1280x800 resolution

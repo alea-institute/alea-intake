@@ -144,9 +144,35 @@ flowchart TD
 
 ## Screenshots
 
-Screenshots are located in [`docs/images/`](docs/images/). Visual documentation will be added in a future update.
+### Login
 
-<!-- Screenshots will be added by Plan 05 -->
+![Login page — email/password and OAuth sign-in](docs/images/login.png)
+
+The login page supports email/password authentication and OAuth 2.0 single sign-on with Google and Microsoft. The sidebar navigation is visible on all pages.
+
+### Chat Interface
+
+> Screenshot placeholder — see [`docs/images/chat.txt`](docs/images/chat.txt) for a description of what this view shows. A live screenshot will be added once the full backend is running.
+
+The chat interface is the primary intake surface. It supports text, voice, and document-upload modalities, with real-time streaming responses and an analysis progress panel. A safety banner appears automatically during sessions flagged for domestic violence, providing hotline resources.
+
+### Intake Dashboard
+
+> Screenshot placeholder — see [`docs/images/dashboard.txt`](docs/images/dashboard.txt) for details. A live screenshot will be added once the full backend is running.
+
+The dashboard lists all intake sessions with filtering, sortable columns, and toggle between table and card-grid views. A virtual list activates automatically when the intake count exceeds 100 records.
+
+### Admin Configuration
+
+> Screenshot placeholder — see [`docs/images/admin.txt`](docs/images/admin.txt) for details. A live screenshot will be added once the full backend is running.
+
+The admin panel provides tabbed configuration for organization settings, LLM providers, autonomy modes, CMS integrations, security, and FOLIO ontology parameters. A guided setup wizard is available for initial deployment.
+
+### Analysis Visualization
+
+> Screenshot placeholder — see [`docs/images/visualization.txt`](docs/images/visualization.txt) for details. A live screenshot will be added once the full backend is running.
+
+The visualization page renders the FOLIO-grounded legal analysis in three modes: a D3 force-directed graph of facts, claims, and elements; a coverage matrix with confidence-colored cells; and a structured narrative. All views use the Okabe-Ito colorblind-safe palette and support export to SVG, PNG, CSV, or PDF.
 
 ---
 

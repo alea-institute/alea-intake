@@ -1,0 +1,23 @@
+Screenshot Placeholder: Admin Configuration
+
+This screenshot should show the admin settings page, which includes:
+
+- A page heading "Admin" with a toggle between tabbed view and setup wizard
+- Admin tabs for organization settings including:
+  - Organization configuration (name, contact, intake settings)
+  - LLM provider configuration (provider, model, API keys, data policy)
+  - Autonomy mode settings (chatbot / professional / agent)
+  - Intake settings (session mode, consent templates, file upload limits)
+  - CMS integration settings (Clio, MyCase, LegalServer connectors)
+  - Security settings (encryption, audit, tenant isolation)
+  - FOLIO ontology settings (OWL branch, update interval, confidence threshold)
+- A setup wizard mode for guided initial configuration
+
+The admin panel is restricted to users with the Admin role and provides
+full organization-level configuration control.
+
+To capture this screenshot:
+1. Start both backend and frontend servers
+2. Log in with admin credentials
+3. Navigate to /admin
+4. Screenshot the page at 1280x800 resolution showing the tabbed interface

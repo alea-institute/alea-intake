@@ -1,0 +1,21 @@
+Screenshot Placeholder: Chat Interface
+
+This screenshot should show the chat-based intake conversation page, which includes:
+
+- A message list area displaying the conversation between the person and the system
+- A chat input bar at the bottom with support for text, voice, and document upload modalities
+- A connection status banner showing WebSocket connectivity
+- A safety banner (visible during DV-flagged sessions) with hotline resources
+- An analysis progress panel on the right side showing real-time FOLIO legal analysis
+- The sidebar navigation with Dashboard and New Intake links
+
+The chat interface is the primary interaction surface for legal intake conversations.
+It uses optimistic message rendering, streaming AI responses, and WebSocket-based
+real-time communication.
+
+To capture this screenshot:
+1. Start both backend and frontend servers
+2. Log in with valid credentials
+3. Navigate to /chat/new to create a new intake session
+4. Send a few messages to populate the conversation
+5. Screenshot the page at 1280x800 resolution
