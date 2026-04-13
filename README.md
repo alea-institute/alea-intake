@@ -41,12 +41,29 @@ ALEA Intake is developed by the [ALEA Institute](https://github.com/alea-institu
   - [FOLIO Ontology Grounding](#folio-ontology-grounding)
 - [Quick Start](#quick-start)
 - [Security](#security)
+  - [Encryption](#encryption)
+  - [Authentication and Authorization](#authentication-and-authorization)
+  - [Audit Logging](#audit-logging)
+  - [Consent Management](#consent-management)
+  - [Right-to-Delete](#right-to-delete)
+  - [LLM Data Privacy](#llm-data-privacy)
+  - [Tenant Isolation](#tenant-isolation)
+  - [Network Security](#network-security)
+- [Deployment Topologies](#deployment-topologies)
+  - [Single-Tenant Docker Compose (SQLite)](#single-tenant-docker-compose-sqlite)
+  - [Multi-Tenant PostgreSQL](#multi-tenant-postgresql)
+  - [Kiosk Deployment](#kiosk-deployment)
+  - [Kubernetes with Helm](#kubernetes-with-helm)
+- [Data Flow and Security Model](#data-flow-and-security-model)
 - [Configuration Reference](#configuration-reference)
   - [Platform Settings (Environment Variables)](#platform-settings-environment-variables)
-  - [Organization Settings (Per-Tenant)](#organization-settings-per-tenant)
+  - [Organization-Level Settings (Admin API)](#organization-level-settings-admin-api)
 - [Scenario Walkthroughs](#scenario-walkthroughs)
-- [Deployment Topologies](#deployment-topologies)
-- [Data Flow and Security Model](#data-flow-and-security-model)
+  - [Legal Aid Kiosk](#legal-aid-kiosk)
+  - [Court SRL Portal](#court-srl-portal)
+  - [Multi-Tenant Cloud](#multi-tenant-cloud)
+  - [Small Legal Aid Office](#small-legal-aid-office)
+  - [Domestic Violence Shelter](#domestic-violence-shelter)
 - [Roadmap](#roadmap)
 - [License](#license)
 - [Contributing](#contributing)
@@ -778,11 +795,373 @@ flowchart TD
 
 **Deletion:** The preview-and-confirm pattern prevents stale deletions. The organization's deletion policy determines whether audit records are fully deleted, anonymized, or anonymized with scheduled future deletion.
 
-<!-- END TASK 1 SECURITY CONTENT -->
+---
 
 ## Configuration Reference
 
-<!-- Configuration reference will be added in Task 2 -->
+ALEA Intake is configured at two levels: **platform settings** via environment variables (apply to the entire deployment) and **organization-level settings** via the admin API (apply per-tenant). All environment variables use the `ALEA_` prefix.
+
+### Platform Settings (Environment Variables)
+
+#### Deployment
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_DEPLOYMENT_MODE` | enum | `single_tenant` | `single_tenant` or `multi_tenant` |
+| `ALEA_PERSISTENCE_MODE` | enum | `persistent` | `persistent`, `ephemeral`, or `cms_integrated` |
+| `ALEA_TENANT_SIGNUP_MODE` | string | `admin_approval` | How new tenants are created |
+| `ALEA_AUTO_ADMIN_EMAIL` | string | _(empty)_ | Email to auto-promote to admin on startup |
+| `ALEA_DEBUG` | bool | `false` | Enable debug mode |
+
+#### Database
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_DATABASE_BACKEND` | enum | `postgresql` | `postgresql` or `sqlite` |
+| `ALEA_DB_HOST` | string | `localhost` | PostgreSQL host |
+| `ALEA_DB_PORT` | int | `5432` | PostgreSQL port |
+| `ALEA_DB_NAME` | string | `alea_intake` | PostgreSQL database name |
+| `ALEA_DB_USER` | string | `alea` | PostgreSQL user |
+| `ALEA_DB_PASSWORD` | string | _(empty)_ | PostgreSQL password |
+| `ALEA_SQLITE_PATH` | string | `./data/alea_intake.db` | SQLite database file path |
+
+#### Encryption
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_MASTER_KEY_PATH` | string | _(empty)_ | Path to 32-byte master KEK file. Auto-generated if missing. |
+| `ALEA_KMS_PROVIDER` | string | _(empty)_ | Cloud KMS provider (`aws` or `gcp`). **Not yet implemented.** |
+| `ALEA_KMS_KEY_ID` | string | _(empty)_ | Cloud KMS key ARN / resource ID. **Not yet implemented.** |
+
+#### Authentication
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_SECRET_KEY` | string | _(required)_ | JWT signing secret. Must be set -- no default. |
+| `ALEA_ACCESS_TOKEN_EXPIRE_MINUTES` | int | `30` | JWT access token lifetime |
+| `ALEA_REFRESH_TOKEN_EXPIRE_DAYS` | int | `7` | Refresh token lifetime |
+| `ALEA_GOOGLE_CLIENT_ID` | string | _(empty)_ | Google OAuth client ID |
+| `ALEA_GOOGLE_CLIENT_SECRET` | string | _(empty)_ | Google OAuth client secret |
+| `ALEA_MICROSOFT_CLIENT_ID` | string | _(empty)_ | Microsoft OAuth client ID |
+| `ALEA_MICROSOFT_CLIENT_SECRET` | string | _(empty)_ | Microsoft OAuth client secret |
+| `ALEA_OAUTH_REDIRECT_BASE_URL` | string | `http://localhost:8000` | Backend URL for OAuth callbacks |
+| `ALEA_FRONTEND_BASE_URL` | string | `http://localhost:5173` | Frontend URL for post-auth redirect |
+| `ALEA_SESSION_SECRET_KEY` | string | _(empty)_ | Session encryption key for OAuth flows |
+
+#### Intake
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_INTAKE_UPLOAD_DIR` | string | `./data/uploads` | Directory for uploaded documents |
+| `ALEA_INTAKE_MAX_FILE_SIZE_MB` | int | `50` | Maximum upload file size |
+| `ALEA_INTAKE_MAX_PAGE_COUNT` | int | `200` | Maximum document page count |
+| `ALEA_INTAKE_MAX_RECORDING_DURATION_SEC` | int | `900` | Maximum voice recording duration (15 min) |
+| `ALEA_INTAKE_DEFAULT_SESSION_MODE` | string | `multi_session` | Default session mode |
+| `ALEA_INTAKE_FACT_VISIBILITY` | string | `internal` | `internal` or `consumer_visible` |
+
+#### ASR (Automatic Speech Recognition)
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_ASR_DEFAULT_PROVIDER` | string | `whisper` | ASR provider name |
+| `ALEA_WHISPER_ENDPOINT` | string | `http://localhost:8790` | Whisper API endpoint |
+| `ALEA_ASR_AUDIO_STORAGE_POLICY` | string | `store_both` | `store_both`, `transcript_only`, or `ephemeral` |
+
+#### FOLIO Ontology
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_FOLIO_OWL_BRANCH` | string | `main` | FOLIO OWL repository branch |
+| `ALEA_FOLIO_UPDATE_INTERVAL_HOURS` | int | `24` | OWL cache refresh interval |
+| `ALEA_FOLIO_CACHE_DIR` | string | `./data/folio_cache` | Local OWL cache directory |
+| `ALEA_FOLIO_CONFIDENCE_THRESHOLD` | float | `0.5` | Minimum confidence for concept resolution |
+| `ALEA_FOLIO_TRAVERSAL_DEPTH` | int | `2` | Adjacency traversal depth |
+
+#### Research
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_COURTLISTENER_BASE_URL` | string | `https://www.courtlistener.com/api/rest/v4` | CourtListener API base URL |
+| `ALEA_RESEARCH_TIMEOUT_SECONDS` | int | `30` | Research query timeout |
+| `ALEA_RESEARCH_MAX_RESULTS_PER_QUERY` | int | `20` | Max results per research query |
+| `ALEA_RESEARCH_CACHE_TTL_CASE_HOURS` | int | `24` | Case law cache TTL |
+| `ALEA_RESEARCH_CACHE_TTL_STATUTE_HOURS` | int | `168` | Statute cache TTL (7 days) |
+
+#### Observability
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_OTEL_ENDPOINT` | string | _(empty)_ | OpenTelemetry collector endpoint. Empty disables tracing. |
+| `ALEA_OTEL_SERVICE_NAME` | string | `alea-intake` | OTEL service name |
+| `ALEA_LOG_LEVEL` | string | `INFO` | Log level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
+| `ALEA_LOG_FORMAT` | string | `json` | `json` or `console` |
+
+#### Rate Limiting
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_RATE_LIMIT_DEFAULT` | string | `100/minute` | Default rate limit |
+| `ALEA_RATE_LIMIT_KEY_HEADER` | string | _(empty)_ | Custom header for rate limit key. Empty uses client IP. |
+| `ALEA_RATE_LIMIT_STORAGE` | string | `memory` | `memory` or `redis://...` URL |
+
+#### Security Headers
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_CSP_SCRIPT_SRC` | string | `'self'` | Content Security Policy script-src directive |
+| `ALEA_HSTS_MAX_AGE` | int | `31536000` | HSTS max-age in seconds (default 1 year) |
+| `ALEA_MAX_REQUEST_SIZE_MB` | int | `50` | Maximum request body size |
+
+#### CMS Integration
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_CMS_ENABLED` | bool | `false` | Enable CMS sync |
+| `ALEA_CMS_SYNC_INTERVAL_SECONDS` | int | `300` | Sync polling interval (5 min) |
+
+#### CORS
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ALEA_CORS_ORIGINS` | list | `["http://localhost:5173"]` | Allowed CORS origins (JSON array) |
+
+### Organization-Level Settings (Admin API)
+
+These settings are per-organization, stored in the `organization_config` table within each tenant's schema, and managed through the admin interface or API.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `llm_provider` | string | `null` | LLM provider: `openai`, `anthropic`, `google`, `vllm` |
+| `llm_model` | string | `null` | Model name (e.g., `gpt-4`, `claude-sonnet-4-6`) |
+| `llm_api_key_encrypted` | bytes | `null` | Encrypted LLM API key (field-level AES-256-GCM encrypted) |
+| `llm_data_policy` | enum | `cloud_optout` | `cloud_optout`, `cloud_baa`, or `local_only` |
+| `kiosk_audit_enabled` | bool | `true` | Enable audit logging in kiosk mode |
+| `kiosk_consent_required` | bool | `true` | Require consent flow in kiosk mode |
+| `kiosk_session_ttl_hours` | int | `24` | Session TTL for ephemeral mode |
+| `analysis_config_json` | JSON | `null` | Analysis pipeline configuration |
+| `autonomy_config_json` | JSON | `null` | Autonomy mode configuration (chatbot / professional / agent) |
+| `output_config_json` | JSON | `null` | Output format configuration |
+
+---
+
+## Scenario Walkthroughs
+
+The following walkthroughs show how to configure ALEA Intake for five common deployment scenarios. Each includes environment variable settings and organization-level configuration choices.
+
+### Legal Aid Kiosk
+
+**Scenario:** An LSC-funded legal aid organization sets up a lobby kiosk for walk-in clients to begin their intake independently. Sessions are ephemeral, audio is not retained, and all AI processing stays local.
+
+**Environment variables:**
+
+```env
+ALEA_DEPLOYMENT_MODE=single_tenant
+ALEA_PERSISTENCE_MODE=ephemeral
+ALEA_DATABASE_BACKEND=sqlite
+ALEA_SQLITE_PATH=./data/kiosk.db
+ALEA_MASTER_KEY_PATH=./data/keys/master.key
+ALEA_ASR_AUDIO_STORAGE_POLICY=ephemeral
+ALEA_SECRET_KEY=<generate-with-openssl-rand-hex-32>
+ALEA_LOG_LEVEL=INFO
+ALEA_LOG_FORMAT=json
+```
+
+**Organization-level settings:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| `kiosk_consent_required` | `true` | Every session starts with consent acknowledgment |
+| `kiosk_session_ttl_hours` | `4` | Sessions auto-delete after 4 hours |
+| `llm_data_policy` | `local_only` | No data leaves the kiosk -- vLLM local model only |
+| `llm_provider` | `vllm` | Local LLM, no cloud API keys needed |
+| `kiosk_audit_enabled` | `true` | Audit logging active for accountability |
+
+**Highlights:**
+
+- All seven languages available for the consumer-facing interface.
+- DV safety screening protocol activates automatically for family law matters.
+- vLLM runs locally -- no cloud API keys, no external network calls required.
+- Ephemeral mode with audio storage set to `ephemeral` means no PII persists and no voice recordings are retained.
+
+---
+
+### Court SRL Portal
+
+**Scenario:** A state court system deploys ALEA Intake for self-represented litigants. The portal is accessible from courthouse kiosks and from home on any device. All processing stays within the court's network.
+
+**Environment variables:**
+
+```env
+ALEA_DEPLOYMENT_MODE=single_tenant
+ALEA_PERSISTENCE_MODE=persistent
+ALEA_DATABASE_BACKEND=postgresql
+ALEA_DB_HOST=court-db.internal
+ALEA_DB_PORT=5432
+ALEA_DB_NAME=alea_intake
+ALEA_DB_USER=alea
+ALEA_DB_PASSWORD=<court-db-password>
+ALEA_MASTER_KEY_PATH=/secure/keys/master.key
+ALEA_SECRET_KEY=<generate-with-openssl-rand-hex-32>
+ALEA_CORS_ORIGINS=["https://selfhelp.courts.example.gov"]
+ALEA_HSTS_MAX_AGE=31536000
+ALEA_LOG_LEVEL=INFO
+ALEA_LOG_FORMAT=json
+```
+
+**Organization-level settings:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| `llm_data_policy` | `local_only` | Court data stays within court-controlled infrastructure |
+| `llm_provider` | `vllm` | Local model -- no external API calls |
+| `autonomy_config_json` | Chatbot for SRL self-service; professional for navigator sessions | Dual-mode depending on user role |
+| `kiosk_consent_required` | `true` | Consent required for both kiosk and web sessions |
+
+**Highlights:**
+
+- All seven languages enabled for the court's linguistically diverse population.
+- Accessibility-first: responsive design, keyboard navigation, screen reader support.
+- vLLM local model means no external network calls and all processing stays within the court's network boundary.
+- Persistent mode for litigants who return for follow-up appointments; kiosk sessions can use ephemeral mode with short TTL.
+
+---
+
+### Multi-Tenant Cloud
+
+**Scenario:** A hosting provider offers ALEA Intake as a service to multiple legal aid organizations. Each organization is a separate tenant with isolated data, independent configuration, and its own encryption keys.
+
+**Environment variables:**
+
+```env
+ALEA_DEPLOYMENT_MODE=multi_tenant
+ALEA_PERSISTENCE_MODE=persistent
+ALEA_DATABASE_BACKEND=postgresql
+ALEA_DB_HOST=prod-db.internal
+ALEA_DB_PORT=5432
+ALEA_DB_NAME=alea_intake
+ALEA_DB_USER=alea
+ALEA_DB_PASSWORD=<production-db-password>
+ALEA_MASTER_KEY_PATH=/secure/keys/master.key
+ALEA_SECRET_KEY=<generate-with-openssl-rand-hex-32>
+ALEA_TENANT_SIGNUP_MODE=admin_approval
+ALEA_RATE_LIMIT_STORAGE=redis://redis:6379
+ALEA_RATE_LIMIT_DEFAULT=100/minute
+ALEA_OTEL_ENDPOINT=http://otel-collector:4318/v1/traces
+ALEA_OTEL_SERVICE_NAME=alea-intake-prod
+ALEA_CMS_ENABLED=true
+ALEA_CMS_SYNC_INTERVAL_SECONDS=300
+ALEA_CORS_ORIGINS=["https://intake.example.com"]
+ALEA_HSTS_MAX_AGE=31536000
+ALEA_LOG_LEVEL=INFO
+ALEA_LOG_FORMAT=json
+```
+
+**Highlights:**
+
+- PostgreSQL with pgvector extension for semantic search embeddings.
+- Cloud KMS is planned but not yet implemented -- use `ALEA_MASTER_KEY_PATH` for now. Protect the master key file with volume encryption and restrictive filesystem permissions.
+- Redis-backed rate limiting for multi-worker safety.
+- OpenTelemetry observability for production monitoring (traces, metrics).
+- CMS integration enabled -- each organization configures its own Clio, MyCase, or LegalServer credentials through the admin API.
+- Each organization independently chooses its LLM provider, data policy, autonomy mode, and consent configuration.
+
+---
+
+### Small Legal Aid Office
+
+**Scenario:** A 5-attorney legal aid office runs ALEA Intake on a single server for their staff. SQLite keeps maintenance simple. Clio CMS sync creates cases automatically.
+
+**Environment variables:**
+
+```env
+ALEA_DEPLOYMENT_MODE=single_tenant
+ALEA_PERSISTENCE_MODE=persistent
+ALEA_DATABASE_BACKEND=sqlite
+ALEA_SQLITE_PATH=./data/alea_intake.db
+ALEA_MASTER_KEY_PATH=./data/keys/master.key
+ALEA_SECRET_KEY=<generate-with-openssl-rand-hex-32>
+ALEA_CMS_ENABLED=true
+ALEA_CMS_SYNC_INTERVAL_SECONDS=300
+ALEA_GOOGLE_CLIENT_ID=<google-oauth-client-id>
+ALEA_GOOGLE_CLIENT_SECRET=<google-oauth-client-secret>
+ALEA_OAUTH_REDIRECT_BASE_URL=https://intake.legalaid.example.org
+ALEA_FRONTEND_BASE_URL=https://intake.legalaid.example.org
+ALEA_CORS_ORIGINS=["https://intake.legalaid.example.org"]
+ALEA_LOG_LEVEL=INFO
+ALEA_LOG_FORMAT=json
+```
+
+**Organization-level settings:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| `llm_provider` | `openai` | Cloud LLM with API-tier access |
+| `llm_data_policy` | `cloud_optout` | API-tier access excludes training data usage |
+| `autonomy_config_json` | Professional mode | Attorneys review each analysis stage |
+
+**Highlights:**
+
+- Docker Compose single-tenant deployment -- one `docker compose up -d` command.
+- SQLite database for zero-maintenance operation (no PostgreSQL to manage).
+- Clio CMS sync creates cases in the office's existing case management system after intake.
+- Google OAuth SSO for staff authentication -- no separate passwords to manage.
+- Persistent mode for ongoing case records.
+
+---
+
+### Domestic Violence Shelter
+
+**Scenario:** A DV shelter provides intake assistance to survivors. Maximum data minimization: ephemeral sessions, no audio retention, no cloud providers, no external network calls. The DV safety screening protocol is active.
+
+**Environment variables:**
+
+```env
+ALEA_DEPLOYMENT_MODE=single_tenant
+ALEA_PERSISTENCE_MODE=ephemeral
+ALEA_DATABASE_BACKEND=sqlite
+ALEA_SQLITE_PATH=./data/shelter.db
+ALEA_MASTER_KEY_PATH=./data/keys/master.key
+ALEA_SECRET_KEY=<generate-with-openssl-rand-hex-32>
+ALEA_ASR_AUDIO_STORAGE_POLICY=ephemeral
+ALEA_LOG_LEVEL=INFO
+ALEA_LOG_FORMAT=json
+# No ALEA_GOOGLE_CLIENT_ID, no ALEA_MICROSOFT_CLIENT_ID -- no cloud OAuth
+# No ALEA_OTEL_ENDPOINT -- no external observability
+# No ALEA_CMS_ENABLED -- no external CMS sync
+```
+
+**Organization-level settings:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| `kiosk_consent_required` | `true` | Explicit consent for every session |
+| `kiosk_session_ttl_hours` | `2` | Sessions auto-delete after 2 hours |
+| `llm_data_policy` | `local_only` | No data leaves the shelter's infrastructure |
+| `llm_provider` | `vllm` | Local model only -- no cloud API calls |
+| `kiosk_audit_enabled` | `true` | Audit logging active (anonymized on deletion) |
+
+**Highlights:**
+
+- DV safety screening protocol activates automatically for family law matters.
+- Audio storage policy set to `ephemeral` -- voice recordings are transcribed during the session and immediately discarded. No audio files are retained.
+- vLLM local model means no cloud providers and no external network calls.
+- Ephemeral mode with a 2-hour TTL auto-deletes all session data. When sessions are deleted, the audit trail is anonymized (`actor_id` set to `NULL`) rather than fully deleted, preserving the record that an intake occurred without identifying the survivor.
+- Minimal data footprint: no OAuth, no CMS sync, no observability endpoints. The shelter's on-premises server is the only infrastructure.
+
+---
+
+## Roadmap
+
+This project is under active development. Planned capabilities include:
+
+- **Cloud KMS integration** -- AWS KMS and GCP Cloud KMS for production key management. The interface exists in the codebase (`ALEA_KMS_PROVIDER`, `ALEA_KMS_KEY_ID` parameters), but the cloud KMS backend is not yet implemented. This is the highest-priority infrastructure item.
+- **Additional CMS connectors** -- Beyond the current Clio, MyCase, and LegalServer adapters, additional case management system integrations are planned based on community demand.
+- **Additional language support** -- Beyond the current seven languages (English, Spanish, Chinese, Vietnamese, Korean, Tagalog, Russian), additional languages will be added based on the needs of deploying organizations.
+- **Full protocol library governance** -- Versioning, review workflows, and quality scoring for screening protocols (DV safety, housing, immigration, etc.).
+- **Strength-of-claim scoring** -- Predictive element coverage analysis to help triage staff assess which claims have the strongest factual support.
+- **Multi-language README** -- Translated documentation for non-English-speaking deployers.
+
+See the [.planning/](.planning/) directory for the complete development history, decision log, and detailed phase-by-phase implementation record.
 
 ---
 
