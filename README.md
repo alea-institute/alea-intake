@@ -1,0 +1,487 @@
+# ALEA Intake
+
+**Open-source, privacy-first legal intake for access to justice.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
+[![React 19](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue.svg)](https://www.typescriptlang.org/)
+
+ALEA Intake is an open-source legal intake platform that helps people describe their legal situations and then identifies the legal issues involved -- including ones the person may not know to mention. It produces a structured analysis mapping the person's facts to claims, legal elements, and authorities across applicable jurisdictions. The system is built for organizations that serve people who cannot afford lawyers: legal aid societies, court self-help centers, domestic violence shelters, public defenders, and similar programs.
+
+ALEA Intake is developed by the [ALEA Institute](https://github.com/alea-institute), a research institute building open infrastructure to support justice and the public good -- for example, advancing access to justice through open technology.
+
+> *Any legal service provider -- especially those serving low-income consumers -- can adapt this system.*
+
+---
+
+## Table of Contents
+
+- [Architecture](#architecture)
+- [Screenshots](#screenshots)
+- [Use Cases](#use-cases)
+  - [Core Use Cases](#core-use-cases)
+    - [Legal Aid Intake](#legal-aid-intake)
+    - [Court Self-Represented Litigant Portals](#court-self-represented-litigant-portals)
+    - [Domestic Violence and Victim Services](#domestic-violence-and-victim-services)
+    - [Tenant Rights and Eviction Defense](#tenant-rights-and-eviction-defense)
+  - [Specialty Use Cases](#specialty-use-cases)
+    - [Law School Clinics](#law-school-clinics)
+    - [Public Defender Intake](#public-defender-intake)
+    - [Immigration Services](#immigration-services)
+    - [Bar Association Lawyer Referral](#bar-association-lawyer-referral)
+    - [Veterans' Benefits Assistance](#veterans-benefits-assistance)
+    - [Disability Benefits](#disability-benefits)
+    - [Consumer Protection and Debt Defense](#consumer-protection-and-debt-defense)
+    - [Family Law and Mediation Intake](#family-law-and-mediation-intake)
+- [Key Capabilities](#key-capabilities)
+  - [Multi-Language Support](#multi-language-support)
+  - [Three Autonomy Modes](#three-autonomy-modes)
+  - [Ephemeral Mode and Right-to-Delete](#ephemeral-mode-and-right-to-delete)
+  - [FOLIO Ontology Grounding](#folio-ontology-grounding)
+- [Quick Start](#quick-start)
+- [Security](#security)
+- [Configuration Reference](#configuration-reference)
+  - [Platform Settings (Environment Variables)](#platform-settings-environment-variables)
+  - [Organization Settings (Per-Tenant)](#organization-settings-per-tenant)
+- [Scenario Walkthroughs](#scenario-walkthroughs)
+- [Deployment Topologies](#deployment-topologies)
+- [Data Flow and Security Model](#data-flow-and-security-model)
+- [Roadmap](#roadmap)
+- [License](#license)
+- [Contributing](#contributing)
+
+---
+
+## Architecture
+
+ALEA Intake processes legal intake through a multi-stage pipeline. A person provides input -- text typed in a chat interface, voice recorded and transcribed, or uploaded documents -- and the system normalizes that input, resolves legal concepts against the [FOLIO open legal ontology](https://github.com/FOLIO-Org), runs an iterative analysis loop to identify claims and missing elements, conducts legal research to find supporting authorities, and generates structured output for the attorney or program staff reviewing the case.
+
+The pipeline is designed to be transparent at every stage. Each legal concept is mapped to a specific FOLIO ontology node, so an attorney reviewing the output can trace exactly why the system identified a particular issue. Facts extracted from the person's narrative are linked to the legal elements they support, and gaps -- elements that lack factual support -- are flagged for follow-up.
+
+```mermaid
+flowchart TD
+    subgraph Input["Consumer Input"]
+        A1[Text Chat]
+        A2[Voice / ASR]
+        A3[Document Upload]
+    end
+
+    subgraph Processing["Intake Pipeline"]
+        B[Input Normalization]
+        C[FOLIO Concept Resolution]
+        D[Iterative Analysis Loop]
+        E[Pre-Research Exploration]
+        F[Legal Research]
+        G[Output Generation]
+    end
+
+    subgraph Supporting["Platform Services"]
+        H[Auth / Encryption]
+        I[Audit Log]
+        J[Tenant Isolation]
+        K[CMS Sync]
+        L[Consent Management]
+    end
+
+    A1 --> B
+    A2 --> B
+    A3 --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+
+    H -.- B
+    I -.- D
+    J -.- B
+    K -.- G
+    L -.- B
+
+    style Input fill:#f0f4ff,stroke:#4a6fa5
+    style Processing fill:#f0fff0,stroke:#4a8f4a
+    style Supporting fill:#fff8f0,stroke:#a57a4a
+```
+
+**Pipeline stages:**
+
+| Stage | What it does |
+|-------|-------------|
+| **Input Normalization** | Accepts text, transcribed audio, or extracted document text. Normalizes into a consistent internal format. |
+| **FOLIO Concept Resolution** | Maps the person's description to legal concepts in the FOLIO open legal ontology using embedding similarity and LLM verification. Unmapped concepts are flagged and preserved, not dropped. |
+| **Iterative Analysis Loop** | Identifies potential claims, maps extracted facts to legal elements, scores completeness, and identifies gaps. Runs multiple passes to catch issues the person did not explicitly mention. |
+| **Pre-Research Exploration** | Explores adjacent legal areas (via FOLIO ontology graph traversal) that may be relevant but were not directly stated. Includes a safety screening layer for domestic violence indicators. |
+| **Legal Research** | Queries external sources (CourtListener, optional MCP-based tools) for case law, statutes, and regulations. Verifies citations, ranks results by relevance and jurisdiction, and identifies binding vs. persuasive authority. |
+| **Output Generation** | Produces structured output: triage recommendations, claim-by-claim analysis, jurisdiction-specific authority lists, referral suggestions, and exportable formats (PDF, JSON, plain text). |
+
+**Supporting services** run alongside the pipeline:
+
+- **Auth and Encryption:** JWT access/refresh tokens, OAuth 2.0 SSO (Google, Microsoft), AES-256-GCM envelope encryption with per-tenant data encryption keys.
+- **Audit Log:** Immutable, append-only event log recording every significant action.
+- **Tenant Isolation:** Multi-tenant schema isolation (each organization gets its own database schema) or single-tenant deployment.
+- **CMS Sync:** Optional two-way synchronization with case management systems (Clio, MyCase, LegalServer).
+- **Consent Management:** Configurable per-organization consent flows with recorded consent records.
+
+---
+
+## Screenshots
+
+Screenshots are located in [`docs/images/`](docs/images/). Visual documentation will be added in a future update.
+
+<!-- Screenshots will be added by Plan 05 -->
+
+---
+
+## Use Cases
+
+The following use cases describe the organizations and scenarios where ALEA Intake fits. The four core use cases have the most detailed treatment. The eight specialty use cases are shorter but highlight which system capabilities are most relevant for each context.
+
+### Core Use Cases
+
+#### Legal Aid Intake
+
+**Who deploys it:** LSC-funded legal aid organizations, non-LSC legal aid societies, pro bono programs at scale.
+
+**Problem solved:** Legal aid programs are overwhelmed. Intake staff conduct brief phone or in-person interviews to determine eligibility and identify legal issues, but the volume of callers and the complexity of overlapping legal problems means that issues get missed. A tenant facing eviction may also have wage theft claims, public benefits denials, or consumer debt problems that only surface with deeper questioning. Traditional intake forms capture the issue the person called about but miss the rest.
+
+ALEA Intake conducts a thorough conversational intake -- by chat, voice, or document review -- and uses the FOLIO legal ontology to identify all relevant legal issues, not just the one the person initially described. The iterative analysis loop specifically checks for related claims that commonly co-occur. The output is a structured analysis that intake staff can review, with each identified issue traced to specific facts and legal elements.
+
+**Recommended configuration:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| Deployment mode | `multi_tenant` or `single_tenant` | Multi-tenant for statewide programs with multiple offices; single-tenant for a single office |
+| Persistence mode | `persistent` or `ephemeral` | Persistent for ongoing case tracking; ephemeral for intake-only with auto-deletion |
+| LLM data policy | `cloud_optout` or `local_only` | Cloud with opt-out for most programs; local-only (vLLM) for programs that prohibit any cloud data transmission |
+| Multi-language | Enabled | Many legal aid clients speak languages other than English |
+| Autonomy mode | `professional` | Staff reviews and approves each analysis stage before the system proceeds |
+
+**Key safeguards:**
+
+- **Consent flow:** Each person sees and accepts a consent disclosure before the intake begins. Consent records are stored and auditable.
+- **Right-to-delete:** After intake, the person (or staff on their behalf) can request deletion. Three policies are available: full deletion, anonymization, or time-based auto-deletion.
+- **Audit trail:** Every action is logged in an immutable, append-only audit log. For programs subject to funder reporting requirements, the audit log provides a record of what was done and when.
+- **No LLM training:** API-tier access means cloud LLM providers do not use intake data for model training. Programs that need stronger guarantees can run a local LLM (vLLM) with the `local_only` data policy.
+
+**Deployment scenario:** A statewide legal aid program deploys ALEA Intake as a multi-tenant cloud instance. Each regional office is a separate tenant with its own encryption keys and database schema. Intake staff use the professional autonomy mode -- the system conducts the interview and drafts an analysis, but staff review and approve each stage. Clients can complete intake in English, Spanish, or Vietnamese. Sessions are persistent, with a 90-day retention policy. The CMS connector syncs accepted cases to Clio for ongoing case management.
+
+---
+
+#### Court Self-Represented Litigant Portals
+
+**Who deploys it:** State and local courts, court self-help centers, court navigator programs, access-to-justice commissions.
+
+**Problem solved:** Most people in civil court do not have a lawyer. Court self-help centers assist self-represented litigants (SRLs) with forms and procedural guidance, but staff capacity is limited and many SRLs never reach a self-help center at all. Online court portals can extend that reach, but most existing portals are static -- they provide forms and instructions but do not help the person understand what legal claims they may have or what facts matter.
+
+ALEA Intake adds a conversational intake layer to court portals. An SRL describes their situation, and the system identifies the relevant claims, applicable court procedures, and which facts they need to document. The output can be structured for the SRL to review directly (in chatbot mode) or for court navigators to review with the SRL (in professional mode).
+
+**Recommended configuration:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| Deployment mode | `single_tenant` | Each court system is a single deployment |
+| Persistence mode | `persistent` or `ephemeral` | Persistent for ongoing litigant accounts; ephemeral for kiosk use |
+| LLM data policy | `local_only` | Courts generally require that case data stays within court-controlled infrastructure |
+| Multi-language | Enabled (all 7 languages) | Court users include speakers of all supported languages |
+| Autonomy mode | `chatbot` or `professional` | Chatbot for direct SRL use; professional for navigator-assisted sessions |
+
+**Key safeguards:**
+
+- **Kiosk mode:** For courthouse lobby kiosks, sessions require consent acknowledgment, have a configurable TTL (time-to-live), and automatically delete when the TTL expires. No persistent PII remains on the kiosk.
+- **Audit trail:** Courts need records of what information was provided and when, for both accountability and quality assurance.
+- **Accessibility:** The frontend supports screen readers, keyboard navigation, and responsive design for mobile devices -- important for SRLs who may access the system from a phone.
+
+**Deployment scenario:** A state court self-help center deploys ALEA Intake on court-controlled infrastructure using Docker Compose with a local vLLM instance. The system runs in single-tenant mode with SQLite for simplicity. Kiosks in the courthouse lobby use ephemeral mode with a 2-hour session TTL. Court navigators use the same system in professional mode from their desks, with persistent sessions for SRLs who return for follow-up appointments. All seven languages are enabled because the court serves a linguistically diverse population.
+
+---
+
+#### Domestic Violence and Victim Services
+
+**Who deploys it:** Domestic violence shelters, victim advocacy organizations, sexual assault service providers, legal aid DV units.
+
+**Problem solved:** Domestic violence cases involve urgent safety concerns alongside complex legal issues that span family law, criminal law, immigration, housing, and public benefits. Advocates need to assess both the immediate safety situation and the full legal landscape. Traditional intake forms were not designed for this -- they capture the presenting issue but may miss protective order options, immigration relief (such as VAWA self-petitions or U visas), housing rights, or financial abuse claims.
+
+ALEA Intake includes a built-in DV safety screening protocol (developed in Phase 5) that runs during the pre-research exploration stage. When domestic violence indicators are detected, the system activates safety-aware processing: it flags the session for advocate review, adjusts the analysis to prioritize protective orders and safety planning, and ensures that the person is connected with appropriate resources.
+
+**Recommended configuration:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| Deployment mode | `single_tenant` | DV programs typically run isolated infrastructure for safety |
+| Persistence mode | `ephemeral` | Minimize data retention for victim safety; configurable TTL |
+| LLM data policy | `local_only` | No victim data should leave the organization's infrastructure |
+| Audio storage policy | `ephemeral` or `transcript_only` | Never retain audio recordings of DV disclosures |
+| Multi-language | Enabled | DV affects people of all backgrounds |
+| Autonomy mode | `professional` | Advocates must review all analysis before any action |
+| Kiosk consent | Required | Explicit consent for every session |
+| Kiosk session TTL | Short (2-4 hours) | Auto-delete sessions after a short window |
+
+**Key safeguards:**
+
+- **DV safety protocol:** Automatic detection of domestic violence indicators triggers safety-aware processing. The system does not attempt to handle safety planning autonomously -- it flags for human advocate review.
+- **Ephemeral by default:** Sessions can be configured to auto-delete after a short TTL. Combined with `local_only` LLM policy, this means no victim data is retained or transmitted to external services.
+- **No audio retention:** The audio storage policy can be set to `ephemeral` (transcribe and immediately delete the recording) or `transcript_only` (retain only the text transcript, not the audio).
+- **Audit anonymization:** When sessions are deleted, the audit trail is anonymized (actor IDs are set to NULL) rather than deleted entirely, preserving the record that an intake occurred without identifying the victim.
+
+**Deployment scenario:** A DV shelter deploys ALEA Intake on a dedicated on-premises server running Docker Compose with a local vLLM instance. The system runs in ephemeral mode with a 4-hour session TTL. Advocates use the professional autonomy mode to conduct intake interviews with survivors. All audio is stored in `transcript_only` mode -- the system transcribes the recording during the session and immediately discards the audio file. When a session's TTL expires, the system automatically deletes all PII and anonymizes the audit trail. The shelter's IT staff are the only people with access to the server.
+
+---
+
+#### Tenant Rights and Eviction Defense
+
+**Who deploys it:** Housing justice programs, tenant unions, eviction defense projects, legal aid housing units.
+
+**Problem solved:** Eviction cases move fast. Tenants often have only days to respond to an eviction notice, and many have defenses or counterclaims they do not know about -- habitability violations, retaliatory eviction, illegal lockout, security deposit theft, or violations of local rent stabilization ordinances. Housing programs need to quickly identify all available defenses and counterclaims so tenants can respond effectively within tight court deadlines.
+
+ALEA Intake is well-suited for housing intake because the FOLIO ontology includes housing and property law concepts, and the iterative analysis loop is designed to identify related claims that co-occur with eviction. A tenant who calls about an eviction may also have habitability claims, utility shutoff violations, or discrimination claims that an intake worker might not think to ask about in a high-volume setting.
+
+**Recommended configuration:**
+
+| Setting | Value | Why |
+|---------|-------|-----|
+| Deployment mode | `single_tenant` or `multi_tenant` | Single for a single program; multi-tenant for a coalition of housing organizations |
+| Persistence mode | `persistent` | Housing cases have court deadlines; data needs to persist through the case |
+| LLM data policy | `cloud_optout` or `local_only` | Depends on the program's data handling policies |
+| Multi-language | Enabled | Tenants facing eviction include speakers of many languages |
+| Autonomy mode | `professional` or `chatbot` | Professional for attorney-reviewed intake; chatbot for tenant self-service during off-hours |
+
+**Key safeguards:**
+
+- **Deadline awareness:** The output generation stage can flag urgency based on the type of housing proceeding identified (e.g., unlawful detainer timelines).
+- **Counterclaim identification:** The iterative analysis loop checks for defenses and counterclaims that commonly accompany eviction proceedings -- habitability, retaliation, discrimination, procedural defects.
+- **Document intake:** Tenants can upload photos of eviction notices, lease agreements, or habitability conditions. The system extracts text and incorporates it into the analysis.
+
+**Deployment scenario:** A tenant union in a large city deploys ALEA Intake as a single-tenant Docker instance. Tenants access the system through the union's website in chatbot mode during evening and weekend hours when staff are unavailable. During business hours, paralegals use professional mode to conduct more thorough intake sessions. The system runs in persistent mode with CMS integration to sync accepted cases to LegalServer, the union's case management system. The analysis output highlights all identified defenses and counterclaims with supporting statutes and case law, giving the paralegal a head start on the response.
+
+---
+
+### Specialty Use Cases
+
+#### Law School Clinics
+
+Law school clinical programs use ALEA Intake to train students on issue spotting while serving real clients. Students conduct intake interviews using the professional autonomy mode, where the system identifies legal issues and the supervising attorney reviews the analysis with the student as a teaching exercise. The system's FOLIO-grounded output shows students exactly how facts map to legal elements, making it a practical complement to classroom instruction. Single-tenant deployment with persistent mode is typical, and the multi-language capability serves clinics in diverse communities.
+
+#### Public Defender Intake
+
+Public defender offices handle high volumes of cases with limited staff. ALEA Intake can conduct an initial interview to identify all charges and potential defenses, collateral consequences (immigration, employment, housing), and related civil legal issues that criminal defense clients often face. The professional autonomy mode ensures that a defender reviews every analysis. Ephemeral mode may be appropriate for initial screenings where the client has not yet been formally accepted, switching to persistent mode once representation begins.
+
+#### Immigration Services
+
+Immigration legal services organizations, asylum assistance programs, and removal defense projects use ALEA Intake to triage complex immigration matters. The system's multi-language support (including Spanish, Chinese, Vietnamese, Korean, Tagalog, and Russian) is particularly valuable in immigration contexts. The FOLIO ontology includes immigration law concepts, and the analysis loop can identify overlapping relief options -- for example, a person seeking asylum may also be eligible for VAWA relief, a U visa, or Special Immigrant Juvenile Status. The `local_only` LLM data policy is recommended for immigration cases given the sensitivity of immigration status information.
+
+#### Bar Association Lawyer Referral
+
+Bar association lawyer referral services use ALEA Intake to improve the accuracy of referrals. Instead of routing callers based on a brief description, the system conducts a thorough intake and produces a structured analysis that helps the referral coordinator match the caller to a lawyer with the right practice area and jurisdictional experience. The triage and referral generation features (in the output stage) produce prioritized practice-area recommendations with complexity scoring, making it easier to route cases to appropriate panel attorneys.
+
+#### Veterans' Benefits Assistance
+
+Veterans' legal assistance programs and Veterans Service Organizations use ALEA Intake to screen veterans for benefits eligibility. VA disability claims, discharge upgrades, pension benefits, and related civil legal issues (housing, employment, family law) often co-occur. The system's iterative analysis loop is designed to catch these overlapping issues. Professional mode lets the advocate review each identified issue with the veteran. The multi-language support serves the linguistically diverse veteran population.
+
+#### Disability Benefits
+
+SSDI and SSI legal assistance programs use ALEA Intake to conduct initial disability benefits screenings. The system can identify whether a person's situation involves an initial application, a reconsideration, an ALJ hearing, or an Appeals Council review, and can flag related legal issues such as Medicaid eligibility, housing accommodations, or employment discrimination. Document upload is useful for medical records and denial letters. The output includes a structured analysis that helps the advocate understand the procedural posture and key factual issues.
+
+#### Consumer Protection and Debt Defense
+
+Consumer law programs and debt defense projects use ALEA Intake to screen for consumer protection claims. Debt collection lawsuits often involve FDCPA violations, statute of limitations defenses, identity theft, or predatory lending claims that the debtor does not recognize. The system's analysis loop identifies these claims by mapping the facts the person describes to consumer protection elements. The output highlights available defenses and counterclaims with supporting authority, which is particularly valuable for high-volume debt defense programs handling hundreds of cases.
+
+#### Family Law and Mediation Intake
+
+Family law legal aid programs and court mediation services use ALEA Intake for initial screening of family law matters -- divorce, custody, support, protective orders, and property division. Family law cases frequently involve overlapping issues across multiple jurisdictions (federal tax implications, state family law, local court rules). The system's multi-jurisdiction analysis and FOLIO grounding help identify all relevant issues. The DV safety screening protocol also runs during family law intake, flagging cases where domestic violence indicators are present and ensuring appropriate safety resources are provided.
+
+---
+
+## Key Capabilities
+
+### Multi-Language Support
+
+ALEA Intake supports seven languages for the consumer-facing interface:
+
+| Code | Language |
+|------|----------|
+| `en` | English |
+| `es` | Spanish |
+| `zh` | Chinese |
+| `vi` | Vietnamese |
+| `ko` | Korean |
+| `tl` | Tagalog |
+| `ru` | Russian |
+
+**Why it matters.** Many people who need legal help speak a language other than English. In legal aid and immigration contexts, the ability to conduct intake in a person's primary language significantly improves the accuracy and completeness of the information gathered. Courts serving diverse populations need multilingual interfaces for self-help kiosks and SRL portals.
+
+**How it works.** The frontend uses [i18next](https://www.i18next.com/) with lazy-loaded namespace bundles. Each language has its own directory under `frontend/public/locales/` containing namespace files (auth, chat, common, dashboard, admin, output, safety). The browser's language preference is detected automatically, and the user can switch languages at any time. All consumer-facing text -- chat interface, consent disclosures, safety messages, navigation, error messages -- is translated.
+
+**How to configure.** Language files are located in `frontend/public/locales/{language_code}/`. To add or modify translations, edit the JSON files in the relevant language directory. To add a new language, create a new directory with the appropriate language code and provide translations for all namespaces.
+
+---
+
+### Three Autonomy Modes
+
+ALEA Intake offers three modes that control how much the system does autonomously versus how much requires human review. Each organization configures its preferred mode through the admin interface.
+
+**Chatbot Mode** -- The system operates autonomously. The person interacts directly with the chat interface, the system conducts the full intake and analysis pipeline, and the output is presented to the person at the end. This mode is appropriate for consumer-facing self-service portals where no staff member is available to review in real time.
+
+**Professional Mode** -- The system conducts the intake interview, but a staff member (attorney, paralegal, advocate) reviews and approves each analysis stage before the system proceeds. The staff member can modify, accept, or reject the system's output at each stage. This is the recommended mode for most legal aid and court programs because it keeps a human in the loop for quality control.
+
+**Agent Mode** -- The system runs autonomously with configurable checkpoints. The organization defines which stages require human approval and which can proceed automatically. This mode is a middle ground between chatbot and professional: it allows automation of routine stages while requiring review at critical decision points.
+
+**Per-organization configuration.** Autonomy mode is set per organization through the admin interface. The configuration is stored in the `autonomy_config_json` field of the organization's settings. Each organization can choose the mode that fits its workflow and risk tolerance.
+
+**Mode switching.** The system supports mid-intake mode changes at stage boundaries. If an advocate reviewing a chatbot-mode session wants to take over, they can switch to professional mode and the system will pause for approval at the next stage.
+
+---
+
+### Ephemeral Mode and Right-to-Delete
+
+ALEA Intake provides three persistence modes and three deletion policies that give organizations fine-grained control over how long data is retained and how it is removed.
+
+**Three persistence modes:**
+
+| Mode | Behavior |
+|------|----------|
+| `ephemeral` | Sessions have a configurable time-to-live (TTL). When the TTL expires (measured from session completion, not creation), the system automatically deletes all session data. Designed for kiosk and walk-in scenarios where data should not persist. |
+| `persistent` | Data is retained until explicitly deleted. Standard mode for organizations that maintain ongoing case records. |
+| `cms_integrated` | Data is synchronized to an external case management system (Clio, MyCase, LegalServer) and can be deleted from ALEA Intake after successful sync. |
+
+**Three deletion policies:**
+
+| Policy | What happens |
+|--------|-------------|
+| `full_delete` | All records for the person are deleted, including audit log entries. Complete removal. |
+| `anonymize` | All PII is deleted, but the audit trail is anonymized (actor IDs set to NULL) rather than removed. Preserves the record that an event occurred without identifying who was involved. |
+| `time_based` | Same as anonymize immediately, with the remaining anonymized records marked for scheduled future deletion. |
+
+**Preview and confirmation.** Before any deletion, the system generates a preview showing exactly what will be deleted: record counts by category (consent records, intake sessions, extracted facts, messages, audit entries). The preview includes a SHA-256 hash that must be sent back with the confirmation request. If the underlying data changes between preview and confirmation -- for example, if new records are created -- the hash will not match and the deletion will be rejected. This prevents accidental deletion of stale previews.
+
+**Kiosk safety.** For kiosk deployments (courthouse lobbies, shelter intake stations), the system can be configured to require consent acknowledgment at the start of every session, enforce a session TTL, and automatically delete all data when the TTL expires. Combined with the `local_only` LLM data policy, this means no PII leaves the kiosk environment and no PII persists after the session window closes.
+
+---
+
+### FOLIO Ontology Grounding
+
+Every legal concept identified during intake is mapped to a node in the [FOLIO (Financial Industry Legal Ontology) open legal ontology](https://github.com/FOLIO-Org). This grounding is central to how the system works and why its output is traceable.
+
+**Why ontology grounding matters.** Legal concepts have specific meanings that vary by jurisdiction and context. By mapping every identified concept to a formal ontology, the system produces output that is:
+
+- **Interoperable.** Other systems that use FOLIO can consume ALEA Intake's output directly, using the ontology IRIs as shared identifiers.
+- **Explainable.** An attorney reviewing the analysis can see exactly which ontology concept the system matched and evaluate whether the match is correct.
+- **Auditable.** Each concept resolution includes a confidence score. Low-confidence matches are flagged for human review rather than silently accepted.
+
+**How it works.** The concept resolution stage uses a two-phase approach:
+
+1. **Embedding similarity.** The person's description is compared against FOLIO concept labels and definitions using vector embeddings (FAISS index). High-confidence matches (above 0.85) are accepted directly.
+2. **LLM verification.** Matches below the high-confidence threshold are sent to the LLM for verification and refinement. The LLM can confirm, reject, or suggest alternative FOLIO concepts.
+
+Resolution scores are weighted: embedding similarity (0.3), label matching (0.3), and LLM verification (0.4). Concepts that cannot be mapped to any FOLIO node are preserved with synthetic keys and flagged as unmapped -- they are never silently dropped.
+
+**Adjacency discovery.** The FOLIO ontology is structured as an OWL graph with object properties linking related concepts. The system traverses these relationships to discover adjacent legal areas that may be relevant. For example, if the system identifies an eviction claim, it can traverse the ontology graph to find related housing law concepts (habitability, security deposits, retaliatory eviction) and check whether the person's facts support those claims as well.
+
+**Configuration:**
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `ALEA_FOLIO_OWL_BRANCH` | `main` | FOLIO ontology Git branch to load |
+| `ALEA_FOLIO_UPDATE_INTERVAL_HOURS` | `24` | How often to check for ontology updates |
+| `ALEA_FOLIO_CACHE_DIR` | `./data/folio_cache` | Local cache directory for ontology files |
+| `ALEA_FOLIO_CONFIDENCE_THRESHOLD` | `0.5` | Minimum confidence score for concept resolution |
+
+---
+
+## Quick Start
+
+The fastest way to run ALEA Intake locally is with Docker Compose in single-tenant mode using SQLite:
+
+```bash
+# Clone the repository
+git clone https://github.com/alea-institute/alea-intake.git
+cd alea-intake
+
+# Generate a secret key
+export ALEA_SECRET_KEY=$(openssl rand -hex 32)
+
+# Start the application
+docker compose up -d
+```
+
+The application will be available at `http://localhost:8000`.
+
+This starts a single-tenant instance with:
+- SQLite database (no PostgreSQL dependency)
+- Persistent data storage
+- Automatic master encryption key generation
+- JSON-formatted logging
+
+For multi-tenant deployment with PostgreSQL, see `docker-compose.multi.yml`. For full configuration details, see [Configuration Reference](#configuration-reference).
+
+> **LLM provider required.** The system requires an LLM provider for the analysis pipeline. Configure an LLM provider (OpenAI, Anthropic, Google, or a local vLLM instance) through the admin interface after first login. See the [Configuration Reference](#configuration-reference) for details.
+
+---
+
+## Security
+
+<!-- Security section details will be added by Plan 04 -->
+
+For responsible disclosure of security vulnerabilities, see [SECURITY.md](SECURITY.md).
+
+---
+
+## Configuration Reference
+
+<!-- Full configuration reference will be added by Plan 04 -->
+
+### Platform Settings (Environment Variables)
+
+<!-- Platform settings table will be added by Plan 04 -->
+
+### Organization Settings (Per-Tenant)
+
+<!-- Organization settings table will be added by Plan 04 -->
+
+---
+
+## Scenario Walkthroughs
+
+<!-- Scenario walkthroughs will be added by Plan 04 -->
+
+---
+
+## Deployment Topologies
+
+<!-- Deployment topology diagrams will be added by Plan 04 -->
+
+---
+
+## Data Flow and Security Model
+
+<!-- Data flow diagram will be added by Plan 04 -->
+
+---
+
+## Roadmap
+
+<!-- Roadmap section will be added by Plan 04 -->
+
+---
+
+## License
+
+MIT License. Copyright (c) 2026 Damien Riehl and ALEA Institute.
+
+See [LICENSE](LICENSE) for the full license text.
+
+For a complete list of third-party dependencies and their licenses, see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+
+---
+
+## Contributing
+
+Contributions are welcome. ALEA Intake is open source under the MIT license, and we accept pull requests from anyone.
+
+Before contributing, please read:
+
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** -- how to report bugs, propose features, run tests, and submit pull requests.
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** -- the Contributor Covenant code of conduct that applies to all project interactions.
+- **[SECURITY.md](SECURITY.md)** -- how to responsibly disclose security vulnerabilities (use GitHub's private vulnerability reporting, not public issues).
+
+<!-- END PLAN 03 CONTENT -->
