@@ -219,6 +219,10 @@ Recent decisions affecting current work:
 - [Phase 11]: Skills as Markdown with YAML frontmatter; Git-based marketplace index
 - [Phase 11]: Dockerfile entrypoint.sh runs Alembic migrations before uvicorn (skippable via env var)
 
+### Roadmap Evolution
+
+- Phase 12 added: Open-source public release — MIT license (copyright Damien Riehl & ALEA Institute), comprehensive README with use cases and security documentation
+
 ### Pending Todos
 
 None yet.

@@ -23,6 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 9: Frontend Visualization** - Graph fact-mapping view, matrix completeness view, narrative-anchored annotation view
 - [x] **Phase 10: Autonomy & Orchestration Modes** - Chatbot, professional, and agent modes with per-org configuration (completed 2026-04-06)
 - [x] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes (completed 2026-04-06)
+- [ ] **Phase 12: Open-Source Public Release** - MIT license, comprehensive README, pre-flight audits, community files, visual assets
 
 ## Phase Details
 
@@ -221,10 +222,31 @@ Plans:
 - [x] 11-03-PLAN.md — Deployment mode branching (multi-tenant/single-tenant), persistence modes (ephemeral/persistent/CMS-integrated), auto-migration, tenant provisioning
 - [x] 11-04-PLAN.md — MIT license, Docker packaging (single-tenant + multi-tenant), Helm chart, install script, skills registry, final main.py v1.0.0 wiring
 
+### Phase 12: Open-Source Public Release
+**Goal**: The alea-intake repository is ready to go public -- licensed correctly, documented comprehensively for legal aid and court program audiences, cleared of secrets and license contamination, with visuals that make the project approachable
+**Depends on**: Phase 11
+**Requirements**: (release-hygiene phase -- no mapped REQ-IDs)
+**Success Criteria** (what must be TRUE):
+  1. LICENSE copyright line reads "Copyright (c) 2026 Damien Riehl and ALEA Institute"
+  2. README.md is a comprehensive, self-contained document (~1500-2500 lines) with architecture diagrams, all 12 use cases, security documentation, configuration reference, scenario walkthroughs, and deployment topology diagrams
+  3. SECURITY.md, CONTRIBUTING.md, and CODE_OF_CONDUCT.md exist with correct content
+  4. THIRD_PARTY_LICENSES.md lists every dependency with SPDX identifiers
+  5. Pre-flight audits (secret scan, dependency licenses, PII scrub, infra linting) passed with zero blocking findings
+  6. Cloud KMS is accurately described as "planned" in the README (not "supported")
+  7. .planning/ directory verified clean of secrets for public transparency
+**Plans:** 5 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Pre-flight audits: secret scan, PII scrub, KMS verification, dependency license audit, THIRD_PARTY_LICENSES.md, infrastructure linting
+- [ ] 12-02-PLAN.md — Community files: LICENSE copyright update, SECURITY.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md
+- [ ] 12-03-PLAN.md — README part 1: project identity, architecture diagram, 12 use cases, 4 key capabilities, quick start
+- [ ] 12-04-PLAN.md — README part 2: security documentation, config reference, scenario walkthroughs, deployment diagrams, roadmap
+- [ ] 12-05-PLAN.md — UI screenshots, .planning/ sanity check, final human verification checkpoint
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> 12
 
 Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phase 4 depends on both 2 and 3.
 
@@ -241,3 +263,4 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 9. Frontend Visualization | 0/5 | Not started | - |
 | 10. Autonomy & Orchestration Modes | 3/3 | Complete    | 2026-04-06 |
 | 11. Integration & Production Deployment | 4/4 | Complete    | 2026-04-06 |
+| 12. Open-Source Public Release | 0/5 | Not started | - |
