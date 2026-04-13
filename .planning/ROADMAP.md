@@ -234,13 +234,13 @@ Plans:
   5. Pre-flight audits (secret scan, dependency licenses, PII scrub, infra linting) passed with zero blocking findings
   6. Cloud KMS is accurately described as "planned" in the README (not "supported")
   7. .planning/ directory verified clean of secrets for public transparency
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 Plans:
 - [x] 12-01-PLAN.md — Pre-flight audits: secret scan, PII scrub, KMS verification, dependency license audit, THIRD_PARTY_LICENSES.md, infrastructure linting
 - [x] 12-02-PLAN.md — Community files: LICENSE copyright update, SECURITY.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md
 - [x] 12-03-PLAN.md — README part 1: project identity, architecture diagram, 12 use cases, 4 key capabilities, quick start
-- [ ] 12-04-PLAN.md — README part 2: security documentation, config reference, scenario walkthroughs, deployment diagrams, roadmap
+- [x] 12-04-PLAN.md — README part 2: security documentation, config reference, scenario walkthroughs, deployment diagrams, roadmap
 - [ ] 12-05-PLAN.md — UI screenshots, .planning/ sanity check, final human verification checkpoint
 
 ## Progress
@@ -263,4 +263,4 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 9. Frontend Visualization | 0/5 | Not started | - |
 | 10. Autonomy & Orchestration Modes | 3/3 | Complete    | 2026-04-06 |
 | 11. Integration & Production Deployment | 4/4 | Complete    | 2026-04-06 |
-| 12. Open-Source Public Release | 3/5 | In Progress|  |
+| 12. Open-Source Public Release | 4/5 | In Progress|  |
