@@ -6,7 +6,9 @@
 **Railway service:** `alea-intake-demo` in `alea-tools` project
 **Railway service id:** `86f796a8-b8a7-49fa-830d-b410bbfa8937`
 **Railway DB service:** `alea-intake-demo-db` (separate from dev)
-**Railway DB password:** stored at `/tmp/demo-pg-pass.txt` on the dev box
+**Demo user (already registered):** `demo@example.com` / `DemoPass123!`
+**DB backend:** SQLite at `/app/data/alea_intake.db` on a Railway Volume (persists across redeploys). PostgreSQL is **not** used for the demo because of a pre-existing asyncpg "another operation in progress" bug that also affects `alea-intake-dev`. The demo Postgres service `alea-intake-demo-db` was created but is dormant.
+**Railway DB password (dormant Postgres):** stored at `/tmp/demo-pg-pass.txt` on the dev box
 **alea-tools project id:** `357ab7e1-d7cd-465e-b22b-74d6d2c4ea2e`
 
 ---
@@ -116,14 +118,21 @@ If the audience picks one of these and live generation fails, you have the file 
 
 ---
 
-## Dry-run results
+## Dry-run results — measured 2026-05-06
 
-| Practice | Discuss-phase Q count | Plan-phase output | Execute-phase output | Total time | Notes |
-|---|---|---|---|---|---|
-| Immigration | _TBD_ | _TBD_ | _TBD_ | _TBD_ | Ran from `dryrun/immigration` branch off `demo/practice-customization`, branch deleted after timing |
-| Patent prosecution | _TBD_ | _TBD_ | _TBD_ | _TBD_ | Same |
+**Railway redeploy timing measured directly (not via /gsd-* loop, just the deploy step):**
 
-**Time budget:** target ≤ 8 min on stage. Hard ceiling 12 min — if a dry run blows that, prune discuss-phase questions or skip discuss-phase on stage and go straight to plan-phase with a short prepared brief.
+| Test | Change | Push → SUCCESS | Notes |
+|---|---|---|---|
+| Canary | Trailing comment on PI yaml | **183 s** (3:03) | First incremental build, some cold-cache overhead |
+| YAML add | New `dryrun_test.yaml` in configs/ | **123 s** (2:03) | Cache warm; this is the realistic on-stage number |
+
+**Implication:** the deploy step alone is ~2 min on stage. Plan accordingly:
+- **/gsd-discuss-phase + /gsd-plan-phase + /gsd-execute-phase**: budget 4–6 min depending on how many discuss-phase questions you let it ask
+- **`git push` → Railway deploys → audience refreshes**: 2–3 min while you bridge with architecture talk
+- **Total on-stage**: 6–9 min from "OK, immigration" to "and there's the new chip"
+
+**Time budget:** target ≤ 8 min on stage. Hard ceiling 12 min — if discuss-phase asks more than 5 questions, cut it short ("got it, plan now") and move on. Never skip plan-phase or execute-phase — those are part of the show.
 
 **To run a dry run yourself:**
 ```bash
