@@ -24,6 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 10: Autonomy & Orchestration Modes** - Chatbot, professional, and agent modes with per-org configuration (completed 2026-04-06)
 - [x] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes (completed 2026-04-06)
 - [x] **Phase 12: Open-Source Public Release** - MIT license, comprehensive README, pre-flight audits, community files, visual assets (completed 2026-04-13)
+- [ ] **Phase 13: Practice-Area Customization (Live Demo)** - Config-driven practice areas (YAML registry, session binding, LLM system-prompt swap), PI seed, frontend chip-row, demo Railway service, and live-demo runbook for talk on 2026-05-06
 
 ## Phase Details
 
@@ -264,3 +265,4 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 10. Autonomy & Orchestration Modes | 3/3 | Complete    | 2026-04-06 |
 | 11. Integration & Production Deployment | 4/4 | Complete    | 2026-04-06 |
 | 12. Open-Source Public Release | 5/5 | Complete   | 2026-04-13 |
+| 13. Practice-Area Customization (Demo) | 0/5 | Planned (demo 2026-05-06) | - |
