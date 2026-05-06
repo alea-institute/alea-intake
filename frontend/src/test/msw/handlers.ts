@@ -77,6 +77,9 @@ export const handlers = [
   http.get('/api/v1/autonomy/admin/stages', () =>
     HttpResponse.json([])
   ),
+  http.get('/api/practice-areas', () =>
+    HttpResponse.json({ practice_areas: [] })
+  ),
   http.get('/api/v1/autonomy/admin/presets', () =>
     HttpResponse.json({})
   ),

@@ -52,6 +52,20 @@ export type WSEvent =
   | { type: 'approval_resolved'; request_id: number; decision: string }
   | { type: 'review_status'; status: 'reviewing' | 'paused' | 'proceeding'; label: string }
 
+/**
+ * Practice-area projection returned by GET /api/practice-areas.
+ *
+ * Welcome messages travel with the list so the chip-row can preview copy
+ * inline on selection; system_prompt and key_topics remain server-internal.
+ */
+export interface PracticeArea {
+  id: string
+  display_name: string
+  welcome_message_consumer: string
+  welcome_message_professional: string
+  disclaimer: string | null
+}
+
 // WebSocket commands (client -> server)
 export type WSCommand =
   | { type: 'text_message'; client_id: string; modality: Modality; content: string }

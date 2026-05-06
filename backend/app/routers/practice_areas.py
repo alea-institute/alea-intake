@@ -11,12 +11,20 @@ Frontend contract (locked for plan 13-03):
     GET /api/practice-areas
     -> {
          "practice_areas": [
-           {"id": str, "display_name": str, "disclaimer": str | None},
+           {
+             "id": str,
+             "display_name": str,
+             "welcome_message_consumer": str,
+             "welcome_message_professional": str,
+             "disclaimer": str | None,
+           },
            ...
          ]
        }
 
-Sorted by ``display_name``.
+Sorted by ``display_name``. Welcome messages are included so the chip-row
+in 13-03 can preview the welcome copy on selection without an extra round
+trip; system_prompt and key_topics remain server-internal.
 """
 
 from __future__ import annotations
@@ -43,6 +51,8 @@ async def list_practice_areas(request: Request) -> dict:
             {
                 "id": area.id,
                 "display_name": area.display_name,
+                "welcome_message_consumer": area.welcome_message_consumer,
+                "welcome_message_professional": area.welcome_message_professional,
                 "disclaimer": area.disclaimer,
             }
             for area in registry.list_all()

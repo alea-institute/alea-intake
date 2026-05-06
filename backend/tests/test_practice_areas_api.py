@@ -119,8 +119,17 @@ class TestPracticeAreasListEndpoint:
         assert ids == ["family_law", "personal_injury"]
 
         # Each entry has exactly the documented public fields
+        # (welcome_message_* added in 13-03 so the chip-row can preview copy
+        # without an extra round-trip)
+        expected_keys = {
+            "id",
+            "display_name",
+            "welcome_message_consumer",
+            "welcome_message_professional",
+            "disclaimer",
+        }
         for entry in data["practice_areas"]:
-            assert set(entry.keys()) == {"id", "display_name", "disclaimer"}
+            assert set(entry.keys()) == expected_keys
 
         # Disclaimer can be None or a string
         family = next(a for a in data["practice_areas"] if a["id"] == "family_law")
@@ -128,6 +137,17 @@ class TestPracticeAreasListEndpoint:
         pi = next(a for a in data["practice_areas"] if a["id"] == "personal_injury")
         assert pi["disclaimer"] is None
         assert pi["display_name"] == "Personal Injury"
+
+        # Welcome messages travel with the projection (13-03 contract)
+        assert pi["welcome_message_consumer"] == "Tell me about your accident."
+        assert (
+            pi["welcome_message_professional"]
+            == "Capture the incident facts."
+        )
+        assert (
+            family["welcome_message_consumer"]
+            == "Tell me about your family situation."
+        )
 
     @pytest.mark.asyncio
     async def test_list_no_auth_required(self, async_client: AsyncClient):
