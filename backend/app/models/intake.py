@@ -50,6 +50,11 @@ class IntakeSession(TenantBase):
     status: Mapped[str] = mapped_column(String(20), default="active", nullable=False)
     started_at: Mapped[datetime] = mapped_column(server_default=func.now())
     ended_at: Mapped[datetime | None] = mapped_column(nullable=True)
+    # Optional binding to a practice-area config (see services.intake.practice_areas).
+    # Nullable preserves backwards compatibility with the generic intake path.
+    practice_area_id: Mapped[str | None] = mapped_column(
+        String(64), nullable=True, index=True
+    )
 
 
 class Message(TenantBase):

@@ -12,6 +12,20 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.intake import Intake, IntakeParty, IntakeSession, Message
+from app.services.intake.practice_areas import PracticeAreaRegistry
+
+
+class UnknownPracticeAreaError(ValueError):
+    """Raised when a session is created with an unrecognized practice_area_id.
+
+    Routers should map this to HTTP 400.
+    """
+
+    def __init__(self, practice_area_id: str) -> None:
+        super().__init__(
+            f"Unknown practice_area_id: {practice_area_id!r}"
+        )
+        self.practice_area_id = practice_area_id
 
 
 class IntakeSessionService:
@@ -37,11 +51,27 @@ class IntakeSessionService:
         await self._session.flush()
         return intake
 
-    async def create_session(self, intake_id: int) -> IntakeSession:
-        """Create a new session for the given intake with status 'active'."""
+    async def create_session(
+        self,
+        intake_id: int,
+        practice_area_id: str | None = None,
+        practice_areas: PracticeAreaRegistry | None = None,
+    ) -> IntakeSession:
+        """Create a new session for the given intake with status 'active'.
+
+        If ``practice_area_id`` is provided, a ``practice_areas`` registry must
+        also be provided so the id can be validated. Unknown ids raise
+        :class:`UnknownPracticeAreaError`. Passing ``practice_area_id=None``
+        preserves the legacy generic-intake behaviour.
+        """
+        if practice_area_id is not None:
+            if practice_areas is None or practice_areas.get(practice_area_id) is None:
+                raise UnknownPracticeAreaError(practice_area_id)
+
         session = IntakeSession(
             intake_id=intake_id,
             status="active",
+            practice_area_id=practice_area_id,
         )
         self._session.add(session)
         await self._session.flush()

@@ -854,8 +854,13 @@ async def test_transcript_approve_also_screens():
     mock_result2.scalar_one.return_value = mock_recording
     mock_result3 = MagicMock()
     mock_result3.scalar_one.return_value = mock_message
+    # Plan 13-02 added a practice_area_id lookup before invoking ConversationService.
+    mock_result4 = MagicMock()
+    mock_result4.scalar_one_or_none.return_value = None
 
-    mock_session.execute = AsyncMock(side_effect=[mock_result1, mock_result2, mock_result3])
+    mock_session.execute = AsyncMock(
+        side_effect=[mock_result1, mock_result2, mock_result3, mock_result4]
+    )
 
     with patch("app.routers.intake.screen_message_fast", new_callable=AsyncMock, return_value=empty_result) as mock_screen, \
          patch("app.routers.intake.persist_screening_event", new_callable=AsyncMock), \

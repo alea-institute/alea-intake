@@ -21,6 +21,7 @@ from typing import Any
 import jwt as pyjwt
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, Request, UploadFile, WebSocket, WebSocketDisconnect, status
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -35,6 +36,7 @@ from app.services.asr import ASRService, TranscriptionResult
 from app.services.document import DocumentService
 from app.services.intake.conversation import ConversationService
 from app.services.intake.message_pipeline import normalize_text, process_message
+from app.services.intake.practice_areas import PracticeAreaRegistry
 from app.services.intake.session_service import IntakeSessionService
 from app.services.screening.middleware import (
     add_to_exploration_queue,
@@ -106,6 +108,41 @@ def _get_org_id(request: Request) -> int:
     return getattr(request.state, "org_id", 1)
 
 
+def _get_practice_areas(app_obj) -> PracticeAreaRegistry | None:
+    """Return the practice-area registry from app state, or ``None`` if not loaded."""
+    return getattr(app_obj.state, "practice_areas", None)
+
+
+async def _lookup_session_practice_area_id(
+    db_session: AsyncSession, session_id: int
+) -> str | None:
+    """Return the practice_area_id stored on the IntakeSession, or ``None``.
+
+    Used by WebSocket handlers to bind LLM responses to the practice area the
+    session was created with.
+    """
+    result = await db_session.execute(
+        select(IntakeSession.practice_area_id).where(IntakeSession.id == session_id)
+    )
+    return result.scalar_one_or_none()
+
+
+class CreateIntakeRequest(BaseModel):
+    """Optional body for ``POST /api/v1/intake/``.
+
+    Currently only carries ``practice_area_id``. Sending an empty body keeps
+    the legacy generic-intake behaviour.
+    """
+
+    practice_area_id: str | None = None
+
+
+class CreateSessionRequest(BaseModel):
+    """Optional body for ``POST /api/v1/intake/{intake_id}/session``."""
+
+    practice_area_id: str | None = None
+
+
 # ---------------------------------------------------------------------------
 # REST endpoints
 # ---------------------------------------------------------------------------
@@ -113,12 +150,20 @@ def _get_org_id(request: Request) -> int:
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_intake(
     request: Request,
+    body: CreateIntakeRequest | None = None,
     current_user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(get_tenant_session),
 ):
-    """Create a new intake with primary party and first session."""
+    """Create a new intake with primary party and first session.
+
+    The optional body accepts ``practice_area_id`` to bind the first session to
+    a specific practice area. Unknown ids return HTTP 400 via the global
+    :class:`UnknownPracticeAreaError` handler.
+    """
     org_id = _get_org_id(request)
     svc = IntakeSessionService(session)
+    practice_area_id = body.practice_area_id if body is not None else None
+    practice_areas = _get_practice_areas(request.app)
 
     intake = await svc.create_intake(
         org_id=org_id,
@@ -131,7 +176,11 @@ async def create_intake(
         role_in_intake="primary",
         label="Primary",
     )
-    intake_session = await svc.create_session(intake.id)
+    intake_session = await svc.create_session(
+        intake.id,
+        practice_area_id=practice_area_id,
+        practice_areas=practice_areas,
+    )
 
     return {
         "id": intake.id,
@@ -140,6 +189,7 @@ async def create_intake(
         "created_at": str(intake.created_at) if intake.created_at else None,
         "session_id": intake_session.id,
         "party_id": party.id,
+        "practice_area_id": intake_session.practice_area_id,
     }
 
 
@@ -216,16 +266,24 @@ async def add_party(
 @router.post("/{intake_id}/session", status_code=status.HTTP_201_CREATED)
 async def create_session(
     intake_id: int,
+    request: Request,
+    body: CreateSessionRequest | None = None,
     current_user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(get_tenant_session),
 ):
     """Create a new session for the intake (multi-session resume)."""
     svc = IntakeSessionService(session)
-    intake_session = await svc.create_session(intake_id)
+    practice_area_id = body.practice_area_id if body is not None else None
+    intake_session = await svc.create_session(
+        intake_id,
+        practice_area_id=practice_area_id,
+        practice_areas=_get_practice_areas(request.app),
+    )
     return {
         "id": intake_session.id,
         "intake_id": intake_session.intake_id,
         "status": intake_session.status,
+        "practice_area_id": intake_session.practice_area_id,
     }
 
 
@@ -343,9 +401,13 @@ async def document_upload(
 
     # Generate LLM follow-up response
     try:
-        conversation_svc = ConversationService()
+        practice_area_id = await _lookup_session_practice_area_id(db_session, session_id)
+        conversation_svc = ConversationService(
+            practice_areas=_get_practice_areas(request.app)
+        )
         llm_response = await conversation_svc.generate_response(
-            messages=[{"role": "user", "content": f"[Document uploaded: {file.filename}]"}]
+            messages=[{"role": "user", "content": f"[Document uploaded: {file.filename}]"}],
+            practice_area_id=practice_area_id,
         )
         await svc.store_message(
             session_id=session_id,
@@ -558,10 +620,16 @@ async def _handle_text_message(
                 "sequence_number": message.sequence_number,
             })
 
-            # Generate and send LLM response
-            conversation_svc = ConversationService()
+            # Generate and send LLM response (bound to session's practice area, if any)
+            practice_area_id = await _lookup_session_practice_area_id(
+                db_session, session_id
+            )
+            conversation_svc = ConversationService(
+                practice_areas=_get_practice_areas(websocket.app)
+            )
             llm_response = await conversation_svc.generate_response(
-                messages=[{"role": "user", "content": content}]
+                messages=[{"role": "user", "content": content}],
+                practice_area_id=practice_area_id,
             )
 
             # Store the system response
@@ -776,10 +844,16 @@ async def _handle_transcript_approve(
                 "sequence_number": original_message.sequence_number,
             })
 
-            # Generate LLM follow-up
-            conversation_svc = ConversationService()
+            # Generate LLM follow-up (practice-area bound when available)
+            practice_area_id = await _lookup_session_practice_area_id(
+                db_session, session_id
+            )
+            conversation_svc = ConversationService(
+                practice_areas=_get_practice_areas(websocket.app)
+            )
             llm_response = await conversation_svc.generate_response(
-                messages=[{"role": "user", "content": approved_text}]
+                messages=[{"role": "user", "content": approved_text}],
+                practice_area_id=practice_area_id,
             )
 
             # Store system response
@@ -866,10 +940,16 @@ async def _handle_transcript_edit(
                 "sequence_number": original_message.sequence_number,
             })
 
-            # Generate LLM follow-up
-            conversation_svc = ConversationService()
+            # Generate LLM follow-up (practice-area bound when available)
+            practice_area_id = await _lookup_session_practice_area_id(
+                db_session, session_id
+            )
+            conversation_svc = ConversationService(
+                practice_areas=_get_practice_areas(websocket.app)
+            )
             llm_response = await conversation_svc.generate_response(
-                messages=[{"role": "user", "content": edited_text}]
+                messages=[{"role": "user", "content": edited_text}],
+                practice_area_id=practice_area_id,
             )
 
             # Store system response

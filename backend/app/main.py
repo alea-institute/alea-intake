@@ -39,6 +39,7 @@ from app.routers.intake import ws_router as intake_ws_router
 from app.routers.intake_professional import router as intake_professional_router
 from app.routers.organizations import router as organizations_router
 from app.routers.output import router as output_router
+from app.routers.practice_areas import router as practice_areas_router
 from app.routers.research import router as research_router
 from app.routers.kb_admin import router as kb_admin_router
 from app.routers.research_admin import router as research_admin_router
@@ -317,6 +318,17 @@ async def insufficient_permissions_handler(request: Request, exc: InsufficientPe
     return JSONResponse(status_code=403, content={"detail": exc.message})
 
 
+from app.services.intake.session_service import UnknownPracticeAreaError
+
+
+@app.exception_handler(UnknownPracticeAreaError)
+async def unknown_practice_area_handler(request: Request, exc: UnknownPracticeAreaError):
+    return JSONResponse(
+        status_code=400,
+        content={"detail": str(exc), "practice_area_id": exc.practice_area_id},
+    )
+
+
 # Routers
 app.include_router(auth_router)
 app.include_router(oauth_router)
@@ -329,6 +341,7 @@ app.include_router(folio_admin_router)
 app.include_router(intake_router)
 app.include_router(intake_ws_router)
 app.include_router(intake_professional_router)
+app.include_router(practice_areas_router)
 app.include_router(analysis_router)
 app.include_router(output_router)
 app.include_router(research_router)
