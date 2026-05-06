@@ -36,3 +36,5 @@ key_topics:
   - Prior statements to insurers or police
   - Statute of limitations / timing
 disclaimer: null
+
+# (timing canary -- harmless trailing newline)
