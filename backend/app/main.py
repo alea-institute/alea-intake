@@ -177,6 +177,30 @@ async def lifespan(app: FastAPI):
     app.state.skills_registry = skills_registry
     logger.info("Skills registry loaded (%d skills)", len(skills_registry.list_skills()))
 
+    # Step 9c: Load practice-area configs (fail-fast on bad config)
+    from pathlib import Path as _Path
+
+    from app.services.intake.practice_areas import (
+        PracticeAreaConfigError,
+        load_practice_areas,
+    )
+
+    _practice_dir = _Path(__file__).resolve().parent / "services" / "intake" / "practice_areas" / "configs"
+    try:
+        practice_areas = load_practice_areas(_practice_dir)
+    except PracticeAreaConfigError:
+        logger.exception(
+            "Failed to load practice-area configs from %s -- aborting startup",
+            _practice_dir,
+        )
+        raise
+    app.state.practice_areas = practice_areas
+    logger.info(
+        "Practice-area registry loaded (%d areas: %s)",
+        len(practice_areas),
+        [a.id for a in practice_areas.list_all()],
+    )
+
     # Step 10: Initialize ApprovalQueue singleton for autonomy endpoints
     from app.routers.autonomy import set_approval_queue
     from app.services.analysis.autonomy.approval_queue import ApprovalQueue
