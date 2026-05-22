@@ -24,6 +24,12 @@ def create_engine() -> AsyncEngine:
             url,
             pool_size=20,
             max_overflow=10,
+            # pre_ping validates a pooled connection with a lightweight check
+            # before handing it out, dropping dead/poisoned asyncpg connections;
+            # recycle (1800s) caps connection lifetime so long-lived poisoned
+            # connections rotate out of the pool.
+            pool_pre_ping=True,
+            pool_recycle=1800,
             echo=settings.debug,
         )
     else:
