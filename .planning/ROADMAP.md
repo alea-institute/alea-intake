@@ -286,7 +286,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 **Plans:** 5 plans
 
 Plans:
-- [ ] 14-01-PLAN.md — Fix the asyncpg "another operation in progress" bug (engine pool_pre_ping/pool_recycle + per-branch session isolation in the analysis orchestrator), verified against a real local Postgres
+- [ ] 14-01-PLAN.md — Fix the asyncpg "another operation in progress" bug (engine pool_pre_ping/pool_recycle + serialize the orchestrator's per-jurisdiction asyncio.gather), verified against a real local Postgres
 - [ ] 14-02-PLAN.md — Fast-forward merge demo/practice-customization -> master and push
 - [ ] 14-03-PLAN.md — Wire alea-intake-dev to GitHub master auto-deploy, confirm Postgres env vars, redeploy (requires railway login)
 - [ ] 14-04-PLAN.md — Verify dev is the canonical test server: /health up + /api/practice-areas returns personal_injury + browser chip-row/PI-welcome smoke test
