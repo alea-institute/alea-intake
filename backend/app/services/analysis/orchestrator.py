@@ -3,7 +3,8 @@
 Single LLM orchestrator per iteration decides which stage to run next.
 Stages: issue-spot -> research -> fact-map -> gap-analyze -> question.
 When multiple jurisdictions detected (ANALYSIS-08/D-06), fact-map and
-gap-analyze run in parallel per jurisdiction via asyncio.gather.
+gap-analyze run per jurisdiction sequentially over the shared session
+(asyncpg connections are not concurrency-safe; see _run_parallel_jurisdictions).
 
 Each stage completion creates an AnalysisStage checkpoint record for
 pause/resume (ANALYSIS-09). Audit trail populates audit_json on every
@@ -13,7 +14,6 @@ sources_consulted, confidence_scores_summary, duration_ms (ANALYSIS-10).
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import time
 from datetime import datetime, timezone
@@ -52,7 +52,8 @@ class AnalysisOrchestrator:
     Single LLM orchestrator per iteration decides which stage to run next.
     Stages: issue-spot -> research -> fact-map -> gap-analyze -> question.
     When multiple jurisdictions detected (ANALYSIS-08/D-06), fact-map and
-    gap-analyze run in parallel per jurisdiction via asyncio.gather.
+    gap-analyze run per jurisdiction sequentially over the shared session
+    (asyncpg connections are not concurrency-safe; see _run_parallel_jurisdictions).
     """
 
     STAGES = ["issue_spot", "explore", "research", "fact_map", "gap_analyze", "question_gen"]
@@ -382,13 +383,25 @@ class AnalysisOrchestrator:
         iteration: AnalysisIteration,
         ws_manager: Any | None,
     ) -> None:
-        """ANALYSIS-08: Run fact-map + gap-analyze in parallel per jurisdiction.
+        """ANALYSIS-08: Run fact-map + gap-analyze per jurisdiction.
 
-        Uses asyncio.gather to create parallel branches. Each branch:
+        Each branch:
         1. Runs FactMapStage.execute(jurisdiction=j)
         2. Runs GapAnalyzeStage.execute(jurisdiction=j)
         3. Creates AnalysisStage checkpoints with jurisdiction label
         Results merged with jurisdiction annotations on all mappings and gaps.
+
+        NOTE: Branches run SEQUENTIALLY, not concurrently. Every branch drives
+        the SHARED self._session (one asyncpg connection) -- both through the
+        stage instances (db_session=self._session) and through the orchestrator's
+        own checkpoint writes (self._session.add / flush in _execute_stage_inner).
+        asyncpg connections are NOT concurrency-safe, so fanning these branches
+        out concurrently (the previous gather-based approach) raises "another
+        operation is in progress" and poisons the pooled connection (it only
+        ever survived on SQLite, which serializes access internally). True
+        per-jurisdiction parallelism would require per-branch connections plus
+        merging the run/iteration ORM objects across sessions -- deferred as a
+        follow-up.
         """
 
         async def _jurisdiction_branch(jurisdiction: str) -> None:
@@ -399,9 +412,8 @@ class AnalysisOrchestrator:
                 "gap_analyze", run, iteration, ws_manager, jurisdiction=jurisdiction,
             )
 
-        await asyncio.gather(
-            *[_jurisdiction_branch(j) for j in jurisdictions]
-        )
+        for j in jurisdictions:
+            await _jurisdiction_branch(j)
 
     async def _select_stages(
         self,
