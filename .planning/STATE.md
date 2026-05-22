@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 12-05-PLAN.md Task 1 (Task 2 checkpoint pending)
-last_updated: "2026-04-13T00:59:25.638Z"
-last_activity: 2026-04-13
+stopped_at: Completed 14-01-PLAN.md (asyncpg root-cause fix verified on real Postgres)
+last_updated: "2026-05-22T19:57:54.796Z"
+last_activity: 2026-05-22
 progress:
-  total_phases: 12
+  total_phases: 13
   completed_phases: 12
-  total_plans: 51
-  completed_plans: 51
-  percent: 100
+  total_plans: 56
+  completed_plans: 52
+  percent: 92
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** When a person describes a legal situation, the system must correctly identify all relevant legal issues -- including ones the person doesn't know to mention -- and produce a structured analysis mapping their facts to claims, elements, and authorities across applicable jurisdictions.
-**Current focus:** Phase 12 — open-source-public-release-mit-license-comprehensive-readme-
+**Current focus:** Phase 14 — railway-dev-server-consolidation
 
 ## Current Position
 
-Phase: 12 (open-source-public-release-mit-license-comprehensive-readme-) — EXECUTING
-Plan: 4 of 5
-Status: Ready to execute
-Last activity: 2026-04-13
+Phase: 14 (railway-dev-server-consolidation) — EXECUTING
+Plan: 1 of 5 complete
+Status: 14-01 complete; next 14-02 (fast-forward asyncpg fix to master)
+Last activity: 2026-05-22
 
-Progress: [============================================------]  89%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -88,6 +88,7 @@ Progress: [============================================------]  89%
 | Phase 12 P03 | 4min | 1 tasks | 2 files |
 | Phase 12 P04 | 5min | 2 tasks | 1 files |
 | Phase 12 P05 | 4min | 1 tasks | 6 files |
+| Phase 14 P01 | 25min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -227,6 +228,8 @@ Recent decisions affecting current work:
 - [Phase 12]: Configuration reference enumerates all 49 ALEA_* env vars and all 10 OrganizationConfig fields from actual source code
 - [Phase 12]: Headless Chromium for login screenshot (MCP chrome-devtools not available); descriptive placeholder .txt files for auth-protected pages
 - [Phase 12]: .planning/ sanity check (D-24a) passed: zero secrets, zero internal URLs, zero real email addresses
+- [Phase ?]: [14-01]: Serialize per-jurisdiction analysis branches (sequential await) instead of asyncio.gather over the shared asyncpg session; per-branch-connection parallelism deferred
+- [Phase ?]: [14-01]: Postgres engine uses pool_pre_ping + pool_recycle=1800 to drop poisoned pooled asyncpg connections; verified on real pgvector pg17 (health up, 12 concurrent SELECT 1 clean)
 
 ### Roadmap Evolution
 
@@ -243,6 +246,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-13T00:59:25.636Z
-Stopped at: Completed 12-05-PLAN.md Task 1 (Task 2 checkpoint pending)
+Last session: 2026-05-22T19:57:54.785Z
+Stopped at: Completed 14-01-PLAN.md (asyncpg root-cause fix verified on real Postgres)
 Resume file: None
