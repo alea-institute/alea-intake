@@ -283,7 +283,11 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 4. **Verify** — `/health` returns `healthy` with `database.status: up`, `/api/practice-areas` returns `personal_injury` on the dev URL, and a browser smoke test confirms the chip-row + PI welcome swap.
 5. **Document & consolidate** — write a dev deploy runbook and retire the redundant `alea-intake-demo` service.
 
-**Plans:** 0 plans
+**Plans:** 5 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 14 to break down)
+- [ ] 14-01-PLAN.md — Fix the asyncpg "another operation in progress" bug (engine pool_pre_ping/pool_recycle + per-branch session isolation in the analysis orchestrator), verified against a real local Postgres
+- [ ] 14-02-PLAN.md — Fast-forward merge demo/practice-customization -> master and push
+- [ ] 14-03-PLAN.md — Wire alea-intake-dev to GitHub master auto-deploy, confirm Postgres env vars, redeploy (requires railway login)
+- [ ] 14-04-PLAN.md — Verify dev is the canonical test server: /health up + /api/practice-areas returns personal_injury + browser chip-row/PI-welcome smoke test
+- [ ] 14-05-PLAN.md — Write the dev deploy runbook and retire the redundant alea-intake-demo service
