@@ -231,6 +231,7 @@ Recent decisions affecting current work:
 ### Roadmap Evolution
 
 - Phase 12 added: Open-source public release — MIT license (copyright Damien Riehl & ALEA Institute), comprehensive README with use cases and security documentation
+- Phase 14 added: Railway Dev Server Consolidation — make alea-intake-dev the single canonical Railway dev/test server tracking master (merge Phase 13, fix asyncpg Postgres bug, wire auto-deploy, retire demo service)
 
 ### Pending Todos
 

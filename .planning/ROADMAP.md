@@ -25,6 +25,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes (completed 2026-04-06)
 - [x] **Phase 12: Open-Source Public Release** - MIT license, comprehensive README, pre-flight audits, community files, visual assets (completed 2026-04-13)
 - [ ] **Phase 13: Practice-Area Customization (Live Demo)** - Config-driven practice areas (YAML registry, session binding, LLM system-prompt swap), PI seed, frontend chip-row, demo Railway service, and live-demo runbook for talk on 2026-05-06
+- [ ] **Phase 14: Railway Dev Server Consolidation** - Make `alea-intake-dev` the single canonical Railway dev/test server tracking `master`: merge Phase 13 to master, fix the asyncpg "another operation in progress" Postgres bug, wire GitHub auto-deploy from master, verify health + practice-areas live, retire the redundant demo service
 
 ## Phase Details
 
@@ -266,3 +267,23 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 11. Integration & Production Deployment | 4/4 | Complete    | 2026-04-06 |
 | 12. Open-Source Public Release | 5/5 | Complete   | 2026-04-13 |
 | 13. Practice-Area Customization (Demo) | 0/5 | Planned (demo 2026-05-06) | - |
+
+### Phase 14: Railway Dev Server Consolidation
+
+**Goal:** `alea-intake-dev` is the single canonical Railway dev/test server, healthy on PostgreSQL, auto-deploying from `master`, with the practice-area feature live and verified. The redundant `alea-intake-demo` service (spun up for the 2026-05-06 talk, now past) is retired.
+
+**Requirements**: Operational/infra phase — no new product requirements; supports reliable testing of all prior phases.
+
+**Depends on:** Phase 13
+
+**Scope:**
+1. **Land code on master** — fast-forward merge `demo/practice-customization` → `master` (clean FF; brings the practice-area feature plus the `$PORT` and uv-from-astral deploy fixes), then push `master`.
+2. **Fix the asyncpg bug** — the dev DB goes down with asyncpg `another operation is in progress` even on the health-check `SELECT 1`. Add `pool_pre_ping=True` + `pool_recycle` to the Postgres engine in `backend/app/db/engine.py` (engine currently has neither), and root-cause/fix any concurrent shared-`AsyncSession` use (prime suspect: analysis orchestrator + `asyncio.gather` stages). SQLite-on-volume is the documented fallback only if the root cause proves deep.
+3. **Wire auto-deploy** — connect `alea-intake-dev` to GitHub on branch `master`; confirm `ALEA_DATABASE_BACKEND=postgresql`, `ALEA_DB_*` wiring, and `ALEA_SKIP_MIGRATIONS=true`. (Requires user `railway login` — CLI currently Unauthorized.)
+4. **Verify** — `/health` returns `healthy` with `database.status: up`, `/api/practice-areas` returns `personal_injury` on the dev URL, and a browser smoke test confirms the chip-row + PI welcome swap.
+5. **Document & consolidate** — write a dev deploy runbook and retire the redundant `alea-intake-demo` service.
+
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 14 to break down)
