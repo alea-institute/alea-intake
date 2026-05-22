@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 14 (railway-dev-server-consolidation) — EXECUTING
-Plan: 1 of 5 complete
-Status: 14-01 complete; next 14-02 (fast-forward asyncpg fix to master)
+Plan: 2 of 5 complete
+Status: 14-01 + 14-02 complete (asyncpg fix on master, pushed). BLOCKED on 14-03 — needs user `railway login` (CLI Unauthorized) to wire dev auto-deploy + redeploy.
 Last activity: 2026-05-22
 
 Progress: [█████████░] 93%
