@@ -1,11 +1,16 @@
 # Stage 1: Frontend build
 FROM node:22-slim AS frontend-build
-RUN corepack enable && corepack prepare pnpm@latest --activate
-WORKDIR /app/frontend
-COPY frontend/package.json frontend/pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile || pnpm install
-COPY frontend/ ./
-RUN pnpm build
+# Pin pnpm (lockfile is v9.0) so builds are reproducible — @latest drifts and can
+# break a frozen install when a new pnpm major lands.
+RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
+WORKDIR /app
+# This is a pnpm workspace: the lockfile lives at the repo ROOT, not in frontend/.
+# Copy the workspace manifests first so the frozen install layer is cacheable.
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY frontend/package.json ./frontend/
+RUN pnpm install --frozen-lockfile
+COPY frontend/ ./frontend/
+RUN pnpm --filter alea-intake-frontend run build
 
 # Stage 2: Backend
 FROM python:3.12-slim AS backend

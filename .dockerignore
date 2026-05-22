@@ -1,0 +1,30 @@
+# Dependencies (reinstalled inside the image)
+**/node_modules
+
+# Build outputs (rebuilt inside the image)
+**/dist
+frontend/dist
+
+# Python caches / local venvs
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+**/.venv
+
+# Local data, keys, and env (never ship these)
+backend/data
+.env
+.env.*
+!.env.example
+
+# VCS, planning, tooling
+.git
+.gitignore
+.planning
+.claude
+
+# Compose / charts / docs not needed in the image
+docker-compose*.yml
+helm
+*.log
