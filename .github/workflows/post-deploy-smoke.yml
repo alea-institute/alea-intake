@@ -9,17 +9,10 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
-    inputs:
-      base_url:
-        description: Base URL to smoke test
-        default: https://alea-intake-dev-production.up.railway.app
 
 concurrency:
   group: post-deploy-smoke
   cancel-in-progress: true
-
-env:
-  BASE_URL: ${{ github.event.inputs.base_url || 'https://alea-intake-dev-production.up.railway.app' }}
 
 jobs:
   smoke:
@@ -32,28 +25,25 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Wait for the pushed commit to be live on dev
-        # workflow_dispatch has no meaningful github.sha vs deploy match, so only
-        # gate on the SHA for push events; dispatch runs the smoke immediately.
-        if: github.event_name == 'push'
+      - name: Wait for the deploy, then run the live smoke test
         env:
+          BASE_URL: https://alea-intake-dev-production.up.railway.app
           EXPECT_SHA: ${{ github.sha }}
+          EVENT: ${{ github.event_name }}
         run: |
-          echo "Waiting for $BASE_URL to report commit $EXPECT_SHA (up to ~25 min)..."
-          for i in $(seq 1 75); do
-            BODY=$(curl -fsS --max-time 20 "$BASE_URL/health" 2>/dev/null || echo '{}')
-            LIVE=$(printf '%s' "$BODY" | python3 -c "import sys,json
-try: print(json.load(sys.stdin).get('commit') or '')
-except Exception: print('')")
-            STATUS=$(printf '%s' "$BODY" | python3 -c "import sys,json
-try: print(json.load(sys.stdin).get('status') or '?')
-except Exception: print('?')")
-            echo "poll $i: live=${LIVE:0:9} expect=${EXPECT_SHA:0:9} status=$STATUS"
-            if [ "$LIVE" = "$EXPECT_SHA" ]; then echo "Pushed commit is live."; exit 0; fi
-            sleep 20
-          done
-          echo "::error::Timed out waiting for $EXPECT_SHA to deploy to $BASE_URL"
-          exit 1
-
-      - name: Run live E2E smoke test
-        run: python3 scripts/smoke_live.py "$BASE_URL"
+          set -euo pipefail
+          if [ "$EVENT" = "push" ]; then
+            echo "Waiting for $BASE_URL to report commit $EXPECT_SHA (up to ~25 min)..."
+            ok=0
+            for i in $(seq 1 75); do
+              live=$(curl -fsS --max-time 20 "$BASE_URL/health" | jq -r '.commit // ""' || echo "")
+              echo "poll $i: live=${live:0:9} expect=${EXPECT_SHA:0:9}"
+              if [ "$live" = "$EXPECT_SHA" ]; then ok=1; echo "Pushed commit is live."; break; fi
+              sleep 20
+            done
+            if [ "$ok" != "1" ]; then
+              echo "::error::Timed out waiting for $EXPECT_SHA to deploy to $BASE_URL"
+              exit 1
+            fi
+          fi
+          python3 scripts/smoke_live.py "$BASE_URL"
