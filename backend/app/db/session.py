@@ -10,6 +10,7 @@ from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.engine import get_engine
+from app.deployment.mode import is_multi_tenant
 
 
 def _is_sqlite() -> bool:
@@ -27,11 +28,12 @@ async def get_tenant_session(request: Request) -> AsyncGenerator[AsyncSession, N
     tenant_schema = getattr(request.state, "tenant_schema", None)
     engine = get_engine()
 
-    # SQLite doesn't support named schemas; map to None (default schema)
-    if _is_sqlite():
+    # SQLite and single-tenant both live in the default/public schema (no named
+    # schemas). Only multi-tenant on a schema-aware backend routes to tenant_{slug}.
+    if _is_sqlite() or not is_multi_tenant():
         schema_map = {"tenant": None, "shared": None}
     else:
-        schema_map = {"tenant": tenant_schema}
+        schema_map = {"tenant": tenant_schema, "shared": "shared"}
 
     async with engine.connect() as conn:
         conn = await conn.execution_options(schema_translate_map=schema_map)
@@ -52,7 +54,9 @@ async def get_shared_session() -> AsyncGenerator[AsyncSession, None]:
     """
     engine = get_engine()
 
-    if _is_sqlite():
+    # SQLite and single-tenant use the default/public schema; only multi-tenant
+    # on a schema-aware backend routes to the named "shared" schema.
+    if _is_sqlite() or not is_multi_tenant():
         schema_map = {"tenant": None, "shared": None}
     else:
         schema_map = {"shared": "shared"}

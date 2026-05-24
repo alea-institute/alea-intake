@@ -27,5 +27,7 @@ class RefreshToken(TenantBase):
     token_family: Mapped[str] = mapped_column(String(36), nullable=False)
     token_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     is_revoked: Mapped[bool] = mapped_column(Boolean, default=False)
-    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
