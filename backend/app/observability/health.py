@@ -8,6 +8,7 @@ because partial functionality is still available.
 from __future__ import annotations
 
 import logging
+import os
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import text
@@ -74,6 +75,9 @@ async def check_health(app: FastAPI) -> dict[str, Any]:
     return {
         "status": overall,
         "version": _VERSION,
+        # Deployed git commit (injected by Railway at build/runtime). Lets CI confirm
+        # the exact pushed commit is live before running post-deploy smoke tests.
+        "commit": os.environ.get("RAILWAY_GIT_COMMIT_SHA"),
         "database": db_status,
         "folio_owl": folio_owl_status,
         "folio_mcp": folio_mcp_status,
