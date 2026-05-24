@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 14 (railway-dev-server-consolidation) — EXECUTING
-Plan: 2 of 5 complete
-Status: 14-01 + 14-02 complete (asyncpg fix on master, pushed). BLOCKED on 14-03 — needs user `railway login` (CLI Unauthorized) to wire dev auto-deploy + redeploy.
-Last activity: 2026-05-22
+Plan: 4 of 5 complete
+Status: 14-01..14-04 complete. Dev fully works on Postgres (NullPool + single-tenant public-schema routing + tz-aware timestamps); auto-deploys from master; register/login/chip-row verified live. Next: 14-05 (dev runbook + retire alea-intake-demo).
+Last activity: 2026-05-24
 
 Progress: [█████████░] 93%
 
