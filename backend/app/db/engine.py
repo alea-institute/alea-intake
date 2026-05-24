@@ -1,6 +1,7 @@
 """Async database engine factory supporting PostgreSQL and SQLite backends."""
 
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from sqlalchemy.pool import NullPool
 
 from app.config import DatabaseBackend, get_settings
 
@@ -22,14 +23,16 @@ def create_engine() -> AsyncEngine:
         )
         return create_async_engine(
             url,
-            pool_size=20,
-            max_overflow=10,
-            # pre_ping validates a pooled connection with a lightweight check
-            # before handing it out, dropping dead/poisoned asyncpg connections;
-            # recycle (1800s) caps connection lifetime so long-lived poisoned
-            # connections rotate out of the pool.
-            pool_pre_ping=True,
-            pool_recycle=1800,
+            # asyncpg connections are bound to the event loop that created them.
+            # This app can initialize the engine outside the serving loop (e.g. at
+            # import / first use), so a pooled connection would be reused across
+            # loops and raise asyncpg's "got Future attached to a different loop"
+            # (it also surfaces as "another operation is in progress"). NullPool
+            # opens a fresh connection per checkout and closes it on return, so no
+            # connection is ever reused across a loop boundary. Postgres handles the
+            # extra connect churn fine at this scale; revisit with a loop-pinned
+            # pool if connection-establishment latency ever matters.
+            poolclass=NullPool,
             echo=settings.debug,
         )
     else:
