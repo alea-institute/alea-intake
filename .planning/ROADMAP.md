@@ -25,7 +25,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes (completed 2026-04-06)
 - [x] **Phase 12: Open-Source Public Release** - MIT license, comprehensive README, pre-flight audits, community files, visual assets (completed 2026-04-13)
 - [ ] **Phase 13: Practice-Area Customization (Live Demo)** - Config-driven practice areas (YAML registry, session binding, LLM system-prompt swap), PI seed, frontend chip-row, demo Railway service, and live-demo runbook for talk on 2026-05-06
-- [ ] **Phase 14: Railway Dev Server Consolidation** - Make `alea-intake-dev` the single canonical Railway dev/test server tracking `master`: merge Phase 13 to master, fix the asyncpg "another operation in progress" Postgres bug, wire GitHub auto-deploy from master, verify health + practice-areas live, retire the redundant demo service
+- [x] **Phase 14: Railway Dev Server Consolidation** - Make `alea-intake-dev` the single canonical Railway dev/test server tracking `master`: merge Phase 13 to master, fix the asyncpg Postgres bugs (cross-loop/concurrency, single-tenant schema routing, tz-aware timestamps), wire GitHub auto-deploy from master, verify health + practice-areas + auth live, retire the redundant demo service (completed 2026-05-24)
 
 ## Phase Details
 
@@ -290,4 +290,4 @@ Plans:
 - [x] 14-02-PLAN.md — Fast-forward merge demo/practice-customization -> master and push
 - [x] 14-03-PLAN.md — Wire alea-intake-dev to GitHub master auto-deploy, confirm Postgres env vars, redeploy (requires railway login)
 - [x] 14-04-PLAN.md — Verify dev is the canonical test server: /health up + /api/practice-areas returns personal_injury + browser chip-row/PI-welcome smoke test
-- [ ] 14-05-PLAN.md — Write the dev deploy runbook and retire the redundant alea-intake-demo service
+- [x] 14-05-PLAN.md — Write the dev deploy runbook and retire the redundant alea-intake-demo service

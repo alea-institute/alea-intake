@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 14 (railway-dev-server-consolidation) — EXECUTING
-Plan: 4 of 5 complete
-Status: 14-01..14-04 complete. Dev fully works on Postgres (NullPool + single-tenant public-schema routing + tz-aware timestamps); auto-deploys from master; register/login/chip-row verified live. Next: 14-05 (dev runbook + retire alea-intake-demo).
+Plan: 5 of 5 complete — Phase 14 COMPLETE
+Status: alea-intake-dev is the single canonical dev/test server: works on Postgres (NullPool + single-tenant public-schema routing + tz-aware timestamps), auto-deploys from master, register/login/chip-row verified live. Dev deploy runbook written; redundant alea-intake-demo service deleted. alea-tools project consolidated.
 Last activity: 2026-05-24
 
 Progress: [█████████░] 93%
