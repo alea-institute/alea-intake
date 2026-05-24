@@ -45,6 +45,16 @@ railway logs --service alea-intake-dev          # build + runtime logs
 
 ## Smoke test (T+ after a deploy)
 
+**Automated (recommended):** runs the full REST journey (auth → consent gate →
+practice-area binding → validation) and reports pass/fail. Stdlib only.
+
+```bash
+python3 scripts/smoke_live.py                 # tests the dev server
+python3 scripts/smoke_live.py https://other   # or any base URL
+```
+
+Manual spot-checks:
+
 ```bash
 BASE=https://alea-intake-dev-production.up.railway.app
 curl -fsS $BASE/health | jq '{status, db: .database.status}'          # healthy / up
