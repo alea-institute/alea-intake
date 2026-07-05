@@ -1,0 +1,196 @@
+{
+  "persona": "landlord-tenant",
+  "email": "persona_landlord-tenant_1783287554@example.com",
+  "base": "https://alea-intake-dev-production.up.railway.app",
+  "steps": {
+    "register": {
+      "http": 201,
+      "ok": true
+    },
+    "consent": {
+      "http": 201,
+      "ok": true
+    },
+    "create_intake": {
+      "http": 201,
+      "ok": true,
+      "intake_id": 19,
+      "session_id": 13,
+      "party_id": 19,
+      "practice_area_id": null
+    },
+    "narrative": {
+      "ok": true,
+      "safety_alerts": 0
+    },
+    "uploads": [
+      {
+        "file": "notice-and-summons.pdf",
+        "http": 201,
+        "extraction_status": "completed",
+        "detail": null
+      },
+      {
+        "file": "text-thread-landlord.pdf",
+        "http": 201,
+        "extraction_status": "completed",
+        "detail": null
+      }
+    ],
+    "analyze": {
+      "http": 202,
+      "run_id": 1,
+      "status": "converged",
+      "detail": null
+    },
+    "final_status": {
+      "run_id": 1,
+      "status": "converged",
+      "iteration": 10,
+      "max_iterations": 10,
+      "convergence_score": 1.0,
+      "progress_pct": 100,
+      "latest_stage": "question_gen"
+    },
+    "results_http": 200,
+    "output_generate": [
+      {
+        "profile": "law_firm",
+        "id": 1,
+        "run_id": 1,
+        "intake_id": 19,
+        "profile_type": "law_firm",
+        "completeness_score": 1.0,
+        "created_at": "2026-07-05T21:39:24.011817Z"
+      }
+    ]
+  },
+  "safety_alerts": [],
+  "analysis": {
+    "run_id": 1,
+    "status": "converged",
+    "claims": [],
+    "gaps": [],
+    "questions": []
+  },
+  "outputs": [
+    {
+      "doc_id": 1,
+      "profile": "law_firm",
+      "completeness": 1.0,
+      "memo_chars": 210,
+      "exports": {
+        "pdf": {
+          "http": 200,
+          "bytes": 8573,
+          "content_type": null,
+          "magic": "%PDF-",
+          "ok": true
+        },
+        "json": {
+          "http": 200,
+          "bytes": 0,
+          "content_type": null,
+          "magic": "",
+          "ok": false
+        }
+      }
+    }
+  ],
+  "transcript": [
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "session_state",
+        "status": "active",
+        "facts_count": 0,
+        "messages_count": 0
+      }
+    },
+    {
+      "dir": "send",
+      "msg": {
+        "type": "text_message",
+        "len": 841
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "message_ack",
+        "id": "1",
+        "client_id": "c0",
+        "timestamp": "2026-07-05 21:39:17.727467+00:00",
+        "message_id": 1,
+        "sequence_number": 1
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "system_message",
+        "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
+        "message_id": 2
+      }
+    },
+    {
+      "dir": "send",
+      "msg": {
+        "type": "text_message",
+        "len": 805
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "message_ack",
+        "id": "3",
+        "client_id": "c1",
+        "timestamp": "2026-07-05 21:39:18.046755+00:00",
+        "message_id": 3,
+        "sequence_number": 3
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "system_message",
+        "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
+        "message_id": 4
+      }
+    },
+    {
+      "dir": "send",
+      "msg": {
+        "type": "text_message",
+        "len": 668
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "message_ack",
+        "id": "5",
+        "client_id": "c2",
+        "timestamp": "2026-07-05 21:39:18.358138+00:00",
+        "message_id": 5,
+        "sequence_number": 5
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "system_message",
+        "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
+        "message_id": 6
+      }
+    },
+    {
+      "stage": "poll_status",
+      "http": 200,
+      "status": "converged",
+      "iteration": 10,
+      "progress": 100
+    }
+  ]
+}
