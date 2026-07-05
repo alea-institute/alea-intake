@@ -200,16 +200,17 @@ def run(persona_dir: Path, out_dir: Path):
     result["analysis"] = j if isinstance(j, dict) else {"_raw": str(j)[:500]}
     run_id = run_id or (j or {}).get("run_id")
 
-    # 8. generate memo (try law_firm + consumer-ish profiles)
+    # 8. generate memos — a professional (law_firm) AND a plain-language
+    # (court_self_help) memo so the judge can score both claim correctness and
+    # RUB-INTAKE-10 reading level. legal_aid = accessible (10th grade) as a spare.
     memo_docs = []
-    for profile in ("law_firm", "consumer", "self_represented", "pro_se"):
+    for profile in ("law_firm", "court_self_help", "legal_aid"):
         s, j, _ = _req("POST", "/api/v1/output/generate", token=token,
                        body={"run_id": run_id, "intake_id": intake_id, "profile_types": [profile]},
                        timeout=300)
         if s in (200, 201) and isinstance(j, dict):
             for d in j.get("documents", []):
                 memo_docs.append({"profile": profile, **d})
-            break  # first working profile is enough for the inner loop
         else:
             memo_docs.append({"profile": profile, "http": s,
                               "detail": (j if isinstance(j, dict) else {}).get("detail")})

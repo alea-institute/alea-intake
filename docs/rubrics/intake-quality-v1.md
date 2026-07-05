@@ -1,9 +1,16 @@
-# Intake Quality Rubric — v1 (DRAFT, pending Damien lock)
+# Intake Quality Rubric — v1.0 (LOCKED 2026-07-05)
 
 **Rubric ID prefix:** `RUB-INTAKE-`
 **Applies to:** the alea-intake analysis pipeline output for a single client intake — the FOLIO mappings, claim/element analysis, gap analysis, deadline surfacing, plain-language memo, and export artifacts.
 **Judged against:** the client's messy first-person narrative + any uploaded documents (the *source of truth*), the FOLIO ontology (via deterministic `folio-python` checks first, FOLIO MCP for semantic-fit calls), and this rubric.
-**Status:** DRAFT v1 — awaiting Damien's inline edits (Proof doc) → then **locked as v1.0**. No campaign finding is scored before lock (policy 3).
+**Status:** **LOCKED v1.0** (Damien, 2026-07-05). Shared via Proof for review; the one substantive lock decision — deadline gating — is recorded below. Campaign findings cite `intake-quality-v1.0`. Amendments bump the version and trigger re-judging of affected findings.
+
+**Lock decisions (Damien, 2026-07-05):**
+- **Deadlines = "detect + hedge" for v1.** RUB-INTAKE-08/09 require the system to surface time-sensitive events prominently and flag "verify the exact date"; a run is **not** GATE-failed merely for lacking exact jurisdiction computation. Full computed deadlines are the II.3.1 feature (a separate build). A *confidently-stated wrong* date still fails RUB-INTAKE-09.
+- Reading-level target (RUB-10): **6th–8th grade** (default; can tighten to 6th later).
+- i18n spot-check (RUB-12): **Spanish, Vietnamese, Chinese** each inner loop; all 7 on the final 8–10 pass (default).
+- Practice-area binding (Q4): personas run **generic/unbound** — the analysis pipeline is practice-area-agnostic (confirmed in code), so full FOLIO/claim analysis is expected without a registered practice area.
+- Group weights accepted as drafted.
 
 ---
 
