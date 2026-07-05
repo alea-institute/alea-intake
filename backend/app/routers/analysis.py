@@ -64,14 +64,43 @@ async def trigger_analysis(
     """
     from app.services.analysis.orchestrator import AnalysisOrchestrator
     from app.services.analysis.trigger import AnalysisTrigger
+    from app.services.extraction.backfill import backfill_intake_facts
     from app.services.llm_service import LLMService
 
     llm_service = LLMService()
+
+    # Resolve FOLIO + embedding singletons (loaded at startup) for concept
+    # resolution during extraction; degrade gracefully if unavailable (e.g. tests).
+    folio = None
+    embedding_service = None
+    try:
+        from app.services.folio.folio_service import get_folio
+
+        folio = get_folio()
+    except Exception:  # pragma: no cover - startup-dependent
+        logger.warning("FOLIO unavailable for extraction; skipping concept resolution", exc_info=True)
+    try:
+        from app.services.embedding.service import EmbeddingService
+
+        embedding_service = EmbeddingService.get_instance()
+    except Exception:  # pragma: no cover - startup-dependent
+        logger.warning("EmbeddingService unavailable for extraction", exc_info=True)
+
+    # Backfill facts from ingested messages before analysis. Without this the
+    # orchestrator's _load_facts() returns [] and analysis yields nothing.
+    try:
+        n_facts = await backfill_intake_facts(
+            db, intake_id, llm_service, folio=folio, embedding_service=embedding_service
+        )
+        logger.info("Pre-analysis fact backfill created %d facts for intake %d", n_facts, intake_id)
+    except Exception:
+        logger.warning("Pre-analysis fact backfill failed for intake %d", intake_id, exc_info=True)
+
     orchestrator = AnalysisOrchestrator(
         db_session=db,
         llm_service=llm_service,
-        folio=None,
-        embedding_service=None,
+        folio=folio,
+        embedding_service=embedding_service,
     )
     trigger = AnalysisTrigger(db_session=db, orchestrator=orchestrator)
 
