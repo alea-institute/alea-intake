@@ -131,6 +131,38 @@ class LLMService:
 
         return config
 
+    async def acomplete(
+        self,
+        messages: list[dict[str, str]],
+        system_prompt: str | None = None,
+    ) -> str:
+        """Send a chat completion and return the text reply.
+
+        Centralizes provider/model construction so text callers (conversational
+        follow-ups, language-level adaptation) don't each rebuild the wiring.
+        Uses the same provider/model/api-key resolution as get_client_config().
+        Raises on provider errors — callers choose their own fallback.
+        """
+        config = self.get_client_config()
+        model_cls = _PROVIDER_MODEL_MAP.get(config["provider"])
+        if model_cls is None:
+            raise ValueError(f"Unknown LLM provider: {config['provider']}")
+        init_kwargs: dict[str, Any] = {
+            "api_key": config.get("api_key"),
+            "model": config.get("model"),
+        }
+        if "endpoint" in config:
+            init_kwargs["endpoint"] = config["endpoint"]
+        model = model_cls(**init_kwargs)
+
+        full_messages: list[dict[str, str]] = []
+        if system_prompt:
+            full_messages.append({"role": "system", "content": system_prompt})
+        full_messages.extend(messages)
+
+        response = await model.chat_async(*full_messages)
+        return (getattr(response, "text", "") or "").strip()
+
     async def check_connection(self) -> dict[str, str]:
         """Test the LLM connection without sending any case data.
 

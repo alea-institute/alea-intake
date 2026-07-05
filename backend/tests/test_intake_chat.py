@@ -10,7 +10,7 @@ Covers:
 """
 
 import json
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from httpx import AsyncClient
@@ -179,12 +179,14 @@ class TestConversationService:
 
     @pytest.mark.asyncio
     async def test_generate_response(self):
-        mock_llm = AsyncMock()
+        mock_llm = MagicMock()
+        mock_llm.acomplete = AsyncMock(return_value="Tell me more about the repairs.")
         svc = ConversationService(mock_llm)
         result = await svc.generate_response(
             messages=[{"role": "user", "content": "My landlord won't fix the plumbing"}]
         )
         assert isinstance(result, str)
+        assert result == "Tell me more about the repairs."
 
 
 # ---------------------------------------------------------------------------

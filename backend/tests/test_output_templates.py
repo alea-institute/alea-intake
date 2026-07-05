@@ -471,7 +471,7 @@ class TestLanguageAdapter:
         mock_llm.get_client_config.return_value = {"provider": "openai", "model": "gpt-4"}
 
         # Mock the LLM call to return simplified text
-        async def mock_rewrite(text, system_prompt):
+        async def mock_rewrite(text, system_prompt, llm_service=None):
             return f"Simplified: {text[:50]}"
 
         adapter = LanguageAdapter()
@@ -491,7 +491,7 @@ class TestLanguageAdapter:
 
         mock_llm = AsyncMock()
 
-        async def mock_rewrite(text, system_prompt):
+        async def mock_rewrite(text, system_prompt, llm_service=None):
             # Simulate LLM that might mangle citations
             return text.replace("123 F.3d 456", "one-two-three F third four-five-six")
 
@@ -504,3 +504,39 @@ class TestLanguageAdapter:
             for section in sections:
                 for auth in section.authorities:
                     assert auth.citation in original_citations
+
+    @pytest.mark.asyncio
+    async def test_plain_rewrite_calls_llm_service(self):
+        """Plain-language profile invokes llm_service.acomplete and rewrites prose."""
+        ctx = _make_context(profile=COURT_SELF_HELP_PROFILE)
+        original_summary = ctx.executive_summary
+        original_issues = [
+            section.issue_statement
+            for sections in ctx.claims_by_jurisdiction.values()
+            for section in sections
+        ]
+
+        # llm_service.acomplete returns a simplified rewrite of whatever it receives
+        async def fake_acomplete(messages, system_prompt=None):
+            return f"[plain] {messages[0]['content'][:40]}"
+
+        mock_llm = MagicMock()
+        mock_llm.acomplete = AsyncMock(side_effect=fake_acomplete)
+
+        adapter = LanguageAdapter()
+        result = await adapter.adapt(ctx, COURT_SELF_HELP_PROFILE, mock_llm)
+
+        # acomplete was actually awaited (summary + each issue_statement, etc.)
+        assert mock_llm.acomplete.await_count >= 1
+        # executive_summary was rewritten (changed from original)
+        assert result.executive_summary.startswith("[plain] ")
+        assert result.executive_summary != original_summary
+        # issue_statement fields were rewritten too
+        rewritten_issues = [
+            section.issue_statement
+            for sections in result.claims_by_jurisdiction.values()
+            for section in sections
+        ]
+        for original, rewritten in zip(original_issues, rewritten_issues):
+            assert rewritten.startswith("[plain] ")
+            assert rewritten != original

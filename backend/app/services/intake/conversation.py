@@ -92,20 +92,20 @@ class ConversationService:
         """
         prompt = self._resolve_system_prompt(practice_area_id, system_prompt)
 
+        fallback = (
+            "Thank you for sharing that. Could you tell me more about when this "
+            "happened and who was involved?"
+        )
         if self._llm is None:
             # No LLM configured -- return a sensible default follow-up
-            return "Thank you for sharing that. Could you tell me more about when this happened and who was involved?"
+            return fallback
 
         try:
-            # Build prompt for alea-llm-client
-            config = self._llm.get_client_config()
-            # For now, return a default until full LLM integration in a later phase
-            # The LLM call would be: client.generate(messages, system=prompt)
-            _ = (config, prompt)  # prompt is the resolved system prompt for the LLM call
-            return "Thank you for sharing that. Could you tell me more about when this happened and who was involved?"
+            reply = await self._llm.acomplete(messages, system_prompt=prompt)
+            return reply or fallback
         except Exception as e:
             logger.warning("LLM response generation failed: %s", e)
-            return "Thank you for sharing that. Could you tell me more about when this happened and who was involved?"
+            return fallback
 
     async def generate_welcome_message(
         self,

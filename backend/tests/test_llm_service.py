@@ -172,6 +172,43 @@ class TestLLMServiceConnectionCheck:
             mock_instance.complete.assert_not_called()
 
 
+class TestLLMServiceAcomplete:
+    """Test acomplete() builds the provider model and returns response text."""
+
+    async def test_acomplete_returns_response_text(self):
+        """acomplete() constructs the model, calls chat_async, returns .text."""
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
+
+        org_config = _make_org_config(provider="openai", model="gpt-4")
+        service = LLMService(org_config=org_config)
+
+        mock_instance = MagicMock()
+        mock_instance.chat_async = AsyncMock(return_value=MagicMock(text="hello"))
+        mock_model_cls = MagicMock(return_value=mock_instance)
+
+        with patch.dict(_PROVIDER_MODEL_MAP, {"openai": mock_model_cls}):
+            result = await service.acomplete(
+                [{"role": "user", "content": "hi"}], system_prompt="be brief"
+            )
+
+        assert result == "hello"
+        # chat_async received the system prompt prepended to the messages
+        sent = mock_instance.chat_async.await_args.args
+        assert sent[0] == {"role": "system", "content": "be brief"}
+        assert sent[1] == {"role": "user", "content": "hi"}
+
+    async def test_acomplete_unknown_provider_raises(self):
+        """acomplete() raises ValueError when provider has no model class."""
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
+
+        org_config = _make_org_config(provider="openai", model="gpt-4")
+        service = LLMService(org_config=org_config)
+
+        with patch.dict(_PROVIDER_MODEL_MAP, {}, clear=True):
+            with pytest.raises(ValueError, match="Unknown LLM provider"):
+                await service.acomplete([{"role": "user", "content": "hi"}])
+
+
 class TestGetLLMServiceFactory:
     """Test the get_llm_service factory function."""
 

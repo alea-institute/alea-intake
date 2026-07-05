@@ -83,7 +83,7 @@ class LanguageAdapter:
         # 2. Rewrite executive summary
         if adapted.executive_summary:
             adapted.executive_summary = await self._rewrite_text(
-                adapted.executive_summary, system_prompt
+                adapted.executive_summary, system_prompt, llm_service
             )
             # Verify citations survived
             adapted.executive_summary = self._restore_citations(
@@ -95,41 +95,48 @@ class LanguageAdapter:
             for section in sections:
                 # Rewrite issue_statement
                 section.issue_statement = await self._rewrite_text(
-                    section.issue_statement, system_prompt
+                    section.issue_statement, system_prompt, llm_service
                 )
                 # Rewrite conclusion
                 if section.conclusion:
                     section.conclusion = await self._rewrite_text(
-                        section.conclusion, system_prompt
+                        section.conclusion, system_prompt, llm_service
                     )
                 # DO NOT rewrite: authority citations, element names, fact text
                 # These are structured data, not prose
 
         return adapted
 
-    async def _rewrite_text(self, text: str, system_prompt: str) -> str:
-        """Rewrite a text passage via LLM.
+    async def _rewrite_text(
+        self, text: str, system_prompt: str, llm_service: Any
+    ) -> str:
+        """Rewrite a text passage at the target reading level via LLM.
 
-        This is the integration point for alea-llm-client. In production,
-        uses llm_service to make the actual LLM call. This method can be
-        mocked in tests.
+        Falls back to the original text on empty input, LLM failure, or a null
+        service — the memo must still render even if adaptation is unavailable.
 
         Args:
             text: Original text to rewrite.
             system_prompt: System prompt defining the target language level.
+            llm_service: LLMService providing acomplete().
 
         Returns:
-            Rewritten text.
+            Rewritten text, or the original on any failure.
         """
-        # In production, this would call:
-        #   model = _PROVIDER_MODEL_MAP[llm_service.provider](**llm_service.get_client_config())
-        #   response = await model.generate(prompt=text, system=system_prompt)
-        #   return response.text
-        #
-        # For now, return the original text -- actual LLM wiring happens
-        # when the orchestrator connects all services.
-        logger.info("LanguageAdapter._rewrite_text called (production uses LLM)")
-        return text
+        if not text or not text.strip():
+            return text
+        if llm_service is None:
+            return text
+        try:
+            rewritten = await llm_service.acomplete(
+                [{"role": "user", "content": text}], system_prompt=system_prompt
+            )
+            return rewritten or text
+        except Exception:
+            logger.warning(
+                "LanguageAdapter rewrite failed; keeping original text", exc_info=True
+            )
+            return text
 
     @staticmethod
     def _extract_citations(context: OutputContext) -> set[str]:
