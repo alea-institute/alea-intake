@@ -1,0 +1,235 @@
+<title>alea-intake — Persona UAT Campaign</title>
+<style>
+  :root {
+    --bg: #f6f6f3; --surface: #ffffff; --surface-2: #fbfbf9;
+    --ink: #1a1c22; --muted: #5c6170; --faint: #878c9b;
+    --hair: #e6e5e0; --hair-strong: #d7d6cf;
+    --accent: #3b4aa0; --accent-soft: #ecedf8;
+    --good: #1f7a52; --good-soft: #e6f2ea;
+    --warn: #9a6a12; --warn-soft: #f6eeda;
+    --crit: #b23a34; --crit-soft: #f7e7e5;
+    --shadow: 0 1px 2px rgba(20,22,34,.05), 0 8px 24px -12px rgba(20,22,34,.12);
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101118; --surface: #191b23; --surface-2: #15171e;
+      --ink: #e9e9ef; --muted: #9aa0b2; --faint: #6f7488;
+      --hair: #282a34; --hair-strong: #343747;
+      --accent: #8f9dff; --accent-soft: #20233a;
+      --good: #4fb487; --good-soft: #14271f;
+      --warn: #d8a53f; --warn-soft: #2c2513;
+      --crit: #e07a72; --crit-soft: #2e1a19;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f6f3; --surface: #ffffff; --surface-2: #fbfbf9;
+    --ink: #1a1c22; --muted: #5c6170; --faint: #878c9b;
+    --hair: #e6e5e0; --hair-strong: #d7d6cf;
+    --accent: #3b4aa0; --accent-soft: #ecedf8;
+    --good: #1f7a52; --good-soft: #e6f2ea;
+    --warn: #9a6a12; --warn-soft: #f6eeda;
+    --crit: #b23a34; --crit-soft: #f7e7e5;
+    --shadow: 0 1px 2px rgba(20,22,34,.05), 0 8px 24px -12px rgba(20,22,34,.12);
+  }
+  :root[data-theme="dark"] {
+    --bg: #101118; --surface: #191b23; --surface-2: #15171e;
+    --ink: #e9e9ef; --muted: #9aa0b2; --faint: #6f7488;
+    --hair: #282a34; --hair-strong: #343747;
+    --accent: #8f9dff; --accent-soft: #20233a;
+    --good: #4fb487; --good-soft: #14271f;
+    --warn: #d8a53f; --warn-soft: #2c2513;
+    --crit: #e07a72; --crit-soft: #2e1a19;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.55);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); line-height: 1.55;
+    -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 34px 20px 80px; }
+
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--faint); }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(28px, 6vw, 40px);
+    line-height: 1.08; letter-spacing: -.01em; text-wrap: balance; margin: 10px 0 6px; }
+  h2 { font-family: var(--serif); font-weight: 600; font-size: 21px; letter-spacing: -.01em;
+    margin: 40px 0 14px; padding-top: 22px; border-top: 1px solid var(--hair); }
+  h2 .n { font-family: var(--mono); font-size: 12px; color: var(--accent);
+    letter-spacing: .1em; margin-right: 10px; vertical-align: 2px; }
+  p { margin: 0 0 12px; color: var(--ink); }
+  .lede { font-size: 17px; color: var(--muted); max-width: 62ch; }
+  code { font-family: var(--mono); font-size: .86em; background: var(--surface-2);
+    border: 1px solid var(--hair); border-radius: 5px; padding: 1px 5px; word-break: break-word; }
+  a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono);
+    font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+    padding: 3px 9px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap; }
+  .chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .c-good { color: var(--good); background: var(--good-soft); border-color: color-mix(in srgb, var(--good) 25%, transparent); }
+  .c-warn { color: var(--warn); background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 25%, transparent); }
+  .c-crit { color: var(--crit); background: var(--crit-soft); border-color: color-mix(in srgb, var(--crit) 25%, transparent); }
+  .c-accent { color: var(--accent); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
+
+  .topline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 16px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 8px 0 4px; }
+  .tile { background: var(--surface); border: 1px solid var(--hair); border-radius: 12px;
+    padding: 15px 16px; box-shadow: var(--shadow); }
+  .tile .k { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+  .tile .v { font-family: var(--serif); font-size: 27px; font-weight: 600; letter-spacing: -.01em;
+    margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .tile .s { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  .card { background: var(--surface); border: 1px solid var(--hair); border-radius: 12px;
+    padding: 16px 18px; margin: 12px 0; box-shadow: var(--shadow);
+    border-left: 3px solid var(--edge, var(--hair-strong)); }
+  .card.good { --edge: var(--good); }
+  .card.warn { --edge: var(--warn); }
+  .card.crit { --edge: var(--crit); }
+  .card h3 { margin: 0 0 6px; font-size: 16px; font-weight: 650; display: flex;
+    align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .card h3 .id { font-family: var(--mono); font-size: 11px; color: var(--faint);
+    letter-spacing: .04em; font-weight: 500; }
+  .card p { font-size: 14.5px; color: var(--muted); margin: 0 0 8px; }
+  .card p:last-child { margin-bottom: 0; }
+  .card .fix { color: var(--ink); }
+  .card .fix b { color: var(--good); font-weight: 650; }
+
+  .callout { background: var(--crit-soft); border: 1px solid color-mix(in srgb, var(--crit) 30%, transparent);
+    border-radius: 12px; padding: 18px 20px; margin: 14px 0; }
+  .callout h3 { margin: 0 0 8px; font-family: var(--serif); font-size: 18px; color: var(--crit); }
+  .callout p { color: var(--ink); font-size: 14.5px; }
+  .callout .steps { margin: 10px 0 0; padding-left: 0; list-style: none; display: grid; gap: 8px; }
+  .callout .steps li { font-size: 14px; padding-left: 20px; position: relative; }
+  .callout .steps li::before { content: "→"; position: absolute; left: 0; color: var(--crit); font-weight: 700; }
+
+  ol.next { counter-reset: s; list-style: none; padding: 0; margin: 6px 0; display: grid; gap: 10px; }
+  ol.next li { position: relative; padding-left: 38px; font-size: 14.5px; color: var(--ink); }
+  ol.next li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: -1px;
+    width: 24px; height: 24px; border-radius: 7px; background: var(--accent-soft); color: var(--accent);
+    font-family: var(--mono); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  ol.next li .g { color: var(--faint); font-size: 12.5px; }
+
+  ul.links { list-style: none; padding: 0; margin: 6px 0; display: grid; gap: 2px; }
+  ul.links li { padding: 8px 0; border-bottom: 1px solid var(--hair); display: flex; gap: 12px;
+    justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+  ul.links li:last-child { border-bottom: 0; }
+  ul.links .path { font-family: var(--mono); font-size: 12.5px; color: var(--muted); word-break: break-all; }
+  ul.links .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--faint); white-space: nowrap; }
+
+  .foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--hair);
+    font-size: 12.5px; color: var(--faint); }
+  .foot code { font-size: 12px; }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Lane 3 · Access-to-Justice intake · UAT campaign</div>
+  <h1>alea-intake — synthetic-persona UAT</h1>
+  <p class="lede">Driving three synthetic legal-aid clients through the live dev server, judged
+    against a locked quality rubric. This page is the campaign's evidence pack — readable on any device.</p>
+  <div class="topline">
+    <span class="chip c-warn">State · Blocked</span>
+    <span class="chip c-good">Dev deploy · Healthy</span>
+    <span class="chip c-good">Tests · 1069 pass</span>
+    <span class="chip c-accent">Rubric · Locked v1.0</span>
+  </div>
+
+  <h2 id="ep-summary"><span class="n">01</span>At a glance</h2>
+  <div class="grid">
+    <div class="tile"><div class="k">Defects fixed</div><div class="v">4</div><div class="s">3 stubs + 1 wiring gap</div></div>
+    <div class="tile"><div class="k">Shipped to dev</div><div class="v">4 / 4</div><div class="s">commit 60edcf9, healthy</div></div>
+    <div class="tile"><div class="k">Backend tests</div><div class="v">1069</div><div class="s">+41 this campaign · 0 fail</div></div>
+    <div class="tile"><div class="k">Personas</div><div class="v">3</div><div class="s">of a planned 8–10</div></div>
+  </div>
+  <p style="font-size:14.5px;color:var(--muted);margin-top:14px">A persona UAT campaign surfaced that the app's
+    UI and API scaffolding was complete and unit-tested, but its <b style="color:var(--ink)">LLM seams were never
+    wired</b> — every real intake produced an empty analysis, invisible to the passing test suite. All four defects
+    are now fixed, tested, and deployed. One external blocker remains before the findings can be validated live.</p>
+
+  <h2 id="ep-findings"><span class="n">02</span>Findings &amp; fixes</h2>
+
+  <div class="card crit">
+    <h3>Analysis pipeline was inert <span class="id">EP-INTAKE-BUG-1 · critical</span> <span class="chip c-good">Fixed</span></h3>
+    <p>Fact extraction was never invoked by any ingestion path (text, document, or voice), so the analysis
+      orchestrator always loaded zero facts → 0 claims, 0 gaps, empty memo. It passed 1045 unit tests because
+      extraction was only ever tested in isolation; the ingestion→analysis seam had no end-to-end test.</p>
+    <p class="fix"><b>Fixed:</b> a fact-extraction backfill at analysis-trigger time — one idempotent wiring point
+      covering every modality. Validated live: the pipeline now finds and processes messages.</p>
+  </div>
+
+  <div class="card warn">
+    <h3>Conversation was a stub <span class="id">EP-INTAKE-BUG-2 · high</span> <span class="chip c-good">Fixed</span></h3>
+    <p>The intake chatbot never called the LLM — it returned the same canned sentence to every message
+      (<code>"Thank you for sharing that…"</code>).</p>
+    <p class="fix"><b>Fixed:</b> added a shared <code>LLMService.acomplete()</code> text helper and wired the
+      conversational response through it, with a graceful fallback.</p>
+  </div>
+
+  <div class="card warn">
+    <h3>Plain-language memo was a no-op <span class="id">EP-INTAKE-RUB-10 · high</span> <span class="chip c-good">Fixed</span></h3>
+    <p>The reading-level adapter returned text unchanged, so consumer memos stayed at attorney reading level —
+      failing the accessibility bar for stressed, mixed-literacy clients.</p>
+    <p class="fix"><b>Fixed:</b> the adapter now rewrites prose at the profile's reading level (6th–8th grade),
+      preserving legal citations verbatim.</p>
+  </div>
+
+  <div class="card good">
+    <h3>Deadline / SOL detection built <span class="id">EP-INTAKE-II.3.1 · feature</span> <span class="chip c-good">Shipped</span></h3>
+    <p>The highest-stakes consumer value — missed deadlines end cases — didn't exist (deadlines were hardcoded
+      empty). Now a "detect + hedge" engine extracts time-sensitive events, computes dates from a cited,
+      human-reviewed Minnesota rule table, and surfaces them in a prominent, hedged memo section.</p>
+    <p class="fix"><b>Verified</b> deterministically against every persona's planted deadline (e.g. served
+      Jun 15 → response due Jul 15; asylum one-year window flagged <i>lapsed</i>).</p>
+  </div>
+
+  <div class="card crit">
+    <h3>Dev server's LLM key is non-functional <span class="id">EP-INTAKE-BUG-3 · blocker</span> <span class="chip c-crit">Open</span></h3>
+    <p>Fixing the wiring above exposed that the dev server's LLM provider itself doesn't work — invisible until
+      now because every LLM path was stubbed, so the credential was never exercised. This blocks live validation
+      of all of the above. It needs Railway access to resolve (see below).</p>
+  </div>
+
+  <h2 id="ep-blocker"><span class="n">03</span>The one thing in the way</h2>
+  <div class="callout">
+    <h3>Railway credentials → dev LLM key</h3>
+    <p>Everything is fixed and deployed; the retest → judge → close loop just needs a working LLM on the dev
+      server. The Railway CLI is de-authenticated and the token isn't in an agent-readable location
+      (<code>twin-secrets</code> is SOPS-encrypted and guarded). Either path unblocks it:</p>
+    <ul class="steps">
+      <li>Re-auth Railway: <code>script -qfc "railway login --browserless" /tmp/pair.log</code> → open the printed URL → confirm.</li>
+      <li>Or pull a token yourself: <code>cd twin-secrets &amp;&amp; sops -d secrets.enc.yaml | grep -i railway</code>.</li>
+    </ul>
+  </div>
+
+  <h2 id="ep-next"><span class="n">04</span>What happens on unblock</h2>
+  <ol class="next">
+    <li>Set the LLM key + switch dev to a cheap model, redeploy. <span class="g">Fast restart, no rebuild.</span></li>
+    <li>Retest all three personas end-to-end against the live server.</li>
+    <li>Judge vs the locked rubric — deterministic FOLIO checks + the hidden answer-key oracle.</li>
+    <li>Populate this evidence pack with per-persona scores, then close v1.0 UAT.</li>
+    <li>Reconcile the stale roadmap against authoritative project state. <span class="g">Ungated — can run anytime.</span></li>
+  </ol>
+
+  <h2 id="ep-links"><span class="n">05</span>Artifacts</h2>
+  <p style="font-size:13.5px;color:var(--muted)">Repo paths are inside the working directory (openable from Remote
+    Control); the rubric is also a shared web doc for inline comments on any device.</p>
+  <ul class="links">
+    <li><span>Quality rubric v1.0 — <a href="https://www.proofeditor.ai/d/1o0wx49u?token=26ed3076-a50c-4812-820a-9ab045ad8c7f">open in Proof</a></span><span class="tag">web · mobile</span></li>
+    <li><span class="path">docs/rubrics/intake-quality-v1.md</span><span class="tag">repo</span></li>
+    <li><span class="path">docs/plans/deadline-detection-v1.md</span><span class="tag">repo</span></li>
+    <li><span class="path">docs/evidence/persona-campaign/personas/ANSWER-KEYS.md</span><span class="tag">repo · oracle</span></li>
+    <li><span class="path">scripts/persona_run.py · folio_check.py</span><span class="tag">repo · harness</span></li>
+  </ul>
+
+  <div class="foot">
+    Campaign STATE marker: <code>blocked</code> · dev <code>alea-intake-dev-production.up.railway.app</code>
+    @ <code>60edcf9</code> · rubric <code>intake-quality-v1.0</code>. Findings carry stable
+    <code>EP-INTAKE-*</code> IDs for reference. Last updated 2026-07-05.
+  </div>
+</div>
