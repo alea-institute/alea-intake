@@ -6,9 +6,9 @@ fact-claim mappings, gaps, and follow-up questions. Supports checkpoint
 persistence for pause/resume and audit trail for every stage.
 """
 
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import Boolean, Float, Integer, JSON, String, Text, func
+from sqlalchemy import Boolean, Date, Float, Integer, JSON, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import TenantBase
@@ -131,6 +131,40 @@ class AnalysisGap(TenantBase):
     iteration_found: Mapped[int] = mapped_column(Integer, nullable=False)
     iteration_resolved: Mapped[int | None] = mapped_column(Integer, nullable=True)
     metadata_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
+
+class Deadline(TenantBase):
+    """A detected time-sensitive event and its (optionally computed) deadline.
+
+    Part of the v1 "detect + hedge" deadline/SOL engine. Every row surfaces a
+    time-sensitive event from the intake narrative or documents. Where a
+    verified rule in ``app/services/deadline/rules.py`` applies, ``computed`` is
+    True and ``computed_date`` holds an estimated date with a ``citation``;
+    otherwise the event is "detected + hedged only" (``computed=False``).
+    ``hedge`` always carries a "verify the exact date" caveat.
+    """
+
+    __tablename__ = "deadlines"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    intake_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    run_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    event_text: Mapped[str] = mapped_column(Text, nullable=False)
+    event_type: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    trigger: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    trigger_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    computed_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    rule_id: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    citation: Mapped[str | None] = mapped_column(Text, nullable=True)
+    computed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    urgency: Mapped[str] = mapped_column(String(20), default="unknown", nullable=False)
+    hedge: Mapped[str] = mapped_column(Text, nullable=False)
+    jurisdiction: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    source_message_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    source_start: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    source_end: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    metadata_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
 
 class FollowUpQuestion(TenantBase):

@@ -154,7 +154,9 @@ async def generate_output(
         context.triage = triage
 
         # Step 3: Generate action items
-        action_items = action_gen.generate(context.gap_report, context.claims_by_jurisdiction)
+        action_items = action_gen.generate(
+            context.gap_report, context.claims_by_jurisdiction, context.deadlines
+        )
         context.action_items = action_items
 
         # Step 4: Language adaptation (skip for professional level)

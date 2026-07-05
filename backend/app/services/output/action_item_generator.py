@@ -14,6 +14,7 @@ from __future__ import annotations
 from app.services.output.schemas import (
     ActionItem,
     CIRACSection,
+    DeadlineRef,
     GapReport,
 )
 
@@ -51,17 +52,43 @@ class ActionItemGenerator:
         self,
         gap_report: GapReport,
         claims_by_jurisdiction: dict[str, list[CIRACSection]],
+        deadlines: list[DeadlineRef] | None = None,
     ) -> list[ActionItem]:
-        """Generate action items from a gap report.
+        """Generate action items from a gap report and detected deadlines.
 
         Args:
             gap_report: Consolidated gap report with per-claim and global gaps.
             claims_by_jurisdiction: Claims grouped by jurisdiction (for referral detection).
+            deadlines: Detected deadlines (v1 "detect + hedge"). Computed deadlines
+                become urgent action items with ``ActionItem.deadline`` populated.
 
         Returns:
             Sorted list of ActionItem, numbered starting at 1.
         """
         items: list[ActionItem] = []
+
+        # 0. Deadline-driven action items (highest stakes). Populates the
+        #    previously-hardcoded ActionItem.deadline field.
+        for d in deadlines or []:
+            if not d.computed or not d.computed_date:
+                continue
+            priority = "urgent" if d.urgency in ("lapsed", "high") else "important"
+            lapsed_prefix = "PAST-DUE? " if d.urgency == "lapsed" else ""
+            items.append(
+                ActionItem(
+                    item_number=0,
+                    category="follow_up_steps",
+                    description=(
+                        f"{lapsed_prefix}Confirm the deadline for: {d.event_text} "
+                        f"(estimated {d.computed_date}"
+                        f"{'; ' + d.citation if d.citation else ''}). {d.hedge}"
+                    ),
+                    priority=priority,
+                    deadline=d.computed_date,
+                    claim_ref=None,
+                    element_ref=None,
+                )
+            )
 
         # 1. Generate items from consolidated gaps
         for gap in gap_report.consolidated_gaps:

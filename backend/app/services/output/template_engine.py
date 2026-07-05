@@ -58,6 +58,12 @@ class TemplateEngine:
         """
         sections: list[str] = []
 
+        # Deadlines & time-sensitive items -- rendered FIRST (before CIRAC), high
+        # stakes, always hedged. Shown whenever any deadline was detected,
+        # independent of profile section toggles.
+        if context.deadlines:
+            sections.append(self.render_section("deadlines.md.j2", context, profile))
+
         # Executive summary
         if (
             profile.sections.get("executive_summary", False)

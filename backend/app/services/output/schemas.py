@@ -155,6 +155,31 @@ class ActionItem(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Deadlines (v1 "detect + hedge")
+# ---------------------------------------------------------------------------
+
+
+class DeadlineRef(BaseModel):
+    """A detected time-sensitive item for the memo's top "Deadlines" section.
+
+    Dates are ISO 8601 strings (or None) so templates render them directly.
+    ``hedge`` always carries a "verify the exact date" caveat.
+    """
+
+    event_text: str
+    event_type: str | None = None
+    trigger: str | None = None
+    trigger_date: str | None = None
+    computed_date: str | None = None
+    rule_id: str | None = None
+    citation: str | None = None
+    computed: bool = False
+    urgency: str = "unknown"
+    hedge: str = ""
+    jurisdiction: str | None = None
+
+
+# ---------------------------------------------------------------------------
 # Org branding
 # ---------------------------------------------------------------------------
 
@@ -205,6 +230,7 @@ class OutputContext(BaseModel):
     matter_title: str
     generated_at: datetime
     claims_by_jurisdiction: dict[str, list[CIRACSection]] = Field(default_factory=dict)
+    deadlines: list[DeadlineRef] = Field(default_factory=list)
     triage: TriageResult | None = None
     action_items: list[ActionItem] = Field(default_factory=list)
     gap_report: GapReport = Field(default_factory=GapReport)

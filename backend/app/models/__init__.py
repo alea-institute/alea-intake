@@ -7,6 +7,7 @@ from app.models.analysis import (
     AnalysisRun,
     AnalysisStage,
     ClaimElement,
+    Deadline,
     FactClaimMapping,
     FollowUpQuestion,
 )
@@ -60,6 +61,7 @@ __all__ = [
     "ConsentRecord",
     "ClaimElement",
     "ConsentTemplate",
+    "Deadline",
     "ExtractedFact",
     "FactClaimMapping",
     "FactSourceSpan",

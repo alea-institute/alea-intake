@@ -23,6 +23,7 @@ from app.models.analysis import (
     AnalysisRun,
     AnalysisStage,
     ClaimElement,
+    Deadline,
     FactClaimMapping,
     FollowUpQuestion,
 )
@@ -105,6 +106,20 @@ async def trigger_analysis(
     trigger = AnalysisTrigger(db_session=db, orchestrator=orchestrator)
 
     run = await trigger.manual_trigger(intake_id=intake_id, session_id=0)
+
+    # Detect + hedge time-sensitive deadlines / SOL for this run. Runs after the
+    # run exists (so Deadline rows carry run_id) and degrades gracefully -- an
+    # LLM/parse failure yields zero deadlines and never fails the analysis.
+    try:
+        from app.services.analysis.stages.deadline_detect import DeadlineDetectStage
+
+        deadline_stage = DeadlineDetectStage(llm_service=llm_service, db_session=db)
+        deadlines = await deadline_stage.detect_and_persist(
+            intake_id=intake_id, run_id=run.id
+        )
+        logger.info("Deadline detection produced %d deadlines for intake %d", len(deadlines), intake_id)
+    except Exception:
+        logger.warning("Deadline detection failed for intake %d", intake_id, exc_info=True)
 
     return {
         "run_id": run.id,
@@ -252,12 +267,36 @@ async def get_analysis_results(
         for q in questions
     ]
 
+    # Load deadlines (v1 "detect + hedge")
+    deadlines_result = await db.execute(
+        select(Deadline).where(Deadline.run_id == run.id)
+    )
+    deadlines = deadlines_result.scalars().all()
+    deadlines_data = [
+        {
+            "id": d.id,
+            "event_text": d.event_text,
+            "event_type": d.event_type,
+            "trigger": d.trigger,
+            "trigger_date": d.trigger_date.isoformat() if d.trigger_date else None,
+            "computed_date": d.computed_date.isoformat() if d.computed_date else None,
+            "rule_id": d.rule_id,
+            "citation": d.citation,
+            "computed": d.computed,
+            "urgency": d.urgency,
+            "hedge": d.hedge,
+            "jurisdiction": d.jurisdiction,
+        }
+        for d in deadlines
+    ]
+
     return {
         "run_id": run.id,
         "status": run.status,
         "claims": claims_data,
         "gaps": gaps_data,
         "questions": questions_data,
+        "deadlines": deadlines_data,
     }
 
 

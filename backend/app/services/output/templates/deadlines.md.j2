@@ -1,0 +1,33 @@
+{# Deadlines & Time-Sensitive Items -- rendered FIRST, before CIRAC (v1 "detect + hedge").
+   Every item is hedged: a computed date is always presented as an estimate to verify,
+   and events without a matching rule are surfaced as "date unclear". #}
+# ⏰ Deadlines & Time-Sensitive Items
+
+> **Read this first.** Missing a legal deadline can end a case. The dates below are
+> estimates generated automatically — **always confirm the exact date with the court
+> or a lawyer.**
+
+{% for d in context.deadlines %}
+{% if d.urgency == "lapsed" %}
+## ⛔ {{ d.event_text }} — DEADLINE MAY HAVE PASSED
+{% else %}
+## ⚠️ {{ d.event_text }}
+{% endif %}
+{% if d.computed and d.computed_date %}
+- **Estimated deadline:** {{ d.computed_date }}
+{% if d.citation %}
+- **Basis:** {{ d.citation }}
+{% endif %}
+{% else %}
+- **Estimated deadline:** date unclear — this time-sensitive item needs an exact date.
+{% endif %}
+{% if d.trigger_date %}
+- **Triggering event:** {{ d.trigger | replace("_", " ") }} on {{ d.trigger_date }}
+{% endif %}
+{% if d.jurisdiction %}
+- **Jurisdiction:** {{ d.jurisdiction }}
+{% endif %}
+- *{{ d.hedge }}*
+
+{% endfor %}
+---

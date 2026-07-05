@@ -18,6 +18,7 @@ from app.models.analysis import (
     AnalysisGap,
     AnalysisRun,
     ClaimElement,
+    Deadline,
     FactClaimMapping,
     FollowUpQuestion,
 )
@@ -28,6 +29,7 @@ from app.services.output.gap_report_builder import GapReportBuilder
 from app.services.output.schemas import (
     AuthorityRef,
     CIRACSection,
+    DeadlineRef,
     ElementRef,
     FactMappingRef,
     GapEntry,
@@ -38,6 +40,9 @@ from app.services.output.schemas import (
 
 # Binding strength ordering: lower = higher priority
 _BINDING_ORDER = {"binding": 0, "persuasive": 1, "secondary": 2}
+
+# Urgency ordering for the top deadlines section: lower = more prominent.
+_URGENCY_ORDER = {"lapsed": 0, "high": 1, "medium": 2, "low": 3, "unknown": 4}
 
 
 class DataAssembler:
@@ -72,6 +77,7 @@ class DataAssembler:
         all_gaps = await self._load_all_open_gaps(run_id)
         questions = await self._load_questions(run_id)
         authorities = await self._load_authorities(intake_id)
+        deadlines = await self._load_deadlines(run_id)
 
         # Build CIRAC sections
         sections_by_jurisdiction: dict[str, list[CIRACSection]] = defaultdict(list)
@@ -198,6 +204,7 @@ class DataAssembler:
             matter_title=matter_title,
             generated_at=datetime.now(timezone.utc),
             claims_by_jurisdiction=dict(sections_by_jurisdiction),
+            deadlines=deadlines,
             triage=None,
             action_items=[],
             gap_report=gap_report,
@@ -304,6 +311,31 @@ class DataAssembler:
             select(Authority).where(Authority.intake_id == intake_id)
         )
         return list(result.scalars().all())
+
+    async def _load_deadlines(self, run_id: int) -> list[DeadlineRef]:
+        """Load Deadline rows for the run as DeadlineRefs, sorted by urgency."""
+        result = await self._session.execute(
+            select(Deadline).where(Deadline.run_id == run_id)
+        )
+        rows = result.scalars().all()
+        refs = [
+            DeadlineRef(
+                event_text=d.event_text,
+                event_type=d.event_type,
+                trigger=d.trigger,
+                trigger_date=d.trigger_date.isoformat() if d.trigger_date else None,
+                computed_date=d.computed_date.isoformat() if d.computed_date else None,
+                rule_id=d.rule_id,
+                citation=d.citation,
+                computed=d.computed,
+                urgency=d.urgency,
+                hedge=d.hedge,
+                jurisdiction=d.jurisdiction,
+            )
+            for d in rows
+        ]
+        refs.sort(key=lambda r: _URGENCY_ORDER.get(r.urgency, 99))
+        return refs
 
     # ------------------------------------------------------------------
     # Private helpers
