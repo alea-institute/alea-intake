@@ -1,0 +1,23 @@
+{
+  "notes": "Default ports 8000 (backend) and 5432 (postgres) conflict with the ontokit project when it's running. This config uses alternate ports. Vite proxy target is controlled by VITE_API_TARGET env var (vite.config.ts falls back to :8000 if unset).",
+  "servers": [
+    {
+      "name": "postgres (pgvector)",
+      "cwd": ".",
+      "command": "docker start alea-intake-db || docker run -d --name alea-intake-db -e POSTGRES_DB=alea_intake -e POSTGRES_USER=alea -e POSTGRES_PASSWORD=devpassword -p 5433:5432 pgvector/pgvector:pg17",
+      "url": "postgresql://alea:devpassword@localhost:5433/alea_intake"
+    },
+    {
+      "name": "backend (FastAPI)",
+      "cwd": "backend",
+      "command": "PYTHONPATH=. ALEA_SECRET_KEY=$(openssl rand -hex 32) ALEA_DB_PORT=5433 ALEA_DB_PASSWORD=devpassword ALEA_MASTER_KEY_PATH=./data/master.key ALEA_CORS_ORIGINS='[\"http://localhost:8923\"]' ALEA_FRONTEND_BASE_URL=http://localhost:8923 ALEA_OAUTH_REDIRECT_BASE_URL=http://localhost:8001 uv run uvicorn app.main:app --host 0.0.0.0 --port 8001",
+      "url": "http://localhost:8001"
+    },
+    {
+      "name": "frontend (Vite)",
+      "cwd": "frontend",
+      "command": "VITE_API_TARGET=http://localhost:8001 npm run dev",
+      "url": "http://localhost:8923"
+    }
+  ]
+}
