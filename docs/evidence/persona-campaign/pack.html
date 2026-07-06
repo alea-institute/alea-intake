@@ -137,7 +137,7 @@
     <span class="chip c-warn">State · Blocked</span>
     <span class="chip c-good">Dev deploy · Healthy</span>
     <span class="chip c-good">Tests · 1069 pass</span>
-    <span class="chip c-accent">Rubric · Locked v1.0</span>
+    <span class="chip c-accent">Rubric · Locked v1.1</span>
   </div>
 
   <h2 id="ep-summary"><span class="n">01</span>At a glance</h2>
@@ -175,17 +175,19 @@
     <h3>Plain-language memo was a no-op <span class="id">EP-INTAKE-RUB-10 · high</span> <span class="chip c-good">Fixed</span></h3>
     <p>The reading-level adapter returned text unchanged, so consumer memos stayed at attorney reading level —
       failing the accessibility bar for stressed, mixed-literacy clients.</p>
-    <p class="fix"><b>Fixed:</b> the adapter now rewrites prose at the profile's reading level (6th–8th grade),
-      preserving legal citations verbatim.</p>
+    <p class="fix"><b>Fixed:</b> the adapter now rewrites prose at the profile's reading level (~6th grade per
+      rubric v1.1), preserving legal citations verbatim.</p>
   </div>
 
   <div class="card good">
-    <h3>Deadline / SOL detection built <span class="id">EP-INTAKE-II.3.1 · feature</span> <span class="chip c-good">Shipped</span></h3>
+    <h3>Deadline / SOL detection built <span class="id">EP-INTAKE-II.3.1 · feature</span> <span class="chip c-warn">Framework shipped</span></h3>
     <p>The highest-stakes consumer value — missed deadlines end cases — didn't exist (deadlines were hardcoded
-      empty). Now a "detect + hedge" engine extracts time-sensitive events, computes dates from a cited,
-      human-reviewed Minnesota rule table, and surfaces them in a prominent, hedged memo section.</p>
-    <p class="fix"><b>Verified</b> deterministically against every persona's planted deadline (e.g. served
-      Jun 15 → response due Jul 15; asylum one-year window flagged <i>lapsed</i>).</p>
+      empty). Shipped the engine framework: extracts time-sensitive events, computes dates from a cited MN +
+      generic rule table, surfaces a prominent memo section. <b>Verified</b> deterministically against every
+      persona's deadline (served Jun 15 → response due Jul 15; asylum one-year window flagged <i>lapsed</i>).</p>
+    <p class="fix">Rubric <b>v1.1</b> now requires deadlines <b>computed, correct, and primary-source-cited for
+      the client's actual state across all 50 states</b> — a staged legal-content pipeline beyond the shipped
+      MN seed (see the deadline plan).</p>
   </div>
 
   <div class="card crit">
@@ -221,7 +223,8 @@
     Control); the rubric is also a shared web doc for inline comments on any device.</p>
   <ul class="links">
     <li><span>Quality rubric v1.0 — <a href="https://www.proofeditor.ai/d/1o0wx49u?token=26ed3076-a50c-4812-820a-9ab045ad8c7f">open in Proof</a></span><span class="tag">web · mobile</span></li>
-    <li><span class="path">docs/rubrics/intake-quality-v1.md</span><span class="tag">repo</span></li>
+    <li><span class="path">docs/rubrics/intake-quality-v1.md</span><span class="tag">repo · v1.1</span></li>
+    <li><span class="path">docs/rubrics/practice-areas/ — landlord-tenant · family-law · immigration</span><span class="tag">repo · oracles</span></li>
     <li><span class="path">docs/plans/deadline-detection-v1.md</span><span class="tag">repo</span></li>
     <li><span class="path">docs/evidence/persona-campaign/personas/ANSWER-KEYS.md</span><span class="tag">repo · oracle</span></li>
     <li><span class="path">scripts/persona_run.py · folio_check.py</span><span class="tag">repo · harness</span></li>
@@ -229,7 +232,7 @@
 
   <div class="foot">
     Campaign STATE marker: <code>blocked</code> · dev <code>alea-intake-dev-production.up.railway.app</code>
-    @ <code>60edcf9</code> · rubric <code>intake-quality-v1.0</code>. Findings carry stable
+    @ <code>60edcf9</code> · rubric <code>intake-quality-v1.1</code>. Findings carry stable
     <code>EP-INTAKE-*</code> IDs for reference. Last updated 2026-07-05.
   </div>
 </div>
