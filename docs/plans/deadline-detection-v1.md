@@ -1,9 +1,25 @@
-# Plan — Deadline / SOL Detection (v1, "detect + hedge")
+# Plan — Deadline / SOL Detection
 
-**Type:** CE feature (new work; improvement II.3.1). **Rubric:** satisfies RUB-INTAKE-08
-(surfacing) and RUB-INTAKE-09 (accuracy/honesty) under the **locked v1.0 "detect + hedge"**
-decision — surface time-sensitive events prominently with a "verify the exact date" hedge;
-compute a date only where a verified rule exists; never state a confident wrong date.
+**Type:** CE feature (new work; improvement II.3.1). **Rubric:** must satisfy RUB-INTAKE-08
+(detect + compute + surface) and RUB-INTAKE-09 (correct + primary-source-cited) under the
+**locked v1.1 "required" decision** (Damien, 2026-07-05).
+
+> **Scope revised 2026-07-05 (Damien):** deadlines are **REQUIRED, computed, correct, and
+> cited to primary sources** — statutes, regulations, court rules (civil/criminal/local),
+> judicial standing orders, and any other applicable primary authority — for the client's
+> **actual state, across all 50 U.S. states** (plus federal authority for immigration). This
+> is a large expansion over the shipped v1 "MN + generic, hedged" engine. Staged below:
+> the shipped engine is the framework + seed; reaching 50-state correctness is a legal-content
+> pipeline, honestly a multi-step CE effort, not a one-shot code change.
+
+## Status (what's shipped vs remaining)
+- **Shipped (v1, deployed):** the framework — `DeadlineEvent`/`Deadline` model, pure
+  `compute_deadlines` engine, a small **cited** MN + generic rule table, LLM event detection,
+  and prominent memo/action-item surfacing. Deterministic date math unit-tested.
+- **Remaining (v1.1 target):** (a) drop hedge-as-default → compute-and-assert with a required
+  primary-source citation; (b) scale the rule coverage from MN+generic to **all 50 states ×
+  the covered matter types**, grounded in primary sources (see "50-state scaling" below);
+  (c) per-deadline citation to the governing authority surfaced in the memo.
 
 ## Problem
 The pipeline has no deadline/SOL detection (`ActionItem.deadline` hardcoded `None`, no date
@@ -18,12 +34,36 @@ all of them prominently in the memo + action items, always hedged. Deterministic
 (gestalt): LLM extracts events (probabilistic) → deterministic rule table + date math →
 deterministic surfacing.
 
-## Non-goals (v1)
-- No comprehensive 50-state rule library. **Minnesota + a tiny generic ruleset only**, each
-  rule human-reviewed and cited. Everything else is "detected + hedged, not computed."
-- No calendar/ICS export, no reminders/notifications (II.3.1 later phases).
-- No change to the "detect + hedge" gate — a computed date is always presented as "estimated,
-  verify."
+## Non-goals
+- No calendar/ICS export, no reminders/notifications yet (later II.3.1 phases).
+- Not attempting to hand-curate every deadline for every matter type in one pass — coverage
+  grows state-by-state, matter-by-matter, each entry cited + verified before it's trusted
+  (see scaling). Uncovered (state, matter) pairs must **fail loudly / escalate**, never emit
+  an uncited guess presented as authoritative (that would fail RUB-INTAKE-09).
+
+## 50-state scaling — how "required + correct + primary-source-cited" is actually reached
+The rule table cannot be a hardcoded MN block. Structure it as a **jurisdiction-keyed rule
+registry** `rules[state][matter_type] -> [DeadlineRule{trigger, compute_fn, citation, source_url,
+verified_by, verified_on}]`, populated by a **gestalt pipeline** (deterministic-first, LLM in
+the middle, deterministic verify):
+1. **Retrieve primary sources** for a (state, matter, trigger): statutes, court rules
+   (civil/criminal/local), standing orders — from an authoritative corpus (e.g. official state
+   code/rules sites, CourtListener, a licensed rules dataset). This is a data-acquisition task
+   as much as code.
+2. **Extract candidate rules** with an LLM (e.g. "response due N days after service under Rule
+   X") — each candidate carries the quoted source text + citation.
+3. **Verify deterministically before trust:** the computed offset must be reproducible by pure
+   date math; the citation must resolve; a legal reviewer (or a high-bar LLM-judge + spot
+   human review) signs off. Only **verified** rules become active; unverified → escalate/gap,
+   never a confident output.
+4. **Seed order:** persona states first (MN), then highest-A2J-need states, expanding on a
+   cadence; each state's coverage tracked. Immigration = federal authority (INA/8 CFR/EOIR)
+   plus related state-criminal deadlines.
+This is a **standalone CE feature of real size** (legal-content + verification pipeline). It
+should get its own `/ce:plan` + likely a curated/licensed rules data source; realistic honesty:
+50-state correctness is incremental, gated per (state, matter) by the verification step —
+the rubric's GATE then applies only where the app claims a computed deadline, and the app must
+escalate rather than guess where coverage is absent.
 
 ## Architecture (gestalt: probabilistic detect → deterministic compute → deterministic surface)
 

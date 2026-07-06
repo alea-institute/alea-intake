@@ -1,16 +1,16 @@
-# Intake Quality Rubric — v1.0 (LOCKED 2026-07-05)
+# Intake Quality Rubric — v1.1 (LOCKED 2026-07-05)
 
 **Rubric ID prefix:** `RUB-INTAKE-`
 **Applies to:** the alea-intake analysis pipeline output for a single client intake — the FOLIO mappings, claim/element analysis, gap analysis, deadline surfacing, plain-language memo, and export artifacts.
 **Judged against:** the client's messy first-person narrative + any uploaded documents (the *source of truth*), the FOLIO ontology (via deterministic `folio-python` checks first, FOLIO MCP for semantic-fit calls), and this rubric.
-**Status:** **LOCKED v1.0** (Damien, 2026-07-05). Shared via Proof for review; the one substantive lock decision — deadline gating — is recorded below. Campaign findings cite `intake-quality-v1.0`. Amendments bump the version and trigger re-judging of affected findings.
+**Status:** **LOCKED v1.1** (Damien, 2026-07-05). Campaign findings cite `intake-quality-v1.1`. Amendments bump the version and trigger re-judging of affected findings.
 
 **Lock decisions (Damien, 2026-07-05):**
-- **Deadlines = "detect + hedge" for v1.** RUB-INTAKE-08/09 require the system to surface time-sensitive events prominently and flag "verify the exact date"; a run is **not** GATE-failed merely for lacking exact jurisdiction computation. Full computed deadlines are the II.3.1 feature (a separate build). A *confidently-stated wrong* date still fails RUB-INTAKE-09.
-- Reading-level target (RUB-10): **6th–8th grade** (default; can tighten to 6th later).
-- i18n spot-check (RUB-12): **Spanish, Vietnamese, Chinese** each inner loop; all 7 on the final 8–10 pass (default).
-- Practice-area binding (Q4): personas run **generic/unbound** — the analysis pipeline is practice-area-agnostic (confirmed in code), so full FOLIO/claim analysis is expected without a registered practice area.
-- Group weights accepted as drafted.
+- **Deadlines are REQUIRED and must be computed correctly (v1.1 — supersedes v1.0's "detect+hedge").** RUB-INTAKE-08/09 now hard-gate: the system must **compute** each applicable deadline for the correct jurisdiction and **cite the governing primary source** — statutes, regulations, court rules (civil / criminal / local rules), judicial standing orders, and any other applicable primary authority. **Scope = any of the 50 U.S. states** (not MN-only). A missing or wrong required deadline is a GATE failure. (Reasonable, clearly-labeled hedging on genuinely ambiguous facts — e.g., "confirm your exact service date" — is still allowed where the *input* is uncertain, but the *rule and computation* must be correct and sourced.)
+- **Reading-level target (RUB-10): ~6th grade** (tightened from 6th–8th).
+- **i18n spot-check (RUB-12): English, Spanish, Chinese** each inner loop; all 7 on the final 8–10 pass.
+- **Practice-area rubrics (Q4): YES.** In addition to this general rubric, maintain **practice-area rubric addenda** (landlord-tenant, family law, immigration, + the final-pass areas) that pin the domain-specific issues, claims/elements, deadlines, and primary sources a good analysis must hit. See `docs/rubrics/practice-areas/`. (Separately, on binding: personas still run *unbound* — the pipeline is practice-area-agnostic — so the addenda are judging oracles, not a required runtime binding.)
+- Group weights accepted as drafted (deadlines remain GATE, so weight is secondary to the pass/fail gate).
 
 ---
 
@@ -89,29 +89,29 @@ When a real legal concept in the facts has **no adequate FOLIO concept**, is it 
 
 ## C. Deadline / statute-of-limitations surfacing
 
-### RUB-INTAKE-08 — Deadline detection & prominence · weight 3 · [GATE]
-Time-sensitive events in the narrative (eviction notice date, "answer due in 5 days," notice-to-quit period, SOL windows, filing deadlines) must be **detected and surfaced prominently**. Missed deadlines end cases — this is the highest-stakes consumer criterion.
-- **3:** All date-bearing/deadline-bearing events detected and surfaced up-front with the computed deadline where a rule exists.
-- **2:** Key deadline surfaced; a secondary date not computed but noted.
-- **1:** Dates echoed but not framed as deadlines / not prominent.
-- **0 / GATE fails:** A hard deadline plainly present in the facts is not surfaced at all.
-> **Accuracy caveat:** a computed deadline must be **correct or explicitly hedged**. An LLM-guessed specific deadline presented as authoritative, if wrong, is a GATE failure under RUB-INTAKE-09 — better to flag "a deadline likely applies; verify the exact date" than to state a wrong date confidently.
+### RUB-INTAKE-08 — Deadline detection, computation & prominence · weight 3 · [GATE]
+Every applicable time-sensitive event (eviction answer/hearing, response deadlines, notice-to-quit periods, SOL windows, filing deadlines) must be **detected, computed for the correct jurisdiction, and surfaced prominently** — required, not optional (v1.1). Missed deadlines end cases — the highest-stakes consumer criterion. Scope = any of the 50 U.S. states.
+- **3:** All applicable deadlines detected AND computed to a specific date/window for the correct jurisdiction, surfaced up-front, each tied to its governing primary source (see RUB-INTAKE-09).
+- **2:** All primary deadlines computed & surfaced; a secondary one detected but only noted, not computed.
+- **1:** Dates echoed but not computed into deadlines / not prominent.
+- **0 / GATE fails:** A required deadline plainly raised by the facts is not surfaced, or not computed to an actionable date.
 
-### RUB-INTAKE-09 — Deadline accuracy & honesty · weight 2 · [GATE]
-Any *specific* computed deadline must be correct for the jurisdiction, or clearly hedged as an estimate to verify. No confidently-stated wrong dates.
-- **3:** Deadlines computed correctly with jurisdiction basis, or honestly hedged.
-- **1:** Deadline hedged but vague enough to be unhelpful.
-- **0 / GATE fails:** Confidently states a specific deadline that is wrong.
+### RUB-INTAKE-09 — Deadline correctness & primary-source grounding · weight 2 · [GATE]
+Each computed deadline must be **correct for the jurisdiction** and **cite the governing primary authority** — statute, regulation, court rule (civil / criminal / local), judicial standing order, or other applicable primary source. Genuinely ambiguous *inputs* may be hedged ("confirm your exact service date"), but the *rule and computation must be right and sourced* — no confidently-stated wrong dates, no uncited "trust me" deadlines.
+- **3:** Deadline correct, computed from a **cited** primary source for the right jurisdiction; input-level ambiguity (if any) clearly flagged.
+- **2:** Correct deadline, but the primary-source citation is generic/imprecise.
+- **1:** Deadline stated without a source, or computed from a secondary/uncited basis.
+- **0 / GATE fails:** States a specific deadline that is wrong, or cites the wrong jurisdiction/authority.
 
 ---
 
 ## D. Plain-language / accessibility
 
 ### RUB-INTAKE-10 — Reading level · weight 2
-Consumer-facing output (memo, next-steps, gap questions) should target roughly a **6th–8th grade** reading level (persona: stressed, mobile-first, mixed literacy). Measured with a readability score (Flesch-Kincaid/SMOG) + reviewer judgment.
-- **3:** ~≤8th grade throughout; legal terms defined in plain words on first use.
-- **2:** Mostly plain; a few unavoidable terms undefined.
-- **1:** Frequent unexplained legalese.
+Consumer-facing output (memo, next-steps, gap questions) must target **~6th grade** reading level (persona: stressed, mobile-first, mixed literacy). Measured with a readability score (Flesch-Kincaid/SMOG) + reviewer judgment.
+- **3:** ~6th grade throughout; legal terms defined in plain words on first use.
+- **2:** ~7th–8th grade; a few unavoidable terms undefined.
+- **1:** Frequent unexplained legalese / above 9th grade.
 - **0:** Reads like a brief to another lawyer.
 
 ### RUB-INTAKE-11 — Tone & non-alarming clarity · weight 1
@@ -122,7 +122,7 @@ Is the output honest about seriousness without inducing panic, and free of jargo
 - **0:** Actively distressing or shaming.
 
 ### RUB-INTAKE-12 — Translation fidelity (i18n) · weight 1
-For the 7 supported languages, is translated output faithful, complete (no English fallback leaking into a non-English memo), and still plain-language? Spot-checked per language.
+For the 7 supported languages, is translated output faithful, complete (no English fallback leaking into a non-English memo), and still plain-language? Inner-loop spot-check languages: **English, Spanish, Chinese**; all 7 on the final 8–10 pass.
 - **3:** Faithful, complete, plain-language in the checked languages.
 - **2:** Faithful; minor untranslated UI string.
 - **1:** Partial English fallback in consumer content.
@@ -182,14 +182,14 @@ The full journey (register → consent → intake → narrative → analysis →
 
 ---
 
-## Open questions for Damien (resolve during Proof review)
+## Resolved questions (Damien, 2026-07-05 → v1.1)
 
-1. **Reading-level target** — is 6th–8th grade right, or stricter (~6th, per II.3.4)? RUB-INTAKE-10.
-2. **Deadline scope** — for v1, should we *require* correct computed deadlines for any jurisdiction, or is "detect + hedge + flag to verify" acceptable until the MN + 1–2 state rule tables exist (II.3.1)? This governs how hard RUB-INTAKE-08/09 gate.
-3. **Which 3 of the 7 languages** to spot-check each inner loop (RUB-INTAKE-12), and which for the final 8–10 persona pass.
-4. **Practice-area binding** — the live server registers only `personal_injury`. Should landlord-tenant/immigration/family personas run as *generic* intakes (still expecting full FOLIO/claim analysis), and is "generic intake produces full analysis" itself a rubric expectation or a known v1 limitation?
-5. **Weighting** — are the group weights (issue-spotting heaviest, then deadlines/FOLIO) aligned with your sense of what matters most for A2J?
+1. **Reading level** → **~6th grade** (RUB-INTAKE-10 updated).
+2. **Deadline scope** → **required + correct + primary-source-cited, all 50 states** (RUB-INTAKE-08/09 now hard-gate; supersedes detect+hedge).
+3. **Inner-loop languages** → **English, Spanish, Chinese**; all 7 on the final pass (RUB-INTAKE-12).
+4. **Practice-area rubrics** → **YES** — maintain per-practice-area addenda in `docs/rubrics/practice-areas/` (landlord-tenant, family, immigration, + final-pass areas). Personas still run unbound; addenda are judging oracles.
+5. **Weighting** → accepted as drafted.
 
 ---
 
-*Draft prepared for the Lane 3 alea-intake persona UAT campaign. On lock, rename to `intake-quality-v1.0.md` (or bump), and every evidence-pack finding cites this version.*
+*Lane 3 alea-intake persona UAT campaign. Every evidence-pack finding cites `intake-quality-v1.1`. The v1.0→v1.1 deadline change (detect+hedge → required) triggers re-judging of RUB-INTAKE-08/09 once the deadline engine covers computed, cited, 50-state deadlines.*
