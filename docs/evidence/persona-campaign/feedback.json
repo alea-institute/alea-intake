@@ -1,0 +1,16 @@
+{
+  "pack_id": "INTAKE-PERSONAS",
+  "title": "alea-intake — Persona UAT Campaign (live validation)",
+  "rubric_version": "intake-quality-v1.1 (LOCKED)",
+  "exported_count": 0,
+  "total_findings": 8,
+  "comments": [],
+  "_schema": {
+    "comments[]": {
+      "id": "EP-<REPO>-<CAMPAIGN>-<NNN>",
+      "title": "str",
+      "status": "pass|borderline|fail|info",
+      "comment": "reviewer text"
+    }
+  }
+}

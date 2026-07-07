@@ -1,6 +1,6 @@
 {
   "persona": "family-custody",
-  "email": "persona_family-custody_1783453984@example.com",
+  "email": "persona_family-custody_1783458277@example.com",
   "base": "https://alea-intake-dev-production.up.railway.app",
   "steps": {
     "register": {
@@ -14,9 +14,9 @@
     "create_intake": {
       "http": 201,
       "ok": true,
-      "intake_id": 109,
-      "session_id": 81,
-      "party_id": 109,
+      "intake_id": 121,
+      "session_id": 90,
+      "party_id": 121,
       "practice_area_id": null
     },
     "narrative": {
@@ -39,1087 +39,687 @@
     ],
     "analyze": {
       "http": 202,
-      "run_id": 25,
+      "run_id": 28,
       "status": "converged",
       "detail": null
     },
     "final_status": {
-      "run_id": 25,
+      "run_id": 28,
       "status": "converged",
-      "iteration": 10,
+      "iteration": 9,
       "max_iterations": 10,
-      "convergence_score": 1.0,
-      "progress_pct": 100,
+      "convergence_score": 0.7533,
+      "progress_pct": 90,
       "latest_stage": "question_gen"
     },
     "results_http": 200,
     "output_generate": [
       {
         "profile": "law_firm",
-        "id": 48,
-        "run_id": 25,
-        "intake_id": 109,
+        "id": 57,
+        "run_id": 28,
+        "intake_id": 121,
         "profile_type": "law_firm",
-        "completeness_score": 1.0,
-        "created_at": "2026-07-07T19:56:03.122149Z"
+        "completeness_score": 0.7533,
+        "created_at": "2026-07-07T21:07:49.510845Z"
       },
       {
         "profile": "court_self_help",
-        "id": 49,
-        "run_id": 25,
-        "intake_id": 109,
+        "id": 58,
+        "run_id": 28,
+        "intake_id": 121,
         "profile_type": "court_self_help",
-        "completeness_score": 1.0,
-        "created_at": "2026-07-07T19:56:04.038852Z"
+        "completeness_score": 0.7533,
+        "created_at": "2026-07-07T21:07:49.998645Z"
       },
       {
         "profile": "legal_aid",
-        "id": 50,
-        "run_id": 25,
-        "intake_id": 109,
+        "id": 59,
+        "run_id": 28,
+        "intake_id": 121,
         "profile_type": "legal_aid",
-        "completeness_score": 1.0,
-        "created_at": "2026-07-07T19:56:04.477499Z"
+        "completeness_score": 0.7533,
+        "created_at": "2026-07-07T21:08:10.346181Z"
       }
     ]
   },
   "safety_alerts": [],
   "analysis": {
-    "run_id": 25,
+    "run_id": 28,
     "status": "converged",
     "claims": [
       {
-        "id": 1315,
-        "claim_name": "Child Custody Battle",
+        "id": 1388,
+        "claim_name": "Child Custody Modification",
         "claim_type": "identified",
         "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
-        "jurisdiction": "state",
-        "confidence": 0.95,
+        "jurisdiction": "family law",
+        "confidence": 1.0,
         "is_potential": false,
-        "rationale": "The consumer is involved in a custody case initiated by Corey, which may lead to changes in custody arrangements for their children.",
+        "rationale": "Corey is seeking full custody and the facts indicate a contentious custody dispute, warranting potential modification of child custody arrangements.",
         "elements": [
           {
-            "id": 671,
-            "element_name": "Established Custody Arrangement",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.81
+            "id": 701,
+            "element_name": "Best Interests of the Child",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
           },
           {
-            "id": 672,
-            "element_name": "Petition Filed",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 673,
-            "element_name": "Response Required",
+            "id": 702,
+            "element_name": "Substantial Change in Circumstances",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           }
         ]
       },
       {
-        "id": 1316,
-        "claim_name": "Potential Domestic Violence",
-        "claim_type": "discovered",
+        "id": 1389,
+        "claim_name": "Domestic Violence Incident",
+        "claim_type": "identified",
         "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
-        "jurisdiction": "state",
-        "confidence": 0.9,
-        "is_potential": true,
-        "rationale": "The consumer describes a physical incident where Corey grabbed her arm and left a bruise, which may indicate domestic violence.",
+        "jurisdiction": "family law",
+        "confidence": 1.0,
+        "is_potential": false,
+        "rationale": "Corey's actions of grabbing and bruising, as well as the threats made, constitute domestic violence.",
         "elements": [
           {
-            "id": 674,
+            "id": 703,
             "element_name": "Physical Abuse",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           },
           {
-            "id": 675,
-            "element_name": "Pattern of Behavior",
+            "id": 704,
+            "element_name": "Threats of Harm",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.81
+            "satisfaction_confidence": 0.85
           },
           {
-            "id": 676,
-            "element_name": "Impact on Children",
+            "id": 705,
+            "element_name": "Fear of Further Harm",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.81
+            "satisfaction_confidence": 0.85
           }
         ]
       },
       {
-        "id": 1317,
-        "claim_name": "Emotional Distress",
+        "id": 1390,
+        "claim_name": "Restraining Order",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9IldpgAfUyz3upHKvXdn8y",
-        "jurisdiction": "state",
-        "confidence": 0.85,
+        "folio_iri": "https://folio.openlegalstandard.org/R7ASJC76FQwJNtH4rbUqULk",
+        "jurisdiction": "family law",
+        "confidence": 0.8,
         "is_potential": true,
-        "rationale": "The consumer expresses feelings of panic, fear, and frustration about her situation, indicating potential claims for emotional distress.",
+        "rationale": "The facts indicate a potential need for emergency protection due to fear of further incidents of domestic violence.",
         "elements": [
           {
-            "id": 677,
-            "element_name": "Severe Emotional Distress",
-            "is_satisfied": false,
-            "satisfaction_confidence": null
+            "id": 706,
+            "element_name": "Recent Threats or Abuse",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
           },
           {
-            "id": 678,
-            "element_name": "Causation",
-            "is_satisfied": false,
-            "satisfaction_confidence": null
-          },
-          {
-            "id": 679,
-            "element_name": "Negligence or Intent",
-            "is_satisfied": false,
-            "satisfaction_confidence": null
+            "id": 707,
+            "element_name": "Imminent Threat",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
           }
         ]
       },
       {
-        "id": 1318,
+        "id": 1391,
+        "claim_name": "Lack of Legal Representation",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RC15aa638D53bC3Edca48b3e",
+        "jurisdiction": "family law",
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "The consumer expresses uncertainty about needing a lawyer and indicates inability to afford one, raising potential claims regarding self-representation in custody matters.",
+        "elements": [
+          {
+            "id": 708,
+            "element_name": "Knowledge of Legal Rights",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          },
+          {
+            "id": 709,
+            "element_name": "Access to Legal Resources",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          }
+        ]
+      },
+      {
+        "id": 1392,
         "claim_name": "Matrimonial Emergency Applications",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RCQJU54O6qCvotCfmDwYZwj",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Battle (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Modification (depth 1)",
         "elements": []
       },
       {
-        "id": 1319,
+        "id": 1393,
         "claim_name": "Remedies in Family Law",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RBOczjtsHXQh2ojzTubbrxI",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Battle (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Modification (depth 1)",
         "elements": []
       },
       {
-        "id": 1320,
+        "id": 1394,
         "claim_name": "Family Law and Matrimonial Claims",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Battle (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Modification (depth 1)",
         "elements": []
       },
       {
-        "id": 1321,
+        "id": 1395,
         "claim_name": "Criminal Assault",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/R8BLgPtZOuKFI8MtZNTaT0u",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Potential Domestic Violence (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Domestic Violence Incident (depth 1)",
         "elements": []
       },
       {
-        "id": 1322,
+        "id": 1396,
         "claim_name": "Crimes Against People",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/R7MbuFEaL6NyU9tM2AXk7lk",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Potential Domestic Violence (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Domestic Violence Incident (depth 1)",
         "elements": []
       },
       {
-        "id": 1323,
-        "claim_name": "Intentional Infliction of Emotional Distress",
+        "id": 1397,
+        "claim_name": "Injunction",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R84N0KXivn5IJaQn8xVwPDg",
+        "folio_iri": "https://folio.openlegalstandard.org/R9rhwkH0GU868poYsoFKzVb",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
         "elements": []
       },
       {
-        "id": 1324,
-        "claim_name": "Witness to Injury Suffering Emotional Distress",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8kPCXBCwi874a8DhCCJaKg",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1325,
-        "claim_name": "Bystander Emotional Distress",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RBxqZs1JzyYftyuWzx1yHib",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1326,
-        "claim_name": "Negligent Infliction of Emotional Distress on a Bystander",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDuyHZDRBvSF1vlAJM9Jpix",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1327,
-        "claim_name": "Negligent Infliction of Emotional Distress",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RCSRe5gA8rHlqeKGEVst9Z9",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1328,
-        "claim_name": "Negligent Infliction of Emotional Distress on a Direct Victim",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R1bRKsKBIEa3Qmhs9fyU3H",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1329,
-        "claim_name": "Personal Injury Claims",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8alUnZrt8GVEzHYhh1KTva",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1330,
+        "id": 1398,
         "claim_name": "Civil Claims",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/R8jYAnNATrfoBxAtIKpf72X",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
         "elements": []
       },
       {
-        "id": 1331,
-        "claim_name": "Tort Claims",
+        "id": 1399,
+        "claim_name": "Equitable Relief",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDqSn32zsjxExcBFzIYxT2D",
+        "folio_iri": "https://folio.openlegalstandard.org/R9iUJ1YX0zK3V9D0RbQKTP4",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
         "elements": []
       },
       {
-        "id": 1332,
-        "claim_name": "Litigation Claims",
+        "id": 1400,
+        "claim_name": "Order",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9q7GJc1zsYT0P4Xdp6l9Oz",
+        "folio_iri": "https://folio.openlegalstandard.org/RDmsvdtBrrw46UnCDJ0LKrJ",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Emotional Distress (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
         "elements": []
       },
       {
-        "id": 1333,
-        "claim_name": "Parental Rights",
+        "id": 1401,
+        "claim_name": "Provisional Remedies",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9xozXwwzmZ3msdwItVKn9c",
+        "folio_iri": "https://folio.openlegalstandard.org/RFXc2NtinmfJhHDBnbVgVN",
         "jurisdiction": null,
-        "confidence": 0.85,
+        "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Since there is no written custody agreement, the consumer may be at risk of losing parental rights in the court's evaluation.",
+        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
         "elements": []
       },
       {
-        "id": 1334,
-        "claim_name": "Harassment or Threatening Behavior",
+        "id": 1402,
+        "claim_name": "Macedonia",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv",
+        "folio_iri": "https://folio.openlegalstandard.org/RBF0136A461a075Df0d9825f",
         "jurisdiction": null,
-        "confidence": 0.78,
+        "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Documented threats can influence the court's perception of each parent's fitness and stability.",
+        "rationale": "Discovered via FOLIO ontology traversal from Lack of Legal Representation (depth 1)",
         "elements": []
       },
       {
-        "id": 1335,
-        "claim_name": "Physical Injury and Domestic Violence",
+        "id": 1403,
+        "claim_name": "Europe",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RCCv5YLoHUOm5AlqcCBzqGf",
+        "folio_iri": "https://folio.openlegalstandard.org/R5E0c679BE29e3F86383A5bc",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Lack of Legal Representation (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1404,
+        "claim_name": "Parental Alienation",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RSQjOF7ik8OIL93pvrq1jV",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Corey's threats and the impact on Miles and Ava's emotional state during the incident may suggest an attempt to alienate them from you.",
+        "elements": []
+      },
+      {
+        "id": 1405,
+        "claim_name": "Documentation and Evidence",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R9HuNkpWm24qMFuntuug6RB",
         "jurisdiction": null,
         "confidence": 0.9,
         "is_potential": true,
-        "rationale": "Physical evidence of violence supports claims regarding the safety of the children in Corey's care.",
+        "rationale": "Documenting evidence, such as saved text messages and incidents of violence, is crucial in custody battles and can strengthen your case.",
         "elements": []
       },
       {
-        "id": 1336,
-        "claim_name": "Impact on Children's Well-Being",
+        "id": 1406,
+        "claim_name": "Child Support Responsibilities",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R9JcsdtYN2CUc5CfCTULHYC",
+        "jurisdiction": null,
+        "confidence": 0.6,
+        "is_potential": true,
+        "rationale": "Understanding potential child support arrangements is essential during custody discussions, especially if custody arrangements change due to the case.",
+        "elements": []
+      },
+      {
+        "id": 1407,
+        "claim_name": "Child Welfare Services Involvement",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RQCqQcWqriNQ2XBCucDmpq",
         "jurisdiction": null,
-        "confidence": 0.8,
+        "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Courts consider the children's emotional health when determining custody arrangements.",
+        "rationale": "The welfare of the children is a priority for the court, and any indication of domestic violence can trigger an investigation by CPS.",
         "elements": []
       },
       {
-        "id": 1337,
-        "claim_name": "Legal Representation Alternatives",
+        "id": 1408,
+        "claim_name": "Seeking Legal Aid",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RC15aa638D53bC3Edca48b3e",
+        "folio_iri": "https://folio.openlegalstandard.org/RTK9LsRPqLC3UUnUHDiAhf",
+        "jurisdiction": null,
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "Legal representation is crucial for navigating custody disputes, especially in cases involving potential domestic violence.",
+        "elements": []
+      },
+      {
+        "id": 1409,
+        "claim_name": "Supervised Visitation Arrangement",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R24YN1aRTJ9uZ8QVvLjK21",
         "jurisdiction": null,
         "confidence": 0.75,
         "is_potential": true,
-        "rationale": "Access to legal representation can significantly affect the outcome of custody cases.",
+        "rationale": "Given the emotional impact on the children during the violent incidents, the custody arrangements should consider safety through supervision.",
         "elements": []
       },
       {
-        "id": 1338,
-        "claim_name": "Emergency Protective Order",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R7053oNO7Kct0Nr8SexmzuU",
-        "jurisdiction": null,
-        "confidence": 0.85,
-        "is_potential": true,
-        "rationale": "Given the bruise and threatening behavior exhibited by Corey, an emergency protective order could provide immediate legal protection and set preliminary custody arrangements during the ongoing legal battle.",
-        "elements": []
-      },
-      {
-        "id": 1339,
+        "id": 1410,
         "claim_name": "Potential Criminal Charges",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RB55623E4A23b41B4feC45bb",
         "jurisdiction": null,
-        "confidence": 0.75,
+        "confidence": 0.8,
         "is_potential": true,
-        "rationale": "The physical aspect of Corey's actions alongside the harassment could lead to possible criminal prosecution, which might further influence custody considerations.",
-        "elements": []
-      },
-      {
-        "id": 1340,
-        "claim_name": "Financial Support for Legal Representation",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDCbopUcNJ7SCPPVAuRA4GO",
-        "jurisdiction": null,
-        "confidence": 0.65,
-        "is_potential": true,
-        "rationale": "The individual requires legal guidance to navigate the custody battle and potential domestic violence claims and should explore community resources, pro bono representation, or legal aid options.",
-        "elements": []
-      },
-      {
-        "id": 1341,
-        "claim_name": "Parenting Plan Development",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RBtI1NMNyrTTDFr6Oj9BNHW",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "To provide clarity and stability for the children, a structured parenting plan developed with legal expertise is essential in reducing conflicts and ensuring the children's best interests.",
+        "rationale": "The act of grabbing the arm resulting in bruising constitutes potential assault, which should be pursued to hold Corey accountable for his actions.",
         "elements": []
       }
     ],
     "gaps": [
       {
-        "id": 1401,
+        "id": 1506,
         "gap_type": "unsupported_element",
-        "description": "Element 'Severe Emotional Distress' is not yet supported by any facts",
-        "priority": 85,
+        "description": "Element 'Best Interests of the Child' is not yet supported by any facts",
+        "priority": 100,
         "status": "open"
       },
       {
-        "id": 1402,
+        "id": 1507,
         "gap_type": "unsupported_element",
-        "description": "Element 'Causation' is not yet supported by any facts",
-        "priority": 85,
+        "description": "Element 'Knowledge of Legal Rights' is not yet supported by any facts",
+        "priority": 70,
         "status": "open"
       },
       {
-        "id": 1403,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Negligence or Intent' is not yet supported by any facts",
-        "priority": 85,
-        "status": "open"
-      },
-      {
-        "id": 1404,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Emotional Distress' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1405,
+        "id": 1508,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1406,
+        "id": 1509,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1407,
+        "id": 1510,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1408,
+        "id": 1511,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1409,
+        "id": 1512,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1410,
+        "id": 1513,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Intentional Infliction of Emotional Distress' has not been explored with fact mappings",
+        "description": "Potential claim 'Injunction' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1411,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Witness to Injury Suffering Emotional Distress' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1412,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Bystander Emotional Distress' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1413,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Bystander' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1414,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Negligent Infliction of Emotional Distress' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1415,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Direct Victim' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1416,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Personal Injury Claims' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1417,
+        "id": 1514,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1418,
+        "id": 1515,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Tort Claims' has not been explored with fact mappings",
+        "description": "Potential claim 'Equitable Relief' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1419,
+        "id": 1516,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Litigation Claims' has not been explored with fact mappings",
+        "description": "Potential claim 'Order' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1420,
+        "id": 1517,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Parental Rights' has not been explored with fact mappings",
+        "description": "Potential claim 'Provisional Remedies' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1421,
+        "id": 1518,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Harassment or Threatening Behavior' has not been explored with fact mappings",
+        "description": "Potential claim 'Macedonia' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1422,
+        "id": 1519,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Physical Injury and Domestic Violence' has not been explored with fact mappings",
+        "description": "Potential claim 'Europe' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1423,
+        "id": 1520,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Impact on Children's Well-Being' has not been explored with fact mappings",
+        "description": "Potential claim 'Parental Alienation' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1424,
+        "id": 1521,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Legal Representation Alternatives' has not been explored with fact mappings",
+        "description": "Potential claim 'Child Support Responsibilities' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1425,
+        "id": 1522,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Emergency Protective Order' has not been explored with fact mappings",
+        "description": "Potential claim 'Child Welfare Services Involvement' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1426,
+        "id": 1523,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Seeking Legal Aid' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1524,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Supervised Visitation Arrangement' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1525,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Potential Criminal Charges' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1427,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Financial Support for Legal Representation' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1428,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Parenting Plan Development' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1429,
+        "id": 1526,
         "gap_type": "procedural_requirement",
-        "description": "Specific deadlines for filing custody claims may be missing, which can affect the case's progress.",
+        "description": "Missing specific filing deadline for modification of custody arrangements, which may vary by jurisdiction.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1430,
+        "id": 1527,
         "gap_type": "procedural_requirement",
-        "description": "The process for applying for an emergency protective order may not be clearly outlined, including who can file and the required documentation.",
+        "description": "Insufficient documentation or evidence may be missing regarding the domestic violence incident, impacting the case's credibility.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1431,
+        "id": 1528,
         "gap_type": "procedural_requirement",
-        "description": "The need to establish jurisdiction based on the location of the incidents of domestic violence may not be addressed.",
+        "description": "The necessary procedure for filing a restraining order may not be adequately completed or followed.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1432,
+        "id": 1529,
         "gap_type": "procedural_requirement",
-        "description": "The timeframe within which a claim must be filed could be unspecified, risking dismissal of the case.",
+        "description": "There may be a lack of acknowledgment regarding the right to legal representation in family law matters, which could affect proceedings.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1433,
+        "id": 1530,
         "gap_type": "procedural_requirement",
-        "description": "Time limits for filing criminal charges may not be outlined, affecting prosecution.",
+        "description": "The critical time sensitivity or urgency requirement for emergency applications may not be properly established or demonstrated.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1434,
+        "id": 1531,
         "gap_type": "procedural_requirement",
-        "description": "Specific steps or requirements for developing a parenting plan may be lacking, leading to confusion in implementation.",
+        "description": "Jurisdictional requirements may not be adequately satisfied, impacting the ability to file claims in a specific court.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1532,
+        "gap_type": "procedural_requirement",
+        "description": "Potential issues related to the statute of limitations for filing criminal assault charges may not be addressed.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1533,
+        "gap_type": "procedural_requirement",
+        "description": "There may be a lack of proper notice to the opposing party before filing for an injunction, violating procedural aspects.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1534,
+        "gap_type": "procedural_requirement",
+        "description": "The timing for seeking equitable relief may not align with required procedural timelines, affecting the claim's validity.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1535,
+        "gap_type": "procedural_requirement",
+        "description": "Missing procedures for enforcing child support obligations, potentially leaving gaps in compliance.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1536,
+        "gap_type": "procedural_requirement",
+        "description": "The requirement for a formal court order to establish supervised visitation may not be satisfied adequately.",
         "priority": 50,
         "status": "open"
       }
     ],
     "questions": [
       {
-        "id": 539,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
+        "id": 591,
+        "question_text": "What specific behaviors or actions demonstrate that decisions are being made in the best interests of the child?",
+        "topic_group": "Best Interests of the Child",
+        "priority": 1,
+        "rationale": "We need to gather evidence to support that the child's needs and well-being are prioritized in this situation.",
+        "status": "pending"
+      },
+      {
+        "id": 592,
+        "question_text": "What information do you currently have about your legal rights in this situation?",
+        "topic_group": "Knowledge of Legal Rights",
+        "priority": 1,
+        "rationale": "Understanding your awareness of legal rights can help identify areas where more support or information is needed.",
+        "status": "pending"
+      },
+      {
+        "id": 593,
+        "question_text": "Have you faced any urgent situations that might require an emergency application?",
+        "topic_group": "Emergency and Legal Procedures",
         "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
+        "rationale": "Exploring immediate needs can help establish if there\u2019s an urgent legal claim that should be pursued.",
         "status": "pending"
       },
       {
-        "id": 568,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
+        "id": 594,
+        "question_text": "What steps have you taken to file for a restraining order, and do you know the necessary procedures?",
+        "topic_group": "Emergency and Legal Procedures",
+        "priority": 3,
+        "rationale": "Understanding your actions will help ensure all required steps are correctly followed to protect your safety.",
         "status": "pending"
       },
       {
-        "id": 531,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 532,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 533,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 534,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
+        "id": 595,
+        "question_text": "Do you have any documents or evidence supporting your claims of domestic violence?",
+        "topic_group": "Documentation and Evidence",
         "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
+        "rationale": "Collecting evidence is critical for the credibility of your case, so we must understand what you already have.",
         "status": "pending"
       },
       {
-        "id": 535,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
+        "id": 596,
+        "question_text": "Are you aware of any specific deadlines for modifying custody arrangements in your area?",
+        "topic_group": "Filing and Procedural Requirements",
+        "priority": 3,
+        "rationale": "Understanding filing deadlines is crucial for ensuring that your case progresses in a timely manner.",
+        "status": "pending"
+      },
+      {
+        "id": 597,
+        "question_text": "Have you received any legal documentation or notices related to your case that may affect how you proceed?",
+        "topic_group": "Filing and Procedural Requirements",
+        "priority": 4,
+        "rationale": "Identifying received communications helps clarify your position and the next steps necessary in your case.",
+        "status": "pending"
+      },
+      {
+        "id": 598,
+        "question_text": "Do you know that you have the right to legal representation in family law matters?",
+        "topic_group": "Legal Representation and Rights",
         "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 536,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 537,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 538,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 540,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 541,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 542,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 543,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 544,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 545,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 546,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 547,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 548,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 549,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 550,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 551,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 552,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 553,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 554,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 555,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 556,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 557,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 558,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 559,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 560,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 561,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 562,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 563,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 564,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 565,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 566,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 567,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 569,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 570,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 571,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 572,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 573,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 574,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 575,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
-        "status": "pending"
-      },
-      {
-        "id": 576,
-        "question_text": "Can you describe any specific instances that made you feel severe emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question aims to gather facts regarding the unsupported_element regarding 'Severe Emotional Distress'.",
-        "status": "pending"
-      },
-      {
-        "id": 577,
-        "question_text": "How do you believe these events have impacted you emotionally?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "This question seeks to explore the impact on emotional well-being and supports the unsupported_element concerning 'Causation'.",
-        "status": "pending"
-      },
-      {
-        "id": 578,
-        "question_text": "Did anyone's actions lead directly to your emotional distress?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 1,
-        "rationale": "Understanding the source is crucial to establish the unsupported_element of 'Negligence or Intent'.",
-        "status": "pending"
-      },
-      {
-        "id": 579,
-        "question_text": "Have you ever filed a claim for emotional distress or related issues before?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This question helps determine if the potential claim 'Emotional Distress' has been adequately covered.",
-        "status": "pending"
-      },
-      {
-        "id": 580,
-        "question_text": "What do you think a remedy for emotional distress would look like for you?",
-        "topic_group": "Emotional Distress and Claims",
-        "priority": 2,
-        "rationale": "This can provide insight into what remedies might be relevant under the unexplored_claim of 'Remedies in Family Law'.",
+        "rationale": "It\u2019s important to ensure you understand your rights and what legal support is available to you.",
         "status": "pending"
       }
     ],
     "deadlines": [
       {
-        "id": 38,
-        "event_text": "On June 15, I got served by a sheriff's deputy.",
-        "event_type": "custody_response",
-        "trigger": "served",
-        "trigger_date": "2023-06-15",
-        "computed_date": null,
-        "rule_id": null,
-        "citation": null,
-        "computed": false,
-        "urgency": "unknown",
-        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "id": 48,
+        "event_text": "I have 30 days to file a Response.",
+        "event_type": "filing_deadline",
+        "trigger": "deadline",
+        "trigger_date": "2026-07-15",
+        "computed_date": "2026-07-15",
+        "rule_id": "stated_court_date",
+        "citation": "The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).",
+        "computed": true,
+        "urgency": "high",
+        "hedge": "This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
         "jurisdiction": null
       },
       {
-        "id": 39,
-        "event_text": "There is a court date in July for an 'Initial Case Management Conference'. The court date is on July 22.",
-        "event_type": "initial_case_management_conference",
+        "id": 49,
+        "event_text": "there's a court date for an Initial Case Management Conference on July 22.",
+        "event_type": "custody_hearing",
         "trigger": "hearing",
-        "trigger_date": "2023-07-22",
-        "computed_date": null,
-        "rule_id": null,
-        "citation": null,
-        "computed": false,
-        "urgency": "unknown",
-        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "trigger_date": "2026-07-22",
+        "computed_date": "2026-07-22",
+        "rule_id": "stated_court_date",
+        "citation": "The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).",
+        "computed": true,
+        "urgency": "high",
+        "hedge": "This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
         "jurisdiction": null
       },
       {
-        "id": 40,
-        "event_text": "On June 28 Corey showed up at my place without texting first while I had the kids. Corey grabbed my arm so hard he left a bruise.",
+        "id": 50,
+        "event_text": "Corey grabbed my arm so hard he left a bruise.",
         "event_type": "injury",
         "trigger": "incident",
-        "trigger_date": "2023-06-28",
+        "trigger_date": "2026-06-28",
         "computed_date": null,
         "rule_id": null,
         "citation": null,
@@ -1132,21 +732,21 @@
   },
   "outputs": [
     {
-      "doc_id": 48,
+      "doc_id": 57,
       "profile": "law_firm",
-      "completeness": 1.0,
-      "memo_chars": 46944,
+      "completeness": 0.7533,
+      "memo_chars": 31516,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 88035,
+          "bytes": 70380,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 713,
+          "bytes": 780,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "ok": true
@@ -1154,21 +754,21 @@
       }
     },
     {
-      "doc_id": 49,
+      "doc_id": 58,
       "profile": "court_self_help",
-      "completeness": 1.0,
-      "memo_chars": 7318,
+      "completeness": 0.7533,
+      "memo_chars": 8935,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 31601,
+          "bytes": 35364,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 712,
+          "bytes": 779,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "ok": true
@@ -1176,21 +776,21 @@
       }
     },
     {
-      "doc_id": 50,
+      "doc_id": 59,
       "profile": "legal_aid",
-      "completeness": 1.0,
-      "memo_chars": 47684,
+      "completeness": 0.7533,
+      "memo_chars": 34134,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 89489,
+          "bytes": 74328,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 712,
+          "bytes": 779,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "ok": true
@@ -1219,10 +819,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "207",
+        "id": "235",
         "client_id": "c0",
-        "timestamp": "2026-07-07 19:53:06.317346+00:00",
-        "message_id": 207,
+        "timestamp": "2026-07-07 21:04:38.834026+00:00",
+        "message_id": 235,
         "sequence_number": 1
       }
     },
@@ -1231,7 +831,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 208
+        "message_id": 236
       }
     },
     {
@@ -1245,10 +845,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "209",
+        "id": "237",
         "client_id": "c1",
-        "timestamp": "2026-07-07 19:53:06.580577+00:00",
-        "message_id": 209,
+        "timestamp": "2026-07-07 21:04:39.121772+00:00",
+        "message_id": 237,
         "sequence_number": 3
       }
     },
@@ -1257,15 +857,15 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 210
+        "message_id": 238
       }
     },
     {
       "stage": "poll_status",
       "http": 200,
       "status": "converged",
-      "iteration": 10,
-      "progress": 100
+      "iteration": 9,
+      "progress": 90
     }
   ]
 }
