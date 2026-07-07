@@ -230,15 +230,29 @@ def run(persona_dir: Path, out_dir: Path):
                  "memo_chars": len(md or ""), "exports": {}}
         for fmt in ("pdf", "json"):
             s2, body2, hdrs2 = _req("GET", f"/api/v1/output/{doc_id}/export/{fmt}", token=token)
-            ok = s2 == 200 and isinstance(body2, (bytes, bytearray)) and len(body2) > 0
-            magic = ""
-            if isinstance(body2, (bytes, bytearray)):
-                magic = bytes(body2[:5]).decode(errors="replace")
-                (out_dir / f"export_{doc_id}.{fmt}").write_bytes(bytes(body2))
-            entry["exports"][fmt] = {"http": s2, "bytes": len(body2) if isinstance(body2, (bytes, bytearray)) else 0,
-                                     "content_type": hdrs2.get("content-type") if isinstance(hdrs2, dict) else None,
+            # _req auto-parses application/json responses into dict/list —
+            # the JSON export arrives parsed, not as bytes (was misreported
+            # as bytes=0 / ok=False). Normalize both shapes to bytes.
+            if isinstance(body2, (dict, list)):
+                body_bytes = json.dumps(body2, indent=1).encode()
+                parsed_ok = bool(body2)
+            elif isinstance(body2, (bytes, bytearray)):
+                body_bytes = bytes(body2)
+                parsed_ok = len(body_bytes) > 0
+            else:
+                body_bytes = b""
+                parsed_ok = False
+            magic = body_bytes[:5].decode(errors="replace")
+            if body_bytes:
+                (out_dir / f"export_{doc_id}.{fmt}").write_bytes(body_bytes)
+            ctype = None
+            if isinstance(hdrs2, dict):
+                ctype = {k.lower(): v for k, v in hdrs2.items()}.get("content-type")
+            entry["exports"][fmt] = {"http": s2, "bytes": len(body_bytes),
+                                     "content_type": ctype,
                                      "magic": magic,
-                                     "ok": ok and (fmt != "pdf" or magic.startswith("%PDF"))}
+                                     "ok": s2 == 200 and parsed_ok and
+                                           (fmt != "pdf" or magic.startswith("%PDF"))}
         outputs.append(entry)
     result["outputs"] = outputs
     result["transcript"] = transcript

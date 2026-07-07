@@ -1,0 +1,27 @@
+GOPHER STATE CREDIT UNION
+Member Statement - Checking Account ....7702
+Statement period: June 1, 2026 - June 30, 2026
+Member: TERRELL WHITFIELD, 1146 PAYNE AVE, ST PAUL MN 55130
+
+Beginning balance (Jun 1):                              $412.36
+
+DEPOSITS AND CREDITS
+Jun 03   SSA TREAS 310 XXSOC SEC  (direct deposit)    $1,480.00
+Jun 05   PAYROLL LUNDEEN'S HDWE                          $167.58
+Jun 12   PAYROLL LUNDEEN'S HDWE                          $167.58
+Jun 19   PAYROLL LUNDEEN'S HDWE                          $151.20
+Jun 26   PAYROLL LUNDEEN'S HDWE                          $167.58
+
+WITHDRAWALS AND DEBITS
+Jun 04   RENT - CHECK #221                               $725.00
+Jun 08   XCEL ENERGY                                      $84.12
+Jun 09   CUB FOODS                                        $96.44
+Jun 15   WALGREENS (RX COPAYS)                            $52.30
+Jun 16   METRO TRANSIT GO-TO CARD                         $40.00
+Jun 22   CUB FOODS                                        $88.71
+Jun 29   FRONTIER COMMUNICATIONS                          $61.99
+
+Ending balance (Jun 30):                              $1,397.74
+
+Note: Social Security disability benefit has been deposited to this account
+monthly by direct deposit since March 2021.
