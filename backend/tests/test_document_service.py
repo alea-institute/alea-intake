@@ -1,7 +1,7 @@
 """Tests for document processing service with PDF, DOCX, and OCR extractors.
 
 Tests cover:
-- PDF extraction via PyMuPDF with structural elements
+- PDF extraction via pdfplumber with structural elements
 - DOCX extraction via python-docx with headings, paragraphs, tables
 - Image OCR via pytesseract (skipped if tesseract not installed)
 - DocumentService MIME type routing

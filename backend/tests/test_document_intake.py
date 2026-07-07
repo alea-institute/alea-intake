@@ -15,7 +15,6 @@ import io
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import pymupdf
 import pytest
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,15 +25,17 @@ from app.services.document import DocumentService
 from app.services.intake.message_pipeline import NormalizedContent, process_message
 
 
+_FIXTURES_DIR = Path(__file__).parent / "fixtures"
+
+
 def _create_minimal_pdf() -> bytes:
-    """Create a minimal valid PDF in memory using pymupdf."""
-    doc = pymupdf.open()
-    page = doc.new_page()
-    page.insert_text((72, 72), "Test Document Heading", fontsize=20)
-    page.insert_text((72, 120), "Test paragraph for extraction.", fontsize=12)
-    buf = doc.tobytes()
-    doc.close()
-    return buf
+    """Return a minimal valid PDF (the shared fixture) for upload tests.
+
+    Uses tests/fixtures/sample.pdf — a 20pt "Sample Legal Document" heading + a
+    12pt paragraph — rather than generating one, so no PDF-authoring dependency
+    (previously PyMuPDF, now dropped for its AGPL license) is needed just for tests.
+    """
+    return (_FIXTURES_DIR / "sample.pdf").read_bytes()
 
 
 # --- Fixtures ---
@@ -85,7 +86,7 @@ async def test_process_message_document_modality(tmp_path):
 
     assert isinstance(result, NormalizedContent)
     assert result.source_type == "document"
-    assert "Test Document Heading" in result.text
+    assert "Sample Legal Document" in result.text
 
 
 @pytest.mark.asyncio
@@ -267,13 +268,13 @@ async def test_upload_document_creates_extraction_record(async_session, intake_r
         document_id=doc.id,
         full_text_encrypted=b"Extracted text content",
         elements_json=[{"text": "Heading", "element_type": "heading", "page": 1}],
-        extraction_method="pymupdf",
+        extraction_method="pdfplumber",
     )
     async_session.add(extraction)
     await async_session.flush()
 
     assert extraction.id is not None
-    assert extraction.extraction_method == "pymupdf"
+    assert extraction.extraction_method == "pdfplumber"
     assert extraction.elements_json is not None
 
 
@@ -348,7 +349,7 @@ async def test_document_service_get_extraction_method():
         mock_settings.return_value.intake_max_page_count = 200
 
         doc_service = DocumentService(upload_dir="/tmp")
-        assert doc_service.get_extraction_method("application/pdf") == "pymupdf"
+        assert doc_service.get_extraction_method("application/pdf") == "pdfplumber"
         assert doc_service.get_extraction_method(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ) == "python-docx"

@@ -29,7 +29,8 @@ required on redistribution):
 | folio-python, alea-llm-client, eyecite, weasyprint, python-docx, lxml | MIT / BSD | permissive |
 | sentence-transformers, faiss-cpu, pgvector | Apache-2.0 / MIT | permissive |
 | **psycopg[binary]** | **LGPL-3.0** | weak copyleft; used unmodified as a dependency — compatible |
-| **pymupdf** | **AGPL-3.0 / commercial** | ⚠ copyleft — see the portfolio OSS-license audit (`EP-PORTFOLIO-OSSLICENSE-001`); resolution pending (replace / commercial license / relicense) |
+| **pdfplumber** (+ pdfminer.six, Pillow, pypdfium2) | **MIT** (pdfplumber, pdfminer.six); Pillow MIT-CMU/HPND; pypdfium2 Apache-2.0 OR BSD-3-Clause | permissive — PDF text extraction backend |
+| ~~pymupdf~~ | ~~AGPL-3.0 / commercial~~ | ✅ **REMOVED 2026-07-07 (S075.4)** — replaced with pdfplumber (MIT) to eliminate the AGPL copyleft obligation flagged in `EP-PORTFOLIO-OSSLICENSE-001`. Heading/bbox extraction preserved 1:1; suite green (1069 passed). |
 | React 19, Radix, TanStack, d3-*, i18next, wavesurfer.js, jspdf | MIT / BSD / ISC | permissive |
 
 Frontend `@fontsource` fonts: OFL-1.1 (above).
