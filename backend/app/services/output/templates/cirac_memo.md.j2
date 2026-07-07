@@ -1,22 +1,16 @@
 {# CIRAC format case memo template per D-01.
    Heading hierarchy: H1=title, H2=jurisdiction, H3=claim, H4=Issue/Rule/Application/Conclusion
-   Groups claims by jurisdiction with authorities showing binding strength and verification. #}
-# {{ context.matter_title }}
-
-**Generated:** {{ context.generated_at.strftime('%Y-%m-%d %H:%M UTC') }}
-**Matter ID:** {{ context.intake_id }}
-**Run ID:** {{ context.run_id }}
-**Completeness:** {{ "%.0f" | format(context.completeness_score * 100) }}%
-
----
-
-{% for jurisdiction, claims in context.claims_by_jurisdiction.items() | sort %}
-## {{ jurisdiction }}
-
-{% for claim in claims %}
+   Groups claims by jurisdiction with authorities showing binding strength and verification.
+   q10: full sections render only for the top-confidence claims (cap applied upstream);
+   adjacency-discovered claims nest under their parent claim ("Related to" note);
+   overflow claims render as the compact "More possible issues" list. #}
+{% macro claim_block(claim) %}
 ### {{ claim.claim_name }}
 
 **Claim Type:** {{ claim.claim_type }} | **Confidence:** {{ "%.0f" | format(claim.confidence * 100) }}%
+{% if claim.parent_claim_name %}
+**Related to:** {{ claim.parent_claim_name }}
+{% endif %}
 {% if claim.folio_iri %}
 **FOLIO IRI:** {{ claim.folio_iri }}
 {% endif %}
@@ -73,5 +67,32 @@
 
 {{ claim.conclusion }}
 
+{% for child in claim.children %}
+{{ claim_block(child) }}
 {% endfor %}
+{% endmacro %}
+# {{ context.matter_title }}
+
+**Generated:** {{ context.generated_at.strftime('%Y-%m-%d %H:%M UTC') }}
+**Matter ID:** {{ context.intake_id }}
+**Run ID:** {{ context.run_id }}
+**Completeness:** {{ "%.0f" | format(context.completeness_score * 100) }}%
+
+---
+
+{% for jurisdiction, claims in context.claims_by_jurisdiction.items() | sort %}
+## {{ jurisdiction }}
+
+{% for claim in claims %}
+{{ claim_block(claim) }}
+{% endfor %}
+{% set more = context.additional_claims_by_jurisdiction.get(jurisdiction, []) %}
+{% if more %}
+### More possible issues (show more)
+
+{% for ac in more %}
+- **{{ ac.claim_name }}**: {{ "%.0f" | format(ac.confidence * 100) }}% confidence{% if ac.parent_claim_name %} (related to {{ ac.parent_claim_name }}){% endif %}
+
+{% endfor %}
+{% endif %}
 {% endfor %}

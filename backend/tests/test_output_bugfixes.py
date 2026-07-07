@@ -356,3 +356,119 @@ async def test_plain_prompt_targets_sixth_grade():
     from app.services.output.language_adapter import _SYSTEM_PROMPTS
 
     assert "6th grade" in _SYSTEM_PROMPTS["plain"]
+
+
+# ---------------------------------------------------------------------------
+# q10 -- memo claim display: top-7 cap + relation grouping
+# ---------------------------------------------------------------------------
+
+
+async def _seed_bare_run(session):
+    """Create a bare intake + converged run (no narrative) for claim tests."""
+    intake = Intake(org_id=1, status="active", metadata_json={})
+    session.add(intake)
+    await session.flush()
+    run = AnalysisRun(intake_id=intake.id, status="converged", trigger_type="manual")
+    session.add(run)
+    await session.flush()
+    return intake, run
+
+
+async def test_memo_caps_full_sections_at_seven(async_session):
+    """>7 claims -> exactly 7 full sections; the rest land in the compact list."""
+    from app.services.output.data_assembler import DataAssembler
+    from app.services.output.schemas import LAW_FIRM_PROFILE
+    from app.services.output.template_engine import TemplateEngine
+
+    intake, run = await _seed_bare_run(async_session)
+    for i in range(10):
+        async_session.add(
+            AnalysisClaim(
+                run_id=run.id,
+                claim_name=f"Claim {chr(65 + i)}",
+                claim_type="identified",
+                jurisdiction="California",
+                confidence=0.95 - i * 0.05,
+            )
+        )
+    await async_session.flush()
+
+    ctx = await DataAssembler(async_session).assemble(
+        run_id=run.id, intake_id=intake.id, profile=LAW_FIRM_PROFILE
+    )
+
+    sections = ctx.claims_by_jurisdiction["California"]
+    assert len(sections) == 7
+    # Ranked by confidence desc: A..G render fully; H, I, J overflow.
+    assert [s.claim_name for s in sections] == [f"Claim {c}" for c in "ABCDEFG"]
+    extra = ctx.additional_claims_by_jurisdiction["California"]
+    assert [a.claim_name for a in extra] == ["Claim H", "Claim I", "Claim J"]
+
+    memo = TemplateEngine().render_full(ctx, LAW_FIRM_PROFILE)
+    assert "More possible issues (show more)" in memo
+    assert "### Claim G" in memo
+    assert "### Claim H" not in memo
+    assert "**Claim H**: 60% confidence" in memo
+
+
+async def test_adjacency_child_renders_grouped_under_parent(async_session):
+    """An adjacency-discovered claim nests under its parent, not interleaved."""
+    from app.services.output.data_assembler import DataAssembler
+    from app.services.output.schemas import LAW_FIRM_PROFILE
+    from app.services.output.template_engine import TemplateEngine
+
+    intake, run = await _seed_bare_run(async_session)
+    async_session.add_all(
+        [
+            AnalysisClaim(
+                run_id=run.id,
+                claim_name="Wrongful Termination",
+                claim_type="identified",
+                jurisdiction="California",
+                confidence=0.9,
+            ),
+            AnalysisClaim(
+                run_id=run.id,
+                claim_name="Breach of Contract",
+                claim_type="identified",
+                jurisdiction="California",
+                confidence=0.5,
+            ),
+            # Exploration-discovered adjacency claim: no jurisdiction, parent
+            # linkage only via the rationale text (mirrors explore.py output).
+            AnalysisClaim(
+                run_id=run.id,
+                claim_name="Retaliation",
+                claim_type="discovered",
+                confidence=0.7,
+                is_potential=True,
+                rationale=(
+                    "Discovered via FOLIO ontology traversal from "
+                    "Wrongful Termination (depth 1)"
+                ),
+                metadata_json={"source_layer": "folio_adjacency", "exploration_round": 1},
+            ),
+        ]
+    )
+    await async_session.flush()
+
+    ctx = await DataAssembler(async_session).assemble(
+        run_id=run.id, intake_id=intake.id, profile=LAW_FIRM_PROFILE
+    )
+
+    sections = ctx.claims_by_jurisdiction["California"]
+    assert [s.claim_name for s in sections] == [
+        "Wrongful Termination",
+        "Breach of Contract",
+    ]
+    assert [c.claim_name for c in sections[0].children] == ["Retaliation"]
+    assert sections[0].children[0].parent_claim_name == "Wrongful Termination"
+    # The child moved out of the jurisdictionless "General" bucket entirely.
+    assert "General" not in ctx.claims_by_jurisdiction
+
+    memo = TemplateEngine().render_full(ctx, LAW_FIRM_PROFILE)
+    i_parent = memo.index("### Wrongful Termination")
+    i_child = memo.index("### Retaliation")
+    i_sibling = memo.index("### Breach of Contract")
+    assert i_parent < i_child < i_sibling
+    assert "**Related to:** Wrongful Termination" in memo

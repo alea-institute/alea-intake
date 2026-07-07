@@ -30,6 +30,7 @@ from app.models.intake import Intake, IntakeSession, Message
 from app.models.research import Authority
 from app.services.output.gap_report_builder import GapReportBuilder
 from app.services.output.schemas import (
+    AdditionalClaimRef,
     AuthorityRef,
     CIRACSection,
     DeadlineRef,
@@ -52,6 +53,112 @@ _URGENCY_ORDER = {"lapsed": 0, "high": 1, "medium": 2, "low": 3, "unknown": 4}
 
 # Safety severity ordering for the top safety section: lower = more prominent.
 _SEVERITY_ORDER = {"critical": 0, "elevated": 1, "advisory": 2}
+
+# q10: the memo renders FULL CIRAC sections for only the top N claims per
+# jurisdiction (roots + nested children both count against the cap). The rest
+# render as a compact "More possible issues" list and stay in the JSON export.
+MEMO_CLAIM_CAP = 7
+
+# Adjacency-discovered claims record their parent only in the rationale text
+# (see app/services/exploration/layers.py): "... from <parent claim name> (depth N)".
+_ADJACENCY_PARENT_RE = re.compile(r"\bfrom (.+?) \(depth \d+\)")
+
+
+def _parent_claim_name(claim: AnalysisClaim) -> str | None:
+    """Resolve the parent-claim linkage for exploration-discovered claims (q10).
+
+    Prefers an explicit ``metadata_json["parent_claim_name"]`` when present;
+    otherwise, for discovered/exploration claims only, parses the adjacency
+    rationale's "from <parent claim name> (depth N)" suffix.
+    """
+    meta = claim.metadata_json if isinstance(claim.metadata_json, dict) else {}
+    explicit = meta.get("parent_claim_name")
+    if explicit:
+        return str(explicit)
+    if claim.claim_type != "discovered" and not meta.get("source_layer"):
+        return None
+    match = _ADJACENCY_PARENT_RE.search(claim.rationale or "")
+    return match.group(1) if match else None
+
+
+def group_and_cap_sections(
+    sections: list[CIRACSection], cap: int = MEMO_CLAIM_CAP
+) -> tuple[list[CIRACSection], list[AdditionalClaimRef]]:
+    """Group claim sections by relation and cap full rendering at ``cap`` (q10).
+
+    - Sections whose ``parent_claim_name`` matches another section in the same
+      jurisdiction nest under that parent (grandchildren nest recursively);
+      everything else is a root.
+    - Roots are ordered by confidence desc; children by confidence desc within
+      their parent (siblings stay together, never interleaved with other roots).
+    - The cap counts roots and children alike, roots prioritized: roots fill
+      the budget first, then children of displayed sections by confidence desc.
+    - Overflow is returned as compact ``AdditionalClaimRef`` entries (nothing
+      is dropped), each noting its parent when applicable.
+
+    Deterministic: ties break on normalized claim name.
+    """
+
+    def sort_key(s: CIRACSection) -> tuple[float, str]:
+        return (-s.confidence, _normalize(s.claim_name))
+
+    by_name: dict[str, CIRACSection] = {}
+    for s in sections:
+        by_name.setdefault(_normalize(s.claim_name), s)
+
+    roots: list[CIRACSection] = []
+    parented: list[CIRACSection] = []
+    for s in sections:
+        parent = (
+            by_name.get(_normalize(s.parent_claim_name))
+            if s.parent_claim_name
+            else None
+        )
+        if parent is not None and parent is not s:
+            parented.append(s)
+        else:
+            # Parent unknown in this jurisdiction: render as a plain root.
+            s.parent_claim_name = None
+            roots.append(s)
+
+    roots.sort(key=sort_key)
+    parented.sort(key=sort_key)
+
+    displayed_roots = roots[:cap]
+    budget = cap - len(displayed_roots)
+    displayed_by_name = {_normalize(r.claim_name): r for r in displayed_roots}
+
+    # Attach children (and grandchildren, once their parent is displayed) in
+    # global confidence-desc order until the budget is exhausted.
+    remaining = list(parented)
+    progress = True
+    while budget > 0 and progress:
+        progress = False
+        for s in list(remaining):
+            parent = displayed_by_name.get(_normalize(s.parent_claim_name or ""))
+            if parent is None:
+                continue
+            parent.children.append(s)
+            displayed_by_name.setdefault(_normalize(s.claim_name), s)
+            remaining.remove(s)
+            budget -= 1
+            progress = True
+            if budget == 0:
+                break
+
+    overflow = sorted(roots[cap:] + remaining, key=sort_key)
+    additional = [
+        AdditionalClaimRef(
+            claim_name=s.claim_name,
+            claim_type=s.claim_type,
+            confidence=s.confidence,
+            jurisdiction=s.jurisdiction,
+            folio_iri=s.folio_iri,
+            parent_claim_name=s.parent_claim_name,
+        )
+        for s in overflow
+    ]
+    return displayed_roots, additional
 
 
 def _normalize(text: str) -> str:
@@ -326,8 +433,45 @@ class DataAssembler:
                 elements=element_refs,
                 gaps=gap_entries,
                 conclusion=conclusion,
+                parent_claim_name=_parent_claim_name(claim),
             )
             sections_by_jurisdiction[jurisdiction].append(section)
+
+        # q10: exploration-discovered claims carry no jurisdiction of their own
+        # (they land in "General"), so first move each child into its parent's
+        # jurisdiction bucket (following the parent chain for grandchildren).
+        name_to_section: dict[str, CIRACSection] = {}
+        section_jur: dict[int, str] = {}
+        for jur, secs in sections_by_jurisdiction.items():
+            for s in secs:
+                name_to_section.setdefault(_normalize(s.claim_name), s)
+                section_jur[id(s)] = jur
+
+        def _target_jurisdiction(section: CIRACSection) -> str:
+            seen: set[int] = {id(section)}
+            cur = section
+            while cur.parent_claim_name:
+                parent = name_to_section.get(_normalize(cur.parent_claim_name))
+                if parent is None or id(parent) in seen:
+                    break
+                seen.add(id(parent))
+                cur = parent
+            return section_jur[id(cur)]
+
+        regrouped: dict[str, list[CIRACSection]] = defaultdict(list)
+        for secs in sections_by_jurisdiction.values():
+            for s in secs:
+                regrouped[_target_jurisdiction(s)].append(s)
+
+        # Group related claims under their parent and cap full sections at
+        # MEMO_CLAIM_CAP per jurisdiction; overflow becomes the compact list.
+        claims_by_jurisdiction: dict[str, list[CIRACSection]] = {}
+        additional_by_jurisdiction: dict[str, list[AdditionalClaimRef]] = {}
+        for jur, secs in regrouped.items():
+            displayed, additional = group_and_cap_sections(secs)
+            claims_by_jurisdiction[jur] = displayed
+            if additional:
+                additional_by_jurisdiction[jur] = additional
 
         # Build gap report
         claim_id_to_name = {c.id: c.claim_name for c in claims}
@@ -358,7 +502,8 @@ class DataAssembler:
             org_id=intake.org_id if intake else 0,
             matter_title=matter_title,
             generated_at=datetime.now(timezone.utc),
-            claims_by_jurisdiction=dict(sections_by_jurisdiction),
+            claims_by_jurisdiction=claims_by_jurisdiction,
+            additional_claims_by_jurisdiction=additional_by_jurisdiction,
             safety_alerts=safety_alerts,
             deadlines=deadlines,
             triage=None,

@@ -108,6 +108,25 @@ class CIRACSection(BaseModel):
     elements: list[ElementRef] = Field(default_factory=list)
     gaps: list[GapEntry] = Field(default_factory=list)
     conclusion: str = ""
+    # q10 grouping: name of the claim this one was discovered from (adjacency
+    # exploration), and related claims rendered nested under this section.
+    parent_claim_name: str | None = None
+    children: list[CIRACSection] = Field(default_factory=list)
+
+
+class AdditionalClaimRef(BaseModel):
+    """Compact overflow entry for claims beyond the memo's full-section cap (q10).
+
+    Rendered as one line each in the "More possible issues" list; carried in the
+    OutputContext so JSON export still includes every claim.
+    """
+
+    claim_name: str
+    claim_type: str
+    confidence: float
+    jurisdiction: str | None = None
+    folio_iri: str | None = None
+    parent_claim_name: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -251,6 +270,11 @@ class OutputContext(BaseModel):
     matter_title: str
     generated_at: datetime
     claims_by_jurisdiction: dict[str, list[CIRACSection]] = Field(default_factory=dict)
+    # q10 cap: claims beyond the top-N full sections, per jurisdiction, as a
+    # compact "More possible issues" list. Nothing is dropped from JSON export.
+    additional_claims_by_jurisdiction: dict[str, list[AdditionalClaimRef]] = Field(
+        default_factory=dict
+    )
     safety_alerts: list[SafetyAlertRef] = Field(default_factory=list)
     deadlines: list[DeadlineRef] = Field(default_factory=list)
     triage: TriageResult | None = None
