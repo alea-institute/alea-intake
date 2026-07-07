@@ -299,7 +299,12 @@ async def _stage_label_prefix(
         except Exception:
             label_results = []
 
-        for owl_cls in label_results:
+        for item in label_results:
+            # Real folio-python returns List[Tuple[OWLClass, score]] (BUG-11);
+            # accept bare OWLClass for test doubles.
+            owl_cls = item[0] if isinstance(item, tuple) else item
+            if owl_cls is None or not getattr(owl_cls, "label", None):
+                continue
             iri = owl_cls.iri
             if iri not in candidates:
                 candidates[iri] = {
@@ -331,6 +336,9 @@ async def _stage_label_prefix(
             prefix_results = []
 
         for owl_cls in prefix_results:
+            owl_cls = owl_cls[0] if isinstance(owl_cls, tuple) else owl_cls
+            if owl_cls is None or not getattr(owl_cls, "label", None):
+                continue
             iri = owl_cls.iri
             if iri not in candidates:
                 candidates[iri] = {

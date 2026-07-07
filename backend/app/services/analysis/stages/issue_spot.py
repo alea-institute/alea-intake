@@ -172,9 +172,24 @@ class IssueSpotStage:
                 "claims": [],
             }
 
+        # Dedupe against claims already persisted for this run: the
+        # orchestrator re-runs issue_spot every iteration over the SAME facts,
+        # which re-persisted identical claims each pass (observed live:
+        # 'Nonpayment of Rent' x3 in one run).
+        from sqlalchemy import select
+
+        existing_rows = await self._session.execute(
+            select(AnalysisClaim.claim_name).where(AnalysisClaim.run_id == run.id)
+        )
+        seen_names = {(n or "").strip().lower() for (n,) in existing_rows.all()}
+
         persisted_claims: list[dict] = []
 
         for spotted in result.claims:
+            name_key = (spotted.claim_name or "").strip().lower()
+            if name_key in seen_names:
+                continue
+            seen_names.add(name_key)
             # Resolve FOLIO IRI if folio and embedding_service are available
             folio_iri = spotted.folio_iri
             if self._folio is not None and self._embedding_service is not None and not folio_iri:
