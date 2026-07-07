@@ -1,9 +1,9 @@
-# Intake Quality Rubric — v1.1 (LOCKED 2026-07-05)
+# Intake Quality Rubric — v1.2 (LOCKED; amended by Damien 2026-07-07)
 
 **Rubric ID prefix:** `RUB-INTAKE-`
 **Applies to:** the alea-intake analysis pipeline output for a single client intake — the FOLIO mappings, claim/element analysis, gap analysis, deadline surfacing, plain-language memo, and export artifacts.
 **Judged against:** the client's messy first-person narrative + any uploaded documents (the *source of truth*), the FOLIO ontology (via deterministic `folio-python` checks first, FOLIO MCP for semantic-fit calls), and this rubric.
-**Status:** **LOCKED v1.1** (Damien, 2026-07-05). Campaign findings cite `intake-quality-v1.1`. Amendments bump the version and trigger re-judging of affected findings.
+**Status:** **LOCKED v1.2** (v1.1 Damien 2026-07-05; v1.2 amendment Damien 2026-07-07 — semantic-fit sub-criterion added to RUB-INTAKE-05, see below). Campaign findings cite `intake-quality-v1.2`. Amendments bump the version and trigger re-judging of affected findings.
 
 **Lock decisions (Damien, 2026-07-05):**
 - **Deadlines are REQUIRED and must be computed correctly (v1.1 — supersedes v1.0's "detect+hedge").** RUB-INTAKE-08/09 now hard-gate: the system must **compute** each applicable deadline for the correct jurisdiction and **cite the governing primary source** — statutes, regulations, court rules (civil / criminal / local rules), judicial standing orders, and any other applicable primary authority. **Scope = any of the 50 U.S. states** (not MN-only). A missing or wrong required deadline is a GATE failure. (Reasonable, clearly-labeled hedging on genuinely ambiguous facts — e.g., "confirm your exact service date" — is still allowed where the *input* is uncertain, but the *rule and computation* must be correct and sourced.)
@@ -70,6 +70,8 @@ Every FOLIO concept the system maps to must be a **real, resolvable FOLIO IRI** 
 - **2:** ≥95% resolve; the rest are clearly-labeled unmapped/low-confidence, not broken IRIs.
 - **1:** 80–95% resolve, or unmapped concepts silently dropped.
 - **0 / GATE fails:** Broken/hallucinated IRIs presented as valid mappings.
+
+**Semantic-fit sub-criterion (v1.2 amendment, Damien 2026-07-07):** mechanical resolvability alone does not satisfy RUB-05. Each *surfaced* mapping must also be a **semantically plausible** concept for the claim it is attached to (assessed per RUB-06's method — FOLIO MCP + reviewer). A run whose IRIs all resolve but whose surfaced mappings are substantially semantic mismatches (e.g. habitability → Product Liability Law, or placeholder/sandbox concepts surfaced as claims) scores at most **1** on RUB-05, and GATE-fails if the mismatches are presented with false confidence as valid mappings. Re-judging of previously-scored RUB-05 findings is required under v1.2.
 
 ### RUB-INTAKE-06 — FOLIO mapping semantic fit · weight 2
 Do the mapped concepts actually *fit* the facts (semantic judgment — FOLIO MCP + reviewer)? An eviction narrative should map to landlord-tenant / housing concepts, not a coincidental lexical match.
