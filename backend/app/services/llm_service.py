@@ -10,6 +10,7 @@ The service MUST NOT expose methods that send arbitrary data to training-eligibl
 
 from __future__ import annotations
 
+import os
 from typing import TYPE_CHECKING, Any
 
 from alea_llm_client import AnthropicModel, GoogleModel, OpenAIModel, VLLMModel
@@ -63,15 +64,25 @@ class LLMService:
         Raises:
             ValueError: If data_policy is 'local_only' but provider is a cloud provider.
         """
-        # Determine provider
+        # Determine provider: org config > platform env override > default.
+        # ALEA_LLM_PROVIDER lets a deployment (e.g. the dev server) pick a
+        # provider without per-org DB config; org_config always wins when set.
+        env_provider = os.getenv("ALEA_LLM_PROVIDER")
         if org_config and org_config.llm_provider:
             self.provider: str = org_config.llm_provider
+        elif env_provider:
+            self.provider = env_provider
         else:
             self.provider = "openai"  # platform default
 
-        # Determine model
+        # Determine model: org config > platform env override > provider default.
+        # ALEA_LLM_MODEL lets a deployment select a cheap model in a dev loop
+        # (policy 5) instead of the expensive per-provider default (e.g. gpt-4).
+        env_model = os.getenv("ALEA_LLM_MODEL")
         if org_config and org_config.llm_model:
             self.model: str = org_config.llm_model
+        elif env_model:
+            self.model = env_model
         else:
             self.model = _DEFAULT_MODELS.get(self.provider, "gpt-4")
 
@@ -83,12 +94,17 @@ class LLMService:
         else:
             self.data_policy = "cloud_optout"
 
-        # Determine API key
+        # Determine API key: org config > platform env override. When neither is
+        # set, api_key stays None and alea-llm-client falls back to its own
+        # provider env var (e.g. OPENAI_API_KEY). ALEA_LLM_API_KEY supplies a key
+        # explicitly, provider-agnostically, without per-org DB config.
         self.api_key: str | None = None
         if org_config and org_config.llm_api_key_encrypted:
             # In production, this would be decrypted via the encryption service.
             # For now, treat the stored bytes as the key directly.
             self.api_key = org_config.llm_api_key_encrypted.decode("utf-8", errors="replace")
+        elif os.getenv("ALEA_LLM_API_KEY"):
+            self.api_key = os.getenv("ALEA_LLM_API_KEY")
 
         # Level 3: Enforce local_only policy
         if self.data_policy == "local_only" and self.provider in _CLOUD_PROVIDERS:

@@ -82,6 +82,41 @@ class TestLLMServiceInit:
         assert service.data_policy == "local_only"
 
 
+class TestLLMServicePlatformEnvOverride:
+    """Platform env overrides (ALEA_LLM_*) apply when no org config is present."""
+
+    def test_env_model_overrides_hardcoded_default(self, monkeypatch):
+        """ALEA_LLM_MODEL overrides the expensive per-provider default (policy 5)."""
+        from app.services.llm_service import LLMService
+
+        monkeypatch.setenv("ALEA_LLM_MODEL", "gpt-4o-mini")
+        monkeypatch.delenv("ALEA_LLM_PROVIDER", raising=False)
+        service = LLMService()
+        assert service.provider == "openai"
+        assert service.model == "gpt-4o-mini"
+
+    def test_env_provider_and_key_override(self, monkeypatch):
+        """ALEA_LLM_PROVIDER and ALEA_LLM_API_KEY apply with no org config."""
+        from app.services.llm_service import LLMService
+
+        monkeypatch.setenv("ALEA_LLM_PROVIDER", "openai")
+        monkeypatch.setenv("ALEA_LLM_API_KEY", "sk-test-platform")
+        service = LLMService()
+        assert service.provider == "openai"
+        assert service.api_key == "sk-test-platform"
+
+    def test_org_config_wins_over_env(self, monkeypatch):
+        """Per-org config takes precedence over platform env overrides."""
+        from app.services.llm_service import LLMService
+
+        monkeypatch.setenv("ALEA_LLM_MODEL", "gpt-4o-mini")
+        monkeypatch.setenv("ALEA_LLM_PROVIDER", "google")
+        org_config = _make_org_config(provider="openai", model="gpt-4")
+        service = LLMService(org_config=org_config)
+        assert service.provider == "openai"
+        assert service.model == "gpt-4"
+
+
 class TestLLMServiceClientConfig:
     """Test get_client_config() returns correct provider-specific config."""
 
