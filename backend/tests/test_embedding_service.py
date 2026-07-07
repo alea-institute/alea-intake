@@ -206,6 +206,34 @@ class TestEmbeddingService:
         assert "ensure_table" in calls
         assert calls.index("ensure_table") < calls.index("delete_all")
 
+    def test_build_index_accepts_real_list_classes(self):
+        """BUG-10: real folio-python FOLIO.classes is a List[OWLClass], not a dict."""
+        from app.services.embedding.service import EmbeddingService
+
+        def _cls(iri, label):
+            c = MagicMock()
+            c.iri = iri
+            c.label = label
+            c.alternative_labels = []
+            return c
+
+        folio = MagicMock()
+        folio.classes = [
+            _cls("iri:1", "Eviction"),
+            _cls("iri:2", None),  # unlabeled classes must be skipped
+            _cls("iri:3", "Wage Theft"),
+        ]
+
+        mock_provider = MagicMock()
+        mock_provider.encode_batch.return_value = [[0.1] * 4] * 2
+        mock_provider.dimension = 4
+        mock_backend = AsyncMock()
+
+        service = EmbeddingService.get_instance(provider=mock_provider, backend=mock_backend)
+        service.build_index(folio)
+
+        assert mock_backend.upsert.call_count == 2
+
     @pytest.mark.asyncio
     async def test_search_returns_results(self):
         """search returns SearchResult objects with iri, label, score."""

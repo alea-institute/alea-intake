@@ -63,7 +63,9 @@ def discover_adjacent_concepts(
     edges: list[dict] = []
 
     # Add the source node
-    source_cls = folio.classes.get(concept_iri)
+    from app.services.folio.folio_service import get_owl_class
+
+    source_cls = get_owl_class(folio, concept_iri)
     if source_cls:
         nodes[concept_iri] = {
             "iri": concept_iri,

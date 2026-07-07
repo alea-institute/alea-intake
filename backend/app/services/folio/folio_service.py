@@ -72,3 +72,28 @@ def reset_folio() -> None:
     global _folio_instance
     with _folio_lock:
         _folio_instance = None
+
+
+def get_owl_class(folio: FOLIO, iri: str):
+    """Look up an OWLClass by IRI against the REAL folio-python contract.
+
+    folio-python's ``FOLIO.classes`` is a ``List[OWLClass]`` — NOT a dict —
+    so ``folio.classes.get(iri)`` / ``iri in folio.classes`` are always wrong
+    against the real library (BUG-10). The supported API is ``iri in folio``
+    and ``folio[iri]``. Test doubles that expose a dict ``classes`` are
+    handled by the fallback.
+
+    Returns the OWLClass or None.
+    """
+    try:
+        if iri in folio:
+            return folio[iri]
+        # Real FOLIO, unknown IRI.
+        if isinstance(getattr(folio, "classes", None), list):
+            return None
+    except TypeError:
+        pass
+    classes = getattr(folio, "classes", None)
+    if hasattr(classes, "get"):
+        return classes.get(iri)
+    return None

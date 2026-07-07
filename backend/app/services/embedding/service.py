@@ -105,8 +105,14 @@ class EmbeddingService:
                 loop.run_until_complete(ensure_table())
             loop.run_until_complete(self._backend.delete_all())  # type: ignore[union-attr]
 
-            # Batch encode all labels
-            classes = list(folio.classes.values())
+            # Batch encode all labels. folio-python's FOLIO.classes is a
+            # List[OWLClass] (BUG-10); dict-shaped test doubles still work.
+            raw_classes = folio.classes
+            if hasattr(raw_classes, "values"):
+                raw_classes = raw_classes.values()
+            classes = [
+                c for c in raw_classes if c is not None and getattr(c, "label", None)
+            ]
             labels = [cls.label for cls in classes]
             batch_size = 256
 

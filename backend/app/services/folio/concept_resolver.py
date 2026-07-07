@@ -111,7 +111,9 @@ def _determine_branch(iri: str, folio: FOLIO, metadata: dict | None = None) -> s
     if metadata and metadata.get("branch"):
         return metadata["branch"]
 
-    if iri not in folio.classes:
+    from app.services.folio.folio_service import get_owl_class
+
+    if get_owl_class(folio, iri) is None:
         return "Unknown"
 
     # Build branch root IRI set lazily
@@ -142,7 +144,7 @@ def _determine_branch(iri: str, folio: FOLIO, metadata: dict | None = None) -> s
             if current_iri in branch_root_iris:
                 return branch_root_iris[current_iri]
 
-            current_cls = folio.classes.get(current_iri)
+            current_cls = get_owl_class(folio, current_iri)
             if current_cls is None:
                 continue
             next_iris.extend(current_cls.sub_class_of)
