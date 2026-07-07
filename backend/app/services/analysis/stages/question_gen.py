@@ -103,7 +103,11 @@ class QuestionGenStage:
             prompt += f"Consumer's story so far: {consumer_context}\n\n"
         prompt += (
             f"Return questions grouped by topic. Each question must reference the gap it addresses "
-            f"by including the gap description in gap_description."
+            f"by including the gap description in gap_description.\n\n"
+            'Return ONLY a JSON object with EXACTLY this structure:\n'
+            '{"groups": [{"topic": "topic name", "questions": [{"question_text": "the question", '
+            '"rationale": "why we ask", "priority": 1, "gap_description": "the gap addressed"}]}], '
+            '"total_questions": 0}'
         )
 
         # Call LLM

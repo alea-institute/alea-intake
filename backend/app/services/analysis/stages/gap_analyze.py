@@ -209,7 +209,11 @@ class GapAnalyzeStage:
         prompt = (
             f"Analyze the following legal claims for procedural requirements that may be missing: {claims_desc}. "
             f"Identify any filing deadlines, statute of limitations concerns, jurisdictional requirements, "
-            f"or other procedural gaps. Return only gaps of type 'procedural_requirement'."
+            f"or other procedural gaps. Return only gaps of type 'procedural_requirement'.\n\n"
+            'Return ONLY a JSON object with EXACTLY this structure:\n'
+            '{"gaps": [{"gap_type": "procedural_requirement", "claim_name": "name or null", '
+            '"element_name": null, "description": "what is missing", "priority": 50}], '
+            '"coverage_pct": 0.0, "summary": "one-line overview"}'
         )
 
         try:

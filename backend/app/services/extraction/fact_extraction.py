@@ -54,7 +54,30 @@ Rules:
 4. If a fact contradicts a previously extracted fact, still extract it -- note both.
 5. Decompose compound statements into atomic facts.
 
-Return a JSON object matching the ExtractionResult schema with "facts" and "entities" arrays."""
+Return ONLY a JSON object with EXACTLY this structure (field names are mandatory):
+{
+  "facts": [
+    {
+      "assertion": "natural-language statement of the atomic fact",
+      "fact_type": "event | relationship | amount | date | condition | sequence",
+      "entities": [],
+      "confidence": 0.0,
+      "source_start": 0,
+      "source_end": 0
+    }
+  ],
+  "entities": [
+    {
+      "entity_type": "one of the entity types listed above",
+      "value": "the verbatim text of the entity",
+      "confidence": 0.0,
+      "source_start": 0,
+      "source_end": 0
+    }
+  ]
+}
+Every fact MUST include "assertion" and "fact_type". Every entity MUST include
+"entity_type", "value", "source_start", and "source_end"."""
 
 
 class FactExtractionService:

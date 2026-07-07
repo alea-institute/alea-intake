@@ -84,6 +84,24 @@ class ExploreStage:
             Dict with new_claims count, triggered_protocols, rounds_completed,
             total_new_issues, and question_transparency flag.
         """
+        # BUG-8 guard: never explore from nothing. With zero extracted facts
+        # every layer degenerates into ungrounded speculation (the LLM invents
+        # generic claims), which violates the no-fabrication contract (RUB-04).
+        if not facts:
+            logger.info(
+                "Exploration skipped for run %s iteration %s: no extracted facts",
+                run.id,
+                iteration.iteration_number,
+            )
+            return {
+                "new_claims": 0,
+                "triggered_protocols": [],
+                "rounds_completed": 0,
+                "total_new_issues": 0,
+                "question_transparency": False,
+                "skipped_no_facts": True,
+            }
+
         # Parse exploration config
         exploration_raw = self._org_config.get("exploration", {})
         if isinstance(exploration_raw, ExplorationConfig):
@@ -108,9 +126,19 @@ class ExploreStage:
 
         stage_result = await engine.explore(run, iteration, claims, facts)
 
-        # Persist discovered issues as AnalysisClaim records (EXPLORE-10)
+        # Persist discovered issues as AnalysisClaim records (EXPLORE-10).
+        # BUG-8 dedupe: the orchestrator re-runs exploration every iteration;
+        # without a name-level dedupe the same discovered issues re-persist
+        # each pass (observed live: 133 near-duplicate claims per intake).
+        seen_names = {
+            (c.claim_name or "").strip().lower() for c in claims if c.claim_name
+        }
         persisted_count = 0
         for new_claim in stage_result.new_claims:
+            name_key = (new_claim.get("claim_name") or "Unknown").strip().lower()
+            if name_key in seen_names:
+                continue
+            seen_names.add(name_key)
             claim = AnalysisClaim(
                 run_id=run.id,
                 claim_name=new_claim.get("claim_name", "Unknown"),

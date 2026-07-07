@@ -278,6 +278,78 @@ class TestExploreStageExecute:
         assert "question_transparency" in result
 
 
+class TestExploreStageGuards:
+    """BUG-8 guards: no exploration from zero facts; dedupe across iterations."""
+
+    @pytest.mark.asyncio
+    async def test_skips_exploration_when_no_facts(
+        self, mock_llm, mock_session, mock_embedding,
+        sample_run, sample_iteration, sample_claims,
+    ):
+        """With zero extracted facts, exploration is skipped entirely (no LLM)."""
+        from app.services.analysis.stages.explore import ExploreStage
+
+        stage = ExploreStage(
+            llm_service=mock_llm,
+            db_session=mock_session,
+            folio=None,
+            embedding_service=mock_embedding,
+            org_config={},
+        )
+
+        with patch("app.services.analysis.stages.explore.ExplorationEngine") as MockEngine:
+            result = await stage.execute(
+                sample_run, sample_iteration, sample_claims, [],
+            )
+
+        MockEngine.assert_not_called()
+        assert result["new_claims"] == 0
+        assert result["skipped_no_facts"] is True
+        mock_session.add.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_dedupes_discovered_claims_against_existing(
+        self, mock_llm, mock_session, mock_embedding,
+        sample_run, sample_iteration, sample_facts,
+    ):
+        """Discovered claims whose name already exists are not re-persisted."""
+        from app.services.analysis.stages.explore import ExploreStage
+
+        # Existing claims already include one of the two discovered names
+        # (case-insensitively).
+        existing = [
+            _make_claim("domestic violence"),
+            _make_claim("Wrongful Termination"),
+        ]
+
+        stage = ExploreStage(
+            llm_service=mock_llm,
+            db_session=mock_session,
+            folio=None,
+            embedding_service=mock_embedding,
+            org_config={},
+        )
+
+        stage_result = _make_stage_result()
+
+        with patch("app.services.analysis.stages.explore.ExplorationEngine") as MockEngine:
+            mock_engine = AsyncMock()
+            mock_engine.explore = AsyncMock(return_value=stage_result)
+            MockEngine.return_value = mock_engine
+
+            with patch("app.services.analysis.stages.explore.ProtocolService") as MockPS:
+                MockPS.return_value = AsyncMock()
+
+                result = await stage.execute(
+                    sample_run, sample_iteration, existing, sample_facts,
+                )
+
+        # Only "Wage Theft" is new; "Domestic Violence" deduped.
+        assert result["new_claims"] == 1
+        added_names = [c[0][0].claim_name for c in mock_session.add.call_args_list]
+        assert added_names == ["Wage Theft"]
+
+
 # ---------------------------------------------------------------------------
 # Orchestrator integration tests
 # ---------------------------------------------------------------------------

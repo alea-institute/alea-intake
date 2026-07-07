@@ -211,6 +211,13 @@ class LLMService:
             full_messages.append({"role": "system", "content": system_prompt})
         full_messages.append({"role": "user", "content": prompt})
 
+        # OpenAI's JSON mode (response_format=json_object) rejects requests
+        # unless the word "json" appears somewhere in the messages (BUG-6).
+        if not any("json" in (m.get("content") or "").lower() for m in full_messages):
+            full_messages.insert(
+                0, {"role": "system", "content": "Respond with a single valid JSON object."}
+            )
+
         response = await model.json_async(messages=full_messages)
         return schema.model_validate(response.data)
 

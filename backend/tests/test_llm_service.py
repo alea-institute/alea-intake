@@ -270,7 +270,7 @@ class TestLLMServiceJsonAsync:
 
         with patch.dict(_PROVIDER_MODEL_MAP, {"openai": mock_model_cls}):
             result = await service.json_async(
-                prompt="what?", schema=Result, system_prompt="be terse"
+                prompt="Answer as JSON: what?", schema=Result, system_prompt="be terse"
             )
 
         assert isinstance(result, Result)
@@ -278,7 +278,7 @@ class TestLLMServiceJsonAsync:
         assert mock_instance.json_async.await_args.args == ()
         sent = mock_instance.json_async.await_args.kwargs["messages"]
         assert sent[0] == {"role": "system", "content": "be terse"}
-        assert sent[1] == {"role": "user", "content": "what?"}
+        assert sent[1] == {"role": "user", "content": "Answer as JSON: what?"}
 
     async def test_json_async_unknown_provider_raises(self):
         """json_async() raises ValueError when provider has no model class."""
@@ -293,6 +293,71 @@ class TestLLMServiceJsonAsync:
         with patch.dict(_PROVIDER_MODEL_MAP, {}, clear=True):
             with pytest.raises(ValueError, match="Unknown LLM provider"):
                 await service.json_async(prompt="x", schema=Result)
+
+
+class TestJsonModeWordGuard:
+    """BUG-6: OpenAI JSON mode requires the word 'json' in the messages."""
+
+    async def test_json_async_injects_json_mention_when_missing(self):
+        """A prompt without 'json' gets a guard system message prepended."""
+        from pydantic import BaseModel
+
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
+
+        class Result(BaseModel):
+            answer: str
+
+        service = LLMService(org_config=_make_org_config(model="gpt-4o-mini"))
+        mock_instance = MagicMock()
+        mock_instance.json_async = AsyncMock(
+            return_value=MagicMock(data={"answer": "x"})
+        )
+        with patch.dict(_PROVIDER_MODEL_MAP, {"openai": MagicMock(return_value=mock_instance)}):
+            await service.json_async(prompt="List the gaps.", schema=Result)
+
+        sent = mock_instance.json_async.await_args.kwargs["messages"]
+        assert any("json" in (m["content"] or "").lower() for m in sent)
+
+    async def test_json_async_no_injection_when_prompt_mentions_json(self):
+        """A prompt already mentioning JSON is sent unchanged."""
+        from pydantic import BaseModel
+
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
+
+        class Result(BaseModel):
+            answer: str
+
+        service = LLMService(org_config=_make_org_config(model="gpt-4o-mini"))
+        mock_instance = MagicMock()
+        mock_instance.json_async = AsyncMock(
+            return_value=MagicMock(data={"answer": "x"})
+        )
+        with patch.dict(_PROVIDER_MODEL_MAP, {"openai": MagicMock(return_value=mock_instance)}):
+            await service.json_async(prompt="Return a JSON object.", schema=Result)
+
+        sent = mock_instance.json_async.await_args.kwargs["messages"]
+        assert len(sent) == 1
+
+
+class TestPromptSchemaContracts:
+    """BUG-7 tripwire: structured-output prompts must spell out required fields."""
+
+    def test_extraction_prompt_names_required_fields(self):
+        from app.services.extraction.fact_extraction import EXTRACTION_SYSTEM_PROMPT
+
+        for field in ("assertion", "fact_type", "entity_type", "value",
+                      "source_start", "source_end", "facts", "entities"):
+            assert f'"{field}"' in EXTRACTION_SYSTEM_PROMPT, field
+        assert "json" in EXTRACTION_SYSTEM_PROMPT.lower()
+
+    def test_stage_prompts_mention_json(self):
+        """Every direct json_async stage prompt must contain the word 'json'."""
+        from app.services.analysis.stages.deadline_detect import DEADLINE_SYSTEM_PROMPT
+        from app.services.analysis.stages.fact_map import FACT_MAP_SYSTEM_PROMPT
+        from app.services.analysis.stages.issue_spot import ISSUE_SPOT_SYSTEM_PROMPT
+
+        for prompt in (DEADLINE_SYSTEM_PROMPT, FACT_MAP_SYSTEM_PROMPT, ISSUE_SPOT_SYSTEM_PROMPT):
+            assert "json" in prompt.lower()
 
 
 class TestNoPositionalMessageCalls:
