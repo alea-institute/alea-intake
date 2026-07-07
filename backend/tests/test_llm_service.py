@@ -227,8 +227,11 @@ class TestLLMServiceAcomplete:
             )
 
         assert result == "hello"
-        # chat_async received the system prompt prepended to the messages
-        sent = mock_instance.chat_async.await_args.args
+        # BUG-4 regression: alea-llm-client requires messages as the `messages=`
+        # kwarg — positional dicts get wrapped as a single message's content and
+        # the provider rejects the request. Assert the kwarg form.
+        assert mock_instance.chat_async.await_args.args == ()
+        sent = mock_instance.chat_async.await_args.kwargs["messages"]
         assert sent[0] == {"role": "system", "content": "be brief"}
         assert sent[1] == {"role": "user", "content": "hi"}
 
@@ -242,6 +245,72 @@ class TestLLMServiceAcomplete:
         with patch.dict(_PROVIDER_MODEL_MAP, {}, clear=True):
             with pytest.raises(ValueError, match="Unknown LLM provider"):
                 await service.acomplete([{"role": "user", "content": "hi"}])
+
+
+class TestLLMServiceJsonAsync:
+    """Test json_async() structured-output helper (BUG-4: was a missing method)."""
+
+    async def test_json_async_validates_schema_and_uses_messages_kwarg(self):
+        """json_async() sends messages= kwarg and validates response.data."""
+        from pydantic import BaseModel
+
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
+
+        class Result(BaseModel):
+            answer: str
+
+        org_config = _make_org_config(provider="openai", model="gpt-4o-mini")
+        service = LLMService(org_config=org_config)
+
+        mock_instance = MagicMock()
+        mock_instance.json_async = AsyncMock(
+            return_value=MagicMock(data={"answer": "42"})
+        )
+        mock_model_cls = MagicMock(return_value=mock_instance)
+
+        with patch.dict(_PROVIDER_MODEL_MAP, {"openai": mock_model_cls}):
+            result = await service.json_async(
+                prompt="what?", schema=Result, system_prompt="be terse"
+            )
+
+        assert isinstance(result, Result)
+        assert result.answer == "42"
+        assert mock_instance.json_async.await_args.args == ()
+        sent = mock_instance.json_async.await_args.kwargs["messages"]
+        assert sent[0] == {"role": "system", "content": "be terse"}
+        assert sent[1] == {"role": "user", "content": "what?"}
+
+    async def test_json_async_unknown_provider_raises(self):
+        """json_async() raises ValueError when provider has no model class."""
+        from pydantic import BaseModel
+
+        from app.services.llm_service import LLMService, _PROVIDER_MODEL_MAP
+
+        class Result(BaseModel):
+            answer: str
+
+        service = LLMService(org_config=_make_org_config())
+        with patch.dict(_PROVIDER_MODEL_MAP, {}, clear=True):
+            with pytest.raises(ValueError, match="Unknown LLM provider"):
+                await service.json_async(prompt="x", schema=Result)
+
+
+class TestNoPositionalMessageCalls:
+    """Source tripwire (BUG-4): no app code may call the LLM client positionally."""
+
+    def test_no_positional_json_or_chat_async_calls_in_app(self):
+        """`json_async(*` / `chat_async(*` wrap dicts as content — always a bug."""
+        import pathlib
+
+        app_root = pathlib.Path(__file__).resolve().parents[1] / "app"
+        offenders = []
+        for py in app_root.rglob("*.py"):
+            src = py.read_text()
+            if "json_async(*" in src or "chat_async(*" in src:
+                offenders.append(str(py))
+        assert offenders == [], (
+            f"Positional LLM-client calls found (pass messages= instead): {offenders}"
+        )
 
 
 class TestGetLLMServiceFactory:

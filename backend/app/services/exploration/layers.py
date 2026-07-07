@@ -257,7 +257,7 @@ async def layer_cheap_llm(
     ]
 
     try:
-        response = await model.json_async(*messages)
+        response = await model.json_async(messages=messages)
         data = response.data
     except Exception:
         logger.warning("Cheap LLM call failed", exc_info=True)
@@ -349,7 +349,7 @@ async def layer_expensive_llm(
     ]
 
     try:
-        response = await model.json_async(*messages)
+        response = await model.json_async(messages=messages)
         data = response.data
     except Exception:
         logger.warning("Expensive LLM call failed", exc_info=True)

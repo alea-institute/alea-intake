@@ -106,7 +106,7 @@ class IssueSpotStage:
             init_kwargs["endpoint"] = config["endpoint"]
 
         model = model_cls(**init_kwargs)
-        response = await model.json_async(*messages)
+        response = await model.json_async(messages=messages)
         return response.data
 
     async def _resolve_folio_iri(self, claim_name: str) -> str | None:

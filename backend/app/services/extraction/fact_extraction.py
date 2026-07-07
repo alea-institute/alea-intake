@@ -128,7 +128,7 @@ class FactExtractionService:
             init_kwargs["endpoint"] = config["endpoint"]
 
         model = model_cls(**init_kwargs)
-        response = await model.json_async(*messages)
+        response = await model.json_async(messages=messages)
         return response.data
 
     async def extract_facts(

@@ -176,8 +176,43 @@ class LLMService:
             full_messages.append({"role": "system", "content": system_prompt})
         full_messages.extend(messages)
 
-        response = await model.chat_async(*full_messages)
+        # alea-llm-client requires messages as a keyword list; positional args
+        # are wrapped as a single user message's content (BUG-4).
+        response = await model.chat_async(messages=full_messages)
         return (getattr(response, "text", "") or "").strip()
+
+    async def json_async(
+        self,
+        prompt: str,
+        schema: type[Any],
+        system_prompt: str | None = None,
+    ) -> Any:
+        """Send a JSON completion and validate the result against a schema.
+
+        Structured-output twin of acomplete(). Callers (gap analysis, question
+        generation) pass a prompt and a pydantic model class; the raw JSON reply
+        is validated and returned as a schema instance. Raises on provider
+        errors or validation failure — callers choose their own fallback.
+        """
+        config = self.get_client_config()
+        model_cls = _PROVIDER_MODEL_MAP.get(config["provider"])
+        if model_cls is None:
+            raise ValueError(f"Unknown LLM provider: {config['provider']}")
+        init_kwargs: dict[str, Any] = {
+            "api_key": config.get("api_key"),
+            "model": config.get("model"),
+        }
+        if "endpoint" in config:
+            init_kwargs["endpoint"] = config["endpoint"]
+        model = model_cls(**init_kwargs)
+
+        full_messages: list[dict[str, str]] = []
+        if system_prompt:
+            full_messages.append({"role": "system", "content": system_prompt})
+        full_messages.append({"role": "user", "content": prompt})
+
+        response = await model.json_async(messages=full_messages)
+        return schema.model_validate(response.data)
 
     async def check_connection(self) -> dict[str, str]:
         """Test the LLM connection without sending any case data.
