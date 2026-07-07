@@ -188,7 +188,10 @@ class TestEmbeddingService:
         service.build_index(mock_folio)
 
         assert mock_provider.encode_batch.called
-        assert mock_backend.upsert.call_count == len(mock_folio.classes)
+        upserted = sum(
+            len(c.args[0]) for c in mock_backend.upsert_many.await_args_list
+        )
+        assert upserted == len(mock_folio.classes)
 
     def test_build_index_ensures_table_before_truncate(self, mock_folio):
         """BUG-9: build_index must create the table before delete_all TRUNCATEs it."""
@@ -232,7 +235,10 @@ class TestEmbeddingService:
         service = EmbeddingService.get_instance(provider=mock_provider, backend=mock_backend)
         service.build_index(folio)
 
-        assert mock_backend.upsert.call_count == 2
+        upserted = sum(
+            len(c.args[0]) for c in mock_backend.upsert_many.await_args_list
+        )
+        assert upserted == 2
 
     @pytest.mark.asyncio
     async def test_search_returns_results(self):

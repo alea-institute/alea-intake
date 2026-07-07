@@ -97,10 +97,22 @@ async def lifespan(app: FastAPI):
         # Step 2: Load FOLIO singleton (sync OWL parsing in executor)
         await loop.run_in_executor(None, get_folio)
 
-        # Step 3: Build embedding index from FOLIO concepts
+        # Step 3: Build embedding index from FOLIO concepts — in the
+        # BACKGROUND. Encoding ~18K labels takes minutes; blocking startup on
+        # it exceeds the deploy healthcheck window and gets the container
+        # killed (observed on Railway). The app serves immediately; concept
+        # resolution degrades gracefully (label/prefix stage) until the index
+        # finishes (BUG-9 follow-up).
         folio = get_folio()  # already loaded in step 2
         emb_service = EmbeddingService.get_instance()
-        await loop.run_in_executor(None, emb_service.build_index, folio)
+
+        async def _build_index_bg() -> None:
+            try:
+                await loop.run_in_executor(None, emb_service.build_index, folio)
+            except Exception:
+                logger.warning("Background embedding index build failed", exc_info=True)
+
+        asyncio.create_task(_build_index_bg())
 
         # Step 4: Start periodic OWL update checker
         update_manager = OWLUpdateManager.get_instance()

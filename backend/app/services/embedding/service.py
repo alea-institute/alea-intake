@@ -118,22 +118,35 @@ class EmbeddingService:
 
             logger.info("Building embedding index for %d FOLIO classes...", len(classes))
 
+            upsert_many = getattr(self._backend, "upsert_many", None)
             for i in range(0, len(labels), batch_size):
                 batch_labels = labels[i : i + batch_size]
                 batch_classes = classes[i : i + batch_size]
                 vectors = self._provider.encode_batch(batch_labels)  # type: ignore[union-attr]
-                for cls, vec in zip(batch_classes, vectors):
-                    loop.run_until_complete(
-                        self._backend.upsert(  # type: ignore[union-attr]
-                            iri=cls.iri,
-                            vector=vec,
-                            metadata={
-                                "label": cls.label,
-                                "branch": getattr(cls, "branch", ""),
-                                "alt_labels": cls.alternative_labels,
-                            },
+                batch_rows = [
+                    {
+                        "iri": cls.iri,
+                        "vector": vec,
+                        "metadata": {
+                            "label": cls.label,
+                            "branch": getattr(cls, "branch", ""),
+                            "alt_labels": cls.alternative_labels,
+                        },
+                    }
+                    for cls, vec in zip(batch_classes, vectors)
+                ]
+                if upsert_many is not None:
+                    # One transaction per batch instead of per vector.
+                    loop.run_until_complete(upsert_many(batch_rows))
+                else:
+                    for row in batch_rows:
+                        loop.run_until_complete(
+                            self._backend.upsert(  # type: ignore[union-attr]
+                                iri=row["iri"],
+                                vector=row["vector"],
+                                metadata=row["metadata"],
+                            )
                         )
-                    )
 
             self._built = True
             logger.info("Embedding index built: %d vectors", len(classes))

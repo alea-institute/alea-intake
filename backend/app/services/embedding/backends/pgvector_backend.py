@@ -67,6 +67,36 @@ class PgVectorBackend:
                 },
             )
 
+    async def upsert_many(self, rows: list[dict]) -> None:
+        """Batch upsert: one transaction + executemany for a whole batch.
+
+        Each row: {"iri", "vector", "metadata"}. Row-at-a-time upserts open
+        one transaction per vector — ~18K transactions per index build.
+        """
+        if not rows:
+            return
+        params = [
+            {
+                "iri": r["iri"],
+                "label": r["metadata"].get("label", ""),
+                "embedding": "[" + ",".join(str(v) for v in r["vector"]) + "]",
+                "metadata": json.dumps(r["metadata"]),
+            }
+            for r in rows
+        ]
+        async with self._engine.begin() as conn:
+            await conn.execute(
+                text(f"""
+                    INSERT INTO shared.{self._table_name} (iri, label, embedding, metadata)
+                    VALUES (:iri, :label, :embedding, :metadata)
+                    ON CONFLICT (iri) DO UPDATE SET
+                        label = EXCLUDED.label,
+                        embedding = EXCLUDED.embedding,
+                        metadata = EXCLUDED.metadata
+                """),
+                params,
+            )
+
     async def search(self, query_vector: list[float], top_k: int = 10) -> list[SearchResult]:
         vec_str = "[" + ",".join(str(v) for v in query_vector) + "]"
         async with self._engine.begin() as conn:
