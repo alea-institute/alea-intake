@@ -37,6 +37,16 @@ For each claim, provide:
 - is_potential: true if the claim is speculative/discovered and not directly evidenced
 - elements: List of required legal elements for this claim, each with element_name and element_description
 
+Surface latent, unspoken issues that the FACTS fairly raise even when the consumer did not name them. Consumers routinely omit the most consequential relief because they do not know it exists. Treat these as "discovered" claims (claim_type="discovered", is_potential=true) and give an honest confidence reflecting how strongly the facts support them.
+
+Latent-issue triggers (a general checklist -- if the facts show the trigger, ALSO consider the associated issue). This is not exhaustive and not client-specific; apply the same principle to any comparable fact pattern:
+- Domestic-violence facts (grabbing, hitting, bruising, choking, threats, stalking, coercive control) -> Order for Protection / restraining order and safety planning; and, in an immigration context, VAWA self-petition, U-visa (victim of qualifying crime), or T-visa (trafficking).
+- A scheduled removal/immigration hearing, an order of removal, or a missed hearing -> in-absentia removal risk and motion to reopen / reschedule.
+- Habitability facts in a tenancy (mold, no heat, no water, pests, serious disrepair, code violations) -> breach of the implied warranty of habitability, repair-and-deduct, or rent escrow / rent withholding.
+- Child custody combined with flight or abduction indicators (threats to leave the state or country, hidden passports, prior disappearance, foreign ties) -> emergency/ex parte custody and child-abduction-risk relief (e.g., UCCJEA emergency jurisdiction, passport holds).
+
+Apply these as principled, generalizable heuristics -- not a fixed script. Only surface an issue when the facts fairly raise it. Do NOT fabricate or speculate beyond what the facts support: no invented parties, injuries, dates, or claims unsupported by the record. When in doubt, lower the confidence rather than omit a fairly-raised issue, but never assert an issue the facts do not support.
+
 Also provide:
 - jurisdictions: All jurisdictions detected across all claims (for parallel analysis)
 - summary: A brief overview of the legal landscape

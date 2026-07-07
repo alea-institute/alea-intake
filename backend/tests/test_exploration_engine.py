@@ -268,6 +268,71 @@ class TestLayerFolioAdjacency:
         results = await layer_folio_adjacency(None, sample_claims, ExplorationConfig())
         assert results == []
 
+    @pytest.mark.asyncio
+    async def test_placeholder_nodes_never_become_claims(self):
+        """BUG-13: sandbox/deprecated adjacency nodes are filtered, never claimed."""
+        import importlib
+
+        from app.services.exploration.layers import layer_folio_adjacency
+
+        claim = _make_claim(
+            "Removal Defense", folio_iri="https://folio.openlegalstandard.org/imm001"
+        )
+        adj_result = {
+            "nodes": [
+                {"iri": "https://folio.openlegalstandard.org/real01",
+                 "label": "VAWA Self-Petition", "depth": 1},
+                {"iri": "https://folio.openlegalstandard.org/zzz01",
+                 "label": "ZZZ - SANDBOX: UNDER CONSTRUCTION", "depth": 1},
+                {"iri": "https://folio.openlegalstandard.org/dep01",
+                 "label": "Deprecated Foo", "depth": 1},
+                {"iri": "https://folio.openlegalstandard.org/blank01",
+                 "label": "", "depth": 1},
+            ],
+            "edges": [],
+        }
+        adj_mod = importlib.import_module("app.services.folio.adjacency")
+
+        with patch.object(adj_mod, "discover_adjacent_concepts", return_value=adj_result):
+            results = await layer_folio_adjacency(
+                MagicMock(), [claim], ExplorationConfig(),
+            )
+
+        labels = {r.claim_name for r in results}
+        assert "VAWA Self-Petition" in labels
+        assert "ZZZ - SANDBOX: UNDER CONSTRUCTION" not in labels
+        assert "Deprecated Foo" not in labels
+        assert all(r.claim_name for r in results)  # no empty-label nodes
+
+    @pytest.mark.asyncio
+    async def test_caps_adjacency_claims_per_source(self):
+        """BUG-13: adjacency claims per source-concept are capped to curb noise."""
+        import importlib
+
+        from app.services.exploration.layers import layer_folio_adjacency
+
+        claim = _make_claim(
+            "Immigration", folio_iri="https://folio.openlegalstandard.org/imm001"
+        )
+        # 20 valid adjacency nodes for a single source claim.
+        adj_result = {
+            "nodes": [
+                {"iri": f"https://folio.openlegalstandard.org/n{i:02d}",
+                 "label": f"Concept {i}", "depth": 1}
+                for i in range(20)
+            ],
+            "edges": [],
+        }
+        adj_mod = importlib.import_module("app.services.folio.adjacency")
+
+        with patch.object(adj_mod, "discover_adjacent_concepts", return_value=adj_result):
+            results = await layer_folio_adjacency(
+                MagicMock(), [claim], ExplorationConfig(),
+            )
+
+        # Capped at 5 per source-concept (BUG-13), not 20.
+        assert len(results) == 5
+
 
 class TestLayerProtocolMatch:
     """Tests for layer_protocol_match."""

@@ -19,6 +19,49 @@ from sqlalchemy.ext.asyncio import AsyncSession
 logger = logging.getLogger(__name__)
 
 
+# BUG-13: FOLIO contains placeholder/sandbox/deprecated concepts (e.g. a node
+# literally labeled "ZZZ - SANDBOX: UNDER CONSTRUCTION") that must never surface
+# as legal claims during ontology traversal. These deterministic markers identify
+# such non-substantive concepts. Kept as substring/prefix checks (case-insensitive)
+# so both adjacency node-add and the exploration layer share one definition.
+_PLACEHOLDER_LABEL_PREFIXES: tuple[str, ...] = ("zzz",)
+_PLACEHOLDER_LABEL_SUBSTRINGS: tuple[str, ...] = (
+    "sandbox",
+    "under construction",
+    "placeholder",
+    "do not use",
+    "deprecated",
+    "test only",
+    "example only",
+)
+
+
+def is_placeholder_concept(label: str | None) -> bool:
+    """Return True if a FOLIO concept label marks a placeholder/sandbox concept.
+
+    BUG-13: Deterministic filter shared by adjacency traversal and the exploration
+    folio-adjacency layer so placeholder/sandbox/deprecated/under-construction
+    concepts never become legal claims.
+
+    A label is considered a placeholder when (case-insensitive), after stripping,
+    it is empty/None, starts with "zzz", or contains any of: "sandbox",
+    "under construction", "placeholder", "do not use", "deprecated", "test only",
+    "example only".
+
+    Args:
+        label: The concept label to test (may be None).
+
+    Returns:
+        True if the concept should be excluded, False otherwise.
+    """
+    if not label or not label.strip():
+        return True
+    normalized = label.strip().lower()
+    if normalized.startswith(_PLACEHOLDER_LABEL_PREFIXES):
+        return True
+    return any(marker in normalized for marker in _PLACEHOLDER_LABEL_SUBSTRINGS)
+
+
 @dataclass
 class AdjacencyConfig:
     """Configuration for adjacency discovery traversal.
@@ -82,6 +125,8 @@ def discover_adjacent_concepts(
             for child in children:
                 if len(nodes) >= config.max_nodes:
                     break
+                if is_placeholder_concept(child.label):
+                    continue  # BUG-13: skip placeholder/sandbox/deprecated concepts
                 if child.iri not in nodes:
                     nodes[child.iri] = {
                         "iri": child.iri,
@@ -105,6 +150,8 @@ def discover_adjacent_concepts(
             for parent in parents:
                 if len(nodes) >= config.max_nodes:
                     break
+                if is_placeholder_concept(parent.label):
+                    continue  # BUG-13: skip placeholder/sandbox/deprecated concepts
                 if parent.iri not in nodes:
                     nodes[parent.iri] = {
                         "iri": parent.iri,
@@ -129,6 +176,9 @@ def discover_adjacent_concepts(
             for subject, prop, obj in connections:
                 if len(nodes) >= config.max_nodes:
                     break
+                # BUG-13: skip edges to/from placeholder/sandbox/deprecated concepts
+                if is_placeholder_concept(obj.label) or is_placeholder_concept(subject.label):
+                    continue
                 # Add object node
                 if obj.iri not in nodes:
                     nodes[obj.iri] = {

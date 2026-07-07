@@ -192,3 +192,79 @@ def test_discover_for_unmapped(mock_folio):
     # Anchor traversal results should be merged
     assert "https://folio.openlegalstandard.org/objective001" in node_iris
     assert "https://folio.openlegalstandard.org/areaoflaw001" in node_iris
+
+
+# ── BUG-13: placeholder / sandbox concept filtering ──────────────────────────
+
+
+def _make_child(iri: str, label: str):
+    """Create a mock FOLIO child/parent concept with iri and label."""
+    c = MagicMock()
+    c.iri = iri
+    c.label = label
+    return c
+
+
+class TestIsPlaceholderConcept:
+    """Deterministic placeholder/sandbox/deprecated concept predicate (BUG-13)."""
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "ZZZ - SANDBOX: UNDER CONSTRUCTION",
+            "zzz something",
+            "ZZZ",
+            "Deprecated Foo",
+            "Some Sandbox Concept",
+            "This is Under Construction",
+            "Placeholder claim",
+            "Do Not Use - internal",
+            "Test Only widget",
+            "Example Only marker",
+            "",
+            "   ",
+            None,
+        ],
+    )
+    def test_excluded_labels(self, label):
+        from app.services.folio.adjacency import is_placeholder_concept
+
+        assert is_placeholder_concept(label) is True
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "Breach of Contract",
+            "Wrongful Termination Claim",
+            "Order for Protection",
+            "Warranty of Habitability",
+            "Puzzle",  # not a prefix match for 'zzz'
+        ],
+    )
+    def test_allowed_labels(self, label):
+        from app.services.folio.adjacency import is_placeholder_concept
+
+        assert is_placeholder_concept(label) is False
+
+
+def test_adjacency_excludes_placeholder_children(mock_folio):
+    """BUG-13: placeholder children are never added as graph nodes."""
+    from app.services.folio.adjacency import AdjacencyConfig, discover_adjacent_concepts
+
+    good = _make_child("https://folio.openlegalstandard.org/good001", "Good Concept")
+    sandbox = _make_child(
+        "https://folio.openlegalstandard.org/zzz001", "ZZZ - SANDBOX: UNDER CONSTRUCTION"
+    )
+    deprecated = _make_child("https://folio.openlegalstandard.org/dep001", "Deprecated Foo")
+    mock_folio.get_children = MagicMock(return_value=[good, sandbox, deprecated])
+    mock_folio.get_parents = MagicMock(return_value=[])
+
+    source_iri = "https://folio.openlegalstandard.org/objective001"
+    result = discover_adjacent_concepts(
+        mock_folio, source_iri, AdjacencyConfig(include_properties=False)
+    )
+
+    node_iris = {n["iri"] for n in result["nodes"]}
+    assert "https://folio.openlegalstandard.org/good001" in node_iris
+    assert "https://folio.openlegalstandard.org/zzz001" not in node_iris
+    assert "https://folio.openlegalstandard.org/dep001" not in node_iris

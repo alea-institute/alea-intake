@@ -91,7 +91,20 @@ async def layer_folio_adjacency(
     if folio is None:
         return []
 
-    from app.services.folio.adjacency import AdjacencyConfig, discover_adjacent_concepts
+    from app.services.folio.adjacency import (
+        AdjacencyConfig,
+        discover_adjacent_concepts,
+        is_placeholder_concept,
+    )
+
+    # BUG-13: cap adjacency claims per source-concept to curb ontology-traversal
+    # noise volume. A single legal claim previously spawned ~30+ adjacency claims,
+    # most of them irrelevant traversal noise. The exploration engine does not
+    # currently expose a per-node relevance/similarity score, so we apply a
+    # deterministic cap on the number of adjacency claims emitted per source claim
+    # (shallower nodes preferred). If a per-node score is added later, prefer
+    # dropping nodes below a relevance threshold here.
+    _MAX_ADJACENCY_PER_SOURCE = 5
 
     results: list[ExplorationResult] = []
     seen_iris: set[str] = set()
@@ -111,14 +124,31 @@ async def layer_folio_adjacency(
             logger.debug("FOLIO adjacency failed for %s", claim.folio_iri, exc_info=True)
             continue
 
-        for node in adjacency.get("nodes", []):
+        # BUG-13: emit shallowest (most relevant) nodes first so the per-source
+        # cap keeps the closest concepts rather than arbitrary traversal order.
+        nodes = sorted(
+            adjacency.get("nodes", []),
+            key=lambda n: n.get("depth", 1),
+        )
+        emitted_for_source = 0
+
+        for node in nodes:
             iri = node.get("iri")
             if not iri or iri in seen_iris or iri in existing_iris:
                 continue
             if iri == claim.folio_iri:
                 continue  # Skip the source node itself
 
+            # BUG-13: never let placeholder/sandbox/deprecated concepts become claims.
+            if is_placeholder_concept(node.get("label")):
+                continue
+
+            # BUG-13: cap adjacency claims per source-concept to curb traversal noise.
+            if emitted_for_source >= _MAX_ADJACENCY_PER_SOURCE:
+                break
+
             seen_iris.add(iri)
+            emitted_for_source += 1
 
             depth = node.get("depth", 1)
             confidence = 0.7 if depth <= 1 else 0.5
