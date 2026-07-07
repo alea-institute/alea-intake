@@ -76,9 +76,90 @@ class DeadlineRule:
     description: str = ""
 
 
-# Ordered: more specific rules first (eviction window before generic served
-# rules), so find_rule() returns the most appropriate match.
+def _is_self_dated(event: DeadlineEvent) -> bool:
+    """True when the event's own stated date IS the operative deadline.
+
+    A scheduled hearing / court appearance, or an explicitly stated
+    response/filing deadline, needs no offset math: the date the client already
+    gave you is the deadline. Without this, a verbatim "August 20, 2026 hearing"
+    matched no rule and surfaced as "date unclear" (BUG-12).
+    """
+    text = _text(event)
+    if event.trigger in {"hearing", "deadline", "appearance", "court_date"}:
+        return True
+    return any(
+        kw in text
+        for kw in (
+            "hearing",
+            "court date",
+            "appearance",
+            "master calendar",
+            "filing deadline",
+            "response due",
+            "answer due",
+        )
+    )
+
+
+def _is_immigration(event: DeadlineEvent) -> bool:
+    text = _text(event)
+    return any(
+        kw in text
+        for kw in (
+            "removal",
+            "immigration",
+            "master calendar",
+            "asylum",
+            "eoir",
+            "deportation",
+            "notice to appear",
+        )
+    )
+
+
+# Ordered: more specific rules first (self-dated court dates, then eviction
+# window before generic served rules), so find_rule() returns the most
+# appropriate match.
 RULES: list[DeadlineRule] = [
+    DeadlineRule(
+        id="immigration_hearing_date",
+        jurisdiction="US",
+        citation=(
+            "The hearing date on your Notice to Appear / EOIR hearing notice "
+            "(8 C.F.R. § 1003.18; INA § 239). Failure to appear can result in an "
+            "in-absentia removal order."
+        ),
+        urgency="high",
+        hedge_text=(
+            "This is the hearing date printed on your immigration court notice — "
+            "you must appear. " + _VERIFY
+        ),
+        applies=lambda ev, jur: _is_self_dated(ev) and _is_immigration(ev),
+        compute=lambda d, ev: d,
+        description=(
+            "Immigration-court hearing/appearance: the stated date IS the "
+            "operative deadline (identity compute)."
+        ),
+    ),
+    DeadlineRule(
+        id="stated_court_date",
+        jurisdiction=None,
+        citation=(
+            "The date printed on your court notice, summons, hearing notice, or "
+            "order (confirm against the document itself)."
+        ),
+        urgency="high",
+        hedge_text=(
+            "This is a date you were given directly (a hearing, court date, or "
+            "stated deadline). " + _VERIFY
+        ),
+        applies=lambda ev, jur: _is_self_dated(ev),
+        compute=lambda d, ev: d,
+        description=(
+            "A stated hearing/court/response date is itself the operative "
+            "deadline (identity compute)."
+        ),
+    ),
     DeadlineRule(
         id="mn_eviction_hearing_window",
         jurisdiction="MN",

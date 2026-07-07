@@ -158,3 +158,39 @@ def test_results_sorted_lapsed_first():
     urgencies = [r.urgency for r in result]
     assert urgencies[0] == "lapsed"
     assert urgencies[-1] == "unknown"
+
+
+def test_immigration_hearing_verbatim_date_is_computed():
+    """BUG-12 regression: a verbatim Aug-20-2026 removal hearing must surface as a
+    COMPUTED deadline on that exact date (not 'date unclear'), cited to the EOIR
+    hearing notice, and NOT flagged lapsed relative to a July-2026 'today'.
+    """
+    ev = DeadlineEvent(
+        event_type="removal_hearing",
+        raw_text="My immigration court removal hearing is scheduled for August 20, 2026.",
+        trigger="hearing",
+        date=date(2026, 8, 20),
+        jurisdiction_hint="US",
+    )
+    d = _one([ev])
+    assert d.computed is True
+    assert d.computed_date == date(2026, 8, 20)
+    assert d.rule_id == "immigration_hearing_date"
+    assert d.citation is not None and ("1003.18" in d.citation or "EOIR" in d.citation)
+    assert d.urgency == "high"  # future hearing -> high, not "lapsed"
+
+
+def test_generic_stated_court_date_is_computed():
+    """BUG-12 regression: a plain stated hearing date (no immigration/eviction
+    context) still computes to itself with a generic court-notice citation."""
+    ev = DeadlineEvent(
+        event_type="hearing",
+        raw_text="My court hearing is on September 3, 2026.",
+        trigger="hearing",
+        date=date(2026, 9, 3),
+    )
+    d = _one([ev])
+    assert d.computed is True
+    assert d.computed_date == date(2026, 9, 3)
+    assert d.rule_id == "stated_court_date"
+    assert d.citation is not None

@@ -46,22 +46,41 @@ statute-of-limitations concern (eviction summons/hearing, being served with a
 petition, a notice to vacate or cure, a filing, an injury/incident, an
 immigration entry or hearing, etc.).
 
+TODAY'S DATE IS {today}. Interpret every date in the narrative relative to this
+anchor:
+- Preserve any year the text states verbatim -- if the client writes
+  "August 20, 2026", the year is 2026. NEVER shift a stated year.
+- If a month/day is given with no year, choose the year that makes the event
+  make sense relative to today (an upcoming hearing is in the future; a past
+  injury is in the past). Do NOT default to a prior year.
+- A stated court date, hearing date, or filing deadline that is already an
+  explicit calendar date IS itself the operative deadline -- return it as the
+  event's `date`.
+
 For each event return:
-- event_type: short category, e.g. "eviction_summons", "custody_response",
-  "notice_to_vacate", "asylum_entry", "removal_hearing", "injury".
+- event_type: short category, e.g. "eviction_summons", "eviction_hearing",
+  "custody_response", "notice_to_vacate", "asylum_entry", "removal_hearing",
+  "master_calendar_hearing", "filing_deadline", "injury".
 - raw_text: the exact narrative snippet the event came from.
 - trigger: the triggering act -- one of "served", "notice_posted", "hearing",
-  "filed", "incident", "entry".
+  "filed", "incident", "entry", "deadline". Use "hearing" for a scheduled court
+  appearance date and "deadline" for an explicitly stated response/filing
+  deadline date.
 - date: the trigger date in ISO 8601 (YYYY-MM-DD), or null if not stated.
-- jurisdiction_hint: state/court hint if present (e.g. "MN"), else null.
+- jurisdiction_hint: the U.S. state (two-letter, e.g. "MN") or "US"/"federal"
+  for immigration-court / federal matters. Infer it from the narrative (a
+  Minnesota address, a Hennepin County court, an immigration court, ICE/EOIR,
+  USCIS) even when not stated as an abbreviation. Use null only when truly
+  indeterminable.
 - window_days: an explicit cure/response window in days if the text states one,
   else null.
 
 Rules:
 1. Only extract events explicitly supported by the text. Never invent dates.
-2. Normalize dates to ISO 8601. If only a partial date is given, use null.
+2. Normalize dates to ISO 8601. If only a partial date is given, apply the
+   year-anchoring guidance above rather than returning null.
 
-Return a JSON object matching: {"events": [ ... ]}."""
+Return a JSON object matching: {{"events": [ ... ]}}."""
 
 
 class DeadlineDetectStage:
@@ -75,13 +94,16 @@ class DeadlineDetectStage:
         self._llm = llm_service
         self._session = db_session
 
-    async def _call_llm_extraction(self, text: str) -> dict[str, Any]:
+    async def _call_llm_extraction(self, text: str, today: date | None = None) -> dict[str, Any]:
         """Call the LLM to extract deadline events. Returns raw JSON dict.
 
         Separated for easy mocking in tests (mirrors FactExtractionService).
+        ``today`` anchors the year-resolution guidance in the prompt so the model
+        never mis-dates an event to a prior year (BUG-12).
         """
+        anchor = (today or date.today()).isoformat()
         messages = [
-            {"role": "system", "content": DEADLINE_SYSTEM_PROMPT},
+            {"role": "system", "content": DEADLINE_SYSTEM_PROMPT.format(today=anchor)},
             {"role": "user", "content": text},
         ]
 
@@ -128,9 +150,11 @@ class DeadlineDetectStage:
         if not text.strip():
             return []
 
+        ref_today = today or date.today()
+
         # --- Detect (probabilistic, mockable) ---
         try:
-            raw = await self._call_llm_extraction(text)
+            raw = await self._call_llm_extraction(text, today=ref_today)
             parsed = DeadlineExtractionResult.model_validate(raw)
         except Exception:
             logger.warning(
@@ -145,7 +169,7 @@ class DeadlineDetectStage:
             return []
 
         # --- Compute (deterministic) ---
-        computed = compute_deadlines(events, jurisdiction=jurisdiction, today=today)
+        computed = compute_deadlines(events, jurisdiction=jurisdiction, today=ref_today)
 
         # --- Persist ---
         created: list[Deadline] = []
