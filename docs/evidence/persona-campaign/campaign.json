@@ -1,0 +1,106 @@
+{
+  "repo": "INTAKE",
+  "campaign": "PERSONAS",
+  "title": "alea-intake — Persona UAT Campaign (live validation)",
+  "campaign_label": "alea-intake · Persona UAT",
+  "description": "First live end-to-end validation of the intake pipeline. Five deploy-test-diagnose-fix cycles took the pipeline from fully inert (0 facts extracted, hallucinated exploration claims) to end-to-end live (121 claims, 86/86 FOLIO IRIs mechanically valid, exports green). Judged vs locked rubric v1.1 by 3 independent judges + deterministic sidecars.",
+  "rubric_version": "intake-quality-v1.1 (LOCKED)",
+  "spend": "app-side ~$1-2 est. (gpt-4o-mini, 3 full 3-persona pipeline runs + probes; 60 failed JSON-mode calls billed ~0)",
+  "environment": "Railway alea-intake-dev (gpt-4o-mini), commit 256936e",
+  "sections": [
+    {
+      "title": "Campaign result — gates summary",
+      "status": "fail",
+      "body": "Gates per persona:\n`landlord-tenant` 4/6 (fail RUB-08, RUB-09)\n`immigration` 3/6 (fail RUB-01, RUB-08, RUB-09)\n`family-custody` 3/6 (fail RUB-01, RUB-08, RUB-09)\n\nAll failures share two systemic roots: deadline computation (BUG-12) and issue-completeness / exploration quality.\n\nThe 8-10 persona expansion was deliberately NOT run this campaign (policy 5 — gates not clear). 5 new personas were authored and committed, ready to run once gates clear: consumer-debt, wage-theft, benefits-denial, employment-discrimination, elder-exploitation."
+    },
+    {
+      "title": "Bugs found and FIXED this campaign (deployed to dev)",
+      "status": "pass",
+      "body_html": "<p>Fixed and deployed to Railway <code>alea-intake-dev</code> this campaign:</p><ul><li><b>BUG-3</b> — dev LLM key/model misconfigured; added Railway vars + new <code>ALEA_LLM_PROVIDER</code>/<code>ALEA_LLM_MODEL</code>/<code>ALEA_LLM_API_KEY</code> env overrides, set to gpt-4o-mini per policy 5.</li><li><b>BUG-4</b> — LLM client called with the wrong API shape at every seam (positional <code>messages</code> args; calls to a nonexistent <code>LLMService.json_async</code> that raised <code>AttributeError</code>, silently swallowed).</li><li><b>BUG-6</b> — OpenAI JSON-mode's \"contains the word 'json'\" requirement was unmet, killing the gap and question-generation stages outright.</li><li><b>BUG-7</b> — extraction prompt never named the schema fields, so pydantic validation rejected every extracted fact (0 facts extracted, forever).</li><li><b>BUG-8</b> — exploration stage ran on 0 facts and fabricated generic claims, then re-ran on every iteration (133 spam claims/persona). Fixed: once-per-run execution + name-based dedupe + no-facts guard.</li><li><b>BUG-9</b> — <code>shared.folio_embeddings</code> was never provisioned (<code>ensure_table</code> never called, no shared schema), so the resolver cascade died at stage 1. Fixed with graceful per-stage degradation. Related startup fix: moved index build off the boot critical path (it was killing the healthcheck / deploys) and batched the upserts (18,325 vectors indexed in 48s).</li><li><b>BUG-10</b> — code assumed a dict contract against folio-python's actual <code>List[OWLClass]</code> return type (<code>build_index</code>, <code>_determine_branch</code>, adjacency traversal).</li><li><b>BUG-11</b> — <code>search_by_label</code> returns <code>(OWLClass, score)</code> tuples, not bare objects; the label-resolution stage crashed on this and silently zeroed ALL IRIs. Also fixed in this pass: <code>issue_spot</code> per-run claim dedupe (was emitting 'Nonpayment of Rent' x3).</li><li><b>BUG-5</b> — downgraded: turned out to be a harness JSON-export misreport, not a pipeline bug.</li></ul><p><b>Meta-finding:</b> three unit test fixtures encoded the wrong contracts (a positional <code>chat_async</code> assertion, dict-shaped classes, a bare-object <code>search_by_label</code> stub) — unit-green, integration-dead. The fixtures matched the code's wrong assumptions, not the real dependency's behavior.</p>"
+    },
+    {
+      "title": "Bugs found, OPEN (next iteration)",
+      "status": "fail",
+      "body_html": "<ul><li><b>BUG-12</b> — deadline year-anchor: the LLM extracts trigger dates with the wrong year (e.g. <code>2023-06-15</code> for a Jun 15, 2026 event) because the prompt gives it no 'today' anchor. <code>computed_date</code> comes back null even for verbatim dates (an Aug 20, 2026 hearing still resolves to 'date unclear'). <code>rule_id</code>/<code>citation</code> are null everywhere — the rules table is never wired through. This is the root cause of the RUB-08/RUB-09 gate failures across all three personas.</li><li><b>BUG-13</b> — FOLIO adjacency exploration spam: roughly 32 of 47 immigration claims are ontology-traversal noise, including a literal <code>'ZZZ - SANDBOX: UNDER CONSTRUCTION'</code> placeholder concept surfaced as a legal claim. Needs placeholder/deprecated-concept filtering plus a relevance threshold.</li><li><b>BUG-14</b> — duplication cluster: memo claim sections repeated up to 9x, gap questions ~92% duplicates (50 questions generated from ~4 templates), fact-links repeated 8-10x. Gaps/questions/memo assembly lack the dedupe logic claims already got this campaign.</li><li><b>BUG-15</b> — <code>safety_alerts</code> = 0 on a narrative describing grabbing, bruising, and an explicit threat (DV persona). The safety detector is inert.</li><li><b>BUG-16</b> — <code>question_gen</code> silently produced 0 questions for the immigration persona despite 55 open gaps.</li><li><b>BUG-17</b> — memo/run traceability mismatch: memo header shows Matter 98 / Run 20 while <code>run.json</code> shows intake 107 / run 23 — the memo was generated from a stale run.</li></ul><p>Plus, not yet bug-numbered: 'No authorities identified' on all 51 landlord-tenant claims (authority/research stage isn't delivering citations); RUB-10 plain-language Flesch-Kincaid grade came back 17-23 vs a ~6 target (the plain-language adapter isn't reaching the output path); the memo leaks pipeline jargon (e.g. 'Practice Area Match 96%'); and a <code>'[URGENT]'</code> flag fires on 30+ items, causing alarm fatigue.</p>"
+    },
+    {
+      "title": "landlord-tenant scorecard",
+      "status": "borderline",
+      "body": "Answer-key comparison: issues identified 4/5 (missed security-deposit specifics), deadlines correct 0/2, FOLIO mappings correct ~4/8.",
+      "rubric_scores": [
+        {"id": "RUB-INTAKE-01", "criterion": "Issue-spotting completeness (GATE)", "score": "2/3", "note": "both gate issues surfaced but padded with tangential invented issues"},
+        {"id": "RUB-INTAKE-02", "criterion": "Fact extraction fidelity", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-03", "criterion": "Contradiction/inconsistency handling", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-04", "criterion": "Facts-to-source traceability", "score": "2/3", "note": "PASS — facts trace, $ inconsistency preserved"},
+        {"id": "RUB-INTAKE-05", "criterion": "FOLIO IRI mechanical validity", "score": "1/3", "note": "PASS 12/16 valid IRIs, unmapped silently null"},
+        {"id": "RUB-INTAKE-06", "criterion": "FOLIO mapping correctness/relevance", "score": "1/3", "note": "habitability → Product Liability Law mismatches"},
+        {"id": "RUB-INTAKE-07", "criterion": "Exploration/adjacency relevance", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-08", "criterion": "Deadline computation accuracy (GATE)", "score": "0/3", "note": "FAIL — hearing computed_date null"},
+        {"id": "RUB-INTAKE-09", "criterion": "Deadline citation/date accuracy (GATE)", "score": "0/3", "note": "FAIL — wrong year + fabricated-looking extra PAST-DUE deadline in memo"},
+        {"id": "RUB-INTAKE-10", "criterion": "Plain-language readability (Flesch-Kincaid)", "score": "0/3", "note": "FK 17.1"},
+        {"id": "RUB-INTAKE-11", "criterion": "Urgency/alert calibration", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-12", "criterion": "Multilingual support (es/zh)", "score": "N/A", "note": "not exercised this campaign"},
+        {"id": "RUB-INTAKE-13", "criterion": "Gap/question quality & non-duplication", "score": "2/3", "note": "questions relevant but 5x duplicated"},
+        {"id": "RUB-INTAKE-14", "criterion": "Safety/escalation detection", "score": "2/3", "note": ""},
+        {"id": "RUB-INTAKE-15", "criterion": "Export integrity (pdf/json)", "score": "3/3", "note": "PASS"},
+        {"id": "RUB-INTAKE-16", "criterion": "Memo/run overall traceability", "score": "2/3", "note": ""}
+      ]
+    },
+    {
+      "title": "immigration scorecard",
+      "status": "fail",
+      "body": "Answer-key comparison: issues identified 3/8, deadlines correct 0/2, FOLIO mappings correct 5/19.",
+      "rubric_scores": [
+        {"id": "RUB-INTAKE-01", "criterion": "Issue-spotting completeness (GATE)", "score": "0/3", "note": "FAIL — VAWA + U-visa + in-absentia absent from all 47 claims"},
+        {"id": "RUB-INTAKE-02", "criterion": "Fact extraction fidelity", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-03", "criterion": "Contradiction/inconsistency handling", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-04", "criterion": "Facts-to-source traceability", "score": "3/3", "note": "PASS"},
+        {"id": "RUB-INTAKE-05", "criterion": "FOLIO IRI mechanical validity", "score": "3/3", "note": "PASS 47/47"},
+        {"id": "RUB-INTAKE-06", "criterion": "FOLIO mapping correctness/relevance", "score": "0/3", "note": "~32 traversal-noise claims incl. SANDBOX placeholder"},
+        {"id": "RUB-INTAKE-07", "criterion": "Exploration/adjacency relevance", "score": "0/3", "note": ""},
+        {"id": "RUB-INTAKE-08", "criterion": "Deadline computation accuracy (GATE)", "score": "0/3", "note": "FAIL — verbatim Aug-20-2026 hearing date → computed null 'date unclear'"},
+        {"id": "RUB-INTAKE-09", "criterion": "Deadline citation/date accuracy (GATE)", "score": "0/3", "note": "FAIL — wrong-year DV date, no citations"},
+        {"id": "RUB-INTAKE-10", "criterion": "Plain-language readability (Flesch-Kincaid)", "score": "0/3", "note": "FK 23.3"},
+        {"id": "RUB-INTAKE-11", "criterion": "Urgency/alert calibration", "score": "0/3", "note": "~40 '[URGENT]' noise bullets"},
+        {"id": "RUB-INTAKE-12", "criterion": "Multilingual support (es/zh)", "score": "N/A", "note": "not exercised this campaign"},
+        {"id": "RUB-INTAKE-13", "criterion": "Gap/question quality & non-duplication", "score": "0/3", "note": "questions = 0 despite gaps = 55"},
+        {"id": "RUB-INTAKE-14", "criterion": "Safety/escalation detection", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-15", "criterion": "Export integrity (pdf/json)", "score": "3/3", "note": "PASS"},
+        {"id": "RUB-INTAKE-16", "criterion": "Memo/run overall traceability", "score": "2/3", "note": ""}
+      ]
+    },
+    {
+      "title": "family-custody scorecard",
+      "status": "fail",
+      "body": "Answer-key comparison: issues identified 1/7 full + 4 partial + 2 missed, deadlines correct 0/3, FOLIO mappings correct ~6/13.",
+      "rubric_scores": [
+        {"id": "RUB-INTAKE-01", "criterion": "Issue-spotting completeness (GATE)", "score": "0/3", "note": "FAIL — OFP never named in consumer memo, abduction risk absent, safety_alerts=0"},
+        {"id": "RUB-INTAKE-02", "criterion": "Fact extraction fidelity", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-03", "criterion": "Contradiction/inconsistency handling", "score": "2/3", "note": ""},
+        {"id": "RUB-INTAKE-04", "criterion": "Facts-to-source traceability", "score": "3/3", "note": "PASS"},
+        {"id": "RUB-INTAKE-05", "criterion": "FOLIO IRI mechanical validity", "score": "3/3", "note": "PASS 27/27"},
+        {"id": "RUB-INTAKE-06", "criterion": "FOLIO mapping correctness/relevance", "score": "1/3", "note": ""},
+        {"id": "RUB-INTAKE-07", "criterion": "Exploration/adjacency relevance", "score": "2/3", "note": ""},
+        {"id": "RUB-INTAKE-08", "criterion": "Deadline computation accuracy (GATE)", "score": "0/3", "note": "FAIL — all computed:false"},
+        {"id": "RUB-INTAKE-09", "criterion": "Deadline citation/date accuracy (GATE)", "score": "0/3", "note": "FAIL — wrong year, no citations"},
+        {"id": "RUB-INTAKE-10", "criterion": "Plain-language readability (Flesch-Kincaid)", "score": "0/3", "note": "FK 20.8"},
+        {"id": "RUB-INTAKE-11", "criterion": "Urgency/alert calibration", "score": "1/3", "note": "30+ URGENT flags, undifferentiated"},
+        {"id": "RUB-INTAKE-12", "criterion": "Multilingual support (es/zh)", "score": "N/A", "note": "not exercised this campaign"},
+        {"id": "RUB-INTAKE-13", "criterion": "Gap/question quality & non-duplication", "score": "0/3", "note": "50 questions ~92% duplicates, none on OFP/response deadline"},
+        {"id": "RUB-INTAKE-14", "criterion": "Safety/escalation detection", "score": "0/3", "note": "Emergency label present but no escalation text; safety detector missed the DV narrative"},
+        {"id": "RUB-INTAKE-15", "criterion": "Export integrity (pdf/json)", "score": "3/3", "note": "PASS"},
+        {"id": "RUB-INTAKE-16", "criterion": "Memo/run overall traceability", "score": "2/3", "note": ""}
+      ]
+    },
+    {
+      "title": "Deterministic sidecars (memo_checks.py + folio_check.py)",
+      "status": "pass",
+      "body": "`folio_check --all`: 86/86 mapped IRIs resolve, are non-deprecated, and are well-rooted in the taxonomy.\n\nExports: pdf + json verified for all 9 memos (3 profiles x 3 personas).\n\nFlesch-Kincaid reading grades: `court_self_help` scored 17.1 (landlord-tenant) / 23.3 (immigration) / 20.8 (family-custody) against a ~6 target.\n\nDeadline digests show wrong-year trigger dates and null computed dates across all three personas — the deterministic evidence underlying BUG-12.\n\nScripts committed to the repo: `scripts/memo_checks.py`, `scripts/folio_check.py`."
+    },
+    {
+      "title": "What v1.0 UAT close still needs",
+      "status": "borderline",
+      "body_html": "<ol><li>Fix <b>BUG-12</b> — deadline engine (year anchor in the extraction prompt + rules-table citation wiring). This is the direct blocker for the RUB-08/RUB-09 gates.</li><li>Fix issue-completeness for the <b>GATE-01</b> failures (VAWA/U-visa/OFP coverage) — likely requires changes to the <code>issue_spot</code> prompt and/or exploration relevance filtering.</li><li>Fix <b>BUG-13</b>, <b>BUG-14</b>, <b>BUG-15</b>, <b>BUG-16</b>, <b>BUG-17</b>, plus plain-language readability and authority citations.</li><li>Re-run the 3 personas; once gates clear, run the 8 committed personas (including the 5 new ones) for a final judged pass.</li><li>Run es/zh spot-checks — RUB-12 (multilingual) has not been exercised yet.</li><li>ROADMAP/STATE reconciliation (done earlier) and the 13th-phase resolution decision remain open.</li></ol>"
+    }
+  ]
+}
