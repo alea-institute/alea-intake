@@ -58,6 +58,16 @@ class TemplateEngine:
         """
         sections: list[str] = []
 
+        # Safety alerts -- rendered ABOVE everything else (SAFETY CRITICAL, BUG-15).
+        # When a DV / self-harm / trafficking concern is detected in the narrative,
+        # calm actionable escalation guidance must be the first thing the reader
+        # sees. Rendered independent of profile toggles; nothing renders when no
+        # alert fired (empty safety_alerts).
+        if context.safety_alerts:
+            sections.append(
+                self.render_section("safety_alerts.md.j2", context, profile)
+            )
+
         # Deadlines & time-sensitive items -- rendered FIRST (before CIRAC), high
         # stakes, always hedged. Shown whenever any deadline was detected,
         # independent of profile section toggles.

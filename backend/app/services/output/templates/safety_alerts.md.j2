@@ -1,0 +1,41 @@
+{# Safety alerts -- rendered FIRST, above everything (SAFETY CRITICAL, BUG-15).
+   Calm, plain-language, actionable escalation. Only rendered when an alert fired;
+   when context.safety_alerts is empty this template is never invoked. RUB-11 tone:
+   supportive and non-alarming, never clinical or fear-inducing. #}
+# 💙 Your Safety Comes First
+
+Some of what you shared suggests you may be dealing with a situation that could
+put your safety at risk. You are not alone, and help is available right now — you
+do not need a lawyer or any money to reach it.
+
+**If you are in immediate danger, call 911.**
+
+You can reach trained, confidential help any time:
+
+- **Call the National Domestic Violence Hotline:** 1-800-799-7233 (open 24/7)
+- **Text the Crisis Text Line:** text HOME to **741741**
+
+{% for alert in context.safety_alerts %}
+{% if alert.hotlines %}
+**More help for {{ alert.protocol_name }}:**
+{% for h in alert.hotlines %}
+- **{{ h.name }}**{% if h.phone %} — call {{ h.phone }}{% endif %}{% if h.text %}, or text {{ h.text }}{% endif %}{% if h.url %} ({{ h.url }}){% endif %}
+
+{% endfor %}
+{% endif %}
+{% if alert.safety_planning %}
+- *{{ alert.safety_planning }}*
+{% endif %}
+{% endfor %}
+
+**Asking a court to protect you.** If someone has hurt you or made you afraid,
+you can ask a court for an **Order for Protection** (sometimes called a
+restraining order). It is a free request you can make yourself: the court clerk's
+office or a local advocate can give you the forms and walk you through them, often
+the same day. A domestic violence advocate (reachable through the hotline above)
+can help you fill them out and can go with you.
+
+You get to decide what feels safe for you. The steps above are here whenever you
+are ready.
+
+---

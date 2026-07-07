@@ -28,6 +28,7 @@ from app.models.output import OutputDocument
 from app.models.user import User
 from app.services.output.action_item_generator import ActionItemGenerator
 from app.services.output.data_assembler import DataAssembler
+from app.services.output.language_adapter import LanguageAdapter
 from app.services.output.export.docx_adapter import DOCXAdapter
 from app.services.output.export.json_adapter import JSONAdapter
 from app.services.output.export.pdf_adapter import PDFAdapter
@@ -141,7 +142,21 @@ async def generate_output(
     assembler = DataAssembler(db)
     triage_scorer = TriageScorer()
     action_gen = ActionItemGenerator()
+    language_adapter = LanguageAdapter()
     engine = TemplateEngine()
+
+    # LLM service for language adaptation (RUB-10). Instantiated lazily; if
+    # construction fails we adapt with a null service (adapter keeps original
+    # text) so output generation never hard-fails on LLM wiring.
+    llm_service = None
+    try:
+        from app.services.llm_service import LLMService
+
+        llm_service = LLMService()
+    except Exception:
+        logger.warning(
+            "LLMService unavailable; language adaptation will no-op", exc_info=True
+        )
 
     documents: list[OutputDocument] = []
 
@@ -159,9 +174,28 @@ async def generate_output(
         )
         context.action_items = action_items
 
-        # Step 4: Language adaptation (skip for professional level)
-        # LanguageAdapter wiring deferred until orchestrator connects
-        # (see 07-02 known stub: _rewrite_text returns text as-is)
+        # Step 4: Language adaptation (RUB-10). Rewrites the professional CIRAC
+        # prose to the profile's reading level BEFORE rendering. Only the
+        # consumer-facing profiles are rewritten:
+        #   - court_self_help (plain, ~6th grade)  -> rewritten
+        #   - legal_aid       (accessible, ~10th)  -> rewritten
+        #   - law_firm        (professional)       -> left untouched (attorney memo)
+        # The adapter self-skips professional (system_prompt is None) and falls
+        # back to original text on a null/failed LLM. Previously this was never
+        # invoked, so plain-language memos rendered at the professional grade level.
+        if profile.language_level == "professional":
+            logger.info(
+                "Language adaptation skipped for professional profile %s",
+                profile.profile_type,
+            )
+        elif llm_service is None:
+            logger.warning(
+                "Language adaptation no-op for profile %s: no LLM service; "
+                "prose renders at original (professional) reading level",
+                profile.profile_type,
+            )
+        else:
+            context = await language_adapter.adapt(context, profile, llm_service)
 
         # Step 5: Render Markdown
         markdown = engine.render_full(context, profile)

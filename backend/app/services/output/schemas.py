@@ -180,6 +180,27 @@ class DeadlineRef(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Safety alerts (SAFETY CRITICAL -- BUG-15)
+# ---------------------------------------------------------------------------
+
+
+class SafetyAlertRef(BaseModel):
+    """A safety concern (DV, self-harm, trafficking, etc.) detected in the narrative.
+
+    Produced by running the existing screening ``TriggerMatcher`` over the
+    intake narrative during output assembly. When any alert fires the memo
+    renders a calm, actionable escalation section near the top.
+    """
+
+    protocol_name: str
+    severity_tier: str  # "critical", "elevated", "advisory"
+    matched_terms: list[str] = Field(default_factory=list)
+    hotlines: list[dict] = Field(default_factory=list)
+    emergency: str | None = None
+    safety_planning: str | None = None
+
+
+# ---------------------------------------------------------------------------
 # Org branding
 # ---------------------------------------------------------------------------
 
@@ -230,6 +251,7 @@ class OutputContext(BaseModel):
     matter_title: str
     generated_at: datetime
     claims_by_jurisdiction: dict[str, list[CIRACSection]] = Field(default_factory=dict)
+    safety_alerts: list[SafetyAlertRef] = Field(default_factory=list)
     deadlines: list[DeadlineRef] = Field(default_factory=list)
     triage: TriageResult | None = None
     action_items: list[ActionItem] = Field(default_factory=list)

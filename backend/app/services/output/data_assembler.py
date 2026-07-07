@@ -7,8 +7,11 @@ for downstream rendering.
 
 from __future__ import annotations
 
+import logging
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
+from types import SimpleNamespace
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,7 +26,7 @@ from app.models.analysis import (
     FollowUpQuestion,
 )
 from app.models.fact import ExtractedFact
-from app.models.intake import Intake
+from app.models.intake import Intake, IntakeSession, Message
 from app.models.research import Authority
 from app.services.output.gap_report_builder import GapReportBuilder
 from app.services.output.schemas import (
@@ -36,13 +39,156 @@ from app.services.output.schemas import (
     GapReport,
     OutputContext,
     OutputProfile,
+    SafetyAlertRef,
 )
+
+logger = logging.getLogger(__name__)
 
 # Binding strength ordering: lower = higher priority
 _BINDING_ORDER = {"binding": 0, "persuasive": 1, "secondary": 2}
 
 # Urgency ordering for the top deadlines section: lower = more prominent.
 _URGENCY_ORDER = {"lapsed": 0, "high": 1, "medium": 2, "low": 3, "unknown": 4}
+
+# Safety severity ordering for the top safety section: lower = more prominent.
+_SEVERITY_ORDER = {"critical": 0, "elevated": 1, "advisory": 2}
+
+
+def _normalize(text: str) -> str:
+    """Shared dedup key: lowercase, collapse whitespace, strip trailing punctuation.
+
+    Used to collapse duplicate questions and duplicate claim/memo sections that
+    the convergence loop's per-iteration re-runs and per-jurisdiction fan-out
+    would otherwise emit repeatedly (BUG-14).
+    """
+    if not text:
+        return ""
+    collapsed = re.sub(r"\s+", " ", text).strip().lower()
+    return collapsed.rstrip(".?!:;,")
+
+
+async def _gather_narrative_text(session: AsyncSession, intake_id: int) -> str:
+    """Concatenate the intake's non-system message text + active fact assertions.
+
+    Mirrors ``DeadlineDetectStage._gather_text`` so the safety pass sees the same
+    narrative the pipeline extracted facts from.
+    """
+    session_ids = (
+        await session.execute(
+            select(IntakeSession.id).where(IntakeSession.intake_id == intake_id)
+        )
+    ).scalars().all()
+
+    parts: list[str] = []
+    if session_ids:
+        messages = (
+            await session.execute(
+                select(Message)
+                .where(
+                    Message.session_id.in_(session_ids),
+                    Message.sender_type != "system",
+                )
+                .order_by(Message.sequence_number)
+            )
+        ).scalars().all()
+        for msg in messages:
+            raw = msg.content_encrypted or b""
+            text = raw.decode("utf-8", errors="replace").strip() if isinstance(raw, bytes) else str(raw).strip()
+            if text:
+                parts.append(text)
+
+    facts = (
+        await session.execute(
+            select(ExtractedFact).where(
+                ExtractedFact.intake_id == intake_id,
+                ExtractedFact.is_active == True,  # noqa: E712
+            )
+        )
+    ).scalars().all()
+    for f in facts:
+        if f.assertion_text:
+            parts.append(f.assertion_text)
+
+    return "\n".join(parts)
+
+
+def _build_seed_matcher():
+    """Build a TriggerMatcher from the built-in seed protocol definitions.
+
+    Reuses the EXISTING screening ``TriggerMatcher`` (no new detector) but sources
+    triggers directly from ``SEED_PROTOCOLS`` rather than DB activations. This makes
+    the analysis-time safety pass work even when protocols were never activated in
+    the tenant (the DV screening previously only ran on the live-message WebSocket
+    path), satisfying "load the built-in seeds" for BUG-15.
+
+    Returns ``(matcher, resources_by_name)`` where resources_by_name maps a
+    protocol name to its ``safety_resources`` dict (hotlines / emergency / plan).
+    """
+    from app.services.screening.seed_protocols import SEED_PROTOCOLS
+    from app.services.screening.trigger_matcher import TriggerMatcher
+
+    protocol_tuples: list[tuple] = []
+    resources_by_name: dict[str, dict] = {}
+    for idx, proto in enumerate(SEED_PROTOCOLS, start=1):
+        version = SimpleNamespace(
+            id=idx,
+            trigger_conditions_json=proto.get("trigger_conditions", {}),
+            _protocol_name=proto["name"],
+            _severity_tier=proto["severity_tier"],
+        )
+        activation = SimpleNamespace(protocol_id=idx)
+        protocol_tuples.append((activation, version))
+        resources_by_name[proto["name"]] = proto.get("safety_resources") or {}
+
+    return TriggerMatcher(protocol_tuples), resources_by_name
+
+
+async def gather_safety_alerts(
+    session: AsyncSession, intake_id: int
+) -> list[SafetyAlertRef]:
+    """Run the existing screening matcher over the intake narrative (BUG-15).
+
+    SAFETY CRITICAL: the analysis pipeline had NO safety detection, so a DV
+    narrative produced ``safety_alerts=0``. This decoupled, deterministic pass
+    (keyword/regex only, no LLM) surfaces DV / self-harm / trafficking concerns so
+    the memo can render calm escalation guidance. Degrades gracefully: any failure
+    yields an empty list and never breaks output generation.
+    """
+    try:
+        text = await _gather_narrative_text(session, intake_id)
+        if not text.strip():
+            return []
+
+        matcher, resources_by_name = _build_seed_matcher()
+        triggered = matcher.match_fast(text)
+
+        alerts: list[SafetyAlertRef] = []
+        seen: set[str] = set()
+        for tp in triggered:
+            if tp.protocol_name in seen:
+                continue
+            seen.add(tp.protocol_name)
+            resources = resources_by_name.get(tp.protocol_name, {})
+            alerts.append(
+                SafetyAlertRef(
+                    protocol_name=tp.protocol_name,
+                    severity_tier=tp.severity_tier,
+                    matched_terms=tp.matched_terms,
+                    hotlines=resources.get("hotlines", []) or [],
+                    emergency=resources.get("emergency"),
+                    safety_planning=resources.get("safety_planning"),
+                )
+            )
+
+        alerts.sort(key=lambda a: _SEVERITY_ORDER.get(a.severity_tier, 99))
+        return alerts
+    except Exception:
+        logger.warning(
+            "Safety screening failed for intake %d; no safety alerts produced",
+            intake_id,
+            exc_info=True,
+        )
+        return []
 
 
 class DataAssembler:
@@ -78,12 +224,21 @@ class DataAssembler:
         questions = await self._load_questions(run_id)
         authorities = await self._load_authorities(intake_id)
         deadlines = await self._load_deadlines(run_id)
+        safety_alerts = await gather_safety_alerts(self._session, intake_id)
 
         # Build CIRAC sections
         sections_by_jurisdiction: dict[str, list[CIRACSection]] = defaultdict(list)
+        # Dedup claim sections across the per-jurisdiction fan-out: the same claim
+        # (same normalized name + folio_iri) must render only once (BUG-14).
+        seen_claim_keys: set[tuple[str, str]] = set()
 
         for claim in claims:
             jurisdiction = claim.jurisdiction or "General"
+
+            claim_key = (_normalize(claim.claim_name), claim.folio_iri or "")
+            if claim_key in seen_claim_keys:
+                continue
+            seen_claim_keys.add(claim_key)
 
             # Elements for this claim
             claim_elements = elements_by_claim.get(claim.id, [])
@@ -204,6 +359,7 @@ class DataAssembler:
             matter_title=matter_title,
             generated_at=datetime.now(timezone.utc),
             claims_by_jurisdiction=dict(sections_by_jurisdiction),
+            safety_alerts=safety_alerts,
             deadlines=deadlines,
             triage=None,
             action_items=[],
@@ -304,7 +460,20 @@ class DataAssembler:
         result = await self._session.execute(
             select(FollowUpQuestion).where(FollowUpQuestion.run_id == run_id)
         )
-        return list(result.scalars().all())
+        questions = list(result.scalars().all())
+
+        # Dedup by normalized text before questions reach the memo. The convergence
+        # loop re-runs question_gen each iteration, so ~92% of gap questions were
+        # duplicates (BUG-14). Keep first occurrence, preserving order.
+        deduped: list[FollowUpQuestion] = []
+        seen: set[str] = set()
+        for q in questions:
+            norm = _normalize(q.question_text)
+            if not norm or norm in seen:
+                continue
+            seen.add(norm)
+            deduped.append(q)
+        return deduped
 
     async def _load_authorities(self, intake_id: int) -> list[Authority]:
         result = await self._session.execute(

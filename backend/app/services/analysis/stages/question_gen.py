@@ -7,6 +7,8 @@ gap analysis results and persists them as FollowUpQuestion records.
 
 from __future__ import annotations
 
+import logging
+import re
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,6 +23,20 @@ from app.services.analysis.schemas import QuestionGenResult
 
 if TYPE_CHECKING:
     from app.services.llm_service import LLMService
+
+logger = logging.getLogger(__name__)
+
+
+def _normalize(text: str) -> str:
+    """Normalize a question for dedup: lowercase, collapse whitespace, strip trailing punctuation.
+
+    Deterministic so the same question phrased identically across convergence
+    iterations collapses to one key (BUG-14).
+    """
+    if not text:
+        return ""
+    collapsed = re.sub(r"\s+", " ", text).strip().lower()
+    return collapsed.rstrip(".?!:;,")
 
 
 class QuestionGenStage:
@@ -74,12 +90,15 @@ class QuestionGenStage:
                 "total_questions": 0,
             }
 
-        # Build set of already-answered question texts
-        answered_texts: set[str] = set()
+        # Build set of ALL existing question texts (normalized), regardless of
+        # status. The orchestrator re-runs question_gen every convergence
+        # iteration, so deduping only against *answered* questions let pending
+        # duplicates accumulate across iterations (BUG-14). Normalize so trivial
+        # whitespace/casing/punctuation differences still collapse.
+        existing_texts: set[str] = set()
         if existing_questions:
             for eq in existing_questions:
-                if eq.status == "answered":
-                    answered_texts.add(eq.question_text)
+                existing_texts.add(_normalize(eq.question_text))
 
         # Build gap lookup by description for matching LLM output to gaps
         gap_by_description: dict[str, AnalysisGap] = {}
@@ -117,6 +136,18 @@ class QuestionGenStage:
                 schema=QuestionGenResult,
             )
         except Exception:
+            # Graceful degradation: still return 0 rather than crash the run, but
+            # make the silent-zero DIAGNOSABLE (BUG-16). Previously the bare
+            # except swallowed the error with no logging, so an immigration
+            # persona could get 0 questions despite 55 open gaps with no trace.
+            logger.warning(
+                "question_gen LLM call failed for run_id=%s iteration=%s "
+                "(%d open gaps); returning 0 questions (graceful degradation)",
+                run.id,
+                iteration.iteration_number,
+                len(open_gaps),
+                exc_info=True,
+            )
             return {
                 "questions_generated": 0,
                 "topic_groups": [],
@@ -127,12 +158,19 @@ class QuestionGenStage:
         questions_generated = 0
         topic_groups: list[str] = []
 
+        # Track texts already emitted this batch so the LLM repeating the same
+        # question across topic groups doesn't create duplicates either.
+        seen_texts: set[str] = set(existing_texts)
+
         for group in result.groups:
             topic_groups.append(group.topic)
             for q_schema in group.questions:
-                # Skip already-answered questions
-                if q_schema.question_text in answered_texts:
+                # Skip any question that duplicates an existing one (any status,
+                # any prior iteration) or one already emitted this batch (BUG-14).
+                norm = _normalize(q_schema.question_text)
+                if not norm or norm in seen_texts:
                     continue
+                seen_texts.add(norm)
 
                 # Match gap by description
                 matched_gap = None

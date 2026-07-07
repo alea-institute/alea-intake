@@ -121,6 +121,30 @@ async def trigger_analysis(
     except Exception:
         logger.warning("Deadline detection failed for intake %d", intake_id, exc_info=True)
 
+    # Decoupled safety screening (SAFETY CRITICAL, BUG-15). The DV/self-harm
+    # screening previously ran only on the live-message WebSocket path, never on
+    # an analysis run -- so a DV narrative surfaced zero safety alerts. Mirror the
+    # decoupled deadline call: run the EXISTING screening matcher over the
+    # narrative after the run exists. Deterministic (keyword/regex, no LLM) and
+    # degrades gracefully. The output layer re-derives these deterministically at
+    # assembly time; here we surface them at trigger time so a fired alert is
+    # observable in the run logs even before a memo is generated.
+    try:
+        from app.services.output.data_assembler import gather_safety_alerts
+
+        safety_alerts = await gather_safety_alerts(db, intake_id)
+        if safety_alerts:
+            logger.warning(
+                "Safety screening flagged %d protocol(s) for intake %d: %s",
+                len(safety_alerts),
+                intake_id,
+                ", ".join(f"{a.protocol_name}[{a.severity_tier}]" for a in safety_alerts),
+            )
+        else:
+            logger.info("Safety screening produced 0 alerts for intake %d", intake_id)
+    except Exception:
+        logger.warning("Safety screening failed for intake %d", intake_id, exc_info=True)
+
     return {
         "run_id": run.id,
         "status": run.status,

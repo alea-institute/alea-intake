@@ -6,7 +6,8 @@ appropriate reading level while preserving citation strings verbatim.
 Three levels:
 - professional: no adaptation (return as-is)
 - accessible: ~10th grade, legal terms with parenthetical explanations
-- plain: ~8th grade, everyday language, minimal jargon
+- plain: ~6th grade, everyday language, legal terms defined in plain words on
+  first use, short sentences (RUB-10)
 
 CRITICAL per pitfall 3: All citation strings (e.g., "123 F.3d 456") must survive
 adaptation unchanged. Post-processing verifies and restores any dropped citations.
@@ -36,10 +37,14 @@ _SYSTEM_PROMPTS: dict[str, str | None] = {
         "Target reading level: 10th grade."
     ),
     "plain": (
-        "Rewrite the following legal text in plain language at an 8th grade "
-        "reading level. Keep all citation strings exactly as-is. Replace legal "
-        "jargon with everyday language. Add brief explanations for necessary "
-        "legal terms."
+        "Rewrite the following legal text in plain language at about a 6th grade "
+        "reading level (RUB-10). Use short sentences -- aim for one idea per "
+        "sentence and roughly 15 words or fewer. Prefer short, everyday words. "
+        "The first time you must use a legal term, immediately define it in plain "
+        "words (for example: 'a lien (a legal claim on your property)'). Do not "
+        "assume the reader knows any legal vocabulary. Keep all citation strings "
+        "(e.g., '123 F.3d 456') exactly as-is. Do not add new facts or legal "
+        "advice; only simplify the wording."
     ),
 }
 
