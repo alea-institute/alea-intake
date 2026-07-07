@@ -12,19 +12,29 @@ ALEA Intake transforms unstructured consumer narratives into structured, ontolog
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Security** - Data models, auth, encryption, tenant isolation, audit logging, and infrastructure scaffolding
-- [ ] **Phase 2: FOLIO Ontology Integration** - Ontology loading, concept resolution, IRI matching, adjacency discovery, and graceful degradation
-- [ ] **Phase 3: Input & Narrative Capture** - Text chat, voice/ASR, document upload, professional notes, normalization, and fact extraction
-- [ ] **Phase 4: Core Analysis Pipeline** - Iterative analysis loop, fact-to-claim mapping, gap analysis, convergence detection, and checkpointing
+> **Checkbox reconciliation (2026-07-07, Fable — Lane 3 close-out):** The summary
+> checkboxes below had drifted stale — Phases 1–4, 6–9, and 13 rendered `[ ]`
+> despite being built and deployed. Reconciled against the authoritative
+> `STATE.md` (`completed_phases: 12`; per-plan completion metrics table covering
+> Phases 01–12 + 14) and the merged code on `master`. All are now `[x]`.
+> Caveat carried from the persona-UAT campaign: **Phase 4** (fact→claim) unit-tests
+> passed in isolation but was not truly end-to-end until the BUG-1 extraction-wiring
+> fix (commit 74614cb, 2026-07-05) connected ingestion → analysis; live validation of
+> the LLM-dependent path remains gated on the dev LLM key (see `briefs/STATUS-lane-3.md`).
+
+- [x] **Phase 1: Foundation & Security** - Data models, auth, encryption, tenant isolation, audit logging, and infrastructure scaffolding
+- [x] **Phase 2: FOLIO Ontology Integration** - Ontology loading, concept resolution, IRI matching, adjacency discovery, and graceful degradation
+- [x] **Phase 3: Input & Narrative Capture** - Text chat, voice/ASR, document upload, professional notes, normalization, and fact extraction
+- [x] **Phase 4: Core Analysis Pipeline** - Iterative analysis loop, fact-to-claim mapping, gap analysis, convergence detection, and checkpointing (end-to-end wiring completed via BUG-1 fix 2026-07-05; live LLM validation key-gated)
 - [x] **Phase 5: Pre-Research Exploration & Safety** - Three-layer exploration, screening protocols, DV default protocol, continuous safety screening (completed 2026-04-04)
-- [ ] **Phase 6: Legal Research & Verification** - Pluggable research tools, MCP + HTTP adapters, citation verification, knowledge base
-- [ ] **Phase 7: Output & Export** - Case memos, triage/routing, action items, configurable formats, and export
-- [ ] **Phase 8: Frontend Application** - Chat interface, streaming progress, dashboard, admin config, mobile responsive, voice recording UI
-- [ ] **Phase 9: Frontend Visualization** - Graph fact-mapping view, matrix completeness view, narrative-anchored annotation view
+- [x] **Phase 6: Legal Research & Verification** - Pluggable research tools, MCP + HTTP adapters, citation verification, knowledge base
+- [x] **Phase 7: Output & Export** - Case memos, triage/routing, action items, configurable formats, and export
+- [x] **Phase 8: Frontend Application** - Chat interface, streaming progress, dashboard, admin config, mobile responsive, voice recording UI
+- [x] **Phase 9: Frontend Visualization** - Graph fact-mapping view, matrix completeness view, narrative-anchored annotation view
 - [x] **Phase 10: Autonomy & Orchestration Modes** - Chatbot, professional, and agent modes with per-org configuration (completed 2026-04-06)
 - [x] **Phase 11: Integration & Production Deployment** - CMS connectors, multi-tenant cloud, self-hosted deployment, persistence modes (completed 2026-04-06)
 - [x] **Phase 12: Open-Source Public Release** - MIT license, comprehensive README, pre-flight audits, community files, visual assets (completed 2026-04-13)
-- [ ] **Phase 13: Practice-Area Customization (Live Demo)** - Config-driven practice areas (YAML registry, session binding, LLM system-prompt swap), PI seed, frontend chip-row, demo Railway service, and live-demo runbook for talk on 2026-05-06
+- [x] **Phase 13: Practice-Area Customization (Live Demo)** - Config-driven practice areas (YAML registry, session binding, LLM system-prompt swap), PI seed, frontend chip-row, demo Railway service, and live-demo runbook for talk on 2026-05-06 (merged to master via Phase 14)
 - [x] **Phase 14: Railway Dev Server Consolidation** - Make `alea-intake-dev` the single canonical Railway dev/test server tracking `master`: merge Phase 13 to master, fix the asyncpg Postgres bugs (cross-loop/concurrency, single-tenant schema routing, tz-aware timestamps), wire GitHub auto-deploy from master, verify health + practice-areas + auth live, retire the redundant demo service (completed 2026-05-24)
 
 ## Phase Details
