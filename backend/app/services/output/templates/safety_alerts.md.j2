@@ -12,28 +12,39 @@ do not need a lawyer or any money to reach it.
 
 You can reach trained, confidential help any time:
 
-- **Call the National Domestic Violence Hotline:** 1-800-799-7233 (open 24/7)
-- **Text the Crisis Text Line:** text HOME to **741741**
-
+{# Header hotlines come from the fired alerts themselves (CE review: a
+   self-harm-only alert must not lead with the DV hotline). Falls back to the
+   universal crisis lines when no alert carries hotlines. #}
+{% set ns = namespace(any_hotline=false) %}
+{% for alert in context.safety_alerts %}{% if alert.hotlines %}{% set ns.any_hotline = true %}{% endif %}{% endfor %}
+{% if ns.any_hotline %}
 {% for alert in context.safety_alerts %}
-{% if alert.hotlines %}
-**More help for {{ alert.protocol_name }}:**
 {% for h in alert.hotlines %}
 - **{{ h.name }}**{% if h.phone %} — call {{ h.phone }}{% endif %}{% if h.text %}, or text {{ h.text }}{% endif %}{% if h.url %} ({{ h.url }}){% endif %}
 
 {% endfor %}
+{% endfor %}
+{% else %}
+- **Call or text 988** — the Suicide & Crisis Lifeline (open 24/7)
 {% endif %}
+- **Text the Crisis Text Line:** text HOME to **741741** (open 24/7, for any kind of crisis)
+
+{% for alert in context.safety_alerts %}
 {% if alert.safety_planning %}
 - *{{ alert.safety_planning }}*
 {% endif %}
 {% endfor %}
 
+{% set ns2 = namespace(dv=false) %}
+{% for alert in context.safety_alerts %}{% if "violence" in alert.protocol_name|lower or "abuse" in alert.protocol_name|lower or "stalking" in alert.protocol_name|lower %}{% set ns2.dv = true %}{% endif %}{% endfor %}
+{% if ns2.dv %}
 **Asking a court to protect you.** If someone has hurt you or made you afraid,
 you can ask a court for an **Order for Protection** (sometimes called a
 restraining order). It is a free request you can make yourself: the court clerk's
 office or a local advocate can give you the forms and walk you through them, often
 the same day. A domestic violence advocate (reachable through the hotline above)
 can help you fill them out and can go with you.
+{% endif %}
 
 You get to decide what feels safe for you. The steps above are here whenever you
 are ready.

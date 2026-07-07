@@ -124,6 +124,14 @@ def group_and_cap_sections(
     roots.sort(key=sort_key)
     parented.sort(key=sort_key)
 
+    # Cycle guard (CE review): if every section resolves to a parent (a
+    # parent_claim_name cycle), roots would be empty and the memo would render
+    # ONLY the overflow list. Promote the highest-confidence section to root.
+    if not roots and parented:
+        promoted = parented.pop(0)
+        promoted.parent_claim_name = None
+        roots.append(promoted)
+
     displayed_roots = roots[:cap]
     budget = cap - len(displayed_roots)
     displayed_by_name = {_normalize(r.claim_name): r for r in displayed_roots}

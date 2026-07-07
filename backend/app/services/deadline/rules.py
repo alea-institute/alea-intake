@@ -76,6 +76,25 @@ class DeadlineRule:
     description: str = ""
 
 
+# Triggers whose date STARTS a clock rather than being the deadline itself. An
+# event with one of these triggers must NEVER be treated as self-dated, even if
+# its snippet mentions a hearing ("the summons says a hearing will be set") --
+# otherwise the identity rules hijack the offset rules and tell the client
+# their deadline was the day they were served (CE review finding, session 2).
+_OFFSET_TRIGGERS = {
+    "served",
+    "service",
+    "filed",
+    "summons",
+    "issued",
+    "incident",
+    "entry",
+    "notice_posted",
+    "notice",
+    "notice_served",
+}
+
+
 def _is_self_dated(event: DeadlineEvent) -> bool:
     """True when the event's own stated date IS the operative deadline.
 
@@ -83,10 +102,17 @@ def _is_self_dated(event: DeadlineEvent) -> bool:
     response/filing deadline, needs no offset math: the date the client already
     gave you is the deadline. Without this, a verbatim "August 20, 2026 hearing"
     matched no rule and surfaced as "date unclear" (BUG-12).
+
+    Decision order: trigger wins. A self-dated trigger -> True; an offset
+    trigger (served/filed/entry/notice...) -> False regardless of keywords in
+    the snippet; only an unknown/blank trigger falls through to the keyword
+    heuristic.
     """
-    text = _text(event)
     if event.trigger in {"hearing", "deadline", "appearance", "court_date"}:
         return True
+    if event.trigger in _OFFSET_TRIGGERS:
+        return False
+    text = _text(event)
     return any(
         kw in text
         for kw in (

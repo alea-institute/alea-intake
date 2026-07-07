@@ -134,11 +134,14 @@ async def trigger_analysis(
 
         safety_alerts = await gather_safety_alerts(db, intake_id)
         if safety_alerts:
+            # Log counts + severity tiers only -- protocol NAMES (e.g. "Domestic
+            # Violence") are a sensitive-category disclosure keyed to an
+            # identifiable intake and do not belong in application logs.
             logger.warning(
-                "Safety screening flagged %d protocol(s) for intake %d: %s",
+                "Safety screening flagged %d protocol(s) for intake %d (severity: %s)",
                 len(safety_alerts),
                 intake_id,
-                ", ".join(f"{a.protocol_name}[{a.severity_tier}]" for a in safety_alerts),
+                ", ".join(sorted({a.severity_tier for a in safety_alerts})),
             )
         else:
             logger.info("Safety screening produced 0 alerts for intake %d", intake_id)

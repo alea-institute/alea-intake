@@ -194,3 +194,35 @@ def test_generic_stated_court_date_is_computed():
     assert d.computed_date == date(2026, 9, 3)
     assert d.rule_id == "stated_court_date"
     assert d.citation is not None
+
+
+def test_served_summons_mentioning_hearing_uses_offset_rule():
+    """CE-review regression: a SERVED eviction summons whose snippet mentions a
+    hearing must still use the MN offset rule (service + 7d), never the
+    self-dated identity rule (which would claim the deadline already passed)."""
+    ev = DeadlineEvent(
+        event_type="eviction_summons",
+        raw_text="sheriff served me the eviction summons; it says a hearing will be set",
+        trigger="served",
+        date=date(2026, 7, 1),
+        jurisdiction_hint="MN",
+    )
+    d = _one([ev], jurisdiction="MN")
+    assert d.rule_id == "mn_eviction_hearing_window"
+    assert d.computed_date == date(2026, 7, 8)
+    assert d.urgency == "high"  # NOT lapsed
+
+
+def test_asylum_entry_mentioning_notice_to_appear_uses_one_year_rule():
+    """CE-review regression: an asylum ENTRY event whose snippet mentions a
+    notice to appear must still compute entry + 1 year, not identity."""
+    ev = DeadlineEvent(
+        event_type="asylum_entry",
+        raw_text="I entered the US in 2025; later I got a notice to appear",
+        trigger="entry",
+        date=date(2025, 9, 1),
+        jurisdiction_hint="US",
+    )
+    d = _one([ev])
+    assert d.rule_id == "asylum_one_year"
+    assert d.computed_date == date(2026, 9, 1)
