@@ -1,0 +1,33 @@
+{
+ "intake_id": 108,
+ "run_id": 24,
+ "org_id": 0,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-07T19:52:52.334234Z",
+ "claims_by_jurisdiction": {},
+ "deadlines": [],
+ "triage": null,
+ "action_items": [],
+ "gap_report": {
+  "per_claim": {},
+  "consolidated_gaps": [],
+  "open_questions": [],
+  "completeness_score": 0.0
+ },
+ "completeness_score": 0.7525,
+ "executive_summary": "",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}

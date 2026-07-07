@@ -1,6 +1,6 @@
 {
   "persona": "landlord-tenant",
-  "email": "persona_landlord-tenant_1783288629@example.com",
+  "email": "persona_landlord-tenant_1783453482@example.com",
   "base": "https://alea-intake-dev-production.up.railway.app",
   "steps": {
     "register": {
@@ -14,9 +14,9 @@
     "create_intake": {
       "http": 201,
       "ok": true,
-      "intake_id": 23,
-      "session_id": 16,
-      "party_id": 23,
+      "intake_id": 107,
+      "session_id": 79,
+      "party_id": 107,
       "practice_area_id": null
     },
     "narrative": {
@@ -39,60 +39,1084 @@
     ],
     "analyze": {
       "http": 202,
-      "run_id": 2,
+      "run_id": 23,
       "status": "converged",
       "detail": null
     },
     "final_status": {
-      "run_id": 2,
+      "run_id": 23,
       "status": "converged",
-      "iteration": 10,
+      "iteration": 5,
       "max_iterations": 10,
-      "convergence_score": 1.0,
-      "progress_pct": 100,
+      "convergence_score": 0.75,
+      "progress_pct": 50,
       "latest_stage": "question_gen"
     },
     "results_http": 200,
     "output_generate": [
       {
         "profile": "law_firm",
-        "id": 2,
-        "run_id": 2,
-        "intake_id": 23,
+        "id": 42,
+        "run_id": 23,
+        "intake_id": 107,
         "profile_type": "law_firm",
-        "completeness_score": 1.0,
-        "created_at": "2026-07-05T21:57:15.467934Z"
+        "completeness_score": 0.75,
+        "created_at": "2026-07-07T19:49:33.143396Z"
+      },
+      {
+        "profile": "court_self_help",
+        "id": 43,
+        "run_id": 23,
+        "intake_id": 107,
+        "profile_type": "court_self_help",
+        "completeness_score": 0.75,
+        "created_at": "2026-07-07T19:49:33.595851Z"
+      },
+      {
+        "profile": "legal_aid",
+        "id": 44,
+        "run_id": 23,
+        "intake_id": 107,
+        "profile_type": "legal_aid",
+        "completeness_score": 0.75,
+        "created_at": "2026-07-07T19:49:34.006495Z"
       }
     ]
   },
   "safety_alerts": [],
   "analysis": {
-    "run_id": 2,
+    "run_id": 23,
     "status": "converged",
-    "claims": [],
-    "gaps": [],
-    "questions": []
+    "claims": [
+      {
+        "id": 1252,
+        "claim_name": "Failure to Repair (Habitability)",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": "state",
+        "confidence": 0.9,
+        "is_potential": true,
+        "rationale": "The landlord ignored the tenant's concerns regarding mold, which is likely a serious health issue affecting a minor with asthma. This could violate state laws concerning habitability and the landlord's obligation to maintain the property.",
+        "elements": [
+          {
+            "id": 653,
+            "element_name": "Duty to Repair",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 655,
+            "element_name": "Failure to Act",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 654,
+            "element_name": "Notice of Defect",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 656,
+            "element_name": "Causation",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          }
+        ]
+      },
+      {
+        "id": 1253,
+        "claim_name": "Retaliatory Eviction",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R9wMn80MhrS9iqfKdQdH1A3",
+        "jurisdiction": "state",
+        "confidence": 0.85,
+        "is_potential": true,
+        "rationale": "The tenant is facing eviction proceedings shortly after reporting health and safety issues to the city and expressing concerns about mold. This pattern suggests potential retaliation from the landlord.",
+        "elements": [
+          {
+            "id": 659,
+            "element_name": "Causal Connection",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          },
+          {
+            "id": 658,
+            "element_name": "Adverse Action",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.73
+          },
+          {
+            "id": 657,
+            "element_name": "Protected Activity",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.69
+          }
+        ]
+      },
+      {
+        "id": 1254,
+        "claim_name": "Nonpayment of Rent",
+        "claim_type": "identified",
+        "folio_iri": "https://folio.openlegalstandard.org/RhM0ab89J6bNADGZjt9GhX",
+        "jurisdiction": "state",
+        "confidence": 1.0,
+        "is_potential": false,
+        "rationale": "The tenant admitted to not paying the specified amount owed for rent and received a 14-day notice, which directly supports a claim for nonpayment of rent.",
+        "elements": [
+          {
+            "id": 661,
+            "element_name": "Rent Due",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 662,
+            "element_name": "Nonpayment",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 660,
+            "element_name": "Existence of Lease",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          }
+        ]
+      },
+      {
+        "id": 1255,
+        "claim_name": "Landlord-Tenant Claims",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R97svnIdQhrkKZw6i3Nn88z",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Retaliatory Eviction (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1256,
+        "claim_name": "Civil Claims",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R8jYAnNATrfoBxAtIKpf72X",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Retaliatory Eviction (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1257,
+        "claim_name": "Property & Premises Liability Claims",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RDSBerlLWg1ntpLqDQn1eVn",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Retaliatory Eviction (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1258,
+        "claim_name": "Eviction Claim",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R87EsagydUYKkWMX3oyulrq",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Nonpayment of Rent (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1259,
+        "claim_name": "Implied Warranty of Habitability",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RBId9f3jW4zEqooPvShqi6Q",
+        "jurisdiction": null,
+        "confidence": 0.9,
+        "is_potential": true,
+        "rationale": "The conditions described (mold and heat issues) could signal a breach of the implied warranty of habitability, which requires landlords to maintain rental properties to be fit for human habitation.",
+        "elements": []
+      },
+      {
+        "id": 1260,
+        "claim_name": "Lack of Proper Notice",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RB3FT9lFNQIjRnFIueLgCa7",
+        "jurisdiction": null,
+        "confidence": 0.85,
+        "is_potential": true,
+        "rationale": "The method of serving legal documents (taping to the door) and the contents of the notice may not meet statutory requirements, which can invalidate the claims made by the landlord.",
+        "elements": []
+      },
+      {
+        "id": 1261,
+        "claim_name": "Failure to Provide Receipts",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.75,
+        "is_potential": true,
+        "rationale": "Failure to provide receipts may complicate matters regarding what has been paid, additional fees, or could be viewed as an unprofessional or improper landlord practice.",
+        "elements": []
+      },
+      {
+        "id": 1262,
+        "claim_name": "Unsafe Living Conditions",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RDNOqfCVAhPu7lEHc6go0cv",
+        "jurisdiction": null,
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "Given that the tenant's son experiences asthma and has been coughing worse since mold's presence, the tenant may argue the landlord's negligence has led to unsafe conditions exacerbating health issues.",
+        "elements": []
+      },
+      {
+        "id": 1263,
+        "claim_name": "Housing Discrimination",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R9SqqJ7oW7XF52TFPoEbPbN",
+        "jurisdiction": null,
+        "confidence": 0.6,
+        "is_potential": true,
+        "rationale": "If the tenant feels that their status as a mother with a child (especially with health conditions) is being leveraged against them unfairly by the landlord, this could represent a form of discrimination.",
+        "elements": []
+      },
+      {
+        "id": 1264,
+        "claim_name": "Health Impact from Mold Exposure",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "The mold issue is connected to Marcus's worsening health symptoms. This could invoke local and state health codes as well as tenancy laws related to maintaining safe living conditions. Legal experts should assess compliance with these health regulations.",
+        "elements": []
+      },
+      {
+        "id": 1265,
+        "claim_name": "Lack of Written Receipts/Records of Payments",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.75,
+        "is_potential": true,
+        "rationale": "The absence of receipts may eliminate clear evidence regarding payments made by the tenant, creating potential for misunderstanding and complicating the eviction claim. Legal implications regarding cash transactions without documentation should be explored.",
+        "elements": []
+      },
+      {
+        "id": 1266,
+        "claim_name": "Potential Violation of Local Tenant Protection Laws",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RBpYE6Y5CAH0m6srdnClfZz",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "The timeline of landlord actions after tenant complaints suggests potential violations of tenant protection laws aimed at preventing retaliatory evictions, especially after the involvement of the city inspector.",
+        "elements": []
+      },
+      {
+        "id": 1267,
+        "claim_name": "Discrimination Claims Related to Family Status",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R9ED899sCUzn9FIu11WRt4B",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Given the nature of the tenant\u2019s circumstances with a child, there may be implications under fair housing laws that protect families from unfair eviction practices. This creates potential cross-practice legal implications.",
+        "elements": []
+      }
+    ],
+    "gaps": [
+      {
+        "id": 1318,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Adverse Action' is not yet supported by any facts",
+        "priority": 85,
+        "status": "open"
+      },
+      {
+        "id": 1319,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Causal Connection' is not yet supported by any facts",
+        "priority": 85,
+        "status": "open"
+      },
+      {
+        "id": 1320,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Existence of Lease' is not yet supported by any facts",
+        "priority": 100,
+        "status": "open"
+      },
+      {
+        "id": 1321,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Notice of Defect' is not yet supported by any facts",
+        "priority": 90,
+        "status": "open"
+      },
+      {
+        "id": 1322,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Causation' is not yet supported by any facts",
+        "priority": 90,
+        "status": "open"
+      },
+      {
+        "id": 1323,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Protected Activity' is not yet supported by any facts",
+        "priority": 85,
+        "status": "open"
+      },
+      {
+        "id": 1324,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Retaliatory Eviction' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1325,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Landlord-Tenant Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1326,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1327,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Property & Premises Liability Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1328,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Implied Warranty of Habitability' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1329,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Lack of Proper Notice' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1330,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Failure to Provide Receipts' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1331,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Unsafe Living Conditions' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1332,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Housing Discrimination' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1333,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Lack of Written Receipts/Records of Payments' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1334,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Potential Violation of Local Tenant Protection Laws' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1335,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Discrimination Claims Related to Family Status' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1336,
+        "gap_type": "procedural_requirement",
+        "description": "Missing evidence of notification to landlord regarding the need for repairs or failure to give the landlord reasonable time to fix the issues.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1337,
+        "gap_type": "procedural_requirement",
+        "description": "Failure to document retaliatory actions from the landlord or to provide timeline of events leading to the eviction that indicate retaliation.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1338,
+        "gap_type": "procedural_requirement",
+        "description": "Lack of evidence regarding the proper notice of nonpayment of rent provided to the tenant before eviction proceedings.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1339,
+        "gap_type": "procedural_requirement",
+        "description": "Absence of the jurisdictional requirements, including proof of landlord-tenant relationship and applicable local laws.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1340,
+        "gap_type": "procedural_requirement",
+        "description": "Failure to provide the proper notice period as required by local law before filing for eviction.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1341,
+        "gap_type": "procedural_requirement",
+        "description": "Lack of evidence showing that tenant notified landlord of unsafe conditions and allowed time for rectification.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1342,
+        "gap_type": "procedural_requirement",
+        "description": "Missing evidence of filing a complaint with the appropriate housing authority or lack of proper notice to the alleged discriminator.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1343,
+        "gap_type": "procedural_requirement",
+        "description": "Failure to document communication with the landlord regarding health issues and mold presence prior to any claims.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1344,
+        "gap_type": "procedural_requirement",
+        "description": "Lack of established timeline to indicate when the violation of local tenant protection laws occurred and proper complaints lodged.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1345,
+        "gap_type": "procedural_requirement",
+        "description": "Absence of evidence showing adverse action against the tenant based on family status and failure to follow administrative complaint procedures if applicable.",
+        "priority": 50,
+        "status": "open"
+      }
+    ],
+    "questions": [
+      {
+        "id": 471,
+        "question_text": "Can you confirm if there was any signed lease agreement between you and the landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 1,
+        "rationale": "We need to establish the existence of the lease to understand your legal obligations and any rights under that agreement.",
+        "status": "pending"
+      },
+      {
+        "id": 472,
+        "question_text": "Have you received any notifications or letters from your landlord regarding eviction or other actions taken against you?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 2,
+        "rationale": "Understanding whether any adverse actions have been communicated is crucial to identifying your case's foundation.",
+        "status": "pending"
+      },
+      {
+        "id": 473,
+        "question_text": "Can you describe any actions or events leading up to your eviction that might indicate retaliation from your landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 3,
+        "rationale": "Identifying a causal connection is necessary to support any claims of retaliatory eviction.",
+        "status": "pending"
+      },
+      {
+        "id": 474,
+        "question_text": "Did you ever notify your landlord about needing repairs in your unit?",
+        "topic_group": "Repairs and Notices",
+        "priority": 1,
+        "rationale": "Determining if you've notified the landlord of defects is crucial for proving your claims about unsafe living conditions.",
+        "status": "pending"
+      },
+      {
+        "id": 475,
+        "question_text": "Do you have evidence showing that you allowed your landlord a reasonable time to fix any reported issues?",
+        "topic_group": "Repairs and Notices",
+        "priority": 2,
+        "rationale": "This information is important to support that you followed proper procedures when seeking repairs.",
+        "status": "pending"
+      },
+      {
+        "id": 476,
+        "question_text": "What kind of communication did you have with your landlord about health issues like mold in your property?",
+        "topic_group": "Repairs and Notices",
+        "priority": 3,
+        "rationale": "This helps document your landlord's knowledge of the issues and your attempts to resolve them before escalating the situation.",
+        "status": "pending"
+      },
+      {
+        "id": 477,
+        "question_text": "Have you considered whether your eviction might be retaliatory or related to any complaints you've made?",
+        "topic_group": "Potential Claims",
+        "priority": 1,
+        "rationale": "It's important to explore all possible claims, especially if you believe the eviction is due to exercising your tenant rights.",
+        "status": "pending"
+      },
+      {
+        "id": 478,
+        "question_text": "Are there any unsafe living conditions you haven't reported yet, which may affect your living situation?",
+        "topic_group": "Potential Claims",
+        "priority": 2,
+        "rationale": "Identifying these conditions could lead to valid claims regarding your right to a safe living environment.",
+        "status": "pending"
+      },
+      {
+        "id": 479,
+        "question_text": "Have you faced any discrimination related to your family status, such as issues impacting your housing?",
+        "topic_group": "Potential Claims",
+        "priority": 3,
+        "rationale": "Understanding if this impacts your situation could help explore discrimination claims, which are often underreported.",
+        "status": "pending"
+      },
+      {
+        "id": 480,
+        "question_text": "Do you have documentation of any payments made for rent or communications with your landlord about payments?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 1,
+        "rationale": "This is crucial for validating your claims and ensuring that proper notice concerning rent payments was provided.",
+        "status": "pending"
+      },
+      {
+        "id": 481,
+        "question_text": "Can you provide evidence of any complaint you filed regarding your housing situation to the housing authority?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 2,
+        "rationale": "This may establish a record that supports your claims and demonstrates that you sought external help.",
+        "status": "pending"
+      },
+      {
+        "id": 482,
+        "question_text": "How did your landlord notify you about any actions related to eviction or nonpayment of rent?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 3,
+        "rationale": "Understanding the process of notification is important to ensure all legal requirements were followed and to validate your claims.",
+        "status": "pending"
+      },
+      {
+        "id": 483,
+        "question_text": "Can you confirm if there was any signed lease agreement between you and the landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 1,
+        "rationale": "We need to establish the existence of the lease to understand your legal obligations and any rights under that agreement.",
+        "status": "pending"
+      },
+      {
+        "id": 484,
+        "question_text": "Have you received any notifications or letters from your landlord regarding eviction or other actions taken against you?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 2,
+        "rationale": "Understanding whether any adverse actions have been communicated is crucial to identifying your case's foundation.",
+        "status": "pending"
+      },
+      {
+        "id": 485,
+        "question_text": "Can you describe any actions or events leading up to your eviction that might indicate retaliation from your landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 3,
+        "rationale": "Identifying a causal connection is necessary to support any claims of retaliatory eviction.",
+        "status": "pending"
+      },
+      {
+        "id": 486,
+        "question_text": "Did you ever notify your landlord about needing repairs in your unit?",
+        "topic_group": "Repairs and Notices",
+        "priority": 1,
+        "rationale": "Determining if you've notified the landlord of defects is crucial for proving your claims about unsafe living conditions.",
+        "status": "pending"
+      },
+      {
+        "id": 487,
+        "question_text": "Do you have evidence showing that you allowed your landlord a reasonable time to fix any reported issues?",
+        "topic_group": "Repairs and Notices",
+        "priority": 2,
+        "rationale": "This information is important to support that you followed proper procedures when seeking repairs.",
+        "status": "pending"
+      },
+      {
+        "id": 488,
+        "question_text": "What kind of communication did you have with your landlord about health issues like mold in your property?",
+        "topic_group": "Repairs and Notices",
+        "priority": 3,
+        "rationale": "This helps document your landlord's knowledge of the issues and your attempts to resolve them before escalating the situation.",
+        "status": "pending"
+      },
+      {
+        "id": 489,
+        "question_text": "Have you considered whether your eviction might be retaliatory or related to any complaints you've made?",
+        "topic_group": "Potential Claims",
+        "priority": 1,
+        "rationale": "It's important to explore all possible claims, especially if you believe the eviction is due to exercising your tenant rights.",
+        "status": "pending"
+      },
+      {
+        "id": 490,
+        "question_text": "Are there any unsafe living conditions you haven't reported yet, which may affect your living situation?",
+        "topic_group": "Potential Claims",
+        "priority": 2,
+        "rationale": "Identifying these conditions could lead to valid claims regarding your right to a safe living environment.",
+        "status": "pending"
+      },
+      {
+        "id": 491,
+        "question_text": "Have you faced any discrimination related to your family status, such as issues impacting your housing?",
+        "topic_group": "Potential Claims",
+        "priority": 3,
+        "rationale": "Understanding if this impacts your situation could help explore discrimination claims, which are often underreported.",
+        "status": "pending"
+      },
+      {
+        "id": 492,
+        "question_text": "Do you have documentation of any payments made for rent or communications with your landlord about payments?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 1,
+        "rationale": "This is crucial for validating your claims and ensuring that proper notice concerning rent payments was provided.",
+        "status": "pending"
+      },
+      {
+        "id": 493,
+        "question_text": "Can you provide evidence of any complaint you filed regarding your housing situation to the housing authority?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 2,
+        "rationale": "This may establish a record that supports your claims and demonstrates that you sought external help.",
+        "status": "pending"
+      },
+      {
+        "id": 494,
+        "question_text": "How did your landlord notify you about any actions related to eviction or nonpayment of rent?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 3,
+        "rationale": "Understanding the process of notification is important to ensure all legal requirements were followed and to validate your claims.",
+        "status": "pending"
+      },
+      {
+        "id": 495,
+        "question_text": "Can you confirm if there was any signed lease agreement between you and the landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 1,
+        "rationale": "We need to establish the existence of the lease to understand your legal obligations and any rights under that agreement.",
+        "status": "pending"
+      },
+      {
+        "id": 496,
+        "question_text": "Have you received any notifications or letters from your landlord regarding eviction or other actions taken against you?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 2,
+        "rationale": "Understanding whether any adverse actions have been communicated is crucial to identifying your case's foundation.",
+        "status": "pending"
+      },
+      {
+        "id": 497,
+        "question_text": "Can you describe any actions or events leading up to your eviction that might indicate retaliation from your landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 3,
+        "rationale": "Identifying a causal connection is necessary to support any claims of retaliatory eviction.",
+        "status": "pending"
+      },
+      {
+        "id": 498,
+        "question_text": "Did you ever notify your landlord about needing repairs in your unit?",
+        "topic_group": "Repairs and Notices",
+        "priority": 1,
+        "rationale": "Determining if you've notified the landlord of defects is crucial for proving your claims about unsafe living conditions.",
+        "status": "pending"
+      },
+      {
+        "id": 499,
+        "question_text": "Do you have evidence showing that you allowed your landlord a reasonable time to fix any reported issues?",
+        "topic_group": "Repairs and Notices",
+        "priority": 2,
+        "rationale": "This information is important to support that you followed proper procedures when seeking repairs.",
+        "status": "pending"
+      },
+      {
+        "id": 500,
+        "question_text": "What kind of communication did you have with your landlord about health issues like mold in your property?",
+        "topic_group": "Repairs and Notices",
+        "priority": 3,
+        "rationale": "This helps document your landlord's knowledge of the issues and your attempts to resolve them before escalating the situation.",
+        "status": "pending"
+      },
+      {
+        "id": 501,
+        "question_text": "Have you considered whether your eviction might be retaliatory or related to any complaints you've made?",
+        "topic_group": "Potential Claims",
+        "priority": 1,
+        "rationale": "It's important to explore all possible claims, especially if you believe the eviction is due to exercising your tenant rights.",
+        "status": "pending"
+      },
+      {
+        "id": 502,
+        "question_text": "Are there any unsafe living conditions you haven't reported yet, which may affect your living situation?",
+        "topic_group": "Potential Claims",
+        "priority": 2,
+        "rationale": "Identifying these conditions could lead to valid claims regarding your right to a safe living environment.",
+        "status": "pending"
+      },
+      {
+        "id": 503,
+        "question_text": "Have you faced any discrimination related to your family status, such as issues impacting your housing?",
+        "topic_group": "Potential Claims",
+        "priority": 3,
+        "rationale": "Understanding if this impacts your situation could help explore discrimination claims, which are often underreported.",
+        "status": "pending"
+      },
+      {
+        "id": 504,
+        "question_text": "Do you have documentation of any payments made for rent or communications with your landlord about payments?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 1,
+        "rationale": "This is crucial for validating your claims and ensuring that proper notice concerning rent payments was provided.",
+        "status": "pending"
+      },
+      {
+        "id": 505,
+        "question_text": "Can you provide evidence of any complaint you filed regarding your housing situation to the housing authority?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 2,
+        "rationale": "This may establish a record that supports your claims and demonstrates that you sought external help.",
+        "status": "pending"
+      },
+      {
+        "id": 506,
+        "question_text": "How did your landlord notify you about any actions related to eviction or nonpayment of rent?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 3,
+        "rationale": "Understanding the process of notification is important to ensure all legal requirements were followed and to validate your claims.",
+        "status": "pending"
+      },
+      {
+        "id": 507,
+        "question_text": "Can you confirm if there was any signed lease agreement between you and the landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 1,
+        "rationale": "We need to establish the existence of the lease to understand your legal obligations and any rights under that agreement.",
+        "status": "pending"
+      },
+      {
+        "id": 508,
+        "question_text": "Have you received any notifications or letters from your landlord regarding eviction or other actions taken against you?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 2,
+        "rationale": "Understanding whether any adverse actions have been communicated is crucial to identifying your case's foundation.",
+        "status": "pending"
+      },
+      {
+        "id": 509,
+        "question_text": "Can you describe any actions or events leading up to your eviction that might indicate retaliation from your landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 3,
+        "rationale": "Identifying a causal connection is necessary to support any claims of retaliatory eviction.",
+        "status": "pending"
+      },
+      {
+        "id": 510,
+        "question_text": "Did you ever notify your landlord about needing repairs in your unit?",
+        "topic_group": "Repairs and Notices",
+        "priority": 1,
+        "rationale": "Determining if you've notified the landlord of defects is crucial for proving your claims about unsafe living conditions.",
+        "status": "pending"
+      },
+      {
+        "id": 511,
+        "question_text": "Do you have evidence showing that you allowed your landlord a reasonable time to fix any reported issues?",
+        "topic_group": "Repairs and Notices",
+        "priority": 2,
+        "rationale": "This information is important to support that you followed proper procedures when seeking repairs.",
+        "status": "pending"
+      },
+      {
+        "id": 512,
+        "question_text": "What kind of communication did you have with your landlord about health issues like mold in your property?",
+        "topic_group": "Repairs and Notices",
+        "priority": 3,
+        "rationale": "This helps document your landlord's knowledge of the issues and your attempts to resolve them before escalating the situation.",
+        "status": "pending"
+      },
+      {
+        "id": 513,
+        "question_text": "Have you considered whether your eviction might be retaliatory or related to any complaints you've made?",
+        "topic_group": "Potential Claims",
+        "priority": 1,
+        "rationale": "It's important to explore all possible claims, especially if you believe the eviction is due to exercising your tenant rights.",
+        "status": "pending"
+      },
+      {
+        "id": 514,
+        "question_text": "Are there any unsafe living conditions you haven't reported yet, which may affect your living situation?",
+        "topic_group": "Potential Claims",
+        "priority": 2,
+        "rationale": "Identifying these conditions could lead to valid claims regarding your right to a safe living environment.",
+        "status": "pending"
+      },
+      {
+        "id": 515,
+        "question_text": "Have you faced any discrimination related to your family status, such as issues impacting your housing?",
+        "topic_group": "Potential Claims",
+        "priority": 3,
+        "rationale": "Understanding if this impacts your situation could help explore discrimination claims, which are often underreported.",
+        "status": "pending"
+      },
+      {
+        "id": 516,
+        "question_text": "Do you have documentation of any payments made for rent or communications with your landlord about payments?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 1,
+        "rationale": "This is crucial for validating your claims and ensuring that proper notice concerning rent payments was provided.",
+        "status": "pending"
+      },
+      {
+        "id": 517,
+        "question_text": "Can you provide evidence of any complaint you filed regarding your housing situation to the housing authority?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 2,
+        "rationale": "This may establish a record that supports your claims and demonstrates that you sought external help.",
+        "status": "pending"
+      },
+      {
+        "id": 518,
+        "question_text": "How did your landlord notify you about any actions related to eviction or nonpayment of rent?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 3,
+        "rationale": "Understanding the process of notification is important to ensure all legal requirements were followed and to validate your claims.",
+        "status": "pending"
+      },
+      {
+        "id": 519,
+        "question_text": "Can you confirm if there was any signed lease agreement between you and the landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 1,
+        "rationale": "We need to establish the existence of the lease to understand your legal obligations and any rights under that agreement.",
+        "status": "pending"
+      },
+      {
+        "id": 520,
+        "question_text": "Have you received any notifications or letters from your landlord regarding eviction or other actions taken against you?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 2,
+        "rationale": "Understanding whether any adverse actions have been communicated is crucial to identifying your case's foundation.",
+        "status": "pending"
+      },
+      {
+        "id": 521,
+        "question_text": "Can you describe any actions or events leading up to your eviction that might indicate retaliation from your landlord?",
+        "topic_group": "Lease and Adverse Actions",
+        "priority": 3,
+        "rationale": "Identifying a causal connection is necessary to support any claims of retaliatory eviction.",
+        "status": "pending"
+      },
+      {
+        "id": 522,
+        "question_text": "Did you ever notify your landlord about needing repairs in your unit?",
+        "topic_group": "Repairs and Notices",
+        "priority": 1,
+        "rationale": "Determining if you've notified the landlord of defects is crucial for proving your claims about unsafe living conditions.",
+        "status": "pending"
+      },
+      {
+        "id": 523,
+        "question_text": "Do you have evidence showing that you allowed your landlord a reasonable time to fix any reported issues?",
+        "topic_group": "Repairs and Notices",
+        "priority": 2,
+        "rationale": "This information is important to support that you followed proper procedures when seeking repairs.",
+        "status": "pending"
+      },
+      {
+        "id": 524,
+        "question_text": "What kind of communication did you have with your landlord about health issues like mold in your property?",
+        "topic_group": "Repairs and Notices",
+        "priority": 3,
+        "rationale": "This helps document your landlord's knowledge of the issues and your attempts to resolve them before escalating the situation.",
+        "status": "pending"
+      },
+      {
+        "id": 525,
+        "question_text": "Have you considered whether your eviction might be retaliatory or related to any complaints you've made?",
+        "topic_group": "Potential Claims",
+        "priority": 1,
+        "rationale": "It's important to explore all possible claims, especially if you believe the eviction is due to exercising your tenant rights.",
+        "status": "pending"
+      },
+      {
+        "id": 526,
+        "question_text": "Are there any unsafe living conditions you haven't reported yet, which may affect your living situation?",
+        "topic_group": "Potential Claims",
+        "priority": 2,
+        "rationale": "Identifying these conditions could lead to valid claims regarding your right to a safe living environment.",
+        "status": "pending"
+      },
+      {
+        "id": 527,
+        "question_text": "Have you faced any discrimination related to your family status, such as issues impacting your housing?",
+        "topic_group": "Potential Claims",
+        "priority": 3,
+        "rationale": "Understanding if this impacts your situation could help explore discrimination claims, which are often underreported.",
+        "status": "pending"
+      },
+      {
+        "id": 528,
+        "question_text": "Do you have documentation of any payments made for rent or communications with your landlord about payments?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 1,
+        "rationale": "This is crucial for validating your claims and ensuring that proper notice concerning rent payments was provided.",
+        "status": "pending"
+      },
+      {
+        "id": 529,
+        "question_text": "Can you provide evidence of any complaint you filed regarding your housing situation to the housing authority?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 2,
+        "rationale": "This may establish a record that supports your claims and demonstrates that you sought external help.",
+        "status": "pending"
+      },
+      {
+        "id": 530,
+        "question_text": "How did your landlord notify you about any actions related to eviction or nonpayment of rent?",
+        "topic_group": "Documented Evidence and Notifications",
+        "priority": 3,
+        "rationale": "Understanding the process of notification is important to ensure all legal requirements were followed and to validate your claims.",
+        "status": "pending"
+      }
+    ],
+    "deadlines": [
+      {
+        "id": 32,
+        "event_text": "A 14-day notice was taped to the door on March 3.",
+        "event_type": "notice_to_vacate",
+        "trigger": "notice_posted",
+        "trigger_date": "2023-03-03",
+        "computed_date": "2023-03-17",
+        "rule_id": "generic_notice_window",
+        "citation": "Cure/vacate period stated in your notice or lease (confirm the exact deadline printed on the notice).",
+        "computed": true,
+        "urgency": "lapsed",
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-07. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": null
+      },
+      {
+        "id": 33,
+        "event_text": "The court issued papers taped to the door stating to show up on April 1st.",
+        "event_type": "eviction_summons",
+        "trigger": "served",
+        "trigger_date": "2023-04-01",
+        "computed_date": null,
+        "rule_id": null,
+        "citation": null,
+        "computed": false,
+        "urgency": "unknown",
+        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": "Halden County"
+      },
+      {
+        "id": 34,
+        "event_text": "The tenant thinks the mold is affecting Marcus's health.",
+        "event_type": "injury",
+        "trigger": "incident",
+        "trigger_date": null,
+        "computed_date": null,
+        "rule_id": null,
+        "citation": null,
+        "computed": false,
+        "urgency": "unknown",
+        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": null
+      }
+    ]
   },
   "outputs": [
     {
-      "doc_id": 2,
+      "doc_id": 42,
       "profile": "law_firm",
-      "completeness": 1.0,
-      "memo_chars": 210,
+      "completeness": 0.75,
+      "memo_chars": 34800,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 8469,
-          "content_type": null,
+          "bytes": 74563,
+          "content_type": "application/pdf",
           "magic": "%PDF-",
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 0,
-          "content_type": null,
-          "magic": "",
-          "ok": false
+          "bytes": 714,
+          "content_type": "application/json",
+          "magic": "{\n \"i",
+          "ok": true
+        }
+      }
+    },
+    {
+      "doc_id": 43,
+      "profile": "court_self_help",
+      "completeness": 0.75,
+      "memo_chars": 7065,
+      "exports": {
+        "pdf": {
+          "http": 200,
+          "bytes": 33105,
+          "content_type": "application/pdf",
+          "magic": "%PDF-",
+          "ok": true
+        },
+        "json": {
+          "http": 200,
+          "bytes": 713,
+          "content_type": "application/json",
+          "magic": "{\n \"i",
+          "ok": true
+        }
+      }
+    },
+    {
+      "doc_id": 44,
+      "profile": "legal_aid",
+      "completeness": 0.75,
+      "memo_chars": 35540,
+      "exports": {
+        "pdf": {
+          "http": 200,
+          "bytes": 76574,
+          "content_type": "application/pdf",
+          "magic": "%PDF-",
+          "ok": true
+        },
+        "json": {
+          "http": 200,
+          "bytes": 713,
+          "content_type": "application/json",
+          "magic": "{\n \"i",
+          "ok": true
         }
       }
     }
@@ -118,10 +1142,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "11",
+        "id": "187",
         "client_id": "c0",
-        "timestamp": "2026-07-05 21:57:10.811861+00:00",
-        "message_id": 11,
+        "timestamp": "2026-07-07 19:44:44.172742+00:00",
+        "message_id": 187,
         "sequence_number": 1
       }
     },
@@ -130,7 +1154,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 12
+        "message_id": 188
       }
     },
     {
@@ -144,10 +1168,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "13",
+        "id": "189",
         "client_id": "c1",
-        "timestamp": "2026-07-05 21:57:11.139639+00:00",
-        "message_id": 13,
+        "timestamp": "2026-07-07 19:44:44.440587+00:00",
+        "message_id": 189,
         "sequence_number": 3
       }
     },
@@ -156,7 +1180,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 14
+        "message_id": 190
       }
     },
     {
@@ -170,10 +1194,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "15",
+        "id": "191",
         "client_id": "c2",
-        "timestamp": "2026-07-05 21:57:11.403658+00:00",
-        "message_id": 15,
+        "timestamp": "2026-07-07 19:44:44.699332+00:00",
+        "message_id": 191,
         "sequence_number": 5
       }
     },
@@ -182,15 +1206,15 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 16
+        "message_id": 192
       }
     },
     {
       "stage": "poll_status",
       "http": 200,
       "status": "converged",
-      "iteration": 10,
-      "progress": 100
+      "iteration": 5,
+      "progress": 50
     }
   ]
 }
