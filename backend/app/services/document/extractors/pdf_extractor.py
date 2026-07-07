@@ -1,64 +1,75 @@
-"""PDF text extraction using PyMuPDF (pymupdf).
+"""PDF text extraction using pdfplumber (MIT-licensed, pure-Python).
 
 Extracts text with structural elements (headings, paragraphs) and page numbers.
-Runs synchronous PyMuPDF operations in a thread executor to avoid blocking.
+pdfplumber exposes per-character font ``size`` and bounding boxes, so heading
+classification and provenance bboxes are preserved 1:1 with the previous
+PyMuPDF backend. PyMuPDF was dropped because it is AGPL-3.0 (S075.4 / license
+policy 13); pdfplumber (over pdfminer.six) is MIT/BSD and keeps alea-intake
+cleanly MIT-compatible. See THIRD-PARTY.md.
+
+Runs synchronous pdfplumber operations in a thread executor to avoid blocking.
 """
 
 from __future__ import annotations
 
 import asyncio
+from collections import defaultdict
 from pathlib import Path
+
+# Font size at/above which a text line is treated as a heading (points).
+_HEADING_FONT_SIZE = 16.0
 
 
 def _extract_sync(file_path: Path) -> tuple[str, list[dict]]:
-    """Synchronous PDF extraction using PyMuPDF.
+    """Synchronous PDF extraction using pdfplumber.
 
-    Classifies elements by font size: >= 16pt = heading, else paragraph.
-    Preserves page boundaries and bounding box information.
+    Groups words into visual lines (by rounded top coordinate) and classifies
+    each line by its largest font size: >= 16pt = heading, else paragraph.
+    Preserves page boundaries and bounding-box information.
 
     Returns:
         Tuple of (full_text, elements) where elements are dicts with
         text, element_type, page, bbox, and font_size keys.
     """
-    import pymupdf
+    import pdfplumber
 
-    doc = pymupdf.open(str(file_path))
     elements: list[dict] = []
     page_texts: list[str] = []
 
-    try:
-        for page_num in range(len(doc)):
-            page = doc[page_num]
-            page_text = page.get_text()
-            page_texts.append(page_text)
+    with pdfplumber.open(str(file_path)) as pdf:
+        for page_num, page in enumerate(pdf.pages, start=1):
+            page_texts.append(page.extract_text() or "")
 
-            # Get structured blocks for element classification
-            blocks = page.get_text("dict")["blocks"]
-            for block in blocks:
-                # Only process text blocks (type 0), skip images (type 1)
-                if block.get("type") != 0:
+            # Words carry per-word font size + bbox; group them into lines so a
+            # heading line is classified as a unit rather than word-by-word.
+            words = page.extract_words(
+                extra_attrs=["size"], use_text_flow=True, keep_blank_chars=False
+            )
+            lines: dict[int, list[dict]] = defaultdict(list)
+            for word in words:
+                lines[round(word["top"])].append(word)
+
+            for top in sorted(lines):
+                line_words = lines[top]
+                text = " ".join(w["text"] for w in line_words).strip()
+                if not text:
                     continue
 
-                for line in block.get("lines", []):
-                    for span in line.get("spans", []):
-                        text = span.get("text", "").strip()
-                        if not text:
-                            continue
+                font_size = max((w.get("size") or 0.0) for w in line_words)
+                x0 = min(w["x0"] for w in line_words)
+                y0 = min(w["top"] for w in line_words)
+                x1 = max(w["x1"] for w in line_words)
+                y1 = max(w["bottom"] for w in line_words)
 
-                        font_size = span.get("size", 12.0)
-                        bbox = span.get("bbox", block.get("bbox", [0, 0, 0, 0]))
+                element_type = "heading" if font_size >= _HEADING_FONT_SIZE else "paragraph"
 
-                        element_type = "heading" if font_size >= 16.0 else "paragraph"
-
-                        elements.append({
-                            "text": text,
-                            "element_type": element_type,
-                            "page": page_num + 1,  # 1-indexed
-                            "bbox": list(bbox),
-                            "font_size": font_size,
-                        })
-    finally:
-        doc.close()
+                elements.append({
+                    "text": text,
+                    "element_type": element_type,
+                    "page": page_num,  # 1-indexed
+                    "bbox": [x0, y0, x1, y1],
+                    "font_size": font_size,
+                })
 
     full_text = "\n\n".join(page_texts)
     return full_text, elements
@@ -67,7 +78,7 @@ def _extract_sync(file_path: Path) -> tuple[str, list[dict]]:
 async def extract_pdf(file_path: Path) -> tuple[str, list[dict]]:
     """Extract text and structural elements from a PDF file.
 
-    Runs synchronous PyMuPDF operations in a thread executor to avoid
+    Runs synchronous pdfplumber operations in a thread executor to avoid
     blocking the event loop.
 
     Args:
