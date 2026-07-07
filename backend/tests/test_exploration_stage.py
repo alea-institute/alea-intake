@@ -308,6 +308,35 @@ class TestExploreStageGuards:
         mock_session.add.assert_not_called()
 
     @pytest.mark.asyncio
+    async def test_skips_exploration_after_first_iteration(
+        self, mock_llm, mock_session, mock_embedding,
+        sample_run, sample_claims, sample_facts,
+    ):
+        """Exploration runs once per analysis run — later iterations skip."""
+        from app.services.analysis.stages.explore import ExploreStage
+
+        iteration2 = MagicMock()
+        iteration2.id = 2
+        iteration2.iteration_number = 2
+
+        stage = ExploreStage(
+            llm_service=mock_llm,
+            db_session=mock_session,
+            folio=None,
+            embedding_service=mock_embedding,
+            org_config={},
+        )
+
+        with patch("app.services.analysis.stages.explore.ExplorationEngine") as MockEngine:
+            result = await stage.execute(
+                sample_run, iteration2, sample_claims, sample_facts,
+            )
+
+        MockEngine.assert_not_called()
+        assert result["new_claims"] == 0
+        assert result["skipped_already_ran"] is True
+
+    @pytest.mark.asyncio
     async def test_dedupes_discovered_claims_against_existing(
         self, mock_llm, mock_session, mock_embedding,
         sample_run, sample_iteration, sample_facts,

@@ -202,8 +202,14 @@ async def resolve_concepts(
     # Candidate accumulator: iri -> {embedding_score, label_score, llm_score, label, metadata, reason}
     candidates: dict[str, dict] = {}
 
-    # Stage 1: Embedding similarity
-    await _stage_embedding(text, expanded_queries, embedding_service, config, candidates)
+    # Stage 1: Embedding similarity. Degrade gracefully: an unavailable
+    # embedding backend (e.g. missing pgvector table, BUG-9) must not take
+    # down the deterministic label/prefix stage below — the cascade is the
+    # point (deterministic-first, probabilistic assist).
+    try:
+        await _stage_embedding(text, expanded_queries, embedding_service, config, candidates)
+    except Exception:
+        logger.warning("Embedding stage failed; continuing with label/LLM stages", exc_info=True)
 
     # Stage 2: Label/prefix search
     await _stage_label_prefix(text, expanded_queries, folio, config, candidates)
@@ -223,7 +229,10 @@ async def resolve_concepts(
         and config.enable_llm_stage
         and llm_model is not None
     ):
-        await _stage_llm(text, folio, config, candidates)
+        try:
+            await _stage_llm(text, folio, config, candidates)
+        except Exception:
+            logger.warning("LLM stage failed; ranking existing candidates", exc_info=True)
 
     # Scoring and ranking
     results = _combine_and_rank(candidates, folio, text, config)

@@ -30,6 +30,9 @@ class PgVectorBackend:
     async def ensure_table(self) -> None:
         """Create the embedding table in shared schema (FOLIO is global, not per-tenant)."""
         async with self._engine.begin() as conn:
+            # Fresh databases (e.g. create_all deployments with migrations
+            # skipped) may not have the shared schema yet (BUG-9).
+            await conn.execute(text("CREATE SCHEMA IF NOT EXISTS shared"))
             await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
             await conn.execute(
                 text(f"""

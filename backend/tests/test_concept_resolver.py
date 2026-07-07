@@ -338,3 +338,32 @@ class TestPersistResolutions:
         assert mappings[0].source == "combined"
         assert mappings[0].intake_id == 1
         assert mappings[1].iri == "https://folio.openlegalstandard.org/areaoflaw001"
+
+
+class TestResolverStageResilience:
+    """BUG-9: a failing embedding backend must not kill the deterministic cascade."""
+
+    @pytest.mark.asyncio
+    async def test_embedding_failure_degrades_to_label_stage(self, mock_folio):
+        """resolve_concepts still returns label-stage matches when embeddings raise."""
+        from app.services.folio.concept_resolver import (
+            ConceptResolutionConfig,
+            resolve_concepts,
+        )
+
+        emb_service = AsyncMock()
+        emb_service.search = AsyncMock(
+            side_effect=RuntimeError('relation "shared.folio_embeddings" does not exist')
+        )
+
+        config = ConceptResolutionConfig(enable_llm_stage=False)
+        results = await resolve_concepts(
+            text="Wrongful Termination Claim",
+            folio=mock_folio,
+            embedding_service=emb_service,
+            config=config,
+        )
+
+        # The label/prefix stage matched despite the dead embedding stage.
+        assert len(results) > 0
+        assert any("objective001" in r.iri for r in results)

@@ -96,6 +96,13 @@ class EmbeddingService:
 
         loop = asyncio.new_event_loop()
         try:
+            # BUG-9: the pgvector table (and shared schema) must exist before
+            # delete_all() TRUNCATEs it — on a fresh database this previously
+            # raised UndefinedTableError, which the lifespan swallowed, leaving
+            # every embedding search broken.
+            ensure_table = getattr(self._backend, "ensure_table", None)
+            if ensure_table is not None:
+                loop.run_until_complete(ensure_table())
             loop.run_until_complete(self._backend.delete_all())  # type: ignore[union-attr]
 
             # Batch encode all labels

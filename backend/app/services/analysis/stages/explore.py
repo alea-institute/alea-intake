@@ -84,6 +84,27 @@ class ExploreStage:
             Dict with new_claims count, triggered_protocols, rounds_completed,
             total_new_issues, and question_transparency flag.
         """
+        # BUG-8 guard: exploration runs ONCE per analysis run. Facts are
+        # backfilled at trigger time and don't change between iterations, so
+        # re-exploring every iteration only re-invents differently-worded
+        # claims the name-dedupe can't catch (observed live: 123 "discovered"
+        # claims over 8 iterations). The engine already does multi-round
+        # stability internally on its single run.
+        if getattr(iteration, "iteration_number", 1) > 1:
+            logger.info(
+                "Exploration skipped for run %s iteration %s: explore runs once per run",
+                run.id,
+                iteration.iteration_number,
+            )
+            return {
+                "new_claims": 0,
+                "triggered_protocols": [],
+                "rounds_completed": 0,
+                "total_new_issues": 0,
+                "question_transparency": False,
+                "skipped_already_ran": True,
+            }
+
         # BUG-8 guard: never explore from nothing. With zero extracted facts
         # every layer degenerates into ungrounded speculation (the LLM invents
         # generic claims), which violates the no-fabrication contract (RUB-04).
