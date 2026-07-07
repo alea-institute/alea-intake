@@ -8,7 +8,7 @@ addressed by stable ID: `EP-<REPO>-<CAMPAIGN>-<NNN>`.
 
 | EP-ID prefix | Campaign | Title | Rubric version | Result | Link |
 |---|---|---|---|---|---|
-| `EP-INTAKE-PERSONAS` | PERSONAS | alea-intake — Persona UAT Campaign (live validation) | intake-quality-v1.1 (LOCKED) | fail (gates: 2/6, 3/6, 3/6 open — BUG-12 deadline engine + issue-completeness) | [docs/evidence/persona-campaign/pack.html](docs/evidence/persona-campaign/pack.html) |
+| `EP-INTAKE-PERSONAS` | PERSONAS | alea-intake — Persona UAT Campaign (live validation) | intake-quality-v1.1 (LOCKED) | fail (gates passing: LT 4/6, IMM 3/6, FAM 3/6 — roots: BUG-12 deadline engine + GATE-01 issue-completeness) | [docs/evidence/persona-campaign/pack.html](docs/evidence/persona-campaign/pack.html) |
 
 ## Conventions
 
