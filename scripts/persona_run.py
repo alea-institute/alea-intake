@@ -248,11 +248,25 @@ def run(persona_dir: Path, out_dir: Path):
             ctype = None
             if isinstance(hdrs2, dict):
                 ctype = {k.lower(): v for k, v in hdrs2.items()}.get("content-type")
+            # BUG-18: a parsed dict is truthy even when every field is an empty
+            # shell ({claims_by_jurisdiction:{}, deadlines:[], executive_summary:
+            # ""}). The old ok=bool(body2) passed those. Assert the JSON export
+            # actually carries structured substance so an empty-shell export
+            # FAILS RUB-15.
+            json_substance = None
+            if fmt == "json" and isinstance(body2, dict):
+                json_substance = bool(
+                    body2.get("claims_by_jurisdiction")
+                    or body2.get("deadlines")
+                    or (body2.get("executive_summary") or "").strip()
+                )
             entry["exports"][fmt] = {"http": s2, "bytes": len(body_bytes),
                                      "content_type": ctype,
                                      "magic": magic,
-                                     "ok": s2 == 200 and parsed_ok and
-                                           (fmt != "pdf" or magic.startswith("%PDF"))}
+                                     "json_substance": json_substance,
+                                     "ok": s2 == 200 and parsed_ok
+                                           and (fmt != "pdf" or magic.startswith("%PDF"))
+                                           and (fmt != "json" or json_substance is True)}
         outputs.append(entry)
     result["outputs"] = outputs
     result["transcript"] = transcript

@@ -77,7 +77,16 @@ def check_run(run_path: Path) -> dict:
             if not e.get("ok"):
                 out["exports_ok"] = False
                 out.setdefault("export_failures", []).append(
-                    {"doc": o.get("doc_id"), "format": fmt, "http": e.get("http")}
+                    {"doc": o.get("doc_id"), "format": fmt, "http": e.get("http"),
+                     "json_substance": e.get("json_substance")}
+                )
+            # BUG-18 (RUB-15): a JSON export that parses but is an empty shell
+            # must be reported as a substance failure, not silently ok.
+            if fmt == "json" and e.get("json_substance") is False:
+                out["exports_ok"] = False
+                out.setdefault("export_failures", []).append(
+                    {"doc": o.get("doc_id"), "format": "json",
+                     "reason": "empty_shell", "json_substance": False}
                 )
     return out
 
