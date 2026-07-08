@@ -27,6 +27,46 @@ from app.services.output.schemas import (
 
 logger = logging.getLogger(__name__)
 
+# BUG-19: the rewriter LLM sometimes *successfully returns* a refusal or a
+# clarification request instead of a rewrite (e.g. "It seems there was an issue
+# with the text provided. Please provide the legal text you'd like rewritten.",
+# "I'm sorry, but I cannot assist with that."). These are not exceptions, so the
+# old ``rewritten or text`` fallback happily leaked them into memos and
+# client-facing PDFs as claim conclusions. We treat any response matching a
+# refusal/meta signature as a rewrite FAILURE and fail closed to the original
+# (unrewritten) prose, logging server-side. Signatures are lowercase; matching
+# is case-insensitive substring. They are meta-commentary phrasings that would
+# never appear inside a genuine plain-language rewrite of legal prose.
+_REFUSAL_SIGNATURES: tuple[str, ...] = (
+    "it seems there was an issue with the text",
+    "please provide the legal text",
+    "please provide the text",
+    "provide the text you'd like",
+    "provide the text you would like",
+    "there is no text provided",
+    "no text was provided",
+    "i'm sorry, but i cannot",
+    "i am sorry, but i cannot",
+    "i'm sorry, but i can't",
+    "i cannot assist with that",
+    "i can't assist with that",
+    "i'm unable to assist",
+    "i am unable to assist",
+    "i cannot help with that",
+    "as an ai language model",
+    "as an ai, i",
+    "could you please provide",
+    "it appears that no text",
+)
+
+
+def _looks_like_refusal(rewritten: str) -> bool:
+    """Return True if the rewriter output is a refusal / clarification request
+    rather than an actual rewrite of the supplied text (BUG-19)."""
+    lowered = rewritten.strip().lower()
+    return any(sig in lowered for sig in _REFUSAL_SIGNATURES)
+
+
 # System prompts by language level
 _SYSTEM_PROMPTS: dict[str, str | None] = {
     "professional": None,  # Skip LLM -- use text as-is
@@ -151,12 +191,24 @@ class LanguageAdapter:
             rewritten = await llm_service.acomplete(
                 [{"role": "user", "content": text}], system_prompt=system_prompt
             )
-            return rewritten or text
         except Exception:
             logger.warning(
                 "LanguageAdapter rewrite failed; keeping original text", exc_info=True
             )
             return text
+        if not rewritten or not rewritten.strip():
+            return text
+        # BUG-19: fail closed on refusal/clarification responses so meta-commentary
+        # ("Please provide the legal text you'd like rewritten.") never leaks into
+        # memos or client PDFs. Log server-side; return the original prose.
+        if _looks_like_refusal(rewritten):
+            logger.warning(
+                "LanguageAdapter rewrite returned a refusal/clarification "
+                "(%r...); keeping original text",
+                rewritten.strip()[:80],
+            )
+            return text
+        return rewritten
 
     @staticmethod
     def _extract_citations(context: OutputContext) -> set[str]:

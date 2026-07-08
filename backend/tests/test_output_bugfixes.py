@@ -359,6 +359,69 @@ async def test_plain_prompt_targets_sixth_grade():
 
 
 # ---------------------------------------------------------------------------
+# BUG-19 -- rewriter refusal / clarification must NOT leak into memos/PDFs
+# ---------------------------------------------------------------------------
+
+
+async def test_language_adapter_fails_closed_on_refusal():
+    """BUG-19: when the rewriter LLM returns a refusal/clarification instead of a
+    rewrite, adapt() must keep the ORIGINAL prose, never the meta-commentary.
+
+    Observed leaks in client PDFs: "It seems there was an issue with the text
+    provided. Please provide the legal text you'd like rewritten." and
+    "I'm sorry, but I cannot assist with that." — repeated as claim conclusions.
+    """
+    from app.services.output.language_adapter import LanguageAdapter
+    from app.services.output.schemas import COURT_SELF_HELP_PROFILE
+
+    ctx = _ctx_with_prose()
+    original_issue = ctx.claims_by_jurisdiction["California"][0].issue_statement
+    original_summary = ctx.executive_summary
+    refusal = (
+        "It seems there was an issue with the text provided. "
+        "Please provide the legal text you'd like rewritten."
+    )
+    llm = SimpleNamespace(acomplete=AsyncMock(return_value=refusal))
+    adapted = await LanguageAdapter().adapt(ctx, COURT_SELF_HELP_PROFILE, llm)
+
+    # The refusal text must appear NOWHERE in the adapted context.
+    assert adapted.executive_summary == original_summary
+    assert adapted.claims_by_jurisdiction["California"][0].issue_statement == original_issue
+    assert "issue with the text" not in adapted.executive_summary.lower()
+    assert (
+        "issue with the text"
+        not in adapted.claims_by_jurisdiction["California"][0].issue_statement.lower()
+    )
+
+
+async def test_language_adapter_fails_closed_on_sorry_refusal():
+    """BUG-19: the "I'm sorry, but I cannot assist" refusal also fails closed."""
+    from app.services.output.language_adapter import LanguageAdapter
+    from app.services.output.schemas import COURT_SELF_HELP_PROFILE
+
+    ctx = _ctx_with_prose()
+    original_issue = ctx.claims_by_jurisdiction["California"][0].issue_statement
+    llm = SimpleNamespace(
+        acomplete=AsyncMock(return_value="I'm sorry, but I cannot assist with that.")
+    )
+    adapted = await LanguageAdapter().adapt(ctx, COURT_SELF_HELP_PROFILE, llm)
+    assert adapted.claims_by_jurisdiction["California"][0].issue_statement == original_issue
+
+
+async def test_looks_like_refusal_helper():
+    """The refusal detector flags meta-commentary but passes genuine rewrites."""
+    from app.services.output.language_adapter import _looks_like_refusal
+
+    assert _looks_like_refusal(
+        "It seems there was an issue with the text provided. Please provide the legal text."
+    )
+    assert _looks_like_refusal("I'm sorry, but I cannot assist with that.")
+    assert not _looks_like_refusal(
+        "You may have a strong claim. The landlord did not fix the heat. That breaks the law."
+    )
+
+
+# ---------------------------------------------------------------------------
 # q10 -- memo claim display: top-7 cap + relation grouping
 # ---------------------------------------------------------------------------
 
