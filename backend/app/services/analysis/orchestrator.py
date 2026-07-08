@@ -347,17 +347,28 @@ class AnalysisOrchestrator:
         # LLM selects which stages to run
         stages = await self._select_stages(run, iteration)
 
-        # Execute stages
+        # Execute stages.
+        #
+        # BUG-16 (structural): the multi-jurisdiction branch used to `break` out
+        # of this loop after running fact_map+gap_analyze in parallel, so every
+        # stage AFTER gap_analyze (question_gen) was silently skipped on any run
+        # whose issue_spot returned >1 jurisdiction. That is why the immigration
+        # persona (federal + state claims) deterministically ended with
+        # questions=0 while single-jurisdiction personas got questions: its
+        # question_gen never executed. Now the parallel branch handles both
+        # stages once and the loop CONTINUES with the remaining stages.
+        parallel_done = False
         for stage_name in stages:
             if stage_name in ("fact_map", "gap_analyze") and len(self._jurisdictions) > 1:
-                # Run in parallel per jurisdiction
-                await self._run_parallel_jurisdictions(
-                    self._jurisdictions, run, iteration, ws_manager,
-                )
-                # Skip individual fact_map and gap_analyze since they ran in parallel
-                stages_to_skip = {"fact_map", "gap_analyze"}
-                stages = [s for s in stages if s not in stages_to_skip]
-                break
+                if not parallel_done:
+                    # Run fact_map + gap_analyze in parallel per jurisdiction
+                    # (one combined pass; the second stage name is skipped).
+                    await self._run_parallel_jurisdictions(
+                        self._jurisdictions, run, iteration, ws_manager,
+                    )
+                    parallel_done = True
+                else:
+                    continue  # already covered by the parallel pass
             else:
                 result = await self._execute_stage(
                     stage_name, run, iteration, ws_manager,

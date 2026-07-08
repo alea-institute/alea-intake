@@ -321,6 +321,56 @@ class TestParallelJurisdictions:
         assert {"CA", "Federal"} == {j for _, j in fact_map_calls}
         assert {"CA", "Federal"} == {j for _, j in gap_calls}
 
+    @pytest.mark.asyncio
+    async def test_multi_jurisdiction_iteration_still_runs_question_gen(
+        self, orch_session, seed_intake, mock_llm_service, mock_ws_manager
+    ):
+        """BUG-16 (structural): on a multi-jurisdiction run, the stage loop used
+        to `break` after the parallel fact_map/gap_analyze pass, silently
+        skipping question_gen. The immigration persona (federal + state)
+        deterministically ended with questions=0 because its question_gen NEVER
+        executed. The iteration must run question_gen after the parallel pass.
+        """
+        from app.services.analysis.orchestrator import AnalysisOrchestrator
+
+        intake, session_obj = seed_intake
+
+        orch = AnalysisOrchestrator(
+            db_session=orch_session,
+            llm_service=mock_llm_service,
+            folio=None,
+            embedding_service=None,
+        )
+        orch._jurisdictions = ["CA", "Federal"]  # multi-jurisdiction
+
+        run = AnalysisRun(
+            intake_id=intake.id, status="running", trigger_type="manual",
+            current_iteration_number=1, max_iterations=10,
+        )
+        orch_session.add(run)
+        await orch_session.flush()
+
+        stage_calls = []
+
+        async def mock_execute(stage_name, run, iteration, ws_manager, jurisdiction=None):
+            stage_calls.append((stage_name, jurisdiction))
+            return {"completed": True}
+
+        orch._execute_stage = mock_execute
+
+        await orch._run_iteration(run, 1, mock_ws_manager)
+
+        stage_names = [s for s, _ in stage_calls]
+        # The parallel pass ran fact_map/gap_analyze per jurisdiction ...
+        assert ("fact_map", "CA") in stage_calls
+        assert ("gap_analyze", "Federal") in stage_calls
+        # ... and crucially the post-gap stages still executed.
+        assert "question_gen" in stage_names, (
+            "question_gen must run after the parallel jurisdiction pass"
+        )
+        # The parallel pass runs exactly once (not once per stage name).
+        assert stage_names.count("fact_map") == 2  # one per jurisdiction
+
 
 # ---- Test: Resume from latest checkpoint ----
 
