@@ -1,6 +1,6 @@
 {
   "persona": "family-custody",
-  "email": "persona_family-custody_1783458277@example.com",
+  "email": "persona_family-custody_1783478247@example.com",
   "base": "https://alea-intake-dev-production.up.railway.app",
   "steps": {
     "register": {
@@ -14,9 +14,9 @@
     "create_intake": {
       "http": 201,
       "ok": true,
-      "intake_id": 121,
-      "session_id": 90,
-      "party_id": 121,
+      "intake_id": 140,
+      "session_id": 104,
+      "party_id": 140,
       "practice_area_id": null
     },
     "narrative": {
@@ -39,670 +39,473 @@
     ],
     "analyze": {
       "http": 202,
-      "run_id": 28,
+      "run_id": 30,
       "status": "converged",
       "detail": null
     },
     "final_status": {
-      "run_id": 28,
+      "run_id": 30,
       "status": "converged",
-      "iteration": 9,
+      "iteration": 10,
       "max_iterations": 10,
-      "convergence_score": 0.7533,
-      "progress_pct": 90,
+      "convergence_score": 1.0,
+      "progress_pct": 100,
       "latest_stage": "question_gen"
     },
     "results_http": 200,
     "output_generate": [
       {
         "profile": "law_firm",
-        "id": 57,
-        "run_id": 28,
-        "intake_id": 121,
+        "id": 63,
+        "run_id": 30,
+        "intake_id": 140,
         "profile_type": "law_firm",
-        "completeness_score": 0.7533,
-        "created_at": "2026-07-07T21:07:49.510845Z"
+        "completeness_score": 1.0,
+        "created_at": "2026-07-08T02:41:03.082089Z"
       },
       {
         "profile": "court_self_help",
-        "id": 58,
-        "run_id": 28,
-        "intake_id": 121,
+        "id": 64,
+        "run_id": 30,
+        "intake_id": 140,
         "profile_type": "court_self_help",
-        "completeness_score": 0.7533,
-        "created_at": "2026-07-07T21:07:49.998645Z"
+        "completeness_score": 1.0,
+        "created_at": "2026-07-08T02:41:03.716185Z"
       },
       {
         "profile": "legal_aid",
-        "id": 59,
-        "run_id": 28,
-        "intake_id": 121,
+        "id": 65,
+        "run_id": 30,
+        "intake_id": 140,
         "profile_type": "legal_aid",
-        "completeness_score": 0.7533,
-        "created_at": "2026-07-07T21:08:10.346181Z"
+        "completeness_score": 1.0,
+        "created_at": "2026-07-08T02:41:19.920426Z"
       }
     ]
   },
   "safety_alerts": [],
   "analysis": {
-    "run_id": 28,
+    "run_id": 30,
     "status": "converged",
     "claims": [
       {
-        "id": 1388,
-        "claim_name": "Child Custody Modification",
+        "id": 1423,
+        "claim_name": "Child Custody Response",
         "claim_type": "identified",
         "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
-        "jurisdiction": "family law",
+        "jurisdiction": "family court",
         "confidence": 1.0,
         "is_potential": false,
-        "rationale": "Corey is seeking full custody and the facts indicate a contentious custody dispute, warranting potential modification of child custody arrangements.",
+        "rationale": "The consumer has been served with a Petition to Establish Custody and is required to file a Response to avoid losing custody rights.",
         "elements": [
           {
-            "id": 701,
-            "element_name": "Best Interests of the Child",
-            "is_satisfied": false,
-            "satisfaction_confidence": null
-          },
-          {
-            "id": 702,
-            "element_name": "Substantial Change in Circumstances",
+            "id": 718,
+            "element_name": "Petition Filed",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 719,
+            "element_name": "Response Filed",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 720,
+            "element_name": "Best Interest of the Child",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.77
           }
         ]
       },
       {
-        "id": 1389,
-        "claim_name": "Domestic Violence Incident",
-        "claim_type": "identified",
-        "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
-        "jurisdiction": "family law",
-        "confidence": 1.0,
-        "is_potential": false,
-        "rationale": "Corey's actions of grabbing and bruising, as well as the threats made, constitute domestic violence.",
+        "id": 1424,
+        "claim_name": "Threatening Behavior",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": "family court, possible criminal",
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "Corey's aggressive actions, including grabbing the consumer's arm and making threats regarding custody, may warrant a request for a protective order.",
         "elements": [
           {
-            "id": 703,
-            "element_name": "Physical Abuse",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 704,
-            "element_name": "Threats of Harm",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 705,
+            "id": 723,
             "element_name": "Fear of Further Harm",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
-          }
-        ]
-      },
-      {
-        "id": 1390,
-        "claim_name": "Restraining Order",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R7ASJC76FQwJNtH4rbUqULk",
-        "jurisdiction": "family law",
-        "confidence": 0.8,
-        "is_potential": true,
-        "rationale": "The facts indicate a potential need for emergency protection due to fear of further incidents of domestic violence.",
-        "elements": [
+          },
           {
-            "id": 706,
-            "element_name": "Recent Threats or Abuse",
+            "id": 721,
+            "element_name": "Physical Harm",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           },
           {
-            "id": 707,
-            "element_name": "Imminent Threat",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "id": 722,
+            "element_name": "Threatening Texts",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
           }
         ]
       },
       {
-        "id": 1391,
-        "claim_name": "Lack of Legal Representation",
+        "id": 1425,
+        "claim_name": "Emergency Custody Relief",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RC15aa638D53bC3Edca48b3e",
-        "jurisdiction": "family law",
+        "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
+        "jurisdiction": "family court",
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "The consumer expresses uncertainty about needing a lawyer and indicates inability to afford one, raising potential claims regarding self-representation in custody matters.",
+        "rationale": "Given the threats made by Corey and his aggressive actions, the consumer may explore emergency custody options to protect the children.",
         "elements": [
           {
-            "id": 708,
-            "element_name": "Knowledge of Legal Rights",
+            "id": 725,
+            "element_name": "Emergency Filing",
             "is_satisfied": false,
             "satisfaction_confidence": null
           },
           {
-            "id": 709,
-            "element_name": "Access to Legal Resources",
+            "id": 726,
+            "element_name": "Best Interest of the Children",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          },
+          {
+            "id": 724,
+            "element_name": "Imminent Danger",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           }
         ]
       },
       {
-        "id": 1392,
+        "id": 1426,
         "claim_name": "Matrimonial Emergency Applications",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RCQJU54O6qCvotCfmDwYZwj",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Modification (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Response (depth 1)",
         "elements": []
       },
       {
-        "id": 1393,
+        "id": 1427,
         "claim_name": "Remedies in Family Law",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RBOczjtsHXQh2ojzTubbrxI",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Modification (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Response (depth 1)",
         "elements": []
       },
       {
-        "id": 1394,
+        "id": 1428,
         "claim_name": "Family Law and Matrimonial Claims",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Modification (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Child Custody Response (depth 1)",
         "elements": []
       },
       {
-        "id": 1395,
-        "claim_name": "Criminal Assault",
+        "id": 1429,
+        "claim_name": "Potential Domestic Violence",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8BLgPtZOuKFI8MtZNTaT0u",
+        "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.9,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Domestic Violence Incident (depth 1)",
+        "rationale": "The physical altercation and the documented harm suggests a pattern of abusive behavior that may influence the court's determination of custody and visitation rights.",
         "elements": []
       },
       {
-        "id": 1396,
-        "claim_name": "Crimes Against People",
+        "id": 1430,
+        "claim_name": "Child Endangerment",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R7MbuFEaL6NyU9tM2AXk7lk",
+        "folio_iri": "https://folio.openlegalstandard.org/RQCqQcWqriNQ2XBCucDmpq",
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.75,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Domestic Violence Incident (depth 1)",
+        "rationale": "If the children are exposed to domestic violence or significant emotional distress, it may influence the court's view on custody arrangements.",
         "elements": []
       },
       {
-        "id": 1397,
-        "claim_name": "Injunction",
+        "id": 1431,
+        "claim_name": "Legal Representation",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9rhwkH0GU868poYsoFKzVb",
+        "folio_iri": "https://folio.openlegalstandard.org/RC15aa638D53bC3Edca48b3e",
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.9,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
+        "rationale": "Many jurisdictions offer legal aid or pro bono services for individuals in custody cases who cannot afford representation.",
         "elements": []
       },
       {
-        "id": 1398,
-        "claim_name": "Civil Claims",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8jYAnNATrfoBxAtIKpf72X",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1399,
-        "claim_name": "Equitable Relief",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9iUJ1YX0zK3V9D0RbQKTP4",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1400,
-        "claim_name": "Order",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDmsvdtBrrw46UnCDJ0LKrJ",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1401,
-        "claim_name": "Provisional Remedies",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RFXc2NtinmfJhHDBnbVgVN",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Restraining Order (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1402,
-        "claim_name": "Macedonia",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RBF0136A461a075Df0d9825f",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Lack of Legal Representation (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1403,
-        "claim_name": "Europe",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R5E0c679BE29e3F86383A5bc",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Lack of Legal Representation (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1404,
+        "id": 1432,
         "claim_name": "Parental Alienation",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RSQjOF7ik8OIL93pvrq1jV",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "Corey's threats and the impact on Miles and Ava's emotional state during the incident may suggest an attempt to alienate them from you.",
+        "rationale": "The court may take actions to prevent parental alienation if evidence shows that one parent is trying to undermine the relationship between the children and the other parent.",
         "elements": []
       },
       {
-        "id": 1405,
-        "claim_name": "Documentation and Evidence",
+        "id": 1433,
+        "claim_name": "Emergency Protective Order",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9HuNkpWm24qMFuntuug6RB",
-        "jurisdiction": null,
-        "confidence": 0.9,
-        "is_potential": true,
-        "rationale": "Documenting evidence, such as saved text messages and incidents of violence, is crucial in custody battles and can strengthen your case.",
-        "elements": []
-      },
-      {
-        "id": 1406,
-        "claim_name": "Child Support Responsibilities",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9JcsdtYN2CUc5CfCTULHYC",
-        "jurisdiction": null,
-        "confidence": 0.6,
-        "is_potential": true,
-        "rationale": "Understanding potential child support arrangements is essential during custody discussions, especially if custody arrangements change due to the case.",
-        "elements": []
-      },
-      {
-        "id": 1407,
-        "claim_name": "Child Welfare Services Involvement",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RQCqQcWqriNQ2XBCucDmpq",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "The welfare of the children is a priority for the court, and any indication of domestic violence can trigger an investigation by CPS.",
-        "elements": []
-      },
-      {
-        "id": 1408,
-        "claim_name": "Seeking Legal Aid",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RTK9LsRPqLC3UUnUHDiAhf",
+        "folio_iri": "https://folio.openlegalstandard.org/R7053oNO7Kct0Nr8SexmzuU",
         "jurisdiction": null,
         "confidence": 0.8,
         "is_potential": true,
-        "rationale": "Legal representation is crucial for navigating custody disputes, especially in cases involving potential domestic violence.",
+        "rationale": "If there is a credible threat to personal safety, a protective order may not only provide immediate relief but also affect custody considerations.",
         "elements": []
       },
       {
-        "id": 1409,
-        "claim_name": "Supervised Visitation Arrangement",
+        "id": 1434,
+        "claim_name": "Threats and Harassment Documentation",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R24YN1aRTJ9uZ8QVvLjK21",
+        "folio_iri": "https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv",
+        "jurisdiction": null,
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "The collection of threatening communications is a critical legal asset that could inform both custody discussions and any potential claims for protection against threats.",
+        "elements": []
+      },
+      {
+        "id": 1435,
+        "claim_name": "Emergency Relief and Protection Orders",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RDmsvdtBrrw46UnCDJ0LKrJ",
         "jurisdiction": null,
         "confidence": 0.75,
         "is_potential": true,
-        "rationale": "Given the emotional impact on the children during the violent incidents, the custody arrangements should consider safety through supervision.",
+        "rationale": "Emergency relief options could provide immediate protection and alter the course of custody negotiations in a way that prioritizes the wellbeing of the children.",
         "elements": []
       },
       {
-        "id": 1410,
-        "claim_name": "Potential Criminal Charges",
+        "id": 1436,
+        "claim_name": "Financial Considerations for Legal Representation",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RB55623E4A23b41B4feC45bb",
+        "folio_iri": "https://folio.openlegalstandard.org/RDCbopUcNJ7SCPPVAuRA4GO",
         "jurisdiction": null,
-        "confidence": 0.8,
+        "confidence": 0.7,
         "is_potential": true,
-        "rationale": "The act of grabbing the arm resulting in bruising constitutes potential assault, which should be pursued to hold Corey accountable for his actions.",
+        "rationale": "Understanding the landscape of legal assistance available for those with financial constraints is vital, as it impacts the strategy and overall outcome of the custody and related claims.",
         "elements": []
       }
     ],
     "gaps": [
       {
-        "id": 1506,
+        "id": 1551,
         "gap_type": "unsupported_element",
-        "description": "Element 'Best Interests of the Child' is not yet supported by any facts",
-        "priority": 100,
-        "status": "open"
-      },
-      {
-        "id": 1507,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Knowledge of Legal Rights' is not yet supported by any facts",
+        "description": "Element 'Emergency Filing' is not yet supported by any facts",
         "priority": 70,
         "status": "open"
       },
       {
-        "id": 1508,
+        "id": 1552,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Best Interest of the Children' is not yet supported by any facts",
+        "priority": 70,
+        "status": "open"
+      },
+      {
+        "id": 1553,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Best Interest of the Child' is not yet supported by any facts",
+        "priority": 100,
+        "status": "open"
+      },
+      {
+        "id": 1554,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Threatening Texts' is not yet supported by any facts",
+        "priority": 80,
+        "status": "open"
+      },
+      {
+        "id": 1555,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1509,
+        "id": 1556,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1510,
+        "id": 1557,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1511,
+        "id": 1558,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+        "description": "Potential claim 'Potential Domestic Violence' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1512,
+        "id": 1559,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+        "description": "Potential claim 'Child Endangerment' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1513,
+        "id": 1560,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Injunction' has not been explored with fact mappings",
+        "description": "Potential claim 'Legal Representation' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1514,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1515,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Equitable Relief' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1516,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Order' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1517,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Provisional Remedies' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1518,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Macedonia' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1519,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Europe' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1520,
+        "id": 1561,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Parental Alienation' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1521,
+        "id": 1562,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Child Support Responsibilities' has not been explored with fact mappings",
+        "description": "Potential claim 'Emergency Protective Order' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1522,
+        "id": 1563,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Child Welfare Services Involvement' has not been explored with fact mappings",
+        "description": "Potential claim 'Emergency Relief and Protection Orders' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1523,
+        "id": 1564,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Seeking Legal Aid' has not been explored with fact mappings",
+        "description": "Potential claim 'Financial Considerations for Legal Representation' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1524,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Supervised Visitation Arrangement' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1525,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Potential Criminal Charges' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1526,
+        "id": 1565,
         "gap_type": "procedural_requirement",
-        "description": "Missing specific filing deadline for modification of custody arrangements, which may vary by jurisdiction.",
+        "description": "Missing information on specific filing deadlines or requirements for urgent custody requests.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1527,
+        "id": 1566,
         "gap_type": "procedural_requirement",
-        "description": "Insufficient documentation or evidence may be missing regarding the domestic violence incident, impacting the case's credibility.",
+        "description": "Lacks specific jurisdictional requirements and protocol for filing in different courts.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1528,
+        "id": 1567,
         "gap_type": "procedural_requirement",
-        "description": "The necessary procedure for filing a restraining order may not be adequately completed or followed.",
+        "description": "Missing details on documentation and evidence that must be provided to substantiate claims of domestic violence.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1529,
+        "id": 1568,
         "gap_type": "procedural_requirement",
-        "description": "There may be a lack of acknowledgment regarding the right to legal representation in family law matters, which could affect proceedings.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1530,
-        "gap_type": "procedural_requirement",
-        "description": "The critical time sensitivity or urgency requirement for emergency applications may not be properly established or demonstrated.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1531,
-        "gap_type": "procedural_requirement",
-        "description": "Jurisdictional requirements may not be adequately satisfied, impacting the ability to file claims in a specific court.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1532,
-        "gap_type": "procedural_requirement",
-        "description": "Potential issues related to the statute of limitations for filing criminal assault charges may not be addressed.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1533,
-        "gap_type": "procedural_requirement",
-        "description": "There may be a lack of proper notice to the opposing party before filing for an injunction, violating procedural aspects.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1534,
-        "gap_type": "procedural_requirement",
-        "description": "The timing for seeking equitable relief may not align with required procedural timelines, affecting the claim's validity.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1535,
-        "gap_type": "procedural_requirement",
-        "description": "Missing procedures for enforcing child support obligations, potentially leaving gaps in compliance.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1536,
-        "gap_type": "procedural_requirement",
-        "description": "The requirement for a formal court order to establish supervised visitation may not be satisfied adequately.",
+        "description": "Insufficient guidance on how to document incidents of threats or harassment, including timelines and evidence required.",
         "priority": 50,
         "status": "open"
       }
     ],
     "questions": [
       {
-        "id": 591,
-        "question_text": "What specific behaviors or actions demonstrate that decisions are being made in the best interests of the child?",
-        "topic_group": "Best Interests of the Child",
+        "id": 599,
+        "question_text": "What specific facts can we gather to support the element of 'Best Interest of the Child'?",
+        "topic_group": "Best Interest of the Child",
         "priority": 1,
-        "rationale": "We need to gather evidence to support that the child's needs and well-being are prioritized in this situation.",
+        "rationale": "Understanding the best interest of the child is critical in custody matters, and we need facts to back this up.",
         "status": "pending"
       },
       {
-        "id": 592,
-        "question_text": "What information do you currently have about your legal rights in this situation?",
-        "topic_group": "Knowledge of Legal Rights",
+        "id": 600,
+        "question_text": "How do we ensure that the 'Best Interest of the Children' is considered in our case?",
+        "topic_group": "Best Interest of the Child",
+        "priority": 2,
+        "rationale": "It\u2019s essential to demonstrate how the children\u2019s needs and welfare are a priority in any legal action.",
+        "status": "pending"
+      },
+      {
+        "id": 601,
+        "question_text": "What evidence do we have regarding 'Threatening Texts'?",
+        "topic_group": "Emergency Filing and Threats",
         "priority": 1,
-        "rationale": "Understanding your awareness of legal rights can help identify areas where more support or information is needed.",
+        "rationale": "Documenting communication that threatens safety is important for any emergency filing.",
         "status": "pending"
       },
       {
-        "id": 593,
-        "question_text": "Have you faced any urgent situations that might require an emergency application?",
-        "topic_group": "Emergency and Legal Procedures",
+        "id": 602,
+        "question_text": "What steps do we need to take to file an 'Emergency Filing'?",
+        "topic_group": "Emergency Filing and Threats",
         "priority": 2,
-        "rationale": "Exploring immediate needs can help establish if there\u2019s an urgent legal claim that should be pursued.",
+        "rationale": "Understanding the process for emergency filings can impact the outcome, especially in urgent situations.",
         "status": "pending"
       },
       {
-        "id": 594,
-        "question_text": "What steps have you taken to file for a restraining order, and do you know the necessary procedures?",
-        "topic_group": "Emergency and Legal Procedures",
+        "id": 603,
+        "question_text": "What potential claims should we explore regarding 'Domestic Violence' in our situation?",
+        "topic_group": "Potential Legal Claims",
+        "priority": 1,
+        "rationale": "Identifying claims related to domestic violence can provide important protection and remedies.",
+        "status": "pending"
+      },
+      {
+        "id": 604,
+        "question_text": "How can we assess the risk of 'Child Endangerment' in our case?",
+        "topic_group": "Potential Legal Claims",
+        "priority": 2,
+        "rationale": "Understanding the risks to children is crucial for making informed legal decisions.",
+        "status": "pending"
+      },
+      {
+        "id": 605,
+        "question_text": "What are the specific filing deadlines for urgent custody requests?",
+        "topic_group": "Procedural Requirements",
+        "priority": 1,
+        "rationale": "Knowing deadlines allows us to act promptly to protect custody interests.",
+        "status": "pending"
+      },
+      {
+        "id": 606,
+        "question_text": "What documentation do we need to support claims of domestic violence?",
+        "topic_group": "Procedural Requirements",
+        "priority": 2,
+        "rationale": "Having the right documentation is essential to substantiate claims and move forward legally.",
+        "status": "pending"
+      },
+      {
+        "id": 607,
+        "question_text": "What protocol should we follow when filing in different courts?",
+        "topic_group": "Procedural Requirements",
         "priority": 3,
-        "rationale": "Understanding your actions will help ensure all required steps are correctly followed to protect your safety.",
-        "status": "pending"
-      },
-      {
-        "id": 595,
-        "question_text": "Do you have any documents or evidence supporting your claims of domestic violence?",
-        "topic_group": "Documentation and Evidence",
-        "priority": 2,
-        "rationale": "Collecting evidence is critical for the credibility of your case, so we must understand what you already have.",
-        "status": "pending"
-      },
-      {
-        "id": 596,
-        "question_text": "Are you aware of any specific deadlines for modifying custody arrangements in your area?",
-        "topic_group": "Filing and Procedural Requirements",
-        "priority": 3,
-        "rationale": "Understanding filing deadlines is crucial for ensuring that your case progresses in a timely manner.",
-        "status": "pending"
-      },
-      {
-        "id": 597,
-        "question_text": "Have you received any legal documentation or notices related to your case that may affect how you proceed?",
-        "topic_group": "Filing and Procedural Requirements",
-        "priority": 4,
-        "rationale": "Identifying received communications helps clarify your position and the next steps necessary in your case.",
-        "status": "pending"
-      },
-      {
-        "id": 598,
-        "question_text": "Do you know that you have the right to legal representation in family law matters?",
-        "topic_group": "Legal Representation and Rights",
-        "priority": 2,
-        "rationale": "It\u2019s important to ensure you understand your rights and what legal support is available to you.",
+        "rationale": "Understanding jurisdictional requirements helps ensure we file correctly and efficiently.",
         "status": "pending"
       }
     ],
     "deadlines": [
       {
-        "id": 48,
-        "event_text": "I have 30 days to file a Response.",
-        "event_type": "filing_deadline",
-        "trigger": "deadline",
-        "trigger_date": "2026-07-15",
-        "computed_date": "2026-07-15",
-        "rule_id": "stated_court_date",
-        "citation": "The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).",
-        "computed": true,
-        "urgency": "high",
-        "hedge": "This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
-        "jurisdiction": null
-      },
-      {
-        "id": 49,
-        "event_text": "there's a court date for an Initial Case Management Conference on July 22.",
+        "id": 53,
+        "event_text": "There is a court date in July for an Initial Case Management Conference. The Initial Case Management Conference is on July 22.",
         "event_type": "custody_hearing",
         "trigger": "hearing",
         "trigger_date": "2026-07-22",
@@ -715,7 +518,21 @@
         "jurisdiction": null
       },
       {
-        "id": 50,
+        "id": 54,
+        "event_text": "On June 15, I got served. The packet is a Petition to Establish Custody. I have 30 days to file a Response.",
+        "event_type": "custody_response",
+        "trigger": "served",
+        "trigger_date": "2026-06-15",
+        "computed_date": null,
+        "rule_id": null,
+        "citation": null,
+        "computed": false,
+        "urgency": "unknown",
+        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": null
+      },
+      {
+        "id": 55,
         "event_text": "Corey grabbed my arm so hard he left a bruise.",
         "event_type": "injury",
         "trigger": "incident",
@@ -732,67 +549,73 @@
   },
   "outputs": [
     {
-      "doc_id": 57,
+      "doc_id": 63,
       "profile": "law_firm",
-      "completeness": 0.7533,
-      "memo_chars": 31516,
+      "completeness": 1.0,
+      "memo_chars": 25399,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 70380,
+          "bytes": 62451,
           "content_type": "application/pdf",
           "magic": "%PDF-",
+          "json_substance": null,
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 780,
+          "bytes": 62317,
           "content_type": "application/json",
           "magic": "{\n \"i",
+          "json_substance": true,
           "ok": true
         }
       }
     },
     {
-      "doc_id": 58,
+      "doc_id": 64,
       "profile": "court_self_help",
-      "completeness": 0.7533,
-      "memo_chars": 8935,
+      "completeness": 1.0,
+      "memo_chars": 6810,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 35364,
+          "bytes": 33065,
           "content_type": "application/pdf",
           "magic": "%PDF-",
+          "json_substance": null,
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 779,
+          "bytes": 63451,
           "content_type": "application/json",
           "magic": "{\n \"i",
+          "json_substance": true,
           "ok": true
         }
       }
     },
     {
-      "doc_id": 59,
+      "doc_id": 65,
       "profile": "legal_aid",
-      "completeness": 0.7533,
-      "memo_chars": 34134,
+      "completeness": 1.0,
+      "memo_chars": 27018,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 74328,
+          "bytes": 65427,
           "content_type": "application/pdf",
           "magic": "%PDF-",
+          "json_substance": null,
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 779,
+          "bytes": 63193,
           "content_type": "application/json",
           "magic": "{\n \"i",
+          "json_substance": true,
           "ok": true
         }
       }
@@ -819,10 +642,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "235",
+        "id": "263",
         "client_id": "c0",
-        "timestamp": "2026-07-07 21:04:38.834026+00:00",
-        "message_id": 235,
+        "timestamp": "2026-07-08 02:37:29.761628+00:00",
+        "message_id": 263,
         "sequence_number": 1
       }
     },
@@ -831,7 +654,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 236
+        "message_id": 264
       }
     },
     {
@@ -845,10 +668,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "237",
+        "id": "265",
         "client_id": "c1",
-        "timestamp": "2026-07-07 21:04:39.121772+00:00",
-        "message_id": 237,
+        "timestamp": "2026-07-08 02:37:30.077143+00:00",
+        "message_id": 265,
         "sequence_number": 3
       }
     },
@@ -857,15 +680,15 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 238
+        "message_id": 266
       }
     },
     {
       "stage": "poll_status",
       "http": 200,
       "status": "converged",
-      "iteration": 9,
-      "progress": 90
+      "iteration": 10,
+      "progress": 100
     }
   ]
 }

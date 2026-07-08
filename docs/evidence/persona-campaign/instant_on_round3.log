@@ -1,0 +1,136 @@
+======================================================================
+  INSTANT-ON persona validation  ->  https://alea-intake-dev-production.up.railway.app
+======================================================================
+
+[1/4] Preflight health check (smoke_live.py) ...
+== Automated E2E smoke: https://alea-intake-dev-production.up.railway.app ==
+  [PASS] health: healthy + db up — status=healthy db=up
+  [PASS] practice-areas: personal_injury present — ids=['personal_injury']
+  [PASS] register: 201 + token — http=201
+  [PASS] login: 200 + token — http=200
+  [PASS] consent gate: intake blocked w/o consent (403) — http=403
+  [PASS] consent: grant 201 — http=201
+  [PASS] intake: create PI (201) + bound — http=201 pa=personal_injury
+  [PASS] intake: create generic (201) + unbound — http=201 pa=None
+  [PASS] intake: unknown practice area -> 400 — http=400
+  [PASS] intake: list returns created intakes — http=200 count=99
+  [PASS] intake: messages endpoint 200 — http=200
+
+== RESULT: 11/11 passed ==
+
+[2/4] Running 3 personas end-to-end ...
+  --- landlord-tenant ---
+== Persona run: landlord-tenant vs https://alea-intake-dev-production.up.railway.app ==
+  register=True narrative=True analyze=error
+  claims=0 gaps=0 questions=0 safety_alerts=0
+  -> /home/damienriehl/Coding Projects/alea-intake/docs/evidence/persona-campaign/runs/landlord-tenant/run.json
+  --- immigration ---
+== Persona run: immigration vs https://alea-intake-dev-production.up.railway.app ==
+  register=True narrative=True analyze=converged
+  claims=12 gaps=14 questions=0 safety_alerts=0
+    - claim: In Absentia Removal Risk | iri=None | conf=0.9 | elements=2
+    - claim: Domestic Violence | iri=https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY | conf=0.9 | elements=2
+    - claim: Harassment and Stalking | iri=None | conf=0.3 | elements=2
+    - claim: Fraudulent Representation | iri=None | conf=0.3 | elements=2
+    - claim: Criminal Assault | iri=https://folio.openlegalstandard.org/R8BLgPtZOuKFI8MtZNTaT0u | conf=0.7 | elements=0
+    - claim: Crimes Against People | iri=https://folio.openlegalstandard.org/R7MbuFEaL6NyU9tM2AXk7lk | conf=0.7 | elements=0
+    - claim: Asylum Application Mismanagement | iri=https://folio.openlegalstandard.org/RDm4rfXgHt9wIDHbrUUGCGL | conf=0.85 | elements=0
+    - claim: Criminal Proceedings and Immigration Consequences | iri=https://folio.openlegalstandard.org/R7aFBns3Z2d9MuNI5sDEGxF | conf=0.8 | elements=0
+    - claim: Immigration Consequences of Domestic Violence | iri=https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq | conf=0.8 | elements=0
+    - claim: Child Custody and Welfare | iri=https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg | conf=0.75 | elements=0
+    - claim: Potential Human Trafficking Concerns | iri=https://folio.openlegalstandard.org/RDOQpX5t5sVf55UPK2CfZTy | conf=0.65 | elements=0
+    - claim: Misuse of Social Security Number | iri=https://folio.openlegalstandard.org/R9ya2bhBlRQfwOwM8T7zhJa | conf=0.7 | elements=0
+  memo doc 60 (law_firm): 34338 chars, exports={'pdf': True, 'json': True}
+  memo doc 61 (court_self_help): 5466 chars, exports={'pdf': True, 'json': True}
+  memo doc 62 (legal_aid): 36076 chars, exports={'pdf': True, 'json': True}
+  -> /home/damienriehl/Coding Projects/alea-intake/docs/evidence/persona-campaign/runs/immigration/run.json
+  --- family-custody ---
+== Persona run: family-custody vs https://alea-intake-dev-production.up.railway.app ==
+  register=True narrative=True analyze=converged
+  claims=14 gaps=18 questions=9 safety_alerts=0
+    - claim: Child Custody Response | iri=https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg | conf=1.0 | elements=3
+    - claim: Threatening Behavior | iri=None | conf=0.8 | elements=3
+    - claim: Emergency Custody Relief | iri=https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg | conf=0.7 | elements=3
+    - claim: Matrimonial Emergency Applications | iri=https://folio.openlegalstandard.org/RCQJU54O6qCvotCfmDwYZwj | conf=0.7 | elements=0
+    - claim: Remedies in Family Law | iri=https://folio.openlegalstandard.org/RBOczjtsHXQh2ojzTubbrxI | conf=0.7 | elements=0
+    - claim: Family Law and Matrimonial Claims | iri=https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU | conf=0.7 | elements=0
+    - claim: Potential Domestic Violence | iri=https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY | conf=0.9 | elements=0
+    - claim: Child Endangerment | iri=https://folio.openlegalstandard.org/RQCqQcWqriNQ2XBCucDmpq | conf=0.75 | elements=0
+    - claim: Legal Representation | iri=https://folio.openlegalstandard.org/RC15aa638D53bC3Edca48b3e | conf=0.9 | elements=0
+    - claim: Parental Alienation | iri=https://folio.openlegalstandard.org/RSQjOF7ik8OIL93pvrq1jV | conf=0.7 | elements=0
+    - claim: Emergency Protective Order | iri=https://folio.openlegalstandard.org/R7053oNO7Kct0Nr8SexmzuU | conf=0.8 | elements=0
+    - claim: Threats and Harassment Documentation | iri=https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv | conf=0.8 | elements=0
+  memo doc 63 (law_firm): 25399 chars, exports={'pdf': True, 'json': True}
+  memo doc 64 (court_self_help): 6810 chars, exports={'pdf': True, 'json': True}
+  memo doc 65 (legal_aid): 27018 chars, exports={'pdf': True, 'json': True}
+  -> /home/damienriehl/Coding Projects/alea-intake/docs/evidence/persona-campaign/runs/family-custody/run.json
+
+[3/4] BUG-3 gate — confirming the LLM produced claims ...
+  landlord-tenant: claims=0 gaps=0 questions=0
+  immigration: claims=12 gaps=14 questions=0
+  family-custody: claims=14 gaps=18 questions=9
+  total claims across personas: 26
+
+[4/4] Deterministic FOLIO IRI check (folio_check.py, RUB-INTAKE-05) ...
+
+== family-custody (13 mapped IRIs) ==
+  [PASS] claim: 'Child Custody Response' -> https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg
+         label='Temporary Child Custody'  branch='Objectives'
+  [PASS] claim: 'Emergency Custody Relief' -> https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg
+         label='Temporary Child Custody'  branch='Objectives'
+  [PASS] claim: 'Matrimonial Emergency Applications' -> https://folio.openlegalstandard.org/RCQJU54O6qCvotCfmDwYZwj
+         label='Matrimonial Emergency Applications'  branch='Objectives'
+  [PASS] claim: 'Remedies in Family Law' -> https://folio.openlegalstandard.org/RBOczjtsHXQh2ojzTubbrxI
+         label='Remedies in Family Law'  branch='Objectives'
+  [PASS] claim: 'Family Law and Matrimonial Claims' -> https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU
+         label='Family Law and Matrimonial Claims'  branch='Objectives'
+  [PASS] claim: 'Potential Domestic Violence' -> https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY
+         label='Domestic Violence'  branch='Objectives'
+  [PASS] claim: 'Child Endangerment' -> https://folio.openlegalstandard.org/RQCqQcWqriNQ2XBCucDmpq
+         label='Child'  branch='Legal Entity'
+  [PASS] claim: 'Legal Representation' -> https://folio.openlegalstandard.org/RC15aa638D53bC3Edca48b3e
+         label='Resen'  branch='Location'
+  [PASS] claim: 'Parental Alienation' -> https://folio.openlegalstandard.org/RSQjOF7ik8OIL93pvrq1jV
+         label='Parental Alienation Claim'  branch='Objectives'
+  [PASS] claim: 'Emergency Protective Order' -> https://folio.openlegalstandard.org/R7053oNO7Kct0Nr8SexmzuU
+         label='Protective Order'  branch='Document / Artifact'
+  [PASS] claim: 'Threats and Harassment Documentation' -> https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv
+         label='Sexual Harassment'  branch='Objectives'
+  [PASS] claim: 'Emergency Relief and Protection Orders' -> https://folio.openlegalstandard.org/RDmsvdtBrrw46UnCDJ0LKrJ
+         label='Order'  branch='Document / Artifact'
+  [PASS] claim: 'Financial Considerations for Legal Repre' -> https://folio.openlegalstandard.org/RDCbopUcNJ7SCPPVAuRA4GO
+         label='Presentation'  branch='Document / Artifact'
+
+== immigration (9 mapped IRIs) ==
+  [PASS] claim: 'Domestic Violence' -> https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY
+         label='Domestic Violence'  branch='Objectives'
+  [PASS] claim: 'Criminal Assault' -> https://folio.openlegalstandard.org/R8BLgPtZOuKFI8MtZNTaT0u
+         label='Criminal Assault'  branch='Objectives'
+  [PASS] claim: 'Crimes Against People' -> https://folio.openlegalstandard.org/R7MbuFEaL6NyU9tM2AXk7lk
+         label='Crimes Against People'  branch='Objectives'
+  [PASS] claim: 'Asylum Application Mismanagement' -> https://folio.openlegalstandard.org/RDm4rfXgHt9wIDHbrUUGCGL
+         label='Management'  branch='Actor / Player'
+  [PASS] claim: 'Criminal Proceedings and Immigration Con' -> https://folio.openlegalstandard.org/R7aFBns3Z2d9MuNI5sDEGxF
+         label='Deportation'  branch='Objectives'
+  [PASS] claim: 'Immigration Consequences of Domestic Vio' -> https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq
+         label='Immigration Status'  branch='Objectives'
+  [PASS] claim: 'Child Custody and Welfare' -> https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg
+         label='Temporary Child Custody'  branch='Objectives'
+  [PASS] claim: 'Potential Human Trafficking Concerns' -> https://folio.openlegalstandard.org/RDOQpX5t5sVf55UPK2CfZTy
+         label='Human Trafficking'  branch='Objectives'
+  [PASS] claim: 'Misuse of Social Security Number' -> https://folio.openlegalstandard.org/R9ya2bhBlRQfwOwM8T7zhJa
+         label='Social Security Number'  branch='Engagement Attributes'
+
+== landlord-tenant (0 mapped IRIs) ==
+  (no FOLIO IRIs mapped — expected while the pipeline is LLM-blocked)
+
+== TOTAL: 22/22 IRIs resolve + rooted + live ==
+
+======================================================================
+  ✅ Personas ran, LLM extracted claims, all FOLIO IRIs resolve.
+  NEXT (agent): judge each run vs the LOCKED rubric (intake-quality v1.1)
+  + the hidden ANSWER-KEYS oracle, then build the evidence pack.
+    keys:   docs/evidence/persona-campaign/personas/ANSWER-KEYS.md
+    rubric: docs/rubrics/intake-quality-v1.md
+    pack:   docs/evidence/persona-campaign/pack.html
+======================================================================

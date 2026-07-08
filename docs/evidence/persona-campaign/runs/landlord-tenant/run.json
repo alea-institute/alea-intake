@@ -1,6 +1,6 @@
 {
   "persona": "landlord-tenant",
-  "email": "persona_landlord-tenant_1783457450@example.com",
+  "email": "persona_landlord-tenant_1783478545@example.com",
   "base": "https://alea-intake-dev-production.up.railway.app",
   "steps": {
     "register": {
@@ -14,9 +14,9 @@
     "create_intake": {
       "http": 201,
       "ok": true,
-      "intake_id": 119,
-      "session_id": 88,
-      "party_id": 119,
+      "intake_id": 141,
+      "session_id": 105,
+      "party_id": 141,
       "practice_area_id": null
     },
     "narrative": {
@@ -44,172 +44,142 @@
       "detail": null
     },
     "final_status": {
-      "run_id": 26,
+      "run_id": 31,
       "status": "converged",
-      "iteration": 4,
+      "iteration": 10,
       "max_iterations": 10,
-      "convergence_score": 0.77,
-      "progress_pct": 40,
+      "convergence_score": 1.0,
+      "progress_pct": 100,
       "latest_stage": "question_gen"
     },
     "results_http": 200,
     "output_generate": [
       {
         "profile": "law_firm",
-        "id": 51,
-        "run_id": 26,
-        "intake_id": 119,
+        "id": 66,
+        "run_id": 31,
+        "intake_id": 141,
         "profile_type": "law_firm",
-        "completeness_score": 0.77,
-        "created_at": "2026-07-07T20:58:26.598892Z"
+        "completeness_score": 1.0,
+        "created_at": "2026-07-08T02:47:35.368297Z"
       },
       {
         "profile": "court_self_help",
-        "id": 52,
-        "run_id": 26,
-        "intake_id": 119,
+        "id": 67,
+        "run_id": 31,
+        "intake_id": 141,
         "profile_type": "court_self_help",
-        "completeness_score": 0.77,
-        "created_at": "2026-07-07T20:58:27.064877Z"
+        "completeness_score": 1.0,
+        "created_at": "2026-07-08T02:47:36.001225Z"
       },
       {
         "profile": "legal_aid",
-        "id": 53,
-        "run_id": 26,
-        "intake_id": 119,
+        "id": 68,
+        "run_id": 31,
+        "intake_id": 141,
         "profile_type": "legal_aid",
-        "completeness_score": 0.77,
-        "created_at": "2026-07-07T20:58:45.635828Z"
+        "completeness_score": 1.0,
+        "created_at": "2026-07-08T02:48:01.059637Z"
       }
     ]
   },
   "safety_alerts": [],
   "analysis": {
-    "run_id": 26,
+    "run_id": 31,
     "status": "converged",
     "claims": [
       {
-        "id": 1342,
+        "id": 1437,
         "claim_name": "Breach of Implied Warranty of Habitability",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RBRosNDPt8cNUuRnoPqYufN",
         "jurisdiction": "state",
-        "confidence": 0.9,
+        "confidence": 0.85,
         "is_potential": true,
-        "rationale": "The landlord's failure to address the mold and heating issues, despite being informed, indicates a breach of the implied warranty of habitability.",
+        "rationale": "The tenant reported mold in the bathroom and that it has affected their child's health. This supports the claim of failure to provide a habitable living environment.",
         "elements": [
           {
-            "id": 680,
-            "element_name": "Tenant's Right to Habitable Premises",
+            "id": 727,
+            "element_name": "Tenancy Agreement",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          },
+          {
+            "id": 729,
+            "element_name": "Failure to Repair",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           },
           {
-            "id": 682,
-            "element_name": "Impact on Tenant's Health",
+            "id": 728,
+            "element_name": "Condition of Premises",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 681,
-            "element_name": "Landlord's Notice of Repairs",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.81
           }
         ]
       },
       {
-        "id": 1343,
-        "claim_name": "Retaliatory Eviction",
+        "id": 1438,
+        "claim_name": "Retaliation against Tenant",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9wMn80MhrS9iqfKdQdH1A3",
+        "folio_iri": null,
         "jurisdiction": "state",
-        "confidence": 0.8,
+        "confidence": 0.4,
         "is_potential": true,
-        "rationale": "The landlord's attempt to collect back rent and issue a notice to vacate after the tenant reported the mold and heating issues suggests a retaliatory motive.",
+        "rationale": "The landlord is pushing the tenant out after the tenant reported issues with the apartment, suggesting potential retaliatory eviction.",
         "elements": [
           {
-            "id": 684,
-            "element_name": "Adverse Action by Landlord",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "id": 732,
+            "element_name": "Temporal Proximity",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
           },
           {
-            "id": 683,
+            "id": 730,
             "element_name": "Protected Activity",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "satisfaction_confidence": 0.71
           },
           {
-            "id": 685,
-            "element_name": "Temporal Proximity",
+            "id": 731,
+            "element_name": "Adverse Action",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           }
         ]
       },
       {
-        "id": 1344,
-        "claim_name": "Failure to Provide Habitable Living Conditions",
+        "id": 1439,
+        "claim_name": "Possible Rent Escrow",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDNOqfCVAhPu7lEHc6go0cv",
+        "folio_iri": null,
         "jurisdiction": "state",
-        "confidence": 0.9,
+        "confidence": 0.4,
         "is_potential": true,
-        "rationale": "The landlord's neglect in addressing the mold and heating issues, which directly affect the tenant's living conditions and health, supports a claim for failure to provide habitable living conditions.",
+        "rationale": "Given the substantial mold issue and heating problems, the tenant could consider withholding rent until repairs are made, if state law allows.",
         "elements": [
           {
-            "id": 688,
-            "element_name": "Tenant's Report of Issues",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "id": 735,
+            "element_name": "Escrow Account",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
           },
           {
-            "id": 686,
-            "element_name": "Habitability Standard Violations",
+            "id": 734,
+            "element_name": "Proper Notice",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "satisfaction_confidence": 0.78
           },
           {
-            "id": 687,
-            "element_name": "Landlord's Knowledge",
+            "id": 733,
+            "element_name": "Material Breach",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           }
         ]
       },
       {
-        "id": 1345,
-        "claim_name": "Claim for Rent Withholding",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9q0hyYnNxQC475BKXOxjbm",
-        "jurisdiction": "state",
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "The tenant's withholding of rent due to the landlord's failure to repair significant issues like mold may constitute a legal basis for rent withholding.",
-        "elements": [
-          {
-            "id": 689,
-            "element_name": "Existence of Defects",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 690,
-            "element_name": "Notice to Landlord",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 691,
-            "element_name": "Withholding Rent Procedure",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          }
-        ]
-      },
-      {
-        "id": 1346,
+        "id": 1440,
         "claim_name": "Breach of Implied Warranty of Habitability by Home Seller",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/R78sQua6LVfK3i7KL9lqmZN",
@@ -220,7 +190,7 @@
         "elements": []
       },
       {
-        "id": 1347,
+        "id": 1441,
         "claim_name": "Breach of Warranty",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/R7NPSSODp2sRYDRSQ2hvF3b",
@@ -231,7 +201,7 @@
         "elements": []
       },
       {
-        "id": 1348,
+        "id": 1442,
         "claim_name": "Product Liability Claims",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/R7MsH9WtTPf14W1GB1m8zrB",
@@ -242,7 +212,7 @@
         "elements": []
       },
       {
-        "id": 1349,
+        "id": 1443,
         "claim_name": "Contract & Quasi-Contract Claims",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RZ1dOPJ6HH6lMJGSLNxfwV",
@@ -253,7 +223,7 @@
         "elements": []
       },
       {
-        "id": 1350,
+        "id": 1444,
         "claim_name": "Property & Premises Liability Claims",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RDSBerlLWg1ntpLqDQn1eVn",
@@ -264,487 +234,421 @@
         "elements": []
       },
       {
-        "id": 1351,
-        "claim_name": "Landlord-Tenant Claims",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R97svnIdQhrkKZw6i3Nn88z",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Retaliatory Eviction (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1352,
-        "claim_name": "Civil Claims",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8jYAnNATrfoBxAtIKpf72X",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Retaliatory Eviction (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1353,
-        "claim_name": "Vital Status",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RtHkyQ5lSxRaJ9oaSOWbkx",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Failure to Provide Habitable Living Conditions (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1354,
-        "claim_name": "Individual Person Characteristics",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R7sHH7RvjZ6aZS7ZExDpYmR",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Failure to Provide Habitable Living Conditions (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1355,
-        "claim_name": "Coverage for Causes Extending From Insured Risk",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R37FvPsRLcbw663pimU2TZ",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Claim for Rent Withholding (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1356,
-        "claim_name": "Underinsured Motorist Claims",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R3zCRTKcqVpd6eTTnI3KH8",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Claim for Rent Withholding (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1357,
-        "claim_name": "No-Fault Claim",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R5RoVVyRmkyMepjXK7X1sp",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Claim for Rent Withholding (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1358,
-        "claim_name": "Insurance Malpractice",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R7H9fjJqEhdvJ0hGGKxvSyG",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Claim for Rent Withholding (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1359,
-        "claim_name": "Social Security Claims",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R84TkU0j0hhqhiA5fYd6Bfb",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Claim for Rent Withholding (depth 1)",
-        "elements": []
-      },
-      {
-        "id": 1360,
-        "claim_name": "Possibility of Medical Necessity Defense",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": null,
-        "confidence": 0.75,
-        "is_potential": true,
-        "rationale": "Given that the child has a medical condition (asthma) that may be exacerbated by mold, this could strengthen the argument for withholding rent until the issue is adequately addressed.",
-        "elements": []
-      },
-      {
-        "id": 1361,
-        "claim_name": "Retaliatory Behavior Extending Beyond Rent Issues",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8RfDzMtuMPdmNTonmhBxu",
-        "jurisdiction": null,
-        "confidence": 0.85,
-        "is_potential": true,
-        "rationale": "Retaliation for reporting health issues can bolster claims under retaliatory eviction laws, expanding the scope of protections available to the tenant.",
-        "elements": []
-      },
-      {
-        "id": 1362,
-        "claim_name": "Lack of Documentation for Additional Fees",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": null,
-        "confidence": 0.65,
-        "is_potential": true,
-        "rationale": "Without documentation for the extra fee, it raises questions about the landlord's practices and whether other charges may be unjustified or unlawful, potentially impacting the landlord's claims.",
-        "elements": []
-      },
-      {
-        "id": 1363,
-        "claim_name": "Tenant's Right to a Safe and Healthy Environment",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RBpYE6Y5CAH0m6srdnClfZz",
-        "jurisdiction": null,
-        "confidence": 0.8,
-        "is_potential": true,
-        "rationale": "This is tied closely to both the Breach of Implied Warranty of Habitability and Failure to Provide Habitable Living Conditions, solidifying the tenant's claims that the landlord's inaction constitutes a violation of legal expectations for housing conditions.",
-        "elements": []
-      },
-      {
-        "id": 1364,
-        "claim_name": "Potential Unlawful Disruption of Utility Services",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDK1QEdQg1T8B5HQqMK2pZN",
-        "jurisdiction": null,
-        "confidence": 0.7,
-        "is_potential": true,
-        "rationale": "Disruption of heating can be considered a failure to meet the implied warranty of habitability, thus impacting the tenant's legal standing in the case.",
-        "elements": []
-      },
-      {
-        "id": 1365,
-        "claim_name": "Negligence in Maintaining Habitability",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R7nqxxlAfhYqqSA2UQ5UxpX",
-        "jurisdiction": null,
-        "confidence": 0.8,
-        "is_potential": true,
-        "rationale": "The worsening mold condition and its impact on Marcus's asthma may constitute a breach of the landlord's duty to maintain habitable conditions.",
-        "elements": []
-      },
-      {
-        "id": 1366,
-        "claim_name": "Possible Discrimination in Rental Practices",
+        "id": 1445,
+        "claim_name": "Discrimination Against Minor",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/R9ED899sCUzn9FIu11WRt4B",
         "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "With a child living in the unit, the landlord's failure to address urgent health hazards, like mold, could be perceived as discriminatory, particularly if it seems the landlord is indifferent to the risks posed to minors.",
+        "elements": []
+      },
+      {
+        "id": 1446,
+        "claim_name": "Harassment",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv",
+        "jurisdiction": null,
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "If the landlord's actions are viewed as intentionally trying to disrupt the tenant's enjoyment of the premises or forcing the tenant out through intimidation or lack of repair, this could be a strong claim.",
+        "elements": []
+      },
+      {
+        "id": 1447,
+        "claim_name": "Failure to Provide Receipts for Rent Payments",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R8RfDzMtuMPdmNTonmhBxu",
+        "jurisdiction": null,
+        "confidence": 0.6,
+        "is_potential": true,
+        "rationale": "A landlord\u2019s obligation to provide receipts for rent payments is tied to transparency and proof of payment; failing to provide these could weaken the tenant's position in disputes about rent owed.",
+        "elements": []
+      },
+      {
+        "id": 1448,
+        "claim_name": "Violation of Tenant's Rights to Repairs",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RBpYE6Y5CAH0m6srdnClfZz",
+        "jurisdiction": null,
+        "confidence": 0.9,
+        "is_potential": true,
+        "rationale": "Tenants have a right to a habitable living environment, and the landlord's inaction in addressing the mold, especially after repeated requests, could strengthen the tenant\u2019s claims.",
+        "elements": []
+      },
+      {
+        "id": 1449,
+        "claim_name": "Retaliatory Eviction",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R9wMn80MhrS9iqfKdQdH1A3",
+        "jurisdiction": null,
+        "confidence": 0.85,
+        "is_potential": true,
+        "rationale": "Retaliation laws protect tenants from being evicted for reporting issues to health authorities or requesting repairs, particularly when issues were raised before eviction proceedings began.",
+        "elements": []
+      },
+      {
+        "id": 1450,
+        "claim_name": "Breach of Warranty of Habitability Due to Mold and Health Concerns",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RBId9f3jW4zEqooPvShqi6Q",
+        "jurisdiction": null,
+        "confidence": 0.85,
+        "is_potential": true,
+        "rationale": "Given the documented mold issue reported by the tenant and the subsequent health effects on Marcus, there is a strong case for breach of the habitability standard, which may not have been fully captured in existing claims.",
+        "elements": []
+      },
+      {
+        "id": 1451,
+        "claim_name": "Return of Extra Payment for Pet without Receipt",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
         "confidence": 0.75,
         "is_potential": true,
-        "rationale": "Discriminatory practices can be inferred from actions taken against tenants with children, especially those facing health issues which the landlord is ignoring.",
+        "rationale": "This claim intersects with the landlord-tenant relationship and may highlight issues of contract enforcement or fraudulent misrepresentation if the landlord refuses to acknowledge the payment.",
+        "elements": []
+      },
+      {
+        "id": 1452,
+        "claim_name": "Retaliation for Reporting Habitability Issues",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R7P7kd5lf60cWlSHHwGsH5k",
+        "jurisdiction": null,
+        "confidence": 0.65,
+        "is_potential": true,
+        "rationale": "Legal expertise is required to establish that the landlord\u2019s motives were retaliatory in nature, particularly after the tenant's communications concerning the mold and subsequent health implications.",
+        "elements": []
+      },
+      {
+        "id": 1453,
+        "claim_name": "Failure to Provide Notice of Court Appearance",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R7cJxMJn6lAOHm1nNAxW9RP",
+        "jurisdiction": null,
+        "confidence": 0.6,
+        "is_potential": true,
+        "rationale": "Failure to adhere to proper notification protocols could jeopardize the landlord's case against the tenant and may necessitate analysis of procedural compliance.",
         "elements": []
       }
     ],
     "gaps": [
       {
-        "id": 1435,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Landlord's Notice of Repairs' is not yet supported by any facts",
-        "priority": 90,
-        "status": "open"
-      },
-      {
-        "id": 1436,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Impact on Tenant's Health' is not yet supported by any facts",
-        "priority": 90,
-        "status": "open"
-      },
-      {
-        "id": 1437,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Protected Activity' is not yet supported by any facts",
-        "priority": 80,
-        "status": "open"
-      },
-      {
-        "id": 1438,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Habitability Standard Violations' is not yet supported by any facts",
-        "priority": 90,
-        "status": "open"
-      },
-      {
-        "id": 1439,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Landlord's Knowledge' is not yet supported by any facts",
-        "priority": 90,
-        "status": "open"
-      },
-      {
-        "id": 1440,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Breach of Implied Warranty of Habitability by Home Seller' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1441,
+        "id": 1573,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Breach of Warranty' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1442,
+        "id": 1569,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Tenancy Agreement' is not yet supported by any facts",
+        "priority": 85,
+        "status": "open"
+      },
+      {
+        "id": 1570,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Temporal Proximity' is not yet supported by any facts",
+        "priority": 40,
+        "status": "open"
+      },
+      {
+        "id": 1571,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Escrow Account' is not yet supported by any facts",
+        "priority": 40,
+        "status": "open"
+      },
+      {
+        "id": 1572,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Breach of Implied Warranty of Habitability by Home Seller' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1574,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Product Liability Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1443,
+        "id": 1575,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Contract & Quasi-Contract Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1444,
+        "id": 1576,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Property & Premises Liability Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1445,
+        "id": 1577,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Landlord-Tenant Claims' has not been explored with fact mappings",
+        "description": "Potential claim 'Discrimination Against Minor' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1446,
+        "id": 1578,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+        "description": "Potential claim 'Harassment' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1447,
+        "id": 1579,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Vital Status' has not been explored with fact mappings",
+        "description": "Potential claim 'Failure to Provide Receipts for Rent Payments' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1448,
+        "id": 1580,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Individual Person Characteristics' has not been explored with fact mappings",
+        "description": "Potential claim 'Violation of Tenant's Rights to Repairs' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1449,
+        "id": 1581,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Coverage for Causes Extending From Insured Risk' has not been explored with fact mappings",
+        "description": "Potential claim 'Breach of Warranty of Habitability Due to Mold and Health Concerns' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1450,
+        "id": 1582,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Underinsured Motorist Claims' has not been explored with fact mappings",
+        "description": "Potential claim 'Retaliation for Reporting Habitability Issues' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1451,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'No-Fault Claim' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1452,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Insurance Malpractice' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1453,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Social Security Claims' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1454,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Possibility of Medical Necessity Defense' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1455,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Retaliatory Behavior Extending Beyond Rent Issues' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1456,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Lack of Documentation for Additional Fees' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1457,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Potential Unlawful Disruption of Utility Services' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1458,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Possible Discrimination in Rental Practices' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1459,
+        "id": 1583,
         "gap_type": "procedural_requirement",
-        "description": "Potential statute of limitations concerns, varies by jurisdiction, must ensure claim is filed within appropriate period, usually 4 years from breach in many states.",
+        "description": "Possible failure to provide adequate notice to landlord about the habitability issues before filing a claim.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1460,
+        "id": 1584,
         "gap_type": "procedural_requirement",
-        "description": "Need to establish that the claim is within the jurisdiction, as some states have specific laws addressing retaliatory eviction which require adherence to local statutes.",
+        "description": "Failure to establish a timeline and evidence of tenant's complaints prior to the alleged retaliation.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1461,
+        "id": 1585,
         "gap_type": "procedural_requirement",
-        "description": "Possibility of statutory filing deadlines for rent withholding claims based on local landlord-tenant laws which may have time limits for tenants to withhold rent after notifying landlord of issues.",
+        "description": "A lack of established procedures for placing rent into escrow may hinder claims related to non-repair issues.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1462,
+        "id": 1586,
         "gap_type": "procedural_requirement",
-        "description": "Must identify the correct jurisdiction for product liability based on where the product was sold or used, as this affects choice of law and applicable legal standards.",
+        "description": "Failure to establish proper notices or notifications under product liability statutes; potential jurisdictional issues depending on the product.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1463,
+        "id": 1587,
         "gap_type": "procedural_requirement",
-        "description": "Statute of limitations for malpractice claims typically ranges from 2 to 4 years, depending on the jurisdiction, necessitating timely filing to avoid claim being barred.",
+        "description": "Need to demonstrate attempts at resolving the dispute prior to litigation to satisfy procedural requirements.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1464,
+        "id": 1588,
         "gap_type": "procedural_requirement",
-        "description": "Certain deadlines must be met for social security claims, including timely administrative appeals after an initial denial which may vary by case type.",
+        "description": "Lack of sufficient evidence documenting the unsafe condition and prior notice to the property owner.",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1465,
+        "id": 1589,
         "gap_type": "procedural_requirement",
-        "description": "Fair Housing Act complaints must generally be filed within 1 year of the alleged discriminatory practice, necessitating attention to filing deadlines to preserve rights.",
+        "description": "Insufficient records of complaints or incidents that demonstrate a pattern of discrimination related to the minor.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1590,
+        "gap_type": "procedural_requirement",
+        "description": "Potential failure to comply with statutory requirements for record-keeping and tenant notification of payment receipts.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1591,
+        "gap_type": "procedural_requirement",
+        "description": "Inadequate documentation of repair requests and responses may undermine the claim.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1592,
+        "gap_type": "procedural_requirement",
+        "description": "Failure to document the timeline between tenant complaints and eviction proceedings, which could affect the viability of the claim.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1593,
+        "gap_type": "procedural_requirement",
+        "description": "Lack of medical documentation linking health issues directly to the mold could weaken the claim.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1594,
+        "gap_type": "procedural_requirement",
+        "description": "Failure to provide documentation of the original agreement regarding the pet payment may complicate the claim.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1595,
+        "gap_type": "procedural_requirement",
+        "description": "Insufficient evidence showing that the reporting preceded the retaliatory acts, making it harder to prove the claim.",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1596,
+        "gap_type": "procedural_requirement",
+        "description": "Noncompliance with service requirements for notifying parties of court appearances.",
         "priority": 50,
         "status": "open"
       }
     ],
     "questions": [
       {
-        "id": 581,
-        "question_text": "What specific notices did the landlord send regarding repairs?",
-        "topic_group": "Landlord Responsibilities",
+        "id": 608,
+        "question_text": "Can you provide details about the tenancy agreement you have with your landlord?",
+        "topic_group": "Tenancy Agreement",
         "priority": 1,
-        "rationale": "To determine if the landlord followed proper procedures for notifying tenants about repairs, which is essential for evaluating any claims regarding landlord's responsibilities.",
+        "rationale": "Understanding the specifics of the tenancy agreement is crucial for supporting any claims related to it.",
         "status": "pending"
       },
       {
-        "id": 582,
-        "question_text": "Has the landlord been informed about the repairs needed in your unit?",
-        "topic_group": "Landlord Responsibilities",
+        "id": 609,
+        "question_text": "Have you experienced any issues with the home that might not meet the basic living standards?",
+        "topic_group": "Breach of Warranty Claims",
         "priority": 2,
-        "rationale": "Understanding the extent to which the landlord was made aware of the issues is crucial for assessing claims related to the landlord's knowledge and responsibility.",
+        "rationale": "This question helps explore the claim related to the 'Breach of Implied Warranty of Habitability by Home Seller' and can reveal other warranty issues.",
         "status": "pending"
       },
       {
-        "id": 583,
-        "question_text": "What health issues have you experienced that you believe are linked to your living conditions?",
-        "topic_group": "Landlord Responsibilities",
+        "id": 610,
+        "question_text": "What warranty or guarantees were made by the seller about the home, and do you have any documentation?",
+        "topic_group": "Breach of Warranty Claims",
         "priority": 3,
-        "rationale": "This information is vital to establish the impact of the living conditions on the tenant's health, strengthening any claims related to health concerns.",
+        "rationale": "Identifying any w\u200b\u200b\u200b\u200barranties can help examine the potential claim of 'Breach of Warranty' related to the home.",
         "status": "pending"
       },
       {
-        "id": 584,
-        "question_text": "Have you been engaged in any activities that you believe may have led to retaliation from your landlord?",
-        "topic_group": "Tenant Rights and Protection",
-        "priority": 1,
-        "rationale": "This information is essential to understand potential claims related to protection against retaliatory actions, which helps address tenant rights.",
+        "id": 611,
+        "question_text": "Are there any health concerns like mold in your home that you've noticed?",
+        "topic_group": "Breach of Warranty Claims",
+        "priority": 4,
+        "rationale": "This is important to understand the potential health implications and explore claims related to 'Breach of Warranty of Habitability Due to Mold and Health Concerns'.",
         "status": "pending"
       },
       {
-        "id": 585,
-        "question_text": "What specific issues have you faced that relate to the habitability of your living space?",
-        "topic_group": "Tenant Rights and Protection",
-        "priority": 2,
-        "rationale": "This helps to determine violations of habitability standards and supports claims regarding unsafe or unlivable conditions.",
+        "id": 612,
+        "question_text": "Have you experienced any injuries or damages related to products used in your home?",
+        "topic_group": "Product Liability Claims",
+        "priority": 5,
+        "rationale": "Asking about any injuries linked to products can help explore potential claims related to product liability.",
         "status": "pending"
       },
       {
-        "id": 586,
-        "question_text": "Have you considered whether there may be other claims related to your situation that we haven't looked into yet?",
-        "topic_group": "Potential Claims Exploration",
-        "priority": 1,
-        "rationale": "This question prompts tenants to think about any additional claims that may need exploration, helping to ensure that every avenue is considered for their case.",
+        "id": 613,
+        "question_text": "Can you tell me more about the products you have in your home and their conditions?",
+        "topic_group": "Product Liability Claims",
+        "priority": 6,
+        "rationale": "Understanding the condition of products may reveal potential liability issues that need to be addressed.",
         "status": "pending"
       },
       {
-        "id": 587,
-        "question_text": "Do you know if there were any specific issues with the product that caused harm?",
-        "topic_group": "Potential Claims Exploration",
-        "priority": 2,
-        "rationale": "Identifying specific issues can guide exploration into product liability claims, important for understanding the full scope of potential claims.",
+        "id": 614,
+        "question_text": "Have you reported any maintenance or habitability issues to your landlord?",
+        "topic_group": "Tenant Rights and Retaliation Issues",
+        "priority": 7,
+        "rationale": "Understanding prior complaints can clarify claims related to 'Retaliation for Reporting Habitability Issues'.",
         "status": "pending"
       },
       {
-        "id": 588,
-        "question_text": "What additional fees have you been charged, and do you have documentation for them?",
-        "topic_group": "Potential Claims Exploration",
-        "priority": 3,
-        "rationale": "Gathering details about fees helps assess whether there may be claims regarding lack of documentation or unjust charges.",
+        "id": 615,
+        "question_text": "Have you faced any negative reactions from your landlord after making complaints?",
+        "topic_group": "Tenant Rights and Retaliation Issues",
+        "priority": 8,
+        "rationale": "This relates to exploring the claim for retaliation and impacts the understanding of your rights as a tenant.",
         "status": "pending"
       },
       {
-        "id": 589,
-        "question_text": "Do you know if there are any deadlines for filing your claims based on your state\u2019s laws?",
-        "topic_group": "Procedural Considerations",
-        "priority": 1,
-        "rationale": "Understanding deadlines is crucial to ensure claims are filed timely and rights are preserved.",
+        "id": 616,
+        "question_text": "Do you feel that your rights as a tenant have been violated in any way, such as regarding necessary repairs?",
+        "topic_group": "Tenant Rights and Retaliation Issues",
+        "priority": 9,
+        "rationale": "This will help examine claims related to 'Violation of Tenant's Rights to Repairs'.",
         "status": "pending"
       },
       {
-        "id": 590,
-        "question_text": "Have you considered where your claim needs to be filed to meet jurisdiction requirements?",
-        "topic_group": "Procedural Considerations",
-        "priority": 2,
-        "rationale": "Identifying the correct jurisdiction is vital for the legal process, ensuring claims are filed in the appropriate location.",
+        "id": 617,
+        "question_text": "Have you received receipts for your rent payments? If not, can you describe the situation?",
+        "topic_group": "Tenant Rights and Retaliation Issues",
+        "priority": 10,
+        "rationale": "This question focuses on exploring any claims related to the failure to provide receipts for rent payments.",
+        "status": "pending"
+      },
+      {
+        "id": 618,
+        "question_text": "Did you inform your landlord about the habitability issues before considering legal action?",
+        "topic_group": "Procedural Requirements",
+        "priority": 11,
+        "rationale": "This addresses the requirement to provide notice to the landlord about habitability issues before filing a claim.",
+        "status": "pending"
+      },
+      {
+        "id": 619,
+        "question_text": "Can you detail the timeline of your complaints to your landlord prior to the alleged retaliation?",
+        "topic_group": "Procedural Requirements",
+        "priority": 12,
+        "rationale": "Establishing a timeline and evidence of complaints is crucial for any claims relating to retaliation.",
+        "status": "pending"
+      },
+      {
+        "id": 620,
+        "question_text": "What steps have you taken to resolve the issues with your landlord before considering litigation?",
+        "topic_group": "Procedural Requirements",
+        "priority": 13,
+        "rationale": "Demonstrating attempts at resolution can fulfill procedural requirements for a potential claim.",
+        "status": "pending"
+      },
+      {
+        "id": 621,
+        "question_text": "Do you have any records of complaints you\u2019ve made regarding discrimination or unsafe conditions?",
+        "topic_group": "Procedural Requirements",
+        "priority": 14,
+        "rationale": "This is important for validating discrimination patterns and ensuring that claims have factual support.",
         "status": "pending"
       }
     ],
     "deadlines": [
       {
-        "id": 41,
-        "event_text": "the case is set for April 1st at 9am at halden county court, housing division",
+        "id": 56,
+        "event_text": "The court papers taped to the door require attendance on April 1st.",
         "event_type": "eviction_hearing",
         "trigger": "hearing",
         "trigger_date": "2026-04-01",
@@ -753,26 +657,12 @@
         "citation": "The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).",
         "computed": true,
         "urgency": "lapsed",
-        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-07. This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-08. This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
         "jurisdiction": "US"
       },
       {
-        "id": 42,
-        "event_text": "the 14-day notice was taped to the door on March 3",
-        "event_type": "notice_to_vacate",
-        "trigger": "notice_posted",
-        "trigger_date": "2026-03-03",
-        "computed_date": "2026-03-17",
-        "rule_id": "generic_notice_window",
-        "citation": "Cure/vacate period stated in your notice or lease (confirm the exact deadline printed on the notice).",
-        "computed": true,
-        "urgency": "lapsed",
-        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-07. Estimated \u2014 confirm the exact date with the court or a lawyer.",
-        "jurisdiction": "US"
-      },
-      {
-        "id": 43,
-        "event_text": "the 14-day notice claimed the person owed $350",
+        "id": 57,
+        "event_text": "the tenant has 14 days to pay it all or move out.",
         "event_type": "filing_deadline",
         "trigger": "deadline",
         "trigger_date": "2026-03-17",
@@ -781,74 +671,94 @@
         "citation": "The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).",
         "computed": true,
         "urgency": "lapsed",
-        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-07. This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
-        "jurisdiction": "US"
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-08. This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": null
+      },
+      {
+        "id": 58,
+        "event_text": "the landlord claims nonpayment AND something checked off about 'material lease violation'",
+        "event_type": "notice_to_vacate",
+        "trigger": "notice_posted",
+        "trigger_date": null,
+        "computed_date": null,
+        "rule_id": null,
+        "citation": null,
+        "computed": false,
+        "urgency": "unknown",
+        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": null
       }
     ]
   },
   "outputs": [
     {
-      "doc_id": 51,
+      "doc_id": 66,
       "profile": "law_firm",
-      "completeness": 0.77,
-      "memo_chars": 32594,
+      "completeness": 1.0,
+      "memo_chars": 33142,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 73299,
+          "bytes": 72380,
           "content_type": "application/pdf",
           "magic": "%PDF-",
+          "json_substance": null,
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 778,
+          "bytes": 83939,
           "content_type": "application/json",
           "magic": "{\n \"i",
+          "json_substance": true,
           "ok": true
         }
       }
     },
     {
-      "doc_id": 52,
+      "doc_id": 67,
       "profile": "court_self_help",
-      "completeness": 0.77,
-      "memo_chars": 9941,
+      "completeness": 1.0,
+      "memo_chars": 7906,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 35795,
+          "bytes": 34458,
           "content_type": "application/pdf",
           "magic": "%PDF-",
+          "json_substance": null,
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 777,
+          "bytes": 85039,
           "content_type": "application/json",
           "magic": "{\n \"i",
+          "json_substance": true,
           "ok": true
         }
       }
     },
     {
-      "doc_id": 53,
+      "doc_id": 68,
       "profile": "legal_aid",
-      "completeness": 0.77,
-      "memo_chars": 35054,
+      "completeness": 1.0,
+      "memo_chars": 34536,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 76200,
+          "bytes": 74850,
           "content_type": "application/pdf",
           "magic": "%PDF-",
+          "json_substance": null,
           "ok": true
         },
         "json": {
           "http": 200,
-          "bytes": 777,
+          "bytes": 84865,
           "content_type": "application/json",
           "magic": "{\n \"i",
+          "json_substance": true,
           "ok": true
         }
       }
@@ -875,10 +785,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "215",
+        "id": "271",
         "client_id": "c0",
-        "timestamp": "2026-07-07 20:50:52.349837+00:00",
-        "message_id": 215,
+        "timestamp": "2026-07-08 02:42:27.223105+00:00",
+        "message_id": 271,
         "sequence_number": 1
       }
     },
@@ -887,7 +797,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 216
+        "message_id": 272
       }
     },
     {
@@ -901,10 +811,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "217",
+        "id": "273",
         "client_id": "c1",
-        "timestamp": "2026-07-07 20:50:52.637354+00:00",
-        "message_id": 217,
+        "timestamp": "2026-07-08 02:42:27.575353+00:00",
+        "message_id": 273,
         "sequence_number": 3
       }
     },
@@ -913,7 +823,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 218
+        "message_id": 274
       }
     },
     {
@@ -927,10 +837,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "219",
+        "id": "275",
         "client_id": "c2",
-        "timestamp": "2026-07-07 20:50:52.921404+00:00",
-        "message_id": 219,
+        "timestamp": "2026-07-08 02:42:27.899416+00:00",
+        "message_id": 275,
         "sequence_number": 5
       }
     },
@@ -939,225 +849,8 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 220
+        "message_id": 276
       }
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
-    },
-    {
-      "stage": "poll_status",
-      "http": 404,
-      "status": null,
-      "iteration": null,
-      "progress": null
     },
     {
       "stage": "poll_status",
@@ -1170,8 +863,8 @@
       "stage": "poll_status",
       "http": 200,
       "status": "converged",
-      "iteration": 4,
-      "progress": 40
+      "iteration": 10,
+      "progress": 100
     }
   ]
 }

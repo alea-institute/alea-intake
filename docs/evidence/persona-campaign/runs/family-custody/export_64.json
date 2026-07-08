@@ -1,0 +1,1655 @@
+{
+ "intake_id": 140,
+ "run_id": 30,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-08T02:41:03.856360Z",
+ "claims_by_jurisdiction": {
+  "family court": [
+   {
+    "claim_id": 1423,
+    "claim_name": "Child Custody Response",
+    "claim_type": "identified",
+    "confidence": 1.0,
+    "jurisdiction": "family court",
+    "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
+    "issue_statement": "The consumer has received a Petition to Establish Custody. This means someone wants to decide who takes care of a child. The consumer must file a Response. If they do not respond, they might lose their custody rights.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 718,
+      "element_name": "Petition Filed",
+      "element_description": "A petition to establish custody must be filed by the other parent.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that a petition to establish custody was served, which directly supports the element that a petition must be filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       },
+       {
+        "fact_id": 617,
+        "fact_text": "The packet is a Petition to Establish Custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that a Petition to Establish Custody has been filed which supports the element regarding the petition filed by the other parent."
+       }
+      ]
+     },
+     {
+      "element_id": 719,
+      "element_name": "Response Filed",
+      "element_description": "A response must be filed within the allotted time to contest the custody arrangement.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that there is a 30-day window to file a response, which is necessary for contesting the custody arrangement."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact indicates the consequence of not filing a response, reinforcing the necessity of filing it within the time frame."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       },
+       {
+        "fact_id": 618,
+        "fact_text": "I have 30 days to file a Response.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the timeline that the individual has 30 days to file a Response to the custody petition which directly relates to the Response Filed element."
+       },
+       {
+        "fact_id": 619,
+        "fact_text": "If I do not file a Response, Corey could get full custody.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact highlights that if no Response is filed, Corey could gain full custody, showing the importance of filing a response."
+       }
+      ]
+     },
+     {
+      "element_id": 720,
+      "element_name": "Best Interest of the Child",
+      "element_description": "Any decision will be based on the best interest of the children involved.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.77,
+      "fact_mappings": [
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       },
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.77,
+        "mapping_rationale": "Describing that full custody would limit visitation to supervised time demonstrates concern for the children's best interest in custody proceedings."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1553,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Best Interest of the Child' is not yet supported by any facts",
+      "priority": 100,
+      "claim_id": 1423,
+      "element_id": 720,
+      "claim_name": "Child Custody Response",
+      "element_name": "Best Interest of the Child",
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "Three parts are confirmed. We are 82% sure about this.",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1428,
+      "claim_name": "Family Law and Matrimonial Claims",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU",
+      "issue_statement": "Found by using FOLIO to look through the Child Custody Response (one level deep).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1557,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1428,
+        "element_id": null,
+        "claim_name": "Family Law and Matrimonial Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+      "parent_claim_name": "Child Custody Response",
+      "children": []
+     },
+     {
+      "claim_id": 1426,
+      "claim_name": "Matrimonial Emergency Applications",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RCQJU54O6qCvotCfmDwYZwj",
+      "issue_statement": "Found by using FOLIO to look through the Child Custody Response (one level deep).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1555,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1426,
+        "element_id": null,
+        "claim_name": "Matrimonial Emergency Applications",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+      "parent_claim_name": "Child Custody Response",
+      "children": []
+     },
+     {
+      "claim_id": 1427,
+      "claim_name": "Remedies in Family Law",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RBOczjtsHXQh2ojzTubbrxI",
+      "issue_statement": "Found by using FOLIO to look through the Child Custody Response (one level deep).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1556,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1427,
+        "element_id": null,
+        "claim_name": "Remedies in Family Law",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+      "parent_claim_name": "Child Custody Response",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1425,
+    "claim_name": "Emergency Custody Relief",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": "family court",
+    "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
+    "issue_statement": "Because Corey has made threats and acted aggressively, the consumer can look into emergency custody options. Emergency custody means getting temporary control over the children for their safety.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 725,
+      "element_name": "Emergency Filing",
+      "element_description": "A request for an emergency custody hearing must be filed with supporting evidence.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 726,
+      "element_name": "Best Interest of the Children",
+      "element_description": "Demonstrating that the emergency relief serves the best interest of the children.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 724,
+      "element_name": "Imminent Danger",
+      "element_description": "Showing evidence that the children are in immediate danger from the other parent.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 620,
+        "fact_text": "Full custody would mean I only get supervised time with my kids.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that full custody would result in only supervised time with the children, suggesting a potential threat to their stability and safety."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1551,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Emergency Filing' is not yet supported by any facts",
+      "priority": 70,
+      "claim_id": 1425,
+      "element_id": 725,
+      "claim_name": "Emergency Custody Relief",
+      "element_name": "Emergency Filing",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1552,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Best Interest of the Children' is not yet supported by any facts",
+      "priority": 70,
+      "claim_id": 1425,
+      "element_id": 726,
+      "claim_name": "Emergency Custody Relief",
+      "element_name": "Best Interest of the Children",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1565,
+      "gap_type": "procedural_requirement",
+      "description": "Missing information on specific filing deadlines or requirements for urgent custody requests.",
+      "priority": 50,
+      "claim_id": 1425,
+      "element_id": null,
+      "claim_name": "Emergency Custody Relief",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "1 of 3 parts has support. This means there is a 28% chance it is true.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "family court, possible criminal": [
+   {
+    "claim_id": 1424,
+    "claim_name": "Threatening Behavior",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": "family court, possible criminal",
+    "folio_iri": null,
+    "issue_statement": "Corey's aggressive actions may lead to asking for a protective order. Grabbing the consumer's arm is one example of being aggressive. Making threats about custody is another example. A protective order is a legal way to keep someone safe from harm.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 723,
+      "element_name": "Fear of Further Harm",
+      "element_description": "Demonstrated fear for safety or well-being that warrants intervention.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact relays a direct threat made by Corey regarding the custody of the children, indicating a fear for personal safety."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       },
+       {
+        "fact_id": 630,
+        "fact_text": "Corey screamed that if I 'tried anything' with the custody case he'd take the kids and I'd 'never see them again.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact reflects a clear expression of fear for safety, indicating that Corey threatened to take the kids away if she proceeded with the custody case."
+       }
+      ]
+     },
+     {
+      "element_id": 721,
+      "element_name": "Physical Harm",
+      "element_description": "Evidence that physical harm occurred, such as bruising from grabbing.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact describes physical harm resulting in a bruise from Corey grabbing the individual, constituting evidence of physical harm."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       },
+       {
+        "fact_id": 628,
+        "fact_text": "Corey grabbed my arm so hard he left a bruise.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides clear evidence of physical harm where Corey grabbed the individual\u2019s arm hard enough to leave a bruise."
+       }
+      ]
+     },
+     {
+      "element_id": 722,
+      "element_name": "Threatening Texts",
+      "element_description": "Documented evidence of threatening texts indicating intent to harm or control.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1554,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Threatening Texts' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1424,
+      "element_id": 722,
+      "claim_name": "Threatening Behavior",
+      "element_name": "Threatening Texts",
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "Two out of three parts are supported with 57% confidence.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1431,
+    "claim_name": "Legal Representation",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RC15aa638D53bC3Edca48b3e",
+    "issue_statement": "Many places have legal aid. This means they help people who cannot pay for a lawyer. This is especially true for custody cases. Pro bono services also help. Pro bono means lawyers give their time for free.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1560,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Legal Representation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1431,
+      "element_id": null,
+      "claim_name": "Legal Representation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1429,
+    "claim_name": "Potential Domestic Violence",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
+    "issue_statement": "The fight and the harm show a pattern of bad behavior. This can affect the court's decisions about custody and visitation rights.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1558,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Domestic Violence' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1429,
+      "element_id": null,
+      "claim_name": "Potential Domestic Violence",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1567,
+      "gap_type": "procedural_requirement",
+      "description": "Missing details on documentation and evidence that must be provided to substantiate claims of domestic violence.",
+      "priority": 50,
+      "claim_id": 1429,
+      "element_id": null,
+      "claim_name": "Potential Domestic Violence",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1433,
+    "claim_name": "Emergency Protective Order",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7053oNO7Kct0Nr8SexmzuU",
+    "issue_statement": "If there is a real threat to your safety, a protective order (a legal way to keep someone away) can help you right away. It can also impact who gets custody (who takes care of a child).",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1562,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Emergency Protective Order' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1433,
+      "element_id": null,
+      "claim_name": "Emergency Protective Order",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1566,
+      "gap_type": "procedural_requirement",
+      "description": "Lacks specific jurisdictional requirements and protocol for filing in different courts.",
+      "priority": 50,
+      "claim_id": 1433,
+      "element_id": null,
+      "claim_name": "Emergency Protective Order",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1434,
+    "claim_name": "Threats and Harassment Documentation",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv",
+    "issue_statement": "Collecting threatening messages is very important in legal cases. These messages can help in discussions about custody (who takes care of a child) and claims for protection against threats.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1568,
+      "gap_type": "procedural_requirement",
+      "description": "Insufficient guidance on how to document incidents of threats or harassment, including timelines and evidence required.",
+      "priority": 50,
+      "claim_id": 1434,
+      "element_id": null,
+      "claim_name": "Threats and Harassment Documentation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1430,
+    "claim_name": "Child Endangerment",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RQCqQcWqriNQ2XBCucDmpq",
+    "issue_statement": "If kids see domestic violence or feel very upset, it can affect how the court decides on custody.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1559,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Child Endangerment' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1430,
+      "element_id": null,
+      "claim_name": "Child Endangerment",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1435,
+    "claim_name": "Emergency Relief and Protection Orders",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDmsvdtBrrw46UnCDJ0LKrJ",
+    "issue_statement": "Emergency relief options can help protect you right away. They can also change custody talks. This way, the children\u2019s wellbeing is the main focus.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1563,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Emergency Relief and Protection Orders' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1435,
+      "element_id": null,
+      "claim_name": "Emergency Relief and Protection Orders",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1436,
+    "claim_name": "Financial Considerations for Legal Representation",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDCbopUcNJ7SCPPVAuRA4GO",
+    "issue_statement": "It is important to know about legal help for people who don't have much money. This can affect how you handle custody and other legal issues.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1564,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Financial Considerations for Legal Representation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1436,
+      "element_id": null,
+      "claim_name": "Financial Considerations for Legal Representation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "General": [
+   {
+    "claim_name": "Parental Alienation",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RSQjOF7ik8OIL93pvrq1jV",
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [
+  {
+   "protocol_name": "Domestic Violence / Intimate Partner Violence",
+   "severity_tier": "critical",
+   "matched_terms": [
+    "left a bruise",
+    "grabbed my arm"
+   ],
+   "hotlines": [
+    {
+     "name": "National Domestic Violence Hotline",
+     "phone": "1-800-799-7233",
+     "text": "START to 88788",
+     "url": "https://www.thehotline.org"
+    },
+    {
+     "name": "National Dating Abuse Helpline",
+     "phone": "1-866-331-9474",
+     "text": "LOVEIS to 22522"
+    }
+   ],
+   "emergency": "If you are in immediate danger, call 911.",
+   "safety_planning": "A safety plan can help you prepare for emergencies. The National DV Hotline can help create one."
+  },
+  {
+   "protocol_name": "Stalking / Harassment",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "threatening"
+   ],
+   "hotlines": [
+    {
+     "name": "Stalking Prevention, Awareness, and Resource Center (SPARC)",
+     "url": "https://www.stalkingawareness.org"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "There is a court date in July for an Initial Case Management Conference. The Initial Case Management Conference is on July 22.",
+   "event_type": "custody_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-07-22",
+   "computed_date": "2026-07-22",
+   "rule_id": "stated_court_date",
+   "citation": "The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": null
+  },
+  {
+   "event_text": "On June 15, I got served. The packet is a Petition to Establish Custody. I have 30 days to file a Response.",
+   "event_type": "custody_response",
+   "trigger": "served",
+   "trigger_date": "2026-06-15",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": null
+  },
+  {
+   "event_text": "Corey grabbed my arm so hard he left a bruise.",
+   "event_type": "injury",
+   "trigger": "incident",
+   "trigger_date": "2026-06-28",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": null
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "discovered",
+    "destination_type": "practice_area",
+    "score": 0.63,
+    "rationale": "discovered practice area (90% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.9,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "identified",
+    "destination_type": "practice_area",
+    "score": 0.35,
+    "rationale": "identified practice area (10% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.1,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "discovered",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Best Interest of the Child' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Custody Response",
+   "element_ref": "Best Interest of the Child"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Threatening Texts' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Threatening Behavior",
+   "element_ref": "Threatening Texts"
+  },
+  {
+   "item_number": 3,
+   "category": "documents_to_gather",
+   "description": "Element 'Emergency Filing' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Emergency Custody Relief",
+   "element_ref": "Emergency Filing"
+  },
+  {
+   "item_number": 4,
+   "category": "documents_to_gather",
+   "description": "Element 'Best Interest of the Children' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Emergency Custody Relief",
+   "element_ref": "Best Interest of the Children"
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: There is a court date in July for an Initial Case Management Conference. The Initial Case Management Conference is on July 22. (estimated 2026-07-22; The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).). This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-07-22",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Matrimonial Emergency Applications",
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Remedies in Family Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Family Law and Matrimonial Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Domestic Violence' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Domestic Violence",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Child Endangerment' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Endangerment",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Legal Representation' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Legal Representation",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Parental Alienation' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Parental Alienation",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Emergency Protective Order' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Emergency Protective Order",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Emergency Relief and Protection Orders' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Emergency Relief and Protection Orders",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Financial Considerations for Legal Representation' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Financial Considerations for Legal Representation",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Missing information on specific filing deadlines or requirements for urgent custody requests.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Emergency Custody Relief",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Lacks specific jurisdictional requirements and protocol for filing in different courts.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Emergency Protective Order",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Missing details on documentation and evidence that must be provided to substantiate claims of domestic violence.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Domestic Violence",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Insufficient guidance on how to document incidents of threats or harassment, including timelines and evidence required.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Threats and Harassment Documentation",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Emergency Custody Relief": [
+    {
+     "gap_id": 1551,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Emergency Filing' is not yet supported by any facts",
+     "priority": 70,
+     "claim_id": 1425,
+     "element_id": 725,
+     "claim_name": "Emergency Custody Relief",
+     "element_name": "Emergency Filing",
+     "action_item_ref": 3,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1552,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Best Interest of the Children' is not yet supported by any facts",
+     "priority": 70,
+     "claim_id": 1425,
+     "element_id": 726,
+     "claim_name": "Emergency Custody Relief",
+     "element_name": "Best Interest of the Children",
+     "action_item_ref": 4,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1565,
+     "gap_type": "procedural_requirement",
+     "description": "Missing information on specific filing deadlines or requirements for urgent custody requests.",
+     "priority": 50,
+     "claim_id": 1425,
+     "element_id": null,
+     "claim_name": "Emergency Custody Relief",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Child Custody Response": [
+    {
+     "gap_id": 1553,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Best Interest of the Child' is not yet supported by any facts",
+     "priority": 100,
+     "claim_id": 1423,
+     "element_id": 720,
+     "claim_name": "Child Custody Response",
+     "element_name": "Best Interest of the Child",
+     "action_item_ref": 1,
+     "open_questions": []
+    }
+   ],
+   "Threatening Behavior": [
+    {
+     "gap_id": 1554,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Threatening Texts' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1424,
+     "element_id": 722,
+     "claim_name": "Threatening Behavior",
+     "element_name": "Threatening Texts",
+     "action_item_ref": 2,
+     "open_questions": []
+    }
+   ],
+   "Matrimonial Emergency Applications": [
+    {
+     "gap_id": 1555,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1426,
+     "element_id": null,
+     "claim_name": "Matrimonial Emergency Applications",
+     "element_name": null,
+     "action_item_ref": 6,
+     "open_questions": []
+    }
+   ],
+   "Remedies in Family Law": [
+    {
+     "gap_id": 1556,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1427,
+     "element_id": null,
+     "claim_name": "Remedies in Family Law",
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    }
+   ],
+   "Family Law and Matrimonial Claims": [
+    {
+     "gap_id": 1557,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1428,
+     "element_id": null,
+     "claim_name": "Family Law and Matrimonial Claims",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    }
+   ],
+   "Potential Domestic Violence": [
+    {
+     "gap_id": 1558,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Domestic Violence' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1429,
+     "element_id": null,
+     "claim_name": "Potential Domestic Violence",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1567,
+     "gap_type": "procedural_requirement",
+     "description": "Missing details on documentation and evidence that must be provided to substantiate claims of domestic violence.",
+     "priority": 50,
+     "claim_id": 1429,
+     "element_id": null,
+     "claim_name": "Potential Domestic Violence",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Child Endangerment": [
+    {
+     "gap_id": 1559,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Child Endangerment' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1430,
+     "element_id": null,
+     "claim_name": "Child Endangerment",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Legal Representation": [
+    {
+     "gap_id": 1560,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Legal Representation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1431,
+     "element_id": null,
+     "claim_name": "Legal Representation",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Parental Alienation": [
+    {
+     "gap_id": 1561,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Parental Alienation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1432,
+     "element_id": null,
+     "claim_name": "Parental Alienation",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Emergency Protective Order": [
+    {
+     "gap_id": 1562,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Emergency Protective Order' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1433,
+     "element_id": null,
+     "claim_name": "Emergency Protective Order",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1566,
+     "gap_type": "procedural_requirement",
+     "description": "Lacks specific jurisdictional requirements and protocol for filing in different courts.",
+     "priority": 50,
+     "claim_id": 1433,
+     "element_id": null,
+     "claim_name": "Emergency Protective Order",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Emergency Relief and Protection Orders": [
+    {
+     "gap_id": 1563,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Emergency Relief and Protection Orders' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1435,
+     "element_id": null,
+     "claim_name": "Emergency Relief and Protection Orders",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Financial Considerations for Legal Representation": [
+    {
+     "gap_id": 1564,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Financial Considerations for Legal Representation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1436,
+     "element_id": null,
+     "claim_name": "Financial Considerations for Legal Representation",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Threats and Harassment Documentation": [
+    {
+     "gap_id": 1568,
+     "gap_type": "procedural_requirement",
+     "description": "Insufficient guidance on how to document incidents of threats or harassment, including timelines and evidence required.",
+     "priority": 50,
+     "claim_id": 1434,
+     "element_id": null,
+     "claim_name": "Threats and Harassment Documentation",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1553,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Best Interest of the Child' is not yet supported by any facts",
+    "priority": 100,
+    "claim_id": 1423,
+    "element_id": 720,
+    "claim_name": "Child Custody Response",
+    "element_name": "Best Interest of the Child",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1554,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Threatening Texts' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1424,
+    "element_id": 722,
+    "claim_name": "Threatening Behavior",
+    "element_name": "Threatening Texts",
+    "action_item_ref": 2,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1551,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Emergency Filing' is not yet supported by any facts",
+    "priority": 70,
+    "claim_id": 1425,
+    "element_id": 725,
+    "claim_name": "Emergency Custody Relief",
+    "element_name": "Emergency Filing",
+    "action_item_ref": 3,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1552,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Best Interest of the Children' is not yet supported by any facts",
+    "priority": 70,
+    "claim_id": 1425,
+    "element_id": 726,
+    "claim_name": "Emergency Custody Relief",
+    "element_name": "Best Interest of the Children",
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1555,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1426,
+    "element_id": null,
+    "claim_name": "Matrimonial Emergency Applications",
+    "element_name": null,
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1556,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1427,
+    "element_id": null,
+    "claim_name": "Remedies in Family Law",
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1557,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1428,
+    "element_id": null,
+    "claim_name": "Family Law and Matrimonial Claims",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1558,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Domestic Violence' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1429,
+    "element_id": null,
+    "claim_name": "Potential Domestic Violence",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1559,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Child Endangerment' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1430,
+    "element_id": null,
+    "claim_name": "Child Endangerment",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1560,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Legal Representation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1431,
+    "element_id": null,
+    "claim_name": "Legal Representation",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1561,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Parental Alienation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1432,
+    "element_id": null,
+    "claim_name": "Parental Alienation",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1562,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Emergency Protective Order' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1433,
+    "element_id": null,
+    "claim_name": "Emergency Protective Order",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1563,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Emergency Relief and Protection Orders' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1435,
+    "element_id": null,
+    "claim_name": "Emergency Relief and Protection Orders",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1564,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Financial Considerations for Legal Representation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1436,
+    "element_id": null,
+    "claim_name": "Financial Considerations for Legal Representation",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1565,
+    "gap_type": "procedural_requirement",
+    "description": "Missing information on specific filing deadlines or requirements for urgent custody requests.",
+    "priority": 50,
+    "claim_id": 1425,
+    "element_id": null,
+    "claim_name": "Emergency Custody Relief",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1566,
+    "gap_type": "procedural_requirement",
+    "description": "Lacks specific jurisdictional requirements and protocol for filing in different courts.",
+    "priority": 50,
+    "claim_id": 1433,
+    "element_id": null,
+    "claim_name": "Emergency Protective Order",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1567,
+    "gap_type": "procedural_requirement",
+    "description": "Missing details on documentation and evidence that must be provided to substantiate claims of domestic violence.",
+    "priority": 50,
+    "claim_id": 1429,
+    "element_id": null,
+    "claim_name": "Potential Domestic Violence",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1568,
+    "gap_type": "procedural_requirement",
+    "description": "Insufficient guidance on how to document incidents of threats or harassment, including timelines and evidence required.",
+    "priority": 50,
+    "claim_id": 1434,
+    "element_id": null,
+    "claim_name": "Threats and Harassment Documentation",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "What specific facts can we gather to support the element of 'Best Interest of the Child'?",
+   "How do we ensure that the 'Best Interest of the Children' is considered in our case?",
+   "What evidence do we have regarding 'Threatening Texts'?",
+   "What steps do we need to take to file an 'Emergency Filing'?",
+   "What potential claims should we explore regarding 'Domestic Violence' in our situation?",
+   "How can we assess the risk of 'Child Endangerment' in our case?",
+   "What are the specific filing deadlines for urgent custody requests?",
+   "What documentation do we need to support claims of domestic violence?",
+   "What protocol should we follow when filing in different courts?"
+  ],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}

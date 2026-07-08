@@ -1,0 +1,2726 @@
+{
+ "intake_id": 146,
+ "run_id": 33,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-08T11:11:08.222677Z",
+ "claims_by_jurisdiction": {
+  "federal": [
+   {
+    "claim_id": 1469,
+    "claim_name": "In-Absentia Removal Risk",
+    "claim_type": "identified",
+    "confidence": 0.95,
+    "jurisdiction": "federal",
+    "folio_iri": null,
+    "issue_statement": "The consumer understands that not going to the planned immigration hearing can lead to removal. An in-absentia removal order means they could be forced to leave without being there.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 747,
+      "element_name": "Immigration Status",
+      "element_description": "The individual is subject to removal proceedings.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 745,
+      "element_name": "Notice of Hearing",
+      "element_description": "The individual must be provided proper notice of the hearing date and time.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.82,
+      "fact_mappings": [
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.82,
+        "mapping_rationale": "The fact states that a hearing letter was received, which constitutes proper notice of the hearing date and time."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.82,
+        "mapping_rationale": "The fact provides the specific date and time of the immigration hearing, confirming that the individual was informed."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       },
+       {
+        "fact_id": 704,
+        "fact_text": "The hearing letter came end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that a hearing letter was received provides evidence of proper notice regarding the individual's immigration hearing."
+       },
+       {
+        "fact_id": 705,
+        "fact_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date and time of the hearing supports the claim that the individual was provided notice of the hearing."
+       }
+      ]
+     },
+     {
+      "element_id": 746,
+      "element_name": "Failure to Appear",
+      "element_description": "The individual did not appear at the scheduled immigration hearing.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.78,
+      "fact_mappings": [
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact indicates the consequences of not attending the court, which supports the claim of possible removal in absentia."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       },
+       {
+        "fact_id": 706,
+        "fact_text": "If I do not come to the court, they can order me removed without me being there, in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement regarding the possibility of being removed in absentia indicates that the individual faces removal proceedings without attending the hearing."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1618,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Immigration Status' is not yet supported by any facts",
+      "priority": 95,
+      "claim_id": 1469,
+      "element_id": 747,
+      "claim_name": "In-Absentia Removal Risk",
+      "element_name": "Immigration Status",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1634,
+      "gap_type": "procedural_requirement",
+      "description": "Failure to provide adequate notice of proceedings can undermine the validity of the removal process.",
+      "priority": 50,
+      "claim_id": 1469,
+      "element_id": null,
+      "claim_name": "In-Absentia Removal Risk",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "Two out of three parts are backed up with 53% certainty.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1472,
+    "claim_name": "Asylum Application Malpractice",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "federal",
+    "folio_iri": null,
+    "issue_statement": "The consumer paid for legal help to file asylum papers. But they did not get any papers or updates. This could mean there was malpractice (a mistake by a professional) or fraud (a lie to steal money).",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 754,
+      "element_name": "Duty of Care",
+      "element_description": "The legal professional had a duty to competently handle the asylum application.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving papers from immigration indicates the assumption that an attorney should have submitted the asylum application properly, establishing a duty of care."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       },
+       {
+        "fact_id": 711,
+        "fact_text": "I received papers from immigration, NTA I think it said.",
+        "confidence": 0.85,
+        "mapping_rationale": "Receiving NTA papers implies that an immigration professional had a duty to address the individual's asylum application."
+       },
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto claimed he would file the asylum papers indicates the existence of a duty of care regarding the application."
+       }
+      ]
+     },
+     {
+      "element_id": 755,
+      "element_name": "Breach of Duty",
+      "element_description": "The legal professional failed to perform their duty, which could include not filing the application.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 717,
+        "fact_text": "Rigoberto said he would file my asylum papers for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Rigoberto promised to file the asylum papers but the individual never got anything back indicates a breach in the duty of care."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       },
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement that nothing was received after Rigoberto's promise indicates a potential breach of duty."
+       }
+      ]
+     },
+     {
+      "element_id": 756,
+      "element_name": "Damages",
+      "element_description": "The individual suffered damages due to the breach, such as missed deadlines for asylum.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 718,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that no paperwork or outcomes were received after the supposed filing indicates damages due to the breach of duty."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1635,
+      "gap_type": "procedural_requirement",
+      "description": "Potential missed deadlines for filing claims against attorneys for malpractice in asylum applications.",
+      "priority": 50,
+      "claim_id": 1472,
+      "element_id": null,
+      "claim_name": "Asylum Application Malpractice",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "Three parts were backed up. There is an 85% chance this is true.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1470,
+    "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "federal",
+    "folio_iri": null,
+    "issue_statement": "If there is worry about the court date and immigration issues, it might be possible to ask the court to open or move the hearing. This could happen if the person does not come to the hearing.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 748,
+      "element_name": "Timeliness of Motion",
+      "element_description": "The motion must be filed in a timely manner after the original hearing.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 749,
+      "element_name": "Reason for Absence",
+      "element_description": "The individual must provide a valid reason for not attending the original hearing.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 750,
+      "element_name": "Equitable Factors",
+      "element_description": "The individual should demonstrate relevant equitable factors justifying rescheduling.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1619,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Timeliness of Motion' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1470,
+      "element_id": 748,
+      "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+      "element_name": "Timeliness of Motion",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1620,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Reason for Absence' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1470,
+      "element_id": 749,
+      "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+      "element_name": "Reason for Absence",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1621,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Equitable Factors' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1470,
+      "element_id": 750,
+      "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+      "element_name": "Equitable Factors",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1623,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Possible Motion to Reopen/Reschedule Hearing' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1470,
+      "element_id": null,
+      "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "0 of 3 elements supported (0% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "state (Minnesota)": [
+   {
+    "claim_id": 1471,
+    "claim_name": "Order for Protection / Restraining Order",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": "state (Minnesota)",
+    "folio_iri": "https://folio.openlegalstandard.org/RB04s7iLq0V5p3mVXkyxY77",
+    "issue_statement": "The consumer faced domestic violence from her husband. This means she can ask for an order for protection. This order can help keep her safe.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 751,
+      "element_name": "Domestic Abuse",
+      "element_description": "There must be evidence of domestic abuse (e.g., physical harm or threats of harm).",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides additional evidence of physical harm, strengthening the claim of domestic abuse."
+       },
+       {
+        "fact_id": 728,
+        "fact_text": "They arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo was arrested corroborates the physical abuse claim."
+       },
+       {
+        "fact_id": 729,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The existence of a police report further supports the claim of domestic violence."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       },
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after a reported incident of being hit supports the claim of domestic abuse."
+       },
+       {
+        "fact_id": 725,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that Danilo hit the individual indicates evidence of domestic abuse."
+       },
+       {
+        "fact_id": 726,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This repeated incident of hitting further supports the evidence of domestic abuse."
+       }
+      ]
+     },
+     {
+      "element_id": 752,
+      "element_name": "Petitioner Security",
+      "element_description": "The petitioner must demonstrate a need for protection to ensure their safety.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 727,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after an incident of abuse indicates a need for protection, which supports the element of security."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       },
+       {
+        "fact_id": 731,
+        "fact_text": "Danilo is still in the criminal court process.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo being in the criminal court process signifies a potential threat to the petitioner\u2019s safety, justifying the need for protection."
+       }
+      ]
+     },
+     {
+      "element_id": 753,
+      "element_name": "Jurisdiction",
+      "element_description": "The petition must be filed in the correct jurisdiction where the abuse occurred or where the parties currently reside.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1622,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Jurisdiction' is not yet supported by any facts",
+      "priority": 85,
+      "claim_id": 1471,
+      "element_id": 753,
+      "claim_name": "Order for Protection / Restraining Order",
+      "element_name": "Jurisdiction",
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "Two out of three parts are supported. There is a 57% chance this is true.",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1475,
+      "claim_name": "Family Law and Matrimonial Claims",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU",
+      "issue_statement": "Found by using FOLIO to look through the Order for Protection / Restraining Order (depth 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1626,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1475,
+        "element_id": null,
+        "claim_name": "Family Law and Matrimonial Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "There are no specific parts explained.",
+      "parent_claim_name": "Order for Protection / Restraining Order",
+      "children": []
+     },
+     {
+      "claim_id": 1473,
+      "claim_name": "Matrimonial Emergency Applications",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RCQJU54O6qCvotCfmDwYZwj",
+      "issue_statement": "Found by using FOLIO to look through the Order for Protection / Restraining Order (depth 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1624,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1473,
+        "element_id": null,
+        "claim_name": "Matrimonial Emergency Applications",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       },
+       {
+        "gap_id": 1636,
+        "gap_type": "procedural_requirement",
+        "description": "Lack of understanding about the emergency hearing requests and their procedural prerequisites.",
+        "priority": 50,
+        "claim_id": 1473,
+        "element_id": null,
+        "claim_name": "Matrimonial Emergency Applications",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "There are no specific parts explained.",
+      "parent_claim_name": "Order for Protection / Restraining Order",
+      "children": []
+     },
+     {
+      "claim_id": 1476,
+      "claim_name": "Order",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RDmsvdtBrrw46UnCDJ0LKrJ",
+      "issue_statement": "Found by using FOLIO to look through the Order for Protection / Restraining Order (depth 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1627,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Order' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1476,
+        "element_id": null,
+        "claim_name": "Order",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "There are no specific parts explained.",
+      "parent_claim_name": "Order for Protection / Restraining Order",
+      "children": []
+     },
+     {
+      "claim_id": 1474,
+      "claim_name": "Remedies in Family Law",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RBOczjtsHXQh2ojzTubbrxI",
+      "issue_statement": "Found by using FOLIO to look through the Order for Protection / Restraining Order (depth 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1625,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1474,
+        "element_id": null,
+        "claim_name": "Remedies in Family Law",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "There are no specific parts explained.",
+      "parent_claim_name": "Order for Protection / Restraining Order",
+      "children": []
+     },
+     {
+      "claim_id": 1477,
+      "claim_name": "Trial Court Created Documents",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RDBXUrFP9mCZLCxzqy8nbEX",
+      "issue_statement": "Found by using FOLIO to look through the Order for Protection / Restraining Order (depth 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1628,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1477,
+        "element_id": null,
+        "claim_name": "Trial Court Created Documents",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "There are no specific parts explained.",
+      "parent_claim_name": "Order for Protection / Restraining Order",
+      "children": []
+     }
+    ]
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1478,
+    "claim_name": "Domestic Violence and Immigration Consequences",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq",
+    "issue_statement": "If someone is a victim of domestic violence, it's important to see if they can get help. They may qualify for protections under the Violence Against Women Act (VAWA). This law helps people facing abuse. There may also be other immigration options for those dealing with domestic abuse.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1629,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Domestic Violence and Immigration Consequences' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1478,
+      "element_id": null,
+      "claim_name": "Domestic Violence and Immigration Consequences",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1637,
+      "gap_type": "procedural_requirement",
+      "description": "Procedural gaps regarding the need for timely submission of evidence related to domestic violence claims for immigration benefits.",
+      "priority": 50,
+      "claim_id": 1478,
+      "element_id": null,
+      "claim_name": "Domestic Violence and Immigration Consequences",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "There are no specific parts explained.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1481,
+    "claim_name": "Domestic Violence Implications",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
+    "issue_statement": "Domestic violence history can lead to claims related to U-Visas or VAWA (Violence Against Women Act). These claims may help someone find a way to legal status. Legal status means being allowed to live in the country legally. This could also help with asylum claims. Asylum claims are requests for protection in another country.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1630,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Domestic Violence Implications' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1481,
+      "element_id": null,
+      "claim_name": "Domestic Violence Implications",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "There are no specific parts explained.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1479,
+    "claim_name": "Employment and Social Security Fraud Risks",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "If a person uses someone else's social security number to get a job, it can be illegal. This can lead to serious legal problems. They might face trouble with their job or their immigration status.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1638,
+      "gap_type": "procedural_requirement",
+      "description": "Unclear procedural requirements for reporting suspected fraud to authorities.",
+      "priority": 50,
+      "claim_id": 1479,
+      "element_id": null,
+      "claim_name": "Employment and Social Security Fraud Risks",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "There are no specific parts explained.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1482,
+    "claim_name": "Child Custody and Support Issues",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
+    "issue_statement": "The mother's legal status could impact custody decisions. This means who gets to take care of the child. Also, any possible criminal charges against the father could change things. It\u2019s important to understand rights about child support. Child support is money that helps take care of a child. There could also be issues if the parents live in different states.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1631,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Child Custody and Support Issues' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1482,
+      "element_id": null,
+      "claim_name": "Child Custody and Support Issues",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1639,
+      "gap_type": "procedural_requirement",
+      "description": "Lack of clarity on which state holds jurisdiction over custody claims, potentially complicating enforcement.",
+      "priority": 50,
+      "claim_id": 1482,
+      "element_id": null,
+      "claim_name": "Child Custody and Support Issues",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "There are no specific parts explained.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1483,
+    "claim_name": "Employment and Social Security Fraud",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RqGxSnAp9vX42GRKHqwvBe",
+    "issue_statement": "You need legal help to understand how employment fraud affects immigration and asylum claims. Employment fraud is when someone lies about jobs. This could also change what is happening in criminal cases right now.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1632,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Employment and Social Security Fraud' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1483,
+      "element_id": null,
+      "claim_name": "Employment and Social Security Fraud",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "There are no specific parts explained.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1480,
+    "claim_name": "Financial Hardship and Legal Aid Access",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "When people have money problems, like issues with their jobs or car trouble, they may find it hard to get legal help. They should look for assistance options.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "There are no specific parts explained.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1484,
+    "claim_name": "Impact of Asylum Application Malpractice",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R9Ictcp1iwOnYdrf1bxOTVA",
+    "issue_statement": "Not filing the asylum papers can affect how you fight against being removed. It shows that legal action is needed against Rigoberto.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1633,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Impact of Asylum Application Malpractice' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1484,
+      "element_id": null,
+      "claim_name": "Impact of Asylum Application Malpractice",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "There are no specific parts explained.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "General": [
+   {
+    "claim_name": "Dependency and Financial Support",
+    "claim_type": "discovered",
+    "confidence": 0.65,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [
+  {
+   "protocol_name": "Immigration Detention Risk",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "asylum"
+   ],
+   "hotlines": [
+    {
+     "name": "National Immigrant Women's Advocacy Project",
+     "url": "https://niwaplibrary.wcl.american.edu"
+    },
+    {
+     "name": "Immigration Advocates Network",
+     "url": "https://www.immigrationadvocates.org"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "The hearing is scheduled for August 20, 2026 at nine in the morning.",
+   "event_type": "removal_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-08-20",
+   "computed_date": "2026-08-20",
+   "rule_id": "immigration_hearing_date",
+   "citation": "The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "US"
+  },
+  {
+   "event_text": "Danilo hit me again on March 15 this year.",
+   "event_type": "injury",
+   "trigger": "incident",
+   "trigger_date": "2026-03-15",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "discovered",
+    "destination_type": "practice_area",
+    "score": 0.6172727272727273,
+    "rationale": "discovered practice area (91% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.9090909090909091,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "identified",
+    "destination_type": "practice_area",
+    "score": 0.33090909090909093,
+    "rationale": "identified practice area (9% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.09090909090909091,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "discovered",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Immigration Status' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "In-Absentia Removal Risk",
+   "element_ref": "Immigration Status"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Jurisdiction' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Order for Protection / Restraining Order",
+   "element_ref": "Jurisdiction"
+  },
+  {
+   "item_number": 3,
+   "category": "documents_to_gather",
+   "description": "Element 'Timeliness of Motion' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Possible Motion to Reopen/Reschedule Hearing",
+   "element_ref": "Timeliness of Motion"
+  },
+  {
+   "item_number": 4,
+   "category": "documents_to_gather",
+   "description": "Element 'Reason for Absence' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Possible Motion to Reopen/Reschedule Hearing",
+   "element_ref": "Reason for Absence"
+  },
+  {
+   "item_number": 5,
+   "category": "documents_to_gather",
+   "description": "Element 'Equitable Factors' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Possible Motion to Reopen/Reschedule Hearing",
+   "element_ref": "Equitable Factors"
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: The hearing is scheduled for August 20, 2026 at nine in the morning. (estimated 2026-08-20; The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.). This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-08-20",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Possible Motion to Reopen/Reschedule Hearing' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Possible Motion to Reopen/Reschedule Hearing",
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Matrimonial Emergency Applications",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Remedies in Family Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Family Law and Matrimonial Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Order' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Order",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Trial Court Created Documents",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Domestic Violence and Immigration Consequences' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Violence and Immigration Consequences",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Domestic Violence Implications' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Violence Implications",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Child Custody and Support Issues' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Custody and Support Issues",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Employment and Social Security Fraud' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Employment and Social Security Fraud",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Impact of Asylum Application Malpractice' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Impact of Asylum Application Malpractice",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Failure to provide adequate notice of proceedings can undermine the validity of the removal process.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "In-Absentia Removal Risk",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Potential missed deadlines for filing claims against attorneys for malpractice in asylum applications.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Asylum Application Malpractice",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "Lack of understanding about the emergency hearing requests and their procedural prerequisites.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Matrimonial Emergency Applications",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "Procedural gaps regarding the need for timely submission of evidence related to domestic violence claims for immigration benefits.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Violence and Immigration Consequences",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "Unclear procedural requirements for reporting suspected fraud to authorities.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Employment and Social Security Fraud Risks",
+   "element_ref": null
+  },
+  {
+   "item_number": 23,
+   "category": "follow_up_steps",
+   "description": "Lack of clarity on which state holds jurisdiction over custody claims, potentially complicating enforcement.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Custody and Support Issues",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "In-Absentia Removal Risk": [
+    {
+     "gap_id": 1618,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Immigration Status' is not yet supported by any facts",
+     "priority": 95,
+     "claim_id": 1469,
+     "element_id": 747,
+     "claim_name": "In-Absentia Removal Risk",
+     "element_name": "Immigration Status",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1634,
+     "gap_type": "procedural_requirement",
+     "description": "Failure to provide adequate notice of proceedings can undermine the validity of the removal process.",
+     "priority": 50,
+     "claim_id": 1469,
+     "element_id": null,
+     "claim_name": "In-Absentia Removal Risk",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Possible Motion to Reopen/Reschedule Hearing": [
+    {
+     "gap_id": 1619,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Timeliness of Motion' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1470,
+     "element_id": 748,
+     "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+     "element_name": "Timeliness of Motion",
+     "action_item_ref": 3,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1620,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Reason for Absence' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1470,
+     "element_id": 749,
+     "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+     "element_name": "Reason for Absence",
+     "action_item_ref": 4,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1621,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Equitable Factors' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1470,
+     "element_id": 750,
+     "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+     "element_name": "Equitable Factors",
+     "action_item_ref": 5,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1623,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Possible Motion to Reopen/Reschedule Hearing' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1470,
+     "element_id": null,
+     "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    }
+   ],
+   "Order for Protection / Restraining Order": [
+    {
+     "gap_id": 1622,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Jurisdiction' is not yet supported by any facts",
+     "priority": 85,
+     "claim_id": 1471,
+     "element_id": 753,
+     "claim_name": "Order for Protection / Restraining Order",
+     "element_name": "Jurisdiction",
+     "action_item_ref": 2,
+     "open_questions": []
+    }
+   ],
+   "Matrimonial Emergency Applications": [
+    {
+     "gap_id": 1624,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1473,
+     "element_id": null,
+     "claim_name": "Matrimonial Emergency Applications",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1636,
+     "gap_type": "procedural_requirement",
+     "description": "Lack of understanding about the emergency hearing requests and their procedural prerequisites.",
+     "priority": 50,
+     "claim_id": 1473,
+     "element_id": null,
+     "claim_name": "Matrimonial Emergency Applications",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Remedies in Family Law": [
+    {
+     "gap_id": 1625,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1474,
+     "element_id": null,
+     "claim_name": "Remedies in Family Law",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Family Law and Matrimonial Claims": [
+    {
+     "gap_id": 1626,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1475,
+     "element_id": null,
+     "claim_name": "Family Law and Matrimonial Claims",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Order": [
+    {
+     "gap_id": 1627,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Order' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1476,
+     "element_id": null,
+     "claim_name": "Order",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Trial Court Created Documents": [
+    {
+     "gap_id": 1628,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1477,
+     "element_id": null,
+     "claim_name": "Trial Court Created Documents",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Domestic Violence and Immigration Consequences": [
+    {
+     "gap_id": 1629,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Domestic Violence and Immigration Consequences' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1478,
+     "element_id": null,
+     "claim_name": "Domestic Violence and Immigration Consequences",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1637,
+     "gap_type": "procedural_requirement",
+     "description": "Procedural gaps regarding the need for timely submission of evidence related to domestic violence claims for immigration benefits.",
+     "priority": 50,
+     "claim_id": 1478,
+     "element_id": null,
+     "claim_name": "Domestic Violence and Immigration Consequences",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Domestic Violence Implications": [
+    {
+     "gap_id": 1630,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Domestic Violence Implications' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1481,
+     "element_id": null,
+     "claim_name": "Domestic Violence Implications",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Child Custody and Support Issues": [
+    {
+     "gap_id": 1631,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Child Custody and Support Issues' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1482,
+     "element_id": null,
+     "claim_name": "Child Custody and Support Issues",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1639,
+     "gap_type": "procedural_requirement",
+     "description": "Lack of clarity on which state holds jurisdiction over custody claims, potentially complicating enforcement.",
+     "priority": 50,
+     "claim_id": 1482,
+     "element_id": null,
+     "claim_name": "Child Custody and Support Issues",
+     "element_name": null,
+     "action_item_ref": 23,
+     "open_questions": []
+    }
+   ],
+   "Employment and Social Security Fraud": [
+    {
+     "gap_id": 1632,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Employment and Social Security Fraud' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1483,
+     "element_id": null,
+     "claim_name": "Employment and Social Security Fraud",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Impact of Asylum Application Malpractice": [
+    {
+     "gap_id": 1633,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Impact of Asylum Application Malpractice' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1484,
+     "element_id": null,
+     "claim_name": "Impact of Asylum Application Malpractice",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Asylum Application Malpractice": [
+    {
+     "gap_id": 1635,
+     "gap_type": "procedural_requirement",
+     "description": "Potential missed deadlines for filing claims against attorneys for malpractice in asylum applications.",
+     "priority": 50,
+     "claim_id": 1472,
+     "element_id": null,
+     "claim_name": "Asylum Application Malpractice",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Employment and Social Security Fraud Risks": [
+    {
+     "gap_id": 1638,
+     "gap_type": "procedural_requirement",
+     "description": "Unclear procedural requirements for reporting suspected fraud to authorities.",
+     "priority": 50,
+     "claim_id": 1479,
+     "element_id": null,
+     "claim_name": "Employment and Social Security Fraud Risks",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1618,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Immigration Status' is not yet supported by any facts",
+    "priority": 95,
+    "claim_id": 1469,
+    "element_id": 747,
+    "claim_name": "In-Absentia Removal Risk",
+    "element_name": "Immigration Status",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1622,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Jurisdiction' is not yet supported by any facts",
+    "priority": 85,
+    "claim_id": 1471,
+    "element_id": 753,
+    "claim_name": "Order for Protection / Restraining Order",
+    "element_name": "Jurisdiction",
+    "action_item_ref": 2,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1623,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Possible Motion to Reopen/Reschedule Hearing' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1470,
+    "element_id": null,
+    "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1624,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1473,
+    "element_id": null,
+    "claim_name": "Matrimonial Emergency Applications",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1625,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1474,
+    "element_id": null,
+    "claim_name": "Remedies in Family Law",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1626,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1475,
+    "element_id": null,
+    "claim_name": "Family Law and Matrimonial Claims",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1627,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Order' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1476,
+    "element_id": null,
+    "claim_name": "Order",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1628,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1477,
+    "element_id": null,
+    "claim_name": "Trial Court Created Documents",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1629,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Domestic Violence and Immigration Consequences' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1478,
+    "element_id": null,
+    "claim_name": "Domestic Violence and Immigration Consequences",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1630,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Domestic Violence Implications' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1481,
+    "element_id": null,
+    "claim_name": "Domestic Violence Implications",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1631,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Child Custody and Support Issues' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1482,
+    "element_id": null,
+    "claim_name": "Child Custody and Support Issues",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1632,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Employment and Social Security Fraud' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1483,
+    "element_id": null,
+    "claim_name": "Employment and Social Security Fraud",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1633,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Impact of Asylum Application Malpractice' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1484,
+    "element_id": null,
+    "claim_name": "Impact of Asylum Application Malpractice",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1634,
+    "gap_type": "procedural_requirement",
+    "description": "Failure to provide adequate notice of proceedings can undermine the validity of the removal process.",
+    "priority": 50,
+    "claim_id": 1469,
+    "element_id": null,
+    "claim_name": "In-Absentia Removal Risk",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1635,
+    "gap_type": "procedural_requirement",
+    "description": "Potential missed deadlines for filing claims against attorneys for malpractice in asylum applications.",
+    "priority": 50,
+    "claim_id": 1472,
+    "element_id": null,
+    "claim_name": "Asylum Application Malpractice",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1636,
+    "gap_type": "procedural_requirement",
+    "description": "Lack of understanding about the emergency hearing requests and their procedural prerequisites.",
+    "priority": 50,
+    "claim_id": 1473,
+    "element_id": null,
+    "claim_name": "Matrimonial Emergency Applications",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1637,
+    "gap_type": "procedural_requirement",
+    "description": "Procedural gaps regarding the need for timely submission of evidence related to domestic violence claims for immigration benefits.",
+    "priority": 50,
+    "claim_id": 1478,
+    "element_id": null,
+    "claim_name": "Domestic Violence and Immigration Consequences",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1638,
+    "gap_type": "procedural_requirement",
+    "description": "Unclear procedural requirements for reporting suspected fraud to authorities.",
+    "priority": 50,
+    "claim_id": 1479,
+    "element_id": null,
+    "claim_name": "Employment and Social Security Fraud Risks",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1639,
+    "gap_type": "procedural_requirement",
+    "description": "Lack of clarity on which state holds jurisdiction over custody claims, potentially complicating enforcement.",
+    "priority": 50,
+    "claim_id": 1482,
+    "element_id": null,
+    "claim_name": "Child Custody and Support Issues",
+    "element_name": null,
+    "action_item_ref": 23,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1619,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Timeliness of Motion' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1470,
+    "element_id": 748,
+    "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+    "element_name": "Timeliness of Motion",
+    "action_item_ref": 3,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1620,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Reason for Absence' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1470,
+    "element_id": 749,
+    "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+    "element_name": "Reason for Absence",
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1621,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Equitable Factors' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1470,
+    "element_id": 750,
+    "claim_name": "Possible Motion to Reopen/Reschedule Hearing",
+    "element_name": "Equitable Factors",
+    "action_item_ref": 5,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}

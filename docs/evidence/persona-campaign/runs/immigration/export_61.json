@@ -1,0 +1,2475 @@
+{
+ "intake_id": 139,
+ "run_id": 29,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-08T02:36:36.843829Z",
+ "claims_by_jurisdiction": {
+  "federal": [
+   {
+    "claim_id": 1411,
+    "claim_name": "In Absentia Removal Risk",
+    "claim_type": "identified",
+    "confidence": 0.9,
+    "jurisdiction": "federal",
+    "folio_iri": null,
+    "issue_statement": "The facts say that Mari can be ordered removed (forced to leave) if she does not go to her court hearing. This raises worries about her immigration status (her legal right to stay in the country).",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 710,
+      "element_name": "Notice of Hearing",
+      "element_description": "The individual must have received proper notice of the hearing date and time.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.78,
+      "fact_mappings": [
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       },
+       {
+        "fact_id": 568,
+        "fact_text": "Mari received a hearing letter.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mari received a hearing letter, satisfying the notice requirement for the hearing."
+       },
+       {
+        "fact_id": 569,
+        "fact_text": "The hearing letter arrived at the end of June.",
+        "confidence": 0.78,
+        "mapping_rationale": "The date the hearing letter arrived confirms that Mari was notified of the hearing date."
+       },
+       {
+        "fact_id": 570,
+        "fact_text": "Yesenia read the hearing letter to Mari.",
+        "confidence": 0.78,
+        "mapping_rationale": "Yesenia reading the hearing letter to Mari ensures that she was made aware of the content and its implications."
+       }
+      ]
+     },
+     {
+      "element_id": 711,
+      "element_name": "Failure to Appear",
+      "element_description": "The individual must fail to appear at the scheduled hearing.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.78,
+      "fact_mappings": [
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       },
+       {
+        "fact_id": 571,
+        "fact_text": "The court hearing is scheduled for August 20, 2026.",
+        "confidence": 0.78,
+        "mapping_rationale": "The scheduled date for the court hearing is critical for establishing the timeframe in which Mari must appear."
+       },
+       {
+        "fact_id": 572,
+        "fact_text": "The hearing is at nine in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "Knowing the time of the hearing reinforces the importance of attendance, relevant for the claim's failure to appear element."
+       },
+       {
+        "fact_id": 573,
+        "fact_text": "If Mari does not attend the hearing, she can be ordered removed in absentia.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact clearly articulates the consequence Mari faces if she does not appear at the hearing."
+       }
+      ]
+     }
+    ],
+    "gaps": [],
+    "conclusion": "Two of the two elements were supported. This shows a 78% level of confidence.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "state": [
+   {
+    "claim_id": 1412,
+    "claim_name": "Domestic Violence",
+    "claim_type": "identified",
+    "confidence": 0.9,
+    "jurisdiction": "state",
+    "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
+    "issue_statement": "The facts show that Danilo hurt Mari. He hit her and got arrested. This means there is a problem with domestic violence (abuse between people in a relationship).",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 712,
+      "element_name": "Intentional Harm",
+      "element_description": "The perpetrator must have intentionally caused physical harm to the victim.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       },
+       {
+        "fact_id": 593,
+        "fact_text": "Danilo hit me the first time last year",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo hitting Mari constitutes intentional physical harm."
+       },
+       {
+        "fact_id": 594,
+        "fact_text": "Danilo hit me again on March 15 this year",
+        "confidence": 0.85,
+        "mapping_rationale": "The event of Danilo hitting Mari again demonstrates continued intentional harm."
+       }
+      ]
+     },
+     {
+      "element_id": 713,
+      "element_name": "Pattern of Abuse",
+      "element_description": "There must be a pattern or history of abusive behavior or threats.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       },
+       {
+        "fact_id": 592,
+        "fact_text": "Danilo started drinking heavily maybe two years ago",
+        "confidence": 0.71,
+        "mapping_rationale": "Danilo's previous behavior of drinking heavily may indicate a pattern leading to abusive incidents."
+       },
+       {
+        "fact_id": 598,
+        "fact_text": "Danilo is still in the criminal court process",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's ongoing criminal court process due to domestic violence suggests a pattern of abuse."
+       }
+      ]
+     }
+    ],
+    "gaps": [],
+    "conclusion": "Two out of two elements are supported. This means there is an 85% confidence level in this finding.",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1416,
+      "claim_name": "Crimes Against People",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7MbuFEaL6NyU9tM2AXk7lk",
+      "issue_statement": "Found by looking through FOLIO's connections from Domestic Violence (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1541,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1416,
+        "element_id": null,
+        "claim_name": "Crimes Against People",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+      "parent_claim_name": "Domestic Violence",
+      "children": []
+     },
+     {
+      "claim_id": 1415,
+      "claim_name": "Criminal Assault",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R8BLgPtZOuKFI8MtZNTaT0u",
+      "issue_statement": "Found by looking through FOLIO's connections from Domestic Violence (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1540,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1415,
+        "element_id": null,
+        "claim_name": "Criminal Assault",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+      "parent_claim_name": "Domestic Violence",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1414,
+    "claim_name": "Fraudulent Representation",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "The facts show that Rigoberto took Mari's money. He was supposed to file an asylum application. However, he did not give any updates. This suggests he may have committed fraud.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 716,
+      "element_name": "False Representation",
+      "element_description": "The individual must have made a false representation concerning a fact or service.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       },
+       {
+        "fact_id": 584,
+        "fact_text": "Rigoberto said he would file my asylum paper for me",
+        "confidence": 0.85,
+        "mapping_rationale": "Rigoberto's promise to file Mari's asylum paper and not following through constitutes false representation."
+       }
+      ]
+     },
+     {
+      "element_id": 717,
+      "element_name": "Reliance",
+      "element_description": "The victim must have relied on that false representation to their detriment.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       },
+       {
+        "fact_id": 585,
+        "fact_text": "I never received anything back after that, no letter, no number, no receipt",
+        "confidence": 0.85,
+        "mapping_rationale": "Mari's reliance on Rigoberto's promise to file the asylum paper shows detrimental reliance on a false representation."
+       }
+      ]
+     }
+    ],
+    "gaps": [],
+    "conclusion": "Two out of two elements are supported. This means there is an 85% confidence level in this finding.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1413,
+    "claim_name": "Harassment and Stalking",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "Rigoberto's mean behavior and his silence toward Mari show signs of harassment.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 714,
+      "element_name": "Repeated Contact Requests",
+      "element_description": "The victim must demonstrate that the perpetrator has made repeated, unwanted contact.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 715,
+      "element_name": "Threatening Behavior",
+      "element_description": "The harassment must include threatening behavior or actions that instill fear.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1537,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Repeated Contact Requests' is not yet supported by any facts",
+      "priority": 30,
+      "claim_id": 1413,
+      "element_id": 714,
+      "claim_name": "Harassment and Stalking",
+      "element_name": "Repeated Contact Requests",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1538,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Threatening Behavior' is not yet supported by any facts",
+      "priority": 30,
+      "claim_id": 1413,
+      "element_id": 715,
+      "claim_name": "Harassment and Stalking",
+      "element_name": "Threatening Behavior",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1539,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Harassment and Stalking' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1413,
+      "element_id": null,
+      "claim_name": "Harassment and Stalking",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "0 of 2 elements supported (0% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1417,
+    "claim_name": "Asylum Application Mismanagement",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDm4rfXgHt9wIDHbrUUGCGL",
+    "issue_statement": "Since Mari asked Rigoberto to help with her asylum application and got nothing back, she might have legal options. These options could affect her current immigration status. They could also impact her ability to fight against being removed from the country.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1542,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Asylum Application Mismanagement' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1417,
+      "element_id": null,
+      "claim_name": "Asylum Application Mismanagement",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1547,
+      "gap_type": "procedural_requirement",
+      "description": "Missing specific filing deadlines for asylum applications, which must typically be filed within one year of arrival in the U.S.",
+      "priority": 50,
+      "claim_id": 1417,
+      "element_id": null,
+      "claim_name": "Asylum Application Mismanagement",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1418,
+    "claim_name": "Criminal Proceedings and Immigration Consequences",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7aFBns3Z2d9MuNI5sDEGxF",
+    "issue_statement": "Domestic violence can help some people get special immigration help. This means how Danilo's case turns out could matter for Mari's immigration status.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1543,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Criminal Proceedings and Immigration Consequences' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1418,
+      "element_id": null,
+      "claim_name": "Criminal Proceedings and Immigration Consequences",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1548,
+      "gap_type": "procedural_requirement",
+      "description": "Lack of clear adherence to jurisdictional requirements regarding the relationship between criminal proceedings and immigration outcomes, including notification of ICE involvement.",
+      "priority": 50,
+      "claim_id": 1418,
+      "element_id": null,
+      "claim_name": "Criminal Proceedings and Immigration Consequences",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1419,
+    "claim_name": "Immigration Consequences of Domestic Violence",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq",
+    "issue_statement": "People who are hurt by domestic violence might get help with immigration. We need to look at Mari's case. This will help us see if she can make a claim under VAWA (Violence Against Women Act) because of what her husband did before.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1544,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Immigration Consequences of Domestic Violence' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1419,
+      "element_id": null,
+      "claim_name": "Immigration Consequences of Domestic Violence",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1420,
+    "claim_name": "Child Custody and Welfare",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
+    "issue_statement": "Mari's son lives in Honduras. Her daughter's well-being might be affected by Mari's problems. Any current legal issues can change her custody rights. Custody means who gets to take care of the child. These issues fall under family law. Family law is the area of law that deals with family matters.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1545,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Child Custody and Welfare' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1420,
+      "element_id": null,
+      "claim_name": "Child Custody and Welfare",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1550,
+      "gap_type": "procedural_requirement",
+      "description": "Missing state-specific statutory filing deadlines and jurisdictional requirements for addressing child custody issues, particularly those involving allegations of abuse or neglect.",
+      "priority": 50,
+      "claim_id": 1420,
+      "element_id": null,
+      "claim_name": "Child Custody and Welfare",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1422,
+    "claim_name": "Misuse of Social Security Number",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R9ya2bhBlRQfwOwM8T7zhJa",
+    "issue_statement": "Using a fake social security number can cause legal problems for Mari. She needs to understand this. It is especially important for her immigration status.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1421,
+    "claim_name": "Potential Human Trafficking Concerns",
+    "claim_type": "discovered",
+    "confidence": 0.65,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDOQpX5t5sVf55UPK2CfZTy",
+    "issue_statement": "Mari relied on Rigoberto and did not communicate much. This raises concerns about unfair practices. It may be important to look closer at human trafficking laws.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1546,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Human Trafficking Concerns' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1421,
+      "element_id": null,
+      "claim_name": "Potential Human Trafficking Concerns",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1549,
+      "gap_type": "procedural_requirement",
+      "description": "Insufficient clarity on the procedural requirements for reporting and addressing potential human trafficking cases, including timelines for filing reports.",
+      "priority": 50,
+      "claim_id": 1421,
+      "element_id": null,
+      "claim_name": "Potential Human Trafficking Concerns",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "It seems there is no content available to rewrite. Please provide a text that needs to be simplified.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {},
+ "safety_alerts": [
+  {
+   "protocol_name": "Immigration Detention Risk",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "asylum"
+   ],
+   "hotlines": [
+    {
+     "name": "National Immigrant Women's Advocacy Project",
+     "url": "https://niwaplibrary.wcl.american.edu"
+    },
+    {
+     "name": "Immigration Advocates Network",
+     "url": "https://www.immigrationadvocates.org"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "The court hearing is scheduled for August 20, 2026.",
+   "event_type": "removal_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-08-20",
+   "computed_date": "2026-08-20",
+   "rule_id": "immigration_hearing_date",
+   "citation": "The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "US"
+  },
+  {
+   "event_text": "Danilo hit me again on March 15 this year.",
+   "event_type": "injury",
+   "trigger": "incident",
+   "trigger_date": "2026-03-15",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "discovered",
+    "destination_type": "practice_area",
+    "score": 0.57,
+    "rationale": "discovered practice area (80% of claims); mixed jurisdictions (60% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.8,
+    "jurisdiction_match": 0.6,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "identified",
+    "destination_type": "practice_area",
+    "score": 0.36,
+    "rationale": "identified practice area (20% of claims); mixed jurisdictions (60% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.2,
+    "jurisdiction_match": 0.6,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "discovered",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Repeated Contact Requests' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Harassment and Stalking",
+   "element_ref": "Repeated Contact Requests"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Threatening Behavior' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Harassment and Stalking",
+   "element_ref": "Threatening Behavior"
+  },
+  {
+   "item_number": 3,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: The court hearing is scheduled for August 20, 2026. (estimated 2026-08-20; The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.). This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-08-20",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Harassment and Stalking' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Harassment and Stalking",
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Criminal Assault",
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Crimes Against People",
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Asylum Application Mismanagement' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Asylum Application Mismanagement",
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Criminal Proceedings and Immigration Consequences' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Criminal Proceedings and Immigration Consequences",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Immigration Consequences of Domestic Violence' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Immigration Consequences of Domestic Violence",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Child Custody and Welfare' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Custody and Welfare",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Human Trafficking Concerns' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Human Trafficking Concerns",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Missing specific filing deadlines for asylum applications, which must typically be filed within one year of arrival in the U.S.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Asylum Application Mismanagement",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Lack of clear adherence to jurisdictional requirements regarding the relationship between criminal proceedings and immigration outcomes, including notification of ICE involvement.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Criminal Proceedings and Immigration Consequences",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Insufficient clarity on the procedural requirements for reporting and addressing potential human trafficking cases, including timelines for filing reports.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Human Trafficking Concerns",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Missing state-specific statutory filing deadlines and jurisdictional requirements for addressing child custody issues, particularly those involving allegations of abuse or neglect.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Custody and Welfare",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Harassment and Stalking": [
+    {
+     "gap_id": 1537,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Repeated Contact Requests' is not yet supported by any facts",
+     "priority": 30,
+     "claim_id": 1413,
+     "element_id": 714,
+     "claim_name": "Harassment and Stalking",
+     "element_name": "Repeated Contact Requests",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1538,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Threatening Behavior' is not yet supported by any facts",
+     "priority": 30,
+     "claim_id": 1413,
+     "element_id": 715,
+     "claim_name": "Harassment and Stalking",
+     "element_name": "Threatening Behavior",
+     "action_item_ref": 2,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1539,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Harassment and Stalking' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1413,
+     "element_id": null,
+     "claim_name": "Harassment and Stalking",
+     "element_name": null,
+     "action_item_ref": 4,
+     "open_questions": []
+    }
+   ],
+   "Criminal Assault": [
+    {
+     "gap_id": 1540,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1415,
+     "element_id": null,
+     "claim_name": "Criminal Assault",
+     "element_name": null,
+     "action_item_ref": 5,
+     "open_questions": []
+    }
+   ],
+   "Crimes Against People": [
+    {
+     "gap_id": 1541,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1416,
+     "element_id": null,
+     "claim_name": "Crimes Against People",
+     "element_name": null,
+     "action_item_ref": 6,
+     "open_questions": []
+    }
+   ],
+   "Asylum Application Mismanagement": [
+    {
+     "gap_id": 1542,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Asylum Application Mismanagement' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1417,
+     "element_id": null,
+     "claim_name": "Asylum Application Mismanagement",
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1547,
+     "gap_type": "procedural_requirement",
+     "description": "Missing specific filing deadlines for asylum applications, which must typically be filed within one year of arrival in the U.S.",
+     "priority": 50,
+     "claim_id": 1417,
+     "element_id": null,
+     "claim_name": "Asylum Application Mismanagement",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Criminal Proceedings and Immigration Consequences": [
+    {
+     "gap_id": 1543,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Criminal Proceedings and Immigration Consequences' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1418,
+     "element_id": null,
+     "claim_name": "Criminal Proceedings and Immigration Consequences",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1548,
+     "gap_type": "procedural_requirement",
+     "description": "Lack of clear adherence to jurisdictional requirements regarding the relationship between criminal proceedings and immigration outcomes, including notification of ICE involvement.",
+     "priority": 50,
+     "claim_id": 1418,
+     "element_id": null,
+     "claim_name": "Criminal Proceedings and Immigration Consequences",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    }
+   ],
+   "Immigration Consequences of Domestic Violence": [
+    {
+     "gap_id": 1544,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Immigration Consequences of Domestic Violence' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1419,
+     "element_id": null,
+     "claim_name": "Immigration Consequences of Domestic Violence",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Child Custody and Welfare": [
+    {
+     "gap_id": 1545,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Child Custody and Welfare' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1420,
+     "element_id": null,
+     "claim_name": "Child Custody and Welfare",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1550,
+     "gap_type": "procedural_requirement",
+     "description": "Missing state-specific statutory filing deadlines and jurisdictional requirements for addressing child custody issues, particularly those involving allegations of abuse or neglect.",
+     "priority": 50,
+     "claim_id": 1420,
+     "element_id": null,
+     "claim_name": "Child Custody and Welfare",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Potential Human Trafficking Concerns": [
+    {
+     "gap_id": 1546,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Human Trafficking Concerns' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1421,
+     "element_id": null,
+     "claim_name": "Potential Human Trafficking Concerns",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1549,
+     "gap_type": "procedural_requirement",
+     "description": "Insufficient clarity on the procedural requirements for reporting and addressing potential human trafficking cases, including timelines for filing reports.",
+     "priority": 50,
+     "claim_id": 1421,
+     "element_id": null,
+     "claim_name": "Potential Human Trafficking Concerns",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1539,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Harassment and Stalking' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1413,
+    "element_id": null,
+    "claim_name": "Harassment and Stalking",
+    "element_name": null,
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1540,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1415,
+    "element_id": null,
+    "claim_name": "Criminal Assault",
+    "element_name": null,
+    "action_item_ref": 5,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1541,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1416,
+    "element_id": null,
+    "claim_name": "Crimes Against People",
+    "element_name": null,
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1542,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Asylum Application Mismanagement' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1417,
+    "element_id": null,
+    "claim_name": "Asylum Application Mismanagement",
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1543,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Criminal Proceedings and Immigration Consequences' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1418,
+    "element_id": null,
+    "claim_name": "Criminal Proceedings and Immigration Consequences",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1544,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Immigration Consequences of Domestic Violence' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1419,
+    "element_id": null,
+    "claim_name": "Immigration Consequences of Domestic Violence",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1545,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Child Custody and Welfare' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1420,
+    "element_id": null,
+    "claim_name": "Child Custody and Welfare",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1546,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Human Trafficking Concerns' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1421,
+    "element_id": null,
+    "claim_name": "Potential Human Trafficking Concerns",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1547,
+    "gap_type": "procedural_requirement",
+    "description": "Missing specific filing deadlines for asylum applications, which must typically be filed within one year of arrival in the U.S.",
+    "priority": 50,
+    "claim_id": 1417,
+    "element_id": null,
+    "claim_name": "Asylum Application Mismanagement",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1548,
+    "gap_type": "procedural_requirement",
+    "description": "Lack of clear adherence to jurisdictional requirements regarding the relationship between criminal proceedings and immigration outcomes, including notification of ICE involvement.",
+    "priority": 50,
+    "claim_id": 1418,
+    "element_id": null,
+    "claim_name": "Criminal Proceedings and Immigration Consequences",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1549,
+    "gap_type": "procedural_requirement",
+    "description": "Insufficient clarity on the procedural requirements for reporting and addressing potential human trafficking cases, including timelines for filing reports.",
+    "priority": 50,
+    "claim_id": 1421,
+    "element_id": null,
+    "claim_name": "Potential Human Trafficking Concerns",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1550,
+    "gap_type": "procedural_requirement",
+    "description": "Missing state-specific statutory filing deadlines and jurisdictional requirements for addressing child custody issues, particularly those involving allegations of abuse or neglect.",
+    "priority": 50,
+    "claim_id": 1420,
+    "element_id": null,
+    "claim_name": "Child Custody and Welfare",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1537,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Repeated Contact Requests' is not yet supported by any facts",
+    "priority": 30,
+    "claim_id": 1413,
+    "element_id": 714,
+    "claim_name": "Harassment and Stalking",
+    "element_name": "Repeated Contact Requests",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1538,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Threatening Behavior' is not yet supported by any facts",
+    "priority": 30,
+    "claim_id": 1413,
+    "element_id": 715,
+    "claim_name": "Harassment and Stalking",
+    "element_name": "Threatening Behavior",
+    "action_item_ref": 2,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}

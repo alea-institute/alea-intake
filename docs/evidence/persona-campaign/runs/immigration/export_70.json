@@ -1,0 +1,2235 @@
+{
+ "intake_id": 145,
+ "run_id": 32,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-08T11:01:59.498303Z",
+ "claims_by_jurisdiction": {
+  "federal": [
+   {
+    "claim_id": 1454,
+    "claim_name": "Motion to Reopen Immigration Proceedings",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": "federal",
+    "folio_iri": "https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq",
+    "issue_statement": "The consumer has a court hearing soon about their immigration status. They were warned they might be removed if they miss the hearing. It is important to understand the risks of not being there.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 736,
+      "element_name": "Timeliness",
+      "element_description": "The motion to reopen must be filed within a certain timeframe after the final order of removal.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 737,
+      "element_name": "Eligibility",
+      "element_description": "The individual must demonstrate eligibility for relief from removal or for a visa application.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 738,
+      "element_name": "Proof of Change in Circumstances",
+      "element_description": "Provide evidence of changed circumstances that could impact the outcome.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1597,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Timeliness' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1454,
+      "element_id": 736,
+      "claim_name": "Motion to Reopen Immigration Proceedings",
+      "element_name": "Timeliness",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1598,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Eligibility' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1454,
+      "element_id": 737,
+      "claim_name": "Motion to Reopen Immigration Proceedings",
+      "element_name": "Eligibility",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1599,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Proof of Change in Circumstances' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1454,
+      "element_id": 738,
+      "claim_name": "Motion to Reopen Immigration Proceedings",
+      "element_name": "Proof of Change in Circumstances",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1602,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Motion to Reopen Immigration Proceedings' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1454,
+      "element_id": null,
+      "claim_name": "Motion to Reopen Immigration Proceedings",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1613,
+      "gap_type": "procedural_requirement",
+      "description": "Failing to meet the required timeline for filing the motion after final order, which is typically within 90 days.",
+      "priority": 50,
+      "claim_id": 1454,
+      "element_id": null,
+      "claim_name": "Motion to Reopen Immigration Proceedings",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "0 of 3 elements supported (0% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1460,
+      "claim_name": "Adjustment of Status Pending",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7dIoqwvQvmYE03eXBHmcO",
+      "issue_statement": "Found by looking through the FOLIO system from Motion to Reopen Immigration Proceedings (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1605,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1460,
+        "element_id": null,
+        "claim_name": "Adjustment of Status Pending",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Motion to Reopen Immigration Proceedings",
+      "children": []
+     },
+     {
+      "claim_id": 1458,
+      "claim_name": "Not in Destination Country",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R76ZlnhoJvqxs7byZOMfScw",
+      "issue_statement": "Found by looking through the FOLIO system from Motion to Reopen Immigration Proceedings (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1604,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1458,
+        "element_id": null,
+        "claim_name": "Not in Destination Country",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Motion to Reopen Immigration Proceedings",
+      "children": []
+     },
+     {
+      "claim_id": 1459,
+      "claim_name": "Out of Immigration Status",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7J5tsgW4oZHjUWIol2tkAg",
+      "issue_statement": "Found by looking through the FOLIO system from Motion to Reopen Immigration Proceedings (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Motion to Reopen Immigration Proceedings",
+      "children": []
+     },
+     {
+      "claim_id": 1461,
+      "claim_name": "Temporary Protected Status",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7rFTVKN1Cc9kDZb75hc6jl",
+      "issue_statement": "Found by looking through the FOLIO system from Motion to Reopen Immigration Proceedings (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1606,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1461,
+        "element_id": null,
+        "claim_name": "Temporary Protected Status",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Motion to Reopen Immigration Proceedings",
+      "children": []
+     },
+     {
+      "claim_id": 1457,
+      "claim_name": "Visa Waived",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R3TZludg4KJtTjPW1T2J9c",
+      "issue_statement": "Found by looking through the FOLIO system from Motion to Reopen Immigration Proceedings (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1603,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1457,
+        "element_id": null,
+        "claim_name": "Visa Waived",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Motion to Reopen Immigration Proceedings",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1456,
+    "claim_name": "Employment Violation (Use of Fraudulent SSN)",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "federal",
+    "folio_iri": null,
+    "issue_statement": "The consumer is using a fake social security number. This can cause legal problems. It could also break job laws.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 744,
+      "element_name": "Potential Consequences",
+      "element_description": "Understanding possible penalties for both employee and employer under federal law.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 742,
+      "element_name": "Employment Eligibility",
+      "element_description": "The employer must verify that the employee is eligible to work in the U.S.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 693,
+        "fact_text": "I work cleaning houses.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact implies the individual is working, which relates to the necessity for employment eligibility verification."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       },
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the individual is using a fraudulent social security number to obtain employment, raising eligibility issues."
+       }
+      ]
+     },
+     {
+      "element_id": 743,
+      "element_name": "Misrepresentation",
+      "element_description": "The consumer's use of a false social security number represents a misrepresentation to the employer.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 694,
+        "fact_text": "A friend gave me a social number that's not really mine to get the job.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates the use of a false SSN, which constitutes misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       },
+       {
+        "fact_id": 695,
+        "fact_text": "I am still working there now.",
+        "confidence": 0.85,
+        "mapping_rationale": "The use of a social security number that is not really the individual's represents a misrepresentation to the employer."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1601,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Potential Consequences' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1456,
+      "element_id": 744,
+      "claim_name": "Employment Violation (Use of Fraudulent SSN)",
+      "element_name": "Potential Consequences",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1614,
+      "gap_type": "procedural_requirement",
+      "description": "Potential statute of limitations for filing a claim may have elapsed based on the timing of the employment violation.",
+      "priority": 50,
+      "claim_id": 1456,
+      "element_id": null,
+      "claim_name": "Employment Violation (Use of Fraudulent SSN)",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "Two out of three parts are confirmed. This means there is a 57% chance it is true.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "state": [
+   {
+    "claim_id": 1455,
+    "claim_name": "Order for Protection / Restraining Order",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "The consumer has suffered from domestic violence. Her husband has abused her in the past. Police have been involved with these issues. These facts show a reason to ask for a legal protective order.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 739,
+      "element_name": "History of Abuse",
+      "element_description": "Demonstration of prior incidents of domestic violence.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 681,
+        "fact_text": "I married my husband Danilo in 2022.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact indicates a significant relationship event where domestic violence has occurred, which supports the history of abuse element."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, directly demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact is another incident of domestic violence, further establishing the history of abuse element."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       },
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual for the first time last year, demonstrating a prior incident of domestic violence."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Danilo hit the individual again on March 15 this year, indicating a continuation of the history of abuse."
+       }
+      ]
+     },
+     {
+      "element_id": 741,
+      "element_name": "Documentation",
+      "element_description": "Gather police reports or other evidence of the violence.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that the police were called, indicating the existence of a police report that documents the violence."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact confirms there was a police report filed, which serves as documentation of the abuse."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.81,
+        "mapping_rationale": "The victim called the police, which resulted in a police report documenting the incident."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.81,
+        "mapping_rationale": "The arrest of Danilo by police adds to the documentation of domestic violence events."
+       },
+       {
+        "fact_id": 692,
+        "fact_text": "The officer said I was cooperating well with them.",
+        "confidence": 0.79,
+        "mapping_rationale": "The police remark that the victim was cooperating indicates that there are ongoing investigations and documentation processes."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       },
+       {
+        "fact_id": 686,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Calling the police after being hit led to a police report, which serves as documentation of the incident."
+       },
+       {
+        "fact_id": 688,
+        "fact_text": "There was a police report.",
+        "confidence": 0.85,
+        "mapping_rationale": "The police report serves as evidence of the violence that occurred, fulfilling the documentation requirement."
+       }
+      ]
+     },
+     {
+      "element_id": 740,
+      "element_name": "Immediate Threat",
+      "element_description": "Establish that the victim is in immediate danger or has a reasonable fear of further harm.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 684,
+        "fact_text": "Danilo hit me for the first time last year.",
+        "confidence": 0.83,
+        "mapping_rationale": "The fact that Danilo hit the victim for the first time indicates an immediate threat to the victim's safety."
+       },
+       {
+        "fact_id": 685,
+        "fact_text": "Danilo hit me again on March 15 this year.",
+        "confidence": 0.83,
+        "mapping_rationale": "The incident on March 15 where Danilo hit the victim again demonstrates a continuing immediate threat of harm."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       },
+       {
+        "fact_id": 687,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danilo's arrest indicates that law enforcement recognized an immediate threat to the victim."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1600,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Immediate Threat' is not yet supported by any facts",
+      "priority": 30,
+      "claim_id": 1455,
+      "element_id": 740,
+      "claim_name": "Order for Protection / Restraining Order",
+      "element_name": "Immediate Threat",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1612,
+      "gap_type": "procedural_requirement",
+      "description": "Filing deadline for requesting the order may not be met based on the timing of the alleged incidents.",
+      "priority": 50,
+      "claim_id": 1455,
+      "element_id": null,
+      "claim_name": "Order for Protection / Restraining Order",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "Three out of three parts are supported. This means we are 85% sure they are correct.",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1462,
+    "claim_name": "Domestic Violence and Family Law",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
+    "issue_statement": "Danilo\u2019s physical abuse may affect custody and divorce cases. It is important to know your rights about child custody (who gets to take care of the kids) and spousal support (money one partner may need from the other after a divorce).",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1607,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Domestic Violence and Family Law' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1462,
+      "element_id": null,
+      "claim_name": "Domestic Violence and Family Law",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1615,
+      "gap_type": "procedural_requirement",
+      "description": "Jurisdictional requirements for filing in family law may not be satisfied if the residence or domicile of the victim is not established in the relevant jurisdiction.",
+      "priority": 50,
+      "claim_id": 1462,
+      "element_id": null,
+      "claim_name": "Domestic Violence and Family Law",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1463,
+    "claim_name": "Immigration Consequences of Criminal Charges",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7aFBns3Z2d9MuNI5sDEGxF",
+    "issue_statement": "Your husband's crime might affect your immigration status. It could also impact any claims for help you want to make. This is especially important since you have a court hearing coming up.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1464,
+    "claim_name": "Support for Child's Education and Welfare",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RQCqQcWqriNQ2XBCucDmpq",
+    "issue_statement": "Since your daughter is starting first grade, it's important to know her educational rights. You should also learn about the services that are available. This is especially important because of your unstable home situation. Understanding these things can help your daughter succeed in school.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1608,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Support for Child's Education and Welfare' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1464,
+      "element_id": null,
+      "claim_name": "Support for Child's Education and Welfare",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1466,
+    "claim_name": "Employment Consequences of Use of Fraudulent SSN",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RBeH9htBENggQCUNKD1Uj0N",
+    "issue_statement": "Using a fake Social Security Number (SSN) can lead to more than just job problems. It can also affect your trustworthiness in immigration law matters. You need legal help to deal with these issues.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1609,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Employment Consequences of Use of Fraudulent SSN' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1466,
+      "element_id": null,
+      "claim_name": "Employment Consequences of Use of Fraudulent SSN",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1465,
+    "claim_name": "Potential Civil Claim Against Rigoberto",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R9q0hyYnNxQC475BKXOxjbm",
+    "issue_statement": "You might have a reason to sue Rigoberto. He did not keep his promises in the contract. This could impact your immigration status.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1616,
+      "gap_type": "procedural_requirement",
+      "description": "Statute of limitations may not be adhered to if the claim is delayed beyond the allowed timeframe.",
+      "priority": 50,
+      "claim_id": 1465,
+      "element_id": null,
+      "claim_name": "Potential Civil Claim Against Rigoberto",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1467,
+    "claim_name": "Impact of Child Custody on Court Proceedings",
+    "claim_type": "discovered",
+    "confidence": 0.65,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
+    "issue_statement": "Understanding custody issues can help us see problems with domestic violence and immigration. These problems can create risks or legal issues for her situation.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1610,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Impact of Child Custody on Court Proceedings' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1467,
+      "element_id": null,
+      "claim_name": "Impact of Child Custody on Court Proceedings",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1617,
+      "gap_type": "procedural_requirement",
+      "description": "Procedural requirements for filing custody modifications may not be met, particularly regarding notice and standing.",
+      "priority": 50,
+      "claim_id": 1467,
+      "element_id": null,
+      "claim_name": "Impact of Child Custody on Court Proceedings",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1468,
+    "claim_name": "Potential Claims Related to Family Law",
+    "claim_type": "discovered",
+    "confidence": 0.6,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU",
+    "issue_statement": "Family law (the area of law about family matters) often connects with immigration status. This means your legal rights as a family member can change if you have immigration issues. Laws can also change based on what happens with domestic violence claims.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1611,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Claims Related to Family Law' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1468,
+      "element_id": null,
+      "claim_name": "Potential Claims Related to Family Law",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {},
+ "safety_alerts": [
+  {
+   "protocol_name": "Immigration Detention Risk",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "asylum"
+   ],
+   "hotlines": [
+    {
+     "name": "National Immigrant Women's Advocacy Project",
+     "url": "https://niwaplibrary.wcl.american.edu"
+    },
+    {
+     "name": "Immigration Advocates Network",
+     "url": "https://www.immigrationadvocates.org"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "The court hearing is scheduled for August 20, 2026 at nine in the morning.",
+   "event_type": "removal_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-08-20",
+   "computed_date": "2026-08-20",
+   "rule_id": "immigration_hearing_date",
+   "citation": "The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "US"
+  },
+  {
+   "event_text": "Danilo hit me again on March 15 this year.",
+   "event_type": "domestic_violence_incident",
+   "trigger": "incident",
+   "trigger_date": "2026-03-15",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "discovered",
+    "destination_type": "practice_area",
+    "score": 0.6649999999999999,
+    "rationale": "discovered practice area (100% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 1.0,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "discovered",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Timeliness' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Motion to Reopen Immigration Proceedings",
+   "element_ref": "Timeliness"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Eligibility' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Motion to Reopen Immigration Proceedings",
+   "element_ref": "Eligibility"
+  },
+  {
+   "item_number": 3,
+   "category": "documents_to_gather",
+   "description": "Element 'Proof of Change in Circumstances' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Motion to Reopen Immigration Proceedings",
+   "element_ref": "Proof of Change in Circumstances"
+  },
+  {
+   "item_number": 4,
+   "category": "documents_to_gather",
+   "description": "Element 'Potential Consequences' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Employment Violation (Use of Fraudulent SSN)",
+   "element_ref": "Potential Consequences"
+  },
+  {
+   "item_number": 5,
+   "category": "documents_to_gather",
+   "description": "Element 'Immediate Threat' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Order for Protection / Restraining Order",
+   "element_ref": "Immediate Threat"
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: The court hearing is scheduled for August 20, 2026 at nine in the morning. (estimated 2026-08-20; The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.). This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-08-20",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Motion to Reopen Immigration Proceedings' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Motion to Reopen Immigration Proceedings",
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Visa Waived",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Not in Destination Country",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Adjustment of Status Pending",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Temporary Protected Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Domestic Violence and Family Law' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Violence and Family Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Support for Child's Education and Welfare' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Support for Child's Education and Welfare",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Employment Consequences of Use of Fraudulent SSN' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Employment Consequences of Use of Fraudulent SSN",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Impact of Child Custody on Court Proceedings' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Impact of Child Custody on Court Proceedings",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Claims Related to Family Law' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Claims Related to Family Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Filing deadline for requesting the order may not be met based on the timing of the alleged incidents.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Order for Protection / Restraining Order",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Failing to meet the required timeline for filing the motion after final order, which is typically within 90 days.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Motion to Reopen Immigration Proceedings",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Potential statute of limitations for filing a claim may have elapsed based on the timing of the employment violation.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Employment Violation (Use of Fraudulent SSN)",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "Jurisdictional requirements for filing in family law may not be satisfied if the residence or domicile of the victim is not established in the relevant jurisdiction.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Violence and Family Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "Statute of limitations may not be adhered to if the claim is delayed beyond the allowed timeframe.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Civil Claim Against Rigoberto",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "Procedural requirements for filing custody modifications may not be met, particularly regarding notice and standing.",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Impact of Child Custody on Court Proceedings",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Motion to Reopen Immigration Proceedings": [
+    {
+     "gap_id": 1597,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Timeliness' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1454,
+     "element_id": 736,
+     "claim_name": "Motion to Reopen Immigration Proceedings",
+     "element_name": "Timeliness",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1598,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Eligibility' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1454,
+     "element_id": 737,
+     "claim_name": "Motion to Reopen Immigration Proceedings",
+     "element_name": "Eligibility",
+     "action_item_ref": 2,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1599,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Proof of Change in Circumstances' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1454,
+     "element_id": 738,
+     "claim_name": "Motion to Reopen Immigration Proceedings",
+     "element_name": "Proof of Change in Circumstances",
+     "action_item_ref": 3,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1602,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Motion to Reopen Immigration Proceedings' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1454,
+     "element_id": null,
+     "claim_name": "Motion to Reopen Immigration Proceedings",
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1613,
+     "gap_type": "procedural_requirement",
+     "description": "Failing to meet the required timeline for filing the motion after final order, which is typically within 90 days.",
+     "priority": 50,
+     "claim_id": 1454,
+     "element_id": null,
+     "claim_name": "Motion to Reopen Immigration Proceedings",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Order for Protection / Restraining Order": [
+    {
+     "gap_id": 1600,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Immediate Threat' is not yet supported by any facts",
+     "priority": 30,
+     "claim_id": 1455,
+     "element_id": 740,
+     "claim_name": "Order for Protection / Restraining Order",
+     "element_name": "Immediate Threat",
+     "action_item_ref": 5,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1612,
+     "gap_type": "procedural_requirement",
+     "description": "Filing deadline for requesting the order may not be met based on the timing of the alleged incidents.",
+     "priority": 50,
+     "claim_id": 1455,
+     "element_id": null,
+     "claim_name": "Order for Protection / Restraining Order",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Employment Violation (Use of Fraudulent SSN)": [
+    {
+     "gap_id": 1601,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Potential Consequences' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1456,
+     "element_id": 744,
+     "claim_name": "Employment Violation (Use of Fraudulent SSN)",
+     "element_name": "Potential Consequences",
+     "action_item_ref": 4,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1614,
+     "gap_type": "procedural_requirement",
+     "description": "Potential statute of limitations for filing a claim may have elapsed based on the timing of the employment violation.",
+     "priority": 50,
+     "claim_id": 1456,
+     "element_id": null,
+     "claim_name": "Employment Violation (Use of Fraudulent SSN)",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Visa Waived": [
+    {
+     "gap_id": 1603,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1457,
+     "element_id": null,
+     "claim_name": "Visa Waived",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    }
+   ],
+   "Not in Destination Country": [
+    {
+     "gap_id": 1604,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1458,
+     "element_id": null,
+     "claim_name": "Not in Destination Country",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Adjustment of Status Pending": [
+    {
+     "gap_id": 1605,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1460,
+     "element_id": null,
+     "claim_name": "Adjustment of Status Pending",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Temporary Protected Status": [
+    {
+     "gap_id": 1606,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1461,
+     "element_id": null,
+     "claim_name": "Temporary Protected Status",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Domestic Violence and Family Law": [
+    {
+     "gap_id": 1607,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Domestic Violence and Family Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1462,
+     "element_id": null,
+     "claim_name": "Domestic Violence and Family Law",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1615,
+     "gap_type": "procedural_requirement",
+     "description": "Jurisdictional requirements for filing in family law may not be satisfied if the residence or domicile of the victim is not established in the relevant jurisdiction.",
+     "priority": 50,
+     "claim_id": 1462,
+     "element_id": null,
+     "claim_name": "Domestic Violence and Family Law",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Support for Child's Education and Welfare": [
+    {
+     "gap_id": 1608,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Support for Child's Education and Welfare' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1464,
+     "element_id": null,
+     "claim_name": "Support for Child's Education and Welfare",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    }
+   ],
+   "Employment Consequences of Use of Fraudulent SSN": [
+    {
+     "gap_id": 1609,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Employment Consequences of Use of Fraudulent SSN' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1466,
+     "element_id": null,
+     "claim_name": "Employment Consequences of Use of Fraudulent SSN",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Impact of Child Custody on Court Proceedings": [
+    {
+     "gap_id": 1610,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Impact of Child Custody on Court Proceedings' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1467,
+     "element_id": null,
+     "claim_name": "Impact of Child Custody on Court Proceedings",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1617,
+     "gap_type": "procedural_requirement",
+     "description": "Procedural requirements for filing custody modifications may not be met, particularly regarding notice and standing.",
+     "priority": 50,
+     "claim_id": 1467,
+     "element_id": null,
+     "claim_name": "Impact of Child Custody on Court Proceedings",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ],
+   "Potential Claims Related to Family Law": [
+    {
+     "gap_id": 1611,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Claims Related to Family Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1468,
+     "element_id": null,
+     "claim_name": "Potential Claims Related to Family Law",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Potential Civil Claim Against Rigoberto": [
+    {
+     "gap_id": 1616,
+     "gap_type": "procedural_requirement",
+     "description": "Statute of limitations may not be adhered to if the claim is delayed beyond the allowed timeframe.",
+     "priority": 50,
+     "claim_id": 1465,
+     "element_id": null,
+     "claim_name": "Potential Civil Claim Against Rigoberto",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1597,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Timeliness' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1454,
+    "element_id": 736,
+    "claim_name": "Motion to Reopen Immigration Proceedings",
+    "element_name": "Timeliness",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1598,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Eligibility' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1454,
+    "element_id": 737,
+    "claim_name": "Motion to Reopen Immigration Proceedings",
+    "element_name": "Eligibility",
+    "action_item_ref": 2,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1599,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Proof of Change in Circumstances' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1454,
+    "element_id": 738,
+    "claim_name": "Motion to Reopen Immigration Proceedings",
+    "element_name": "Proof of Change in Circumstances",
+    "action_item_ref": 3,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1602,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Motion to Reopen Immigration Proceedings' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1454,
+    "element_id": null,
+    "claim_name": "Motion to Reopen Immigration Proceedings",
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1603,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1457,
+    "element_id": null,
+    "claim_name": "Visa Waived",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1604,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1458,
+    "element_id": null,
+    "claim_name": "Not in Destination Country",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1605,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1460,
+    "element_id": null,
+    "claim_name": "Adjustment of Status Pending",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1606,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1461,
+    "element_id": null,
+    "claim_name": "Temporary Protected Status",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1607,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Domestic Violence and Family Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1462,
+    "element_id": null,
+    "claim_name": "Domestic Violence and Family Law",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1608,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Support for Child's Education and Welfare' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1464,
+    "element_id": null,
+    "claim_name": "Support for Child's Education and Welfare",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1609,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Employment Consequences of Use of Fraudulent SSN' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1466,
+    "element_id": null,
+    "claim_name": "Employment Consequences of Use of Fraudulent SSN",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1610,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Impact of Child Custody on Court Proceedings' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1467,
+    "element_id": null,
+    "claim_name": "Impact of Child Custody on Court Proceedings",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1611,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Claims Related to Family Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1468,
+    "element_id": null,
+    "claim_name": "Potential Claims Related to Family Law",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1612,
+    "gap_type": "procedural_requirement",
+    "description": "Filing deadline for requesting the order may not be met based on the timing of the alleged incidents.",
+    "priority": 50,
+    "claim_id": 1455,
+    "element_id": null,
+    "claim_name": "Order for Protection / Restraining Order",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1613,
+    "gap_type": "procedural_requirement",
+    "description": "Failing to meet the required timeline for filing the motion after final order, which is typically within 90 days.",
+    "priority": 50,
+    "claim_id": 1454,
+    "element_id": null,
+    "claim_name": "Motion to Reopen Immigration Proceedings",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1614,
+    "gap_type": "procedural_requirement",
+    "description": "Potential statute of limitations for filing a claim may have elapsed based on the timing of the employment violation.",
+    "priority": 50,
+    "claim_id": 1456,
+    "element_id": null,
+    "claim_name": "Employment Violation (Use of Fraudulent SSN)",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1615,
+    "gap_type": "procedural_requirement",
+    "description": "Jurisdictional requirements for filing in family law may not be satisfied if the residence or domicile of the victim is not established in the relevant jurisdiction.",
+    "priority": 50,
+    "claim_id": 1462,
+    "element_id": null,
+    "claim_name": "Domestic Violence and Family Law",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1616,
+    "gap_type": "procedural_requirement",
+    "description": "Statute of limitations may not be adhered to if the claim is delayed beyond the allowed timeframe.",
+    "priority": 50,
+    "claim_id": 1465,
+    "element_id": null,
+    "claim_name": "Potential Civil Claim Against Rigoberto",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1617,
+    "gap_type": "procedural_requirement",
+    "description": "Procedural requirements for filing custody modifications may not be met, particularly regarding notice and standing.",
+    "priority": 50,
+    "claim_id": 1467,
+    "element_id": null,
+    "claim_name": "Impact of Child Custody on Court Proceedings",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1601,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Potential Consequences' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1456,
+    "element_id": 744,
+    "claim_name": "Employment Violation (Use of Fraudulent SSN)",
+    "element_name": "Potential Consequences",
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1600,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Immediate Threat' is not yet supported by any facts",
+    "priority": 30,
+    "claim_id": 1455,
+    "element_id": 740,
+    "claim_name": "Order for Protection / Restraining Order",
+    "element_name": "Immediate Threat",
+    "action_item_ref": 5,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}
