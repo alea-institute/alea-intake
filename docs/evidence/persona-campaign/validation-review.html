@@ -1,4 +1,4 @@
-<title>Ground-Truth Validation Review — Persona UAT Round 2</title>
+<title>Ground-Truth Validation Review — Persona UAT (R2 trail · R3 update)</title>
 <style>
   :root{
     --serif: Charter,"Bitstream Charter","Sitka Text",Cambria,Georgia,serif;
@@ -239,6 +239,48 @@
   .fyi ul{margin:0;padding-left:1.15em;font-size:14px;color:var(--ink-2);max-width:72ch}
   .fyi li{margin:4px 0}
 
+  /* ---- round-3 update banner ---- */
+  .updbanner{margin:22px 0 6px;border:1px solid var(--rule);border-left:5px solid var(--accent-deep);
+    border-radius:0 10px 10px 0;background:linear-gradient(180deg,#eef3f9,#e3ebf4);
+    padding:14px 18px 15px;box-shadow:var(--shadow)}
+  .updbanner .ub-tag{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:#fff;background:var(--accent-deep);border-radius:3px;padding:2px 8px;display:inline-block}
+  .updbanner .ub-lead{font-size:15px;color:var(--ink);margin:9px 0 0;max-width:80ch}
+  .updbanner .ub-delta{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:11px;
+    font-family:var(--sans);font-size:13px;color:var(--ink-2)}
+  .updbanner .ubd{background:#fff;border:1px solid var(--rule);border-radius:20px;padding:3px 12px;
+    font-variant-numeric:tabular-nums;display:inline-flex;align-items:baseline;gap:5px}
+  .updbanner .ubd b{color:var(--ink)}
+  .updbanner .ubd b.up{color:var(--pass)}
+  .updbanner .ubd em{font-style:normal;color:var(--ink-3);font-size:11.5px}
+  .updbanner .arw{color:var(--ink-3)}
+
+  /* ---- fixed-in-round-3 ruling (muted) ---- */
+  .ruling.fixed{border-left-color:#9aa6b3;background:#f7f9fb;opacity:.85}
+  .ruling.fixed .rverdict{color:#3a6b4d;border-color:#9dc7ae;background:#eef6f1}
+  .ruling .fixed-badge{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:#1f5b3c;background:#e4f1ea;border:1px solid #9dc7ae;border-radius:20px;padding:2px 9px}
+  .fixed-note{margin-top:10px;font-family:var(--sans);font-size:12.5px;color:var(--ink-2);
+    background:var(--panel);border:1px dashed var(--rule);border-radius:6px;padding:9px 11px;max-width:72ch}
+  .fixed-note b{color:var(--ink)}
+  .fixed-note a{font-weight:700}
+
+  /* ---- reconciliation caption ---- */
+  .recon{margin-top:14px;font-family:var(--sans);font-size:13px;color:var(--ink-2);
+    background:#f4f6f9;border:1px solid var(--rule);border-radius:8px;padding:11px 14px;max-width:78ch}
+  .recon b{color:var(--ink)}
+
+  /* ---- remaining bugs strip ---- */
+  .bugstrip{border:1px solid var(--rule);border-radius:10px;background:#fbfaf6;padding:16px 18px;margin-top:22px}
+  .bugstrip h3{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:0 0 3px;font-weight:700}
+  .bugstrip .bs-note{font-size:13.5px;color:var(--ink-2);margin:0 0 12px;max-width:76ch}
+  .bugstrip .bs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 16px}
+  @media(max-width:720px){.bugstrip .bs-grid{grid-template-columns:1fr}}
+  .bugstrip .bug{display:flex;gap:9px;font-size:13.5px;color:var(--ink-2);align-items:baseline}
+  .bugstrip .bug code{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--accent-deep);
+    background:#e6ecf3;border:1px solid #c3d2e2;border-radius:3px;padding:1px 6px;flex:none;letter-spacing:.02em}
+  .bugstrip .bug b{color:var(--ink)}
+
   footer.foot{margin-top:64px;border-top:2px solid var(--accent-deep);padding-top:18px;
     font-family:var(--sans);font-size:13px;color:var(--ink-2);max-width:74ch}
   footer.foot b{color:var(--ink)}
@@ -247,18 +289,29 @@
 </style>
 
 <header class="mast">
-  <div class="kicker">alea-intake · Persona UAT · Round 2 re-judge vs rubric v1.2 (LOCKED)</div>
+  <div class="kicker">alea-intake · Persona UAT · Round 2 ground-truth trail + Round 3 re-run overlay · rubric v1.2 (LOCKED)</div>
   <h1>Ground-Truth Validation Review</h1>
-  <p class="sub">You asked: <em>"How do I see the ground truth? How can I give feedback without seeing what happened?"</em> This page lays the full chain side by side for all three personas — what the client said, what the answer key expected, what the system produced, and what the judge ruled — so you can agree or disagree with each verdict and settle the open decisions.</p>
+  <p class="sub">You asked: <em>"How do I see the ground truth? How can I give feedback without seeing what happened?"</em> This page lays the full chain side by side for all three personas — what the client said, what the answer key expected, what the system produced, and what the judge ruled — so you can agree or disagree with each verdict and settle the open decisions. <b>Round 3 ran overnight after this page was first built</b> — the pills and scorecard now reflect round 3; the walkthrough trails remain the round-2 explainer.</p>
   <div class="metastrip">
-    <span><b>Env</b> Railway alea-intake-dev · gpt-4o-mini · commit 682039e</span>
-    <span><b>Runs</b> 26 / 27 / 28</span>
-    <span><b>Evidence commit</b> 5973b13 → re-judge 0f3cac5</span>
-    <span><b>Gates</b> LT 4/6 · IMM 2/6 · FC 3/6</span>
+    <span><b>Env</b> Railway alea-intake-dev · gpt-4o-mini · commit 170c1ad</span>
+    <span><b>Runs</b> 30 / 31 / 34 (round 3)</span>
+    <span><b>Evidence commit</b> aa11b8e (re-judge v1.2)</span>
+    <span><b>Gates</b> LT 5/6 · IMM 2/6 · FC 3/6</span>
   </div>
 </header>
 
 <div class="wrap">
+
+<!-- ============ 0. ROUND-3 UPDATE BANNER ============ -->
+<aside class="updbanner" role="note" aria-label="Round 3 overnight update">
+  <span class="ub-tag">Updated overnight</span>
+  <p class="ub-lead"><b>Round 3 ran after this page was first built.</b> Seven fix commits shipped (c8f49cd…aa11b8e), all three personas re-ran (runs 30 / 31 / 34) and were re-judged vs the LOCKED v1.2 rubric. The gate pills and scorecard below now reflect round 3; the per-client walkthrough trails are kept as the round-2 ground-truth explainer, with any ruling that round 3 resolved marked <em>Fixed</em> inline so you don't re-review it.</p>
+  <div class="ub-delta">
+    <span class="ubd"><b>LT</b> 4/6 <span class="arw">→</span> <b class="up">5/6</b></span>
+    <span class="ubd"><b>IMM</b> 2/6 <span class="arw">→</span> <b>2/6</b> <em>· RUB-09 now correctly sourced (8 C.F.R. §1003.18 / INA §239); questions restored 0→9</em></span>
+    <span class="ubd"><b>FC</b> 3/6 <span class="arw">→</span> <b>3/6</b></span>
+  </div>
+</aside>
 
 <!-- ============ 1. VERDICT AT A GLANCE ============ -->
 <section id="glance">
@@ -270,23 +323,23 @@
     <!-- LT -->
     <div class="card warn">
       <div class="who">Danika Osgood</div>
-      <div class="meta">landlord-tenant · MN ch. 504B · "today" Mar 22 2026 · run 26</div>
-      <div class="score"><b class="num">4</b> / 6 gates pass · 25 claims · 3 deadlines</div>
+      <div class="meta">landlord-tenant · MN ch. 504B · "today" Mar 22 2026 · run 31 (round 3)</div>
+      <div class="score"><b class="num">5</b> / 6 gates pass · 17 claims · 3 deadlines · 14 questions</div>
       <div class="gaterow">
         <span class="pill pass">01 issues</span>
         <span class="pill pass">04 no-fab</span>
         <span class="pill fail">05 FOLIO fit</span>
         <span class="pill pass">08 deadlines</span>
-        <span class="pill warn">09 accuracy</span>
-        <span class="pill fail">15 export</span>
+        <span class="pill pass">09 accuracy</span>
+        <span class="pill pass">15 export</span>
       </div>
-      <div class="blocks"><b>What blocks it</b> — FOLIO mappings resolve but land on wrong concepts (Insurance, Vital Status); JSON export ships an empty shell and memos leak a rewriter error.</div>
+      <div class="blocks"><b>What blocks it</b> — only RUB-05 still gates: the exploration/discovered lane bypasses the new semantic-fit validator (BUG-22, e.g. "Breach of WoH Due to Mold" → Product Liability Law @0.85). Export, both deadlines, and the rewriter-leak all now pass.</div>
     </div>
     <!-- IMM -->
     <div class="card fail">
       <div class="who">Marisol "Mari" Gómez</div>
-      <div class="meta">immigration · Fort Snelling EOIR · "today" early Jul 2026 · run 27</div>
-      <div class="score"><b class="num">2</b> / 6 gates pass · 21 claims · 4 deadlines · 0 questions</div>
+      <div class="meta">immigration · Fort Snelling EOIR · "today" early Jul 2026 · run 34 (round 3)</div>
+      <div class="score"><b class="num">2</b> / 6 gates pass · 16 claims · 3 deadlines · 9 questions</div>
       <div class="gaterow">
         <span class="pill fail">01 issues</span>
         <span class="pill pass">04 no-fab</span>
@@ -295,22 +348,22 @@
         <span class="pill pass">09 accuracy</span>
         <span class="pill fail">15 export</span>
       </div>
-      <div class="blocks"><b>What blocks it</b> — VAWA self-petition entirely absent; asylum one-year lapse never computed; a patent "Markman Hearing" surfaced URGENT; export empty.</div>
+      <div class="blocks"><b>What blocks it</b> — count flat but healthier: VAWA now named, Markman/Rize gone, questions restored 0→9, deadline correctly sourced. Remaining: asylum one-year lapse still uncomputed (Q1/Q2); RUB-05 exploration-lane mismatches (BUG-22); RUB-15 fails judge-strict only on the empty executive_summary (BUG-23 → Q6).</div>
     </div>
     <!-- FC -->
     <div class="card fail">
       <div class="who">Dahlia Renshaw</div>
-      <div class="meta">family-custody · Hennepin Co. MN · "today" Jul 5 2026 · run 28</div>
-      <div class="score"><b class="num">3</b> / 6 gates pass · 23 claims · 3 deadlines</div>
+      <div class="meta">family-custody · Hennepin Co. MN · "today" Jul 5 2026 · run 30 (round 3)</div>
+      <div class="score"><b class="num">3</b> / 6 gates pass · 14 claims · 3 deadlines · 9 questions</div>
       <div class="gaterow">
-        <span class="pill fail">01 issues</span>
+        <span class="pill pass">01 issues</span>
         <span class="pill pass">04 no-fab</span>
         <span class="pill fail">05 FOLIO fit</span>
-        <span class="pill warn">08 deadlines</span>
-        <span class="pill warn">09 accuracy</span>
+        <span class="pill fail">08 deadlines</span>
+        <span class="pill pass">09 accuracy</span>
         <span class="pill fail">15 export</span>
       </div>
-      <div class="blocks"><b>What blocks it</b> — § 518.17 DV custody factor never connected to the assault; abduction threat mislabeled "Parental Alienation"; "Macedonia" &amp; "Europe" surfaced URGENT; export empty.</div>
+      <div class="blocks"><b>What blocks it</b> — DV hotline now leads every memo (BUG-20 fixed). Remaining: RUB-08 MN 30-day custody-response rule missing (BUG-24, response due Jul 15 — 7 days out); RUB-05 "Legal Representation" → "Resen" N. Macedonia municipality @0.90 (BUG-22); RUB-15 empty executive_summary (BUG-23 → Q6).</div>
     </div>
   </div>
 
@@ -326,13 +379,14 @@
   <h2 class="secnum" data-n="2">Validation trails</h2>
   <div class="sechead">The full chain, per client</div>
   <p class="sechead-note prose">For each persona: (a) what the client actually said, (b) the hidden ground truth from ANSWER-KEYS, (c) what the system produced aligned row-by-row, and (d) the judge's ruling on each failed gate with its cited evidence — each with an agree / disagree control that feeds the composer below.</p>
+  <p class="recon"><b>Reading this in round 3:</b> the tables and quotes below are the original <b>round-2 ground-truth walkthrough</b>, kept intact because they are the clearest explainer of <em>how</em> validation works. Where round 3 resolved a ruling, that block is marked <b>Fixed — no feedback needed</b> and its agree/disagree control is retired, so you only spend review effort on gates that are still live.</p>
 
   <!-- ===================== LANDLORD-TENANT ===================== -->
   <article class="persona" id="p-lt">
     <div class="phead">
       <span class="pname">Danika Osgood</span>
       <span class="pfacts">landlord-tenant · Birchcrest Terrace unit 4 · MN Stat. ch. 504B · hearing Apr 1 2026</span>
-      <span class="verdict-tag warn">4 / 6 — borderline</span>
+      <span class="verdict-tag warn">5 / 6 — borderline (round 3)</span>
     </div>
     <div class="pbody">
 
@@ -412,36 +466,16 @@
           </div>
         </div>
 
-        <div class="ruling" data-verdict="Danika Osgood (landlord-tenant) · RUB-15 Export integrity · FAIL">
-          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2</span></div>
-          <p class="rwhy">PDFs round-trip fine, but the JSON export is an empty shell that does not match the 25 claims / 3 deadlines on screen (BUG-18), and the memos leak a rewriter error string.</p>
-          <div class="evidence"><span class="elab">Judge-cited evidence</span>export JSON: "claims_by_jurisdiction": {}, "deadlines": [], "action_items": [], "executive_summary": "" — vs 25 claims on screen. Memos 51/53 leak: "It seems there was an issue with the text provided. Please provide the legal text you'd like rewritten."</div>
-          <div class="control">
-            <fieldset><legend>Do you agree with this verdict?</legend>
-              <div class="opts">
-                <label><input type="radio" name="v-lt-15" value="Agree"><span>Agree</span></label>
-                <label><input type="radio" name="v-lt-15" value="Disagree"><span>Disagree</span></label>
-                <label><input type="radio" name="v-lt-15" value="Unsure"><span>Unsure</span></label>
-              </div>
-              <textarea data-note="v-lt-15" placeholder="Your reasoning (optional)"></textarea>
-            </fieldset>
-          </div>
+        <div class="ruling fixed">
+          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict warn">Now passes</span><span class="fixed-badge">Fixed in round 3 — no feedback needed</span></div>
+          <p class="rwhy" style="text-decoration:none"><s>Round-2 ruling: JSON export was an empty shell (BUG-18) and the memos leaked a rewriter error string (BUG-19).</s></p>
+          <div class="fixed-note"><b>Resolved:</b> BUG-18 (exports now serialize the full post-adaptation context) and BUG-19 (refusal-signature detection fails closed to the unrewritten prose) are both verified fixed live. Run 31's JSON carries the full 17-claim tree, 3 deadlines and 14 questions and round-trips against the memos; zero rewriter leaks across all round-3 memos. <b>RUB-15 passes for landlord-tenant.</b> The empty <code>executive_summary</code> defect (BUG-23) remains — see the remaining-bugs strip and decision Q6.</div>
         </div>
 
-        <div class="ruling warn" data-verdict="Danika Osgood (landlord-tenant) · RUB-09 Deadline accuracy · PASS (borderline, flagged for you)">
-          <div class="rhead"><span class="rgate">RUB-09 · Deadline accuracy &amp; primary-source grounding</span><span class="rverdict warn">Pass — borderline</span><span class="rcrit">weight 2 · flagged for Damien</span></div>
-          <p class="rwhy">No wrong date or authority is asserted, so it passes as scored. But zero primary-source statutes are cited, rule_ids are self-referential, and there is no "what state are you in?" question. A strict reading of the landlord-tenant addendum (RUB-LT-16) would gate this. Your call on strictness.</p>
-          <div class="evidence"><span class="elab">Judge-cited evidence</span>citation = "The date printed on your court notice… (confirm against the document itself)"; rule_id = "stated_court_date" / "generic_notice_window"; no § 504B.321 or § 504B.135 cited; jurisdiction resolved but state never confirmed with the client.</div>
-          <div class="control">
-            <fieldset><legend>Should "correct date, no statute cited" pass or gate?</legend>
-              <div class="opts">
-                <label><input type="radio" name="v-lt-09" value="Agree — pass"><span>Agree (pass)</span></label>
-                <label><input type="radio" name="v-lt-09" value="Disagree — should gate"><span>Disagree (gate it)</span></label>
-                <label><input type="radio" name="v-lt-09" value="Unsure"><span>Unsure</span></label>
-              </div>
-              <textarea data-note="v-lt-09" placeholder="Your reasoning (optional) — does a correct-but-uncited deadline mislead a self-rep client?"></textarea>
-            </fieldset>
-          </div>
+        <div class="ruling fixed">
+          <div class="rhead"><span class="rgate">RUB-09 · Deadline accuracy &amp; primary-source grounding</span><span class="rverdict warn">Passes — now decision Q5</span><span class="fixed-badge">Moved to a decision — set it once at Q5</span></div>
+          <p class="rwhy">RUB-09 passes as scored (no wrong date or authority is asserted), same as round 3. The open question it raised — a correct deadline with no primary-source statute cited, rule_ids self-referential — is not a per-verdict agree/disagree anymore; it's been generalized into <b>decision Q5 (RUB-09 source strictness)</b> below so you answer it once for the whole campaign.</p>
+          <div class="fixed-note"><b>Round-2 evidence, still illustrative:</b> citation = "The date printed on your court notice… (confirm against the document itself)"; rule_id = "stated_court_date" / "generic_notice_window"; no § 504B.321 or § 504B.135 cited. In round 3 immigration's hearing deadline <em>is</em> now correctly sourced (8 C.F.R. §1003.18 / INA §239) — so the live question is exactly Q5's: is a correct citation enough, or must primary-source text be quoted? <b>Set your call at <a href="#q5">Q5</a>.</b></div>
         </div>
       </div>
     </div>
@@ -566,20 +600,10 @@
           </div>
         </div>
 
-        <div class="ruling" data-verdict="Marisol Gómez (immigration) · RUB-15 Export integrity · FAIL">
-          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2</span></div>
-          <p class="rwhy">PDFs complete, but JSON exports are empty shells (BUG-18) and the rewriter error leaks 16× into memo_56 including the exported PDF.</p>
-          <div class="evidence"><span class="elab">Judge-cited evidence</span>export JSON empty; memo_56 contains "It seems there was an issue with the text provided. Please provide the legal text you'd like rewritten." repeated 16 times, carried into the PDF.</div>
-          <div class="control">
-            <fieldset><legend>Do you agree with this verdict?</legend>
-              <div class="opts">
-                <label><input type="radio" name="v-imm-15" value="Agree"><span>Agree</span></label>
-                <label><input type="radio" name="v-imm-15" value="Disagree"><span>Disagree</span></label>
-                <label><input type="radio" name="v-imm-15" value="Unsure"><span>Unsure</span></label>
-              </div>
-              <textarea data-note="v-imm-15" placeholder="Your reasoning (optional)"></textarea>
-            </fieldset>
-          </div>
+        <div class="ruling fixed">
+          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Still fails — but only on Q6</span><span class="fixed-badge">Round-2 defects fixed — decision, not feedback</span></div>
+          <p class="rwhy"><s>Round-2 ruling: JSON exports were empty shells (BUG-18) and the rewriter error leaked 16× into memo_56 and its PDF (BUG-19).</s> Both are verified fixed in round 3.</p>
+          <div class="fixed-note"><b>Resolved:</b> run 34's JSON now carries the full 16-claim tree, 3 cited deadlines, 22 action items and 9 questions (BUG-18); zero rewriter leaks in any memo (BUG-19). <b>The gate still reads FAIL judge-strict</b> — but the only remaining defect is the empty <code>executive_summary</code> (BUG-23), which the judges split on (LT judge passed with-defect; IMM/FC judges failed). That split is exactly <b>decision Q6</b> — resolve it there, not as a per-verdict call. <b>Set your call at <a href="#q6">Q6</a>.</b></div>
         </div>
       </div>
     </div>
@@ -687,20 +711,10 @@
           </div>
         </div>
 
-        <div class="ruling" data-verdict="Dahlia Renshaw (family-custody) · RUB-15 Export integrity · FAIL">
-          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2</span></div>
-          <p class="rwhy">PDFs complete, but JSON exports are empty shells (BUG-18) and the rewriter error appears as the "Conclusion" of 10+ sections in memo_59 and its PDF.</p>
-          <div class="evidence"><span class="elab">Judge-cited evidence</span>export JSON empty; memo_59 renders "It seems there was an issue with the text provided…" under a "#### Conclusion" heading across 10+ sections, carried into the PDF.</div>
-          <div class="control">
-            <fieldset><legend>Do you agree with this verdict?</legend>
-              <div class="opts">
-                <label><input type="radio" name="v-fc-15" value="Agree"><span>Agree</span></label>
-                <label><input type="radio" name="v-fc-15" value="Disagree"><span>Disagree</span></label>
-                <label><input type="radio" name="v-fc-15" value="Unsure"><span>Unsure</span></label>
-              </div>
-              <textarea data-note="v-fc-15" placeholder="Your reasoning (optional)"></textarea>
-            </fieldset>
-          </div>
+        <div class="ruling fixed">
+          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Still fails — but only on Q6</span><span class="fixed-badge">Round-2 defects fixed — decision, not feedback</span></div>
+          <p class="rwhy"><s>Round-2 ruling: JSON exports were empty shells (BUG-18) and the rewriter error appeared as the "Conclusion" of 10+ sections in memo_59 and its PDF (BUG-19).</s> Both are verified fixed in round 3.</p>
+          <div class="fixed-note"><b>Resolved:</b> run 30's JSON/PDF now open with claims, deadlines and a populated gap_report that match the memos (BUG-18); zero rewriter leaks (BUG-19). Also fixed this round: <b>BUG-20</b> — all three memos now lead with the National DV Hotline 1-800-799-7233, immigration orgs gone. <b>The gate still reads FAIL judge-strict</b>, but the only remaining defect is the empty <code>executive_summary</code> (BUG-23) — that is <b>decision Q6</b>. <b>Set your call at <a href="#q6">Q6</a>.</b></div>
         </div>
       </div>
     </div>
@@ -710,8 +724,8 @@
 <!-- ============ 3. DECISIONS ============ -->
 <section id="decisions">
   <h2 class="secnum" data-n="3">Open decisions</h2>
-  <div class="sechead">Four calls only you can make</div>
-  <p class="sechead-note prose">Each has a recommendation. Your pick + any notes flow into the composer below alongside your per-verdict agreements.</p>
+  <div class="sechead">Six calls only you can make</div>
+  <p class="sechead-note prose">Each has a recommendation. Your pick + any notes flow into the composer below alongside your per-verdict agreements. Q1–Q4 are unchanged from round 2; Q5 and Q6 are new — they formalize the two policy questions that round 3 surfaced (RUB-09 citation strictness and the RUB-15 empty-executive-summary split).</p>
 
   <div class="decision" id="q1">
     <div class="dhead"><span class="dq">Q1 — RUB-01 doctrine depth</span><span class="dtag">gate policy</span></div>
@@ -784,6 +798,38 @@
     </div>
   </div>
 
+  <div class="decision" id="q5">
+    <div class="dhead"><span class="dq">Q5 — RUB-09 source strictness</span><span class="dtag">gate policy · new in R3</span></div>
+    <p class="dbody">Round 3 produced the campaign's first correctly-sourced deadline — immigration's hearing now cites <b>8 C.F.R. §1003.18 / INA §239</b>. But landlord-tenant and family-custody deadlines still lean on document-echo citations with no primary-source statute. Is a <b>correct statute/CFR citation sufficient</b> for RUB-09, or must the primary-source text be <b>quoted or linked</b>? RUB-09 currently scores 1 everywhere and only gate-passes because nothing wrong is asserted, so a strict reading would gate the whole campaign.</p>
+    <div class="rec"><b>Claude recommends — citation sufficient for v1</b> A correct, verifiable statute/CFR pin-cite (like the immigration §1003.18 / §239 pair) is enough at intake for a gpt-4o-mini tool; requiring quoted or linked primary-source text is a v2 depth goal, not a v1 gate. Track "primary-source depth" as a scored dimension, don't hard-gate on it.</p>
+    <div class="control">
+      <fieldset><legend>Your call</legend>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="Correct citation sufficient for v1 [Claude rec]"><span>(a) Citation sufficient</span></label>
+          <label><input type="radio" name="q5" value="Require quoted/linked primary-source text"><span>(b) Require quoted/linked source</span></label>
+          <label><input type="radio" name="q5" value="Unsure"><span>Unsure</span></label>
+        </div>
+        <textarea data-note="q5" placeholder="Notes (optional) — does an uncited-but-correct deadline mislead a self-rep client?"></textarea>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="decision" id="q6">
+    <div class="dhead"><span class="dq">Q6 — RUB-15 gate reading (empty exec summary)</span><span class="dtag">gate policy · new in R3</span></div>
+    <p class="dbody">With BUG-18 (empty exports) and BUG-19 (rewriter leak) fixed, the exports are substantive everywhere — but <b>executive_summary is an empty string in every memo</b> while its profile flag is on and completeness reads 1.0 (BUG-23, a queued assembler fix). The judges split: the LT judge passed RUB-15 with the defect noted; the IMM and FC judges failed it. Does an otherwise-substantive export with an empty exec-summary <b>FAIL the gate</b>, or <b>ride as a normal bug</b>?</p>
+    <div class="rec"><b>Claude recommends — normal bug, don't gate</b> The export round-trips its full claim/deadline/question tree and does not mislead; a missing summary block is a content gap, not an integrity failure. Log BUG-23 as a normal fix in the next engineering round and let RUB-15 pass on substance. Gating on it would fail two personas for a cosmetic omission.</p>
+    <div class="control">
+      <fieldset><legend>Your call</legend>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="Normal bug — don't gate, RUB-15 passes on substance [Claude rec]"><span>(a) Don't gate</span></label>
+          <label><input type="radio" name="q6" value="Empty exec-summary FAILS RUB-15"><span>(b) Gate it (fail)</span></label>
+          <label><input type="radio" name="q6" value="Unsure"><span>Unsure</span></label>
+        </div>
+        <textarea data-note="q6" placeholder="Notes (optional)"></textarea>
+      </fieldset>
+    </div>
+  </div>
+
   <div class="fyi">
     <h4>FYI — also blocked on you (not for this page's feedback, just so you have it)</h4>
     <ul>
@@ -793,13 +839,29 @@
   </div>
 </section>
 
+<!-- ============ 3b. REMAINING BUGS (no decision needed) ============ -->
+<section id="remaining-bugs" style="margin-top:34px">
+  <div class="bugstrip">
+    <h3>Remaining engineering bugs — queued for the next round (no decision needed)</h3>
+    <p class="bs-note">These are the round-3 defects the judges and deterministic sidecars caught. Every one is an engineering fix already routed to the next iteration — listed here only so nothing is a surprise; none needs a call from you.</p>
+    <div class="bs-grid">
+      <div class="bug"><code>BUG-22</code><span><b>RUB-05, all 3.</b> The exploration/"discovered" claim lane bypasses the new semantic-fit validator — e.g. FC "Legal Representation" @0.90 maps to <b>"Resen," a North Macedonia municipality</b> (round-2 geographic bug relabeled, caught only at IRI level). Fix: route every lane through SemanticFitValidator.</span></div>
+      <div class="bug"><code>BUG-23</code><span><b>RUB-15, all 3.</b> <code>executive_summary</code> is an empty string in every export while its profile flag is on and completeness reads 1.0. The assembler never generates one. (This is what decision Q6 rules on.)</span></div>
+      <div class="bug"><code>BUG-24</code><span><b>FC, highest-stakes miss.</b> The MN 30-day custody-response rule is absent from the deadline engine, so the Jul 15 response deadline (served Jun 15 + 30, ~7 days out) is echoed but <code>computed=false</code>. Add a served+N-days rules family.</span></div>
+      <div class="bug"><code>BUG-25</code><span><b>Triage enum leak.</b> The claim_type enum ("discovered" / "identified") leaks as the practice-area label in every consumer memo — the routing table renders meaningless.</span></div>
+      <div class="bug"><code>BUG-26</code><span><b>Fact-linkage duplication.</b> The same fact span repeats up to 11–20× per element across memos and exports (all personas).</span></div>
+      <div class="bug"><code>BUG-27</code><span><b>FC uploads, zero facts.</b> The uploaded text-thread extracts as "completed" but contributes no facts — the "Threatening Texts" element is marked Unsupported although the upload <em>is</em> those texts; summons-only details absent.</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ 4. COMPOSER ============ -->
 <section id="composer">
   <h2 class="secnum" data-n="4">Send your feedback</h2>
   <div class="sechead">One button, one paste</div>
   <div class="composer">
     <h3>Copy my feedback</h3>
-    <p>This gathers every agree/disagree you set above, your notes, and your four decisions into a plain-text summary. Click the button, then paste it back to Claude in chat — that's the whole loop, no backend, nothing leaves this page until you paste it.</p>
+    <p>This gathers every agree/disagree you set above, your notes, and your six decisions (Q1–Q6) into a plain-text summary. Click the button, then paste it back to Claude in chat — that's the whole loop, no backend, nothing leaves this page until you paste it.</p>
     <div class="actionbar">
       <button class="copybtn" id="copyBtn" type="button">Copy my feedback to clipboard</button>
       <span class="copystate" id="copyState">Copied — now paste it to Claude in chat.</span>
@@ -810,8 +872,9 @@
 
 <footer class="foot">
   <hr class="thin">
-  <p style="margin-top:14px"><b>Overnight work, in flight.</b> The engineering fixes behind these failures — <b>BUG-18</b> (wire the real analysis payload into the JSON exporter), <b>BUG-19</b>, <b>BUG-20</b> (domain-mismatched resource list), and <b>BUG-21</b> (semantic-fit gating on FOLIO mappings) — are running autonomously right now. This page validates <b>round 2 exactly as it was judged</b>; it does not reflect those in-progress fixes. Your verdicts here tell me whether the judge called it right before the next re-run.</p>
-  <p class="runmeta">Sources: personas/ANSWER-KEYS.md · runs/{landlord-tenant,immigration,family-custody}/run.json (26/27/28) · manifest.json (re-judge v1.2) · docs/rubrics/intake-quality-v1.md (v1.2 LOCKED). Rendered for review — self-contained, no external requests.</p>
+  <p style="margin-top:14px"><b>Engineering round 3 is complete.</b> The four round-2 blockers all landed on master and were verified live: <b>BUG-18</b> (JSON exporter now serializes the real post-adaptation payload), <b>BUG-19</b> (rewriter refusals fail closed instead of leaking), <b>BUG-20</b> (DV domain now guarantees the National DV Hotline; word-boundary matcher kills the "ice"-in-"office" false positive), and <b>BUG-21</b> (semantic-fit validation on the issue_spot lane). <b>BUG-16</b> was root-caused: a structural multi-jurisdiction <code>break</code> was skipping question_gen on every multi-jurisdiction run, which is why immigration emitted 0 questions — now 9. The still-open defects (BUG-22–27) are queued for the next engineering round. This page now overlays those round-3 results on the round-2 ground-truth walkthrough.</p>
+  <p style="margin-top:10px"><b>Expansion is parked pending your rulings.</b> The decision rule requires all three core personas to clear all six gates before the 5-persona expansion runs — and immigration is hard-blocked on the doctrine-depth (Q1) and lapsed-deadline (Q2) calls regardless of further engineering. So the expansion waits on Q1/Q2; the queued BUG-22/23/24 fixes clear the remaining engineering gates in parallel.</p>
+  <p class="runmeta">Sources: personas/ANSWER-KEYS.md · runs/{landlord-tenant,immigration,family-custody} (round 3: runs 30/31/34, memos 63–77) · campaign.json + manifest.json (re-judge v1.2, evidence commit aa11b8e) · docs/rubrics/intake-quality-v1.md (v1.2 LOCKED). Trails below reflect the round-2 walkthrough. Rendered for review — self-contained, no external requests.</p>
 </footer>
 
 </div>
@@ -822,7 +885,7 @@
   function assemble(){
     var out=[];
     out.push("=== alea-intake Persona UAT — Damien's validation feedback ===");
-    out.push("Round 2 re-judge vs rubric v1.2 (LOCKED) · runs 26/27/28");
+    out.push("Round 3 re-run + re-judge vs rubric v1.2 (LOCKED) · runs 30/31/34 · gates LT 5/6, IMM 2/6, FC 3/6");
     out.push("");
     out.push("--- PER-VERDICT AGREEMENTS ---");
     var verdicts=document.querySelectorAll("[data-verdict]");
@@ -843,7 +906,7 @@
     if(!anyV) out.push("(none set)");
     out.push("");
     out.push("--- DECISIONS ---");
-    var qs=[["q1","Q1 RUB-01 doctrine depth"],["q2","Q2 RUB-08 lapsed deadlines"],["q3","Q3 hydration re-gen spend"],["q4","Q4 redesign mockup pick"]];
+    var qs=[["q1","Q1 RUB-01 doctrine depth"],["q2","Q2 RUB-08 lapsed deadlines"],["q3","Q3 hydration re-gen spend"],["q4","Q4 redesign mockup pick"],["q5","Q5 RUB-09 source strictness"],["q6","Q6 RUB-15 empty exec-summary gate"]];
     qs.forEach(function(q){
       var name=q[0], title=q[1];
       var sel=document.querySelector('input[name="'+name+'"]:checked');
