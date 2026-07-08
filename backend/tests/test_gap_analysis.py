@@ -874,3 +874,55 @@ async def test_answered_questions_not_regenerated(
     answered_texts = {existing_q.question_text}
     for q in new_questions:
         assert q.question_text not in answered_texts
+
+
+@pytest.mark.asyncio
+async def test_question_gen_caps_gap_batch(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    mock_llm_service: MagicMock,
+):
+    """BUG-16 root cause: a gap-heavy run (40 open gaps) must not send them all to
+    the LLM. The batch is capped to the top-20 by priority so the call stays
+    reliable and cannot silently zero.
+    """
+    from app.services.analysis.schemas import QuestionGenResult
+
+    gaps = []
+    for i in range(40):
+        gaps.append(
+            AnalysisGap(
+                run_id=analysis_run.id,
+                gap_type="unsupported_element",
+                claim_id=1,
+                element_id=None,
+                description=f"Gap number {i:02d} needs more information",
+                priority=i,  # 0..39; top-20 => priorities 20..39
+                status="open",
+                iteration_found=1,
+            )
+        )
+    async_session.add_all(gaps)
+    await async_session.flush()
+
+    captured = {}
+
+    async def _capture(prompt, schema):
+        captured["prompt"] = prompt
+        return QuestionGenResult(groups=[], total_questions=0)
+
+    mock_llm_service.json_async = AsyncMock(side_effect=_capture)
+
+    stage = QuestionGenStage(
+        llm_service=mock_llm_service,
+        db_session=async_session,
+    )
+    await stage.execute(run=analysis_run, iteration=analysis_iteration, gaps=gaps)
+
+    prompt = captured["prompt"]
+    gap_lines = [ln for ln in prompt.splitlines() if ln.startswith("- [")]
+    assert len(gap_lines) == 20, f"expected 20 gaps in prompt, got {len(gap_lines)}"
+    # Highest-priority gap present; lowest-priority gap excluded.
+    assert "Gap number 39" in prompt
+    assert "Gap number 00" not in prompt

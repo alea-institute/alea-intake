@@ -26,6 +26,15 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# BUG-16 root cause: a gap-heavy persona (immigration: 40 open gaps) sent all 40
+# gaps in one prompt and expected the model to return questions for every one.
+# The oversized request/response silently failed (JSON truncation / schema
+# rejection) -> 0 questions despite dozens of gaps, while lighter personas
+# (10-25 gaps) succeeded. Bounding the batch to the highest-priority gaps keeps
+# the call reliable and still covers what matters most. Higher AnalysisGap
+# priority == more impactful (gap_analyze sets priority = confidence * 100).
+_MAX_GAPS_PER_CALL: int = 20
+
 
 def _normalize(text: str) -> str:
     """Normalize a question for dedup: lowercase, collapse whitespace, strip trailing punctuation.
@@ -89,6 +98,23 @@ class QuestionGenStage:
                 "topic_groups": [],
                 "total_questions": 0,
             }
+
+        # BUG-16 root cause: bound the batch to the highest-priority gaps so a
+        # gap-heavy run cannot silently zero. Sort by priority desc (most
+        # impactful first) then cap. total_open kept for observability.
+        total_open = len(open_gaps)
+        if total_open > _MAX_GAPS_PER_CALL:
+            open_gaps = sorted(open_gaps, key=lambda g: g.priority, reverse=True)[
+                :_MAX_GAPS_PER_CALL
+            ]
+            logger.info(
+                "question_gen run_id=%s iteration=%s: capped %d open gaps to top %d "
+                "by priority to keep the LLM call reliable",
+                run.id,
+                iteration.iteration_number,
+                total_open,
+                _MAX_GAPS_PER_CALL,
+            )
 
         # Build set of ALL existing question texts (normalized), regardless of
         # status. The orchestrator re-runs question_gen every convergence
