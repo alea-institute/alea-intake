@@ -356,18 +356,28 @@ async def test_issue_spot_calls_concept_resolver(
         embedding_service=mock_embedding,
     )
 
+    from types import SimpleNamespace
+
+    resolved_concept = SimpleNamespace(
+        iri="https://folio.openlegalstandard.org/objective001",
+        label="Wrongful Termination",
+        branch="Area of Law",
+        confidence=0.9,
+    )
+
     with (
         patch.object(stage, "_call_llm", new_callable=AsyncMock, return_value=llm_response),
         patch.object(
-            stage, "_resolve_folio_iri",
+            stage, "_resolve_folio_concept",
             new_callable=AsyncMock,
-            return_value="https://folio.openlegalstandard.org/objective001",
+            return_value=resolved_concept,
         ) as mock_resolve,
     ):
         await stage.execute(run, iteration, sample_facts)
 
     mock_resolve.assert_called_once_with("Wrongful Termination Claim")
     claims = (await stage_session.execute(select(AnalysisClaim))).scalars().all()
+    # Fit branch ("Area of Law") -> mapping survives semantic-fit validation.
     assert claims[0].folio_iri == "https://folio.openlegalstandard.org/objective001"
 
 

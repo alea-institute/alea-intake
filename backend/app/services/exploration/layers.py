@@ -96,6 +96,8 @@ async def layer_folio_adjacency(
         discover_adjacent_concepts,
         is_placeholder_concept,
     )
+    from app.services.folio.concept_resolver import _determine_branch
+    from app.services.analysis.semantic_fit import is_geographic_concept
 
     # BUG-13: cap adjacency claims per source-concept to curb ontology-traversal
     # noise volume. A single legal claim previously spawned ~30+ adjacency claims,
@@ -141,6 +143,17 @@ async def layer_folio_adjacency(
 
             # BUG-13: never let placeholder/sandbox/deprecated concepts become claims.
             if is_placeholder_concept(node.get("label")):
+                continue
+
+            # BUG-21: never let geographic concepts (a wrong seed mapping fanning
+            # out into "Rize" / "Macedonia" / "Europe") surface as legal claims.
+            branch = node.get("branch")
+            if branch is None:
+                try:
+                    branch = _determine_branch(iri, folio)
+                except Exception:
+                    branch = None
+            if is_geographic_concept(node.get("label"), branch):
                 continue
 
             # BUG-13: cap adjacency claims per source-concept to curb traversal noise.

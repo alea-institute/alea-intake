@@ -119,11 +119,11 @@ class IssueSpotStage:
         response = await model.json_async(messages=messages)
         return response.data
 
-    async def _resolve_folio_iri(self, claim_name: str) -> str | None:
-        """Resolve a claim name to a FOLIO IRI via ConceptResolver.
+    async def _resolve_folio_concept(self, claim_name: str) -> Any | None:
+        """Resolve a claim name to a FOLIO concept via ConceptResolver.
 
-        Returns the best-match IRI or None if resolution fails/unavailable.
-        Separated for easy mocking in tests.
+        Returns the best-match ResolvedConcept (carrying iri/label/branch) or
+        None if resolution fails/unavailable. Separated for easy mocking.
         """
         try:
             from app.services.folio.concept_resolver import resolve_concepts
@@ -134,7 +134,7 @@ class IssueSpotStage:
                 embedding_service=self._embedding_service,
             )
             if resolved:
-                return resolved[0].iri
+                return resolved[0]
         except Exception:
             logger.debug(
                 "ConceptResolver failed for claim '%s', proceeding without IRI",
@@ -193,17 +193,71 @@ class IssueSpotStage:
         )
         seen_names = {(n or "").strip().lower() for (n,) in existing_rows.all()}
 
-        persisted_claims: list[dict] = []
+        # Pass 1: dedupe + resolve FOLIO concepts (iri/label/branch) for each new
+        # claim. We collect resolutions so a single batched semantic-fit pass can
+        # validate them before persistence (BUG-21).
+        from app.services.analysis.semantic_fit import FitItem, SemanticFitValidator
 
+        new_claims: list[Any] = []          # spotted claim schemas surviving dedupe
+        resolutions: dict[str, Any] = {}    # name_key -> ResolvedConcept | None
         for spotted in result.claims:
             name_key = (spotted.claim_name or "").strip().lower()
             if name_key in seen_names:
                 continue
             seen_names.add(name_key)
-            # Resolve FOLIO IRI if folio and embedding_service are available
-            folio_iri = spotted.folio_iri
-            if self._folio is not None and self._embedding_service is not None and not folio_iri:
-                folio_iri = await self._resolve_folio_iri(spotted.claim_name)
+            resolved = None
+            if (
+                self._folio is not None
+                and self._embedding_service is not None
+                and not spotted.folio_iri
+            ):
+                resolved = await self._resolve_folio_concept(spotted.claim_name)
+            resolutions[name_key] = resolved
+            new_claims.append(spotted)
+
+        # Semantic-fit validation (BUG-21): geographic/placeholder/branch-mismatch
+        # rejection + confidence recalibration, one LLM call per analysis over the
+        # whole batch. A wrong mapping is cleared so it can neither be presented at
+        # false confidence nor seed the adjacency fan-out into unrelated concepts.
+        fit_items: list[FitItem] = []
+        for spotted in new_claims:
+            name_key = (spotted.claim_name or "").strip().lower()
+            resolved = resolutions.get(name_key)
+            if resolved is not None and getattr(resolved, "iri", None):
+                fit_items.append(
+                    FitItem(
+                        key=name_key,
+                        claim_name=spotted.claim_name,
+                        concept_label=getattr(resolved, "label", "") or "",
+                        branch=getattr(resolved, "branch", "") or "",
+                        confidence=spotted.confidence,
+                    )
+                )
+
+        fit_verdicts: dict[str, Any] = {}
+        if fit_items:
+            matter_context = "; ".join(
+                f.assertion_text for f in facts[:12] if f.assertion_text
+            )[:1500]
+            validator = SemanticFitValidator(self._llm)
+            fit_verdicts = await validator.validate(matter_context, fit_items)
+
+        persisted_claims: list[dict] = []
+
+        for spotted in new_claims:
+            name_key = (spotted.claim_name or "").strip().lower()
+            resolved = resolutions.get(name_key)
+            folio_iri = spotted.folio_iri or (
+                getattr(resolved, "iri", None) if resolved is not None else None
+            )
+            confidence = spotted.confidence
+
+            # Apply semantic-fit verdict: drop the wrong IRI and/or recalibrate.
+            verdict = fit_verdicts.get(name_key)
+            if verdict is not None:
+                if verdict.drop_iri:
+                    folio_iri = None
+                confidence = verdict.adjusted_confidence
 
             # Persist AnalysisClaim
             claim = AnalysisClaim(
@@ -212,7 +266,7 @@ class IssueSpotStage:
                 claim_type=spotted.claim_type,
                 folio_iri=folio_iri,
                 jurisdiction=spotted.jurisdiction,
-                confidence=spotted.confidence,
+                confidence=confidence,
                 rationale=spotted.rationale,
                 is_potential=spotted.is_potential,
                 iteration_discovered=iteration.iteration_number,
