@@ -296,7 +296,9 @@ async def test_claim_sections_dedup_across_fanout(async_session):
 
 
 async def test_question_gen_logs_on_llm_failure(async_session):
-    """A swallowed LLM error is logged (diagnosable) but still returns 0 questions.
+    """An LLM failure is logged (diagnosable) AND the deterministic fallback
+    still produces questions from the open gaps (BUG-16: a run must never zero
+    its questions just because the model refused / the JSON call broke).
 
     Asserts on the module logger directly (not caplog): structlog reconfiguration
     by earlier tests in the full suite breaks caplog record propagation.
@@ -323,10 +325,62 @@ async def test_question_gen_logs_on_llm_failure(async_session):
     with patch.object(qg_module, "logger", wraps=qg_module.logger) as mock_logger:
         result = await stage.execute(run, iteration, [gap])
 
-    assert result["questions_generated"] == 0
+    # Deterministic fallback: one plain question per open gap (capped).
+    assert result["questions_generated"] == 1
+    assert result["topic_groups"] == ["More information needed"]
     assert mock_logger.warning.called
     logged_msg = mock_logger.warning.call_args[0][0]
     assert "question_gen LLM call failed" in logged_msg
+
+    from sqlalchemy import select
+
+    rows = (
+        await async_session.execute(
+            select(FollowUpQuestion).where(FollowUpQuestion.run_id == run.id)
+        )
+    ).scalars().all()
+    assert len(rows) == 1
+    assert "missing proof" in rows[0].question_text
+    assert rows[0].gap_id == gap.id
+
+
+async def test_question_gen_fallback_caps_and_ranks(async_session):
+    """The BUG-16 fallback emits at most 8 questions, highest-priority gaps first."""
+    from app.services.analysis.stages.question_gen import QuestionGenStage
+
+    run = AnalysisRun(intake_id=1, status="running", trigger_type="manual")
+    async_session.add(run)
+    await async_session.flush()
+    iteration = AnalysisIteration(run_id=run.id, iteration_number=1, status="running")
+    async_session.add(iteration)
+    await async_session.flush()
+
+    gaps = []
+    for i in range(12):
+        g = AnalysisGap(
+            run_id=run.id, gap_type="unsupported_element",
+            description=f"gap number {i:02d}", priority=i, status="open",
+            iteration_found=1,
+        )
+        gaps.append(g)
+    async_session.add_all(gaps)
+    await async_session.flush()
+
+    llm = SimpleNamespace(json_async=AsyncMock(side_effect=RuntimeError("refused")))
+    stage = QuestionGenStage(llm_service=llm, db_session=async_session)
+    result = await stage.execute(run, iteration, gaps)
+
+    assert result["questions_generated"] == 8  # capped
+    from sqlalchemy import select
+
+    rows = (
+        await async_session.execute(
+            select(FollowUpQuestion).where(FollowUpQuestion.run_id == run.id)
+        )
+    ).scalars().all()
+    texts = " ".join(q.question_text for q in rows)
+    assert "gap number 11" in texts  # highest priority included
+    assert "gap number 00" not in texts  # lowest priority excluded
 
 
 async def test_question_gen_dedups_against_all_existing(async_session):

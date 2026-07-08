@@ -138,6 +138,13 @@ class QuestionGenStage:
         )
 
         prompt = (
+            # BUG-16: the immigration persona (DV + borrowed-SSN + notario-fraud
+            # facts) reproducibly zeroed questions while lighter personas
+            # succeeded — consistent with a provider refusal on the sensitive
+            # content. Frame the task explicitly as legal-aid intake assistance
+            # so the model treats the sensitive facts as context, not a request.
+            f"You are helping a legal-aid intake system gather information from a "
+            f"client so a licensed attorney can help them. "
             f"Generate consumer-friendly follow-up questions based on the following gaps in the legal analysis. "
             f"Do NOT use legal jargon. Group questions by topic area. "
             f"Rank questions by priority (highest-impact gaps first). "
@@ -162,23 +169,23 @@ class QuestionGenStage:
                 schema=QuestionGenResult,
             )
         except Exception:
-            # Graceful degradation: still return 0 rather than crash the run, but
-            # make the silent-zero DIAGNOSABLE (BUG-16). Previously the bare
-            # except swallowed the error with no logging, so an immigration
-            # persona could get 0 questions despite 55 open gaps with no trace.
+            # Diagnosable degradation (BUG-16): log loudly, then fall back to
+            # DETERMINISTIC template questions from the top-priority gaps so a
+            # run never zeroes its questions just because the LLM path failed
+            # (provider refusal on sensitive facts, JSON truncation, etc.).
+            # D-11 requires all gaps to produce questions; zero questions on a
+            # gap-heavy run is a worse outcome than plainly-worded ones.
             logger.warning(
                 "question_gen LLM call failed for run_id=%s iteration=%s "
-                "(%d open gaps); returning 0 questions (graceful degradation)",
+                "(%d open gaps); falling back to deterministic gap questions",
                 run.id,
                 iteration.iteration_number,
                 len(open_gaps),
                 exc_info=True,
             )
-            return {
-                "questions_generated": 0,
-                "topic_groups": [],
-                "total_questions": 0,
-            }
+            return await self._fallback_questions(
+                run, iteration, open_gaps, existing_texts
+            )
 
         # Persist questions
         questions_generated = 0
@@ -231,4 +238,75 @@ class QuestionGenStage:
             "questions_generated": questions_generated,
             "topic_groups": topic_groups,
             "total_questions": questions_generated,
+        }
+
+    # Plain-language templates per gap type for the deterministic fallback
+    # (BUG-16). Worded at a ~6th-grade level, no jargon.
+    _FALLBACK_TEMPLATES: dict[str, str] = {
+        "unsupported_element": "Can you tell us more about this? {hint}",
+        "unexplored_claim": "We may have found another issue that could help you. {hint}",
+        "weak_mapping": "We want to make sure we understood you right. {hint}",
+        "procedural_requirement": "There may be a rule or deadline to check. {hint}",
+    }
+    _MAX_FALLBACK_QUESTIONS: int = 8
+
+    async def _fallback_questions(
+        self,
+        run: AnalysisRun,
+        iteration: AnalysisIteration,
+        open_gaps: list[AnalysisGap],
+        existing_texts: set[str],
+    ) -> dict[str, Any]:
+        """Deterministic template questions from the top-priority gaps (BUG-16).
+
+        Used only when the LLM path fails. Produces one plain question per gap
+        (highest priority first, capped) so a client is never left with zero
+        follow-ups just because the model refused or the JSON call broke.
+        """
+        ranked = sorted(open_gaps, key=lambda g: g.priority, reverse=True)
+        seen = set(existing_texts)
+        generated = 0
+        for gap in ranked:
+            if generated >= self._MAX_FALLBACK_QUESTIONS:
+                break
+            hint = (gap.description or "").strip().rstrip(".")
+            if not hint:
+                continue
+            template = self._FALLBACK_TEMPLATES.get(
+                gap.gap_type, "Can you tell us more about this? {hint}"
+            )
+            text = template.format(hint=f"Our notes say: {hint}.")
+            norm = _normalize(text)
+            if not norm or norm in seen:
+                continue
+            seen.add(norm)
+            self.db_session.add(
+                FollowUpQuestion(
+                    run_id=run.id,
+                    gap_id=gap.id,
+                    question_text=text,
+                    topic_group="More information needed",
+                    priority=gap.priority,
+                    rationale=(
+                        "We could not build a custom question here, so we are "
+                        "asking directly about the missing information."
+                        if self.question_transparency
+                        else None
+                    ),
+                    status="pending",
+                    iteration_asked=iteration.iteration_number,
+                )
+            )
+            generated += 1
+
+        await self.db_session.flush()
+        logger.info(
+            "question_gen fallback produced %d deterministic questions for run_id=%s",
+            generated,
+            run.id,
+        )
+        return {
+            "questions_generated": generated,
+            "topic_groups": ["More information needed"] if generated else [],
+            "total_questions": generated,
         }
