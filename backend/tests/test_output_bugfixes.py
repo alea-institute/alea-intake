@@ -677,3 +677,82 @@ async def test_adjacency_child_renders_grouped_under_parent(async_session):
     i_sibling = memo.index("### Breach of Contract")
     assert i_parent < i_child < i_sibling
     assert "**Related to:** Wrongful Termination" in memo
+
+
+async def test_question_gen_fallback_on_valid_but_empty_llm_result(async_session):
+    """BUG-16 second shape: the model 'refuses' with a VALID empty JSON
+    ({"groups": []}) — no exception. With open gaps and no existing questions,
+    the deterministic fallback must still fire so questions never silently zero.
+    """
+    from app.services.analysis.schemas import QuestionGenResult
+    from app.services.analysis.stages.question_gen import QuestionGenStage
+
+    run = AnalysisRun(intake_id=1, status="running", trigger_type="manual")
+    async_session.add(run)
+    await async_session.flush()
+    iteration = AnalysisIteration(run_id=run.id, iteration_number=1, status="running")
+    async_session.add(iteration)
+    await async_session.flush()
+
+    gap = AnalysisGap(
+        run_id=run.id, gap_type="unsupported_element",
+        description="needs evidence of abuse", priority=80, status="open",
+        iteration_found=1,
+    )
+    async_session.add(gap)
+    await async_session.flush()
+
+    llm = SimpleNamespace(
+        json_async=AsyncMock(return_value=QuestionGenResult(groups=[], total_questions=0))
+    )
+    stage = QuestionGenStage(llm_service=llm, db_session=async_session)
+    result = await stage.execute(run, iteration, [gap])
+
+    assert result["questions_generated"] == 1
+    assert result["topic_groups"] == ["More information needed"]
+
+
+async def test_question_gen_no_fallback_when_existing_questions_explain_zero(async_session):
+    """When zero new questions is legitimate (all duplicates of existing ones),
+    the fallback must NOT fire — no noise on later convergence iterations."""
+    from app.services.analysis.schemas import (
+        QuestionGenResult,
+        QuestionGroup,
+        QuestionSchema,
+    )
+    from app.services.analysis.stages.question_gen import QuestionGenStage
+
+    run = AnalysisRun(intake_id=1, status="running", trigger_type="manual")
+    async_session.add(run)
+    await async_session.flush()
+    iteration = AnalysisIteration(run_id=run.id, iteration_number=2, status="running")
+    async_session.add(iteration)
+    await async_session.flush()
+
+    gap = AnalysisGap(
+        run_id=run.id, gap_type="unsupported_element",
+        description="needs proof", priority=50, status="open", iteration_found=1,
+    )
+    async_session.add(gap)
+    existing = FollowUpQuestion(
+        run_id=run.id, question_text="Do you have any documents?",
+        topic_group="evidence", status="pending", iteration_asked=1,
+    )
+    async_session.add(existing)
+    await async_session.flush()
+
+    # LLM re-emits the same question -> dedupe -> 0 new.
+    llm = SimpleNamespace(
+        json_async=AsyncMock(return_value=QuestionGenResult(
+            groups=[QuestionGroup(topic="evidence", questions=[QuestionSchema(
+                question_text="Do you have any documents?",
+                rationale="dup", priority=50, gap_description="needs proof",
+            )])],
+            total_questions=1,
+        ))
+    )
+    stage = QuestionGenStage(llm_service=llm, db_session=async_session)
+    result = await stage.execute(run, iteration, [gap], existing_questions=[existing])
+
+    assert result["questions_generated"] == 0
+    assert result["topic_groups"] != ["More information needed"]

@@ -234,6 +234,26 @@ class QuestionGenStage:
 
         await self.db_session.flush()
 
+        # BUG-16 (second shape): the model can "refuse" by returning a VALID but
+        # empty JSON ({"groups": []}) — no exception, so the except-path fallback
+        # never fires, and a run with open gaps and no prior questions ends with
+        # zero. Observed live on the immigration persona (sensitive DV/SSN
+        # facts): claims/gaps/memos all fine, questions silently 0 across runs.
+        # When the LLM path yields nothing AND there are no existing questions
+        # to explain the emptiness, fall back to deterministic gap questions.
+        if questions_generated == 0 and not existing_texts:
+            logger.warning(
+                "question_gen LLM returned zero questions for run_id=%s "
+                "iteration=%s (%d open gaps, no existing questions); using "
+                "deterministic fallback",
+                run.id,
+                iteration.iteration_number,
+                len(open_gaps),
+            )
+            return await self._fallback_questions(
+                run, iteration, open_gaps, existing_texts
+            )
+
         return {
             "questions_generated": questions_generated,
             "topic_groups": topic_groups,
