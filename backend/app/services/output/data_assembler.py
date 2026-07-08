@@ -258,6 +258,69 @@ def _build_seed_matcher():
     return TriggerMatcher(protocol_tuples), resources_by_name
 
 
+# Protocol-name substrings that put an alert in the "DV advocate" domain --
+# mirrors the memo template's DV-advocate block condition (safety_alerts.md.j2).
+_DV_DOMAIN_MARKERS = ("violence", "abuse", "stalking")
+
+
+def _ensure_dv_hotline_for_dv_domain(
+    alerts: list[SafetyAlertRef], resources_by_name: dict[str, dict]
+) -> None:
+    """Guarantee the National DV Hotline is present when the DV-advocate domain
+    is active (BUG-20). Mutates ``alerts`` in place.
+
+    The memo tells DV/abuse/stalking clients to reach a domestic-violence
+    advocate "through the hotline above". That guidance must be backed by an
+    actual DV hotline. If the DV-domain is active but no fired alert carries a
+    hotline named for domestic violence, attach the DV protocol's hotline to the
+    most relevant DV-domain alert.
+    """
+    if not alerts:
+        return
+
+    dv_domain_alerts = [
+        a
+        for a in alerts
+        if any(m in a.protocol_name.lower() for m in _DV_DOMAIN_MARKERS)
+    ]
+    if not dv_domain_alerts:
+        return
+
+    def _has_dv_hotline(alert: SafetyAlertRef) -> bool:
+        return any(
+            "domestic violence" in (h.get("name", "") or "").lower()
+            or h.get("phone") == "1-800-799-7233"
+            for h in alert.hotlines
+        )
+
+    if any(_has_dv_hotline(a) for a in dv_domain_alerts):
+        return
+
+    # Find the DV protocol's hotlines from the seed resources.
+    dv_hotlines: list[dict] = []
+    for name, resources in resources_by_name.items():
+        if "domestic violence" in name.lower():
+            dv_hotlines = resources.get("hotlines", []) or []
+            break
+    if not dv_hotlines:
+        return
+
+    # Prefer an actual DV/abuse alert; otherwise the first DV-domain alert
+    # (e.g. Stalking) so the "hotline above" reference resolves.
+    target = next(
+        (
+            a
+            for a in dv_domain_alerts
+            if "violence" in a.protocol_name.lower() or "abuse" in a.protocol_name.lower()
+        ),
+        dv_domain_alerts[0],
+    )
+    existing_names = {(h.get("name", "") or "").lower() for h in target.hotlines}
+    for h in dv_hotlines:
+        if (h.get("name", "") or "").lower() not in existing_names:
+            target.hotlines.append(h)
+
+
 async def gather_safety_alerts(
     session: AsyncSession, intake_id: int
 ) -> list[SafetyAlertRef]:
@@ -294,6 +357,16 @@ async def gather_safety_alerts(
                     safety_planning=resources.get("safety_planning"),
                 )
             )
+
+        # BUG-20: condition resources on the alert DOMAIN. The memo's
+        # DV-advocate guidance ("reach a domestic violence advocate through the
+        # hotline above") renders whenever a violence / abuse / IPV / stalking
+        # alert fires. If the fired alerts happen NOT to carry a DV hotline
+        # (e.g. only a Stalking alert fired, whose sole resource is SPARC), the
+        # guidance would point at a non-DV hotline. Guarantee that when the
+        # DV-advocate domain is active, the National Domestic Violence Hotline
+        # is present so the guidance is never domain-mismatched.
+        _ensure_dv_hotline_for_dv_domain(alerts, resources_by_name)
 
         alerts.sort(key=lambda a: _SEVERITY_ORDER.get(a.severity_tier, 99))
         return alerts

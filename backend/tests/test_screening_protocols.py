@@ -185,6 +185,35 @@ def test_trigger_matcher_keyword_match():
     assert "hitting me" in results[0].matched_terms
 
 
+def test_trigger_matcher_keyword_word_boundary():
+    """BUG-20: short keywords match on WORD boundaries, not as substrings.
+
+    The immigration protocol's "ice" must NOT fire on "police", "Office",
+    "Justice", "notice", or "service" (a family-custody summons is full of
+    these), but MUST fire on the standalone word "ICE".
+    """
+    activation = _mock_activation(3, 30)
+    version = _mock_version(30, 3, {
+        "keywords": ["ice", "deportation", "immigration status"],
+        "regex_patterns": [],
+        "folio_concept_iris": [],
+    }, protocol_name="Immigration Detention Risk", severity_tier="elevated")
+    matcher = TriggerMatcher([(activation, version)])
+
+    # A DV custody summons: Sheriff's Office, Justice Center, notice of service.
+    no_match = matcher.match_fast(
+        "Personal service by the Sheriff's Office; notice filed at the Justice "
+        "Center. The police were not called."
+    )
+    assert no_match == [], "'ice' must not fire inside police/office/justice/notice/service"
+
+    # Standalone token still fires.
+    hit = matcher.match_fast("I am worried ICE will detain me")
+    assert len(hit) > 0
+    assert hit[0].trigger_type == "keyword"
+    assert "ice" in hit[0].matched_terms
+
+
 def test_trigger_matcher_regex_match():
     """TriggerMatcher.match_fast returns triggered protocols for regex pattern match."""
     activation = _mock_activation(2, 20)

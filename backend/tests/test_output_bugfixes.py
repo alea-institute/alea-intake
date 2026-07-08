@@ -143,6 +143,94 @@ async def test_memo_omits_escalation_section_when_benign(async_session):
 
 
 # ---------------------------------------------------------------------------
+# BUG-20 -- safety resources conditioned on the alert domain
+# ---------------------------------------------------------------------------
+
+# A lay-described DV text thread (mirrors the family-custody persona): NO literal
+# phrase "domestic violence", yet unmistakable intimate-partner violence.
+_LAY_DV_NARRATIVE = (
+    "open the door I'm not leaving. you think you can just take my kids from me. "
+    "you tried anything with that petition and I swear you will never see them "
+    "again. that mark on your arm is nothing compared to what happens if you keep "
+    "this up. you left a bruise on me in front of the kids. don't you dare call "
+    "the cops."
+)
+
+# A stalking narrative that does NOT trip any DV keyword/regex -- fires only the
+# Stalking / Harassment protocol (whose sole resource is SPARC).
+_STALKING_ONLY_NARRATIVE = (
+    "This person has been stalking me for weeks. He keeps following me and shows "
+    "up at my workplace uninvited. I feel harassed and watched everywhere I go."
+)
+
+
+async def test_lay_dv_narrative_fires_dv_protocol(async_session):
+    """BUG-20: a DV narrative described in lay terms (no phrase 'domestic
+    violence') still fires the DV protocol so the DV hotline surfaces."""
+    from app.services.output.data_assembler import gather_safety_alerts
+
+    intake, _run = await _seed_intake_with_narrative(async_session, _LAY_DV_NARRATIVE)
+    alerts = await gather_safety_alerts(async_session, intake.id)
+
+    dv = next((a for a in alerts if "Domestic Violence" in a.protocol_name), None)
+    assert dv is not None, "lay-described DV narrative must fire the DV protocol"
+    assert any("1-800-799-7233" in str(h) for h in dv.hotlines)
+
+
+async def test_lay_dv_narrative_does_not_fire_immigration(async_session):
+    """BUG-20: a family-custody narrative full of 'office'/'police'/'notice'
+    must NOT spuriously fire the immigration protocol via the 'ice' substring."""
+    from app.services.output.data_assembler import gather_safety_alerts
+
+    narrative = (
+        "Personal service by the Sheriff's Office. Notice filed with the Justice "
+        "Center. " + _LAY_DV_NARRATIVE
+    )
+    intake, _run = await _seed_intake_with_narrative(async_session, narrative)
+    alerts = await gather_safety_alerts(async_session, intake.id)
+
+    assert not any("Immigration" in a.protocol_name for a in alerts), (
+        "'ice' must not fire immigration inside office/justice/notice/service"
+    )
+
+
+async def test_dv_domain_guarantees_dv_hotline_when_only_stalking_fires(async_session):
+    """BUG-20: when only a Stalking alert fires (SPARC), the DV-advocate domain
+    is still active, so the memo must be backed by the National DV Hotline."""
+    from app.services.output.data_assembler import gather_safety_alerts
+
+    intake, _run = await _seed_intake_with_narrative(
+        async_session, _STALKING_ONLY_NARRATIVE
+    )
+    alerts = await gather_safety_alerts(async_session, intake.id)
+
+    assert alerts, "stalking narrative should fire at least one alert"
+    assert any("stalking" in a.protocol_name.lower() for a in alerts)
+    # The domain guardrail injects the DV hotline so "the hotline above" resolves.
+    all_hotlines = [h for a in alerts for h in a.hotlines]
+    assert any("1-800-799-7233" in str(h) for h in all_hotlines), (
+        "DV-advocate domain active but no DV hotline present"
+    )
+
+
+async def test_lay_dv_memo_renders_dv_hotline(async_session):
+    """BUG-20 end-to-end: assemble+render a lay-DV narrative -> the memo's safety
+    section carries the National DV Hotline, not a domain-mismatched list."""
+    from app.services.output.data_assembler import DataAssembler
+    from app.services.output.schemas import COURT_SELF_HELP_PROFILE
+    from app.services.output.template_engine import TemplateEngine
+
+    intake, run = await _seed_intake_with_narrative(async_session, _LAY_DV_NARRATIVE)
+    ctx = await DataAssembler(async_session).assemble(
+        run_id=run.id, intake_id=intake.id, profile=COURT_SELF_HELP_PROFILE
+    )
+    markdown = TemplateEngine().render_full(ctx, COURT_SELF_HELP_PROFILE)
+    assert "Your Safety Comes First" in markdown
+    assert "1-800-799-7233" in markdown
+    assert "Immigrant Women" not in markdown
+
+
+# ---------------------------------------------------------------------------
 # BUG-14 -- dedup of questions and claim sections
 # ---------------------------------------------------------------------------
 

@@ -63,8 +63,24 @@ class TriggerMatcher:
                 except re.error:
                     pass  # Skip invalid patterns
 
-            # Build lowercased keyword list for substring matching
+            # Build keyword matchers with WORD-BOUNDARY semantics (BUG-20).
+            # Plain substring matching made short keywords catastrophic: the
+            # immigration protocol's "ice" fired on "pol-ICE", "off-ICE",
+            # "just-ICE", "not-ICE", "serv-ICE" — so a family-custody summons
+            # (full of "Sheriff's Office" / "Justice Center" / "notice of
+            # service") spuriously surfaced immigration resources in a DV memo.
+            # We now require each keyword phrase to match on non-word boundaries
+            # so "ice" only fires on the standalone word "ice", never inside
+            # another word. Multi-word phrases ("domestic violence") are
+            # unaffected. Keep keywords_lower for matched-term reporting.
             keywords_lower = [kw.lower() for kw in keywords_raw]
+            keyword_patterns: list[tuple[str, re.Pattern]] = []
+            for kw in keywords_lower:
+                if not kw:
+                    continue
+                keyword_patterns.append(
+                    (kw, re.compile(r"(?<!\w)" + re.escape(kw) + r"(?!\w)", re.IGNORECASE))
+                )
 
             protocol_id = activation.protocol_id
             self._compiled_patterns[protocol_id] = compiled
@@ -75,6 +91,7 @@ class TriggerMatcher:
                 "severity_tier": getattr(version, "_severity_tier", "advisory"),
                 "version_id": version.id,
                 "keywords_lower": keywords_lower,
+                "keyword_patterns": keyword_patterns,
                 "compiled_patterns": compiled,
                 "folio_iris": folio_iris,
             })
@@ -92,9 +109,10 @@ class TriggerMatcher:
             matched_terms: list[str] = []
             trigger_type: str | None = None
 
-            # 1. Keyword matching -- check if any keyword phrase appears in content
-            for kw in proto["keywords_lower"]:
-                if kw in content_lower:
+            # 1. Keyword matching -- word-boundary match so short tokens ("ice",
+            #    "dv") never fire inside larger words ("police", "advocate").
+            for kw, pattern in proto["keyword_patterns"]:
+                if pattern.search(content_lower):
                     matched_terms.append(kw)
                     trigger_type = "keyword"
 

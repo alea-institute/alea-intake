@@ -61,11 +61,25 @@ _DV_IPV = {
             "domestic violence", "afraid of partner", "hitting me", "abusive relationship",
             "partner threatens", "spouse hits", "beaten by", "afraid to go home",
             "controlling behavior", "restraining order", "protection order",
-            "intimate partner violence", "ipv", "dv",
+            "order for protection", "intimate partner violence", "ipv", "dv",
+            # BUG-20: real intake narratives describe DV in lay terms, not the
+            # phrase "domestic violence". A family-custody DV text thread ("you
+            # left a bruise on me in front of the kids", "don't you dare call the
+            # cops") previously fired NO safety protocol, so the DV hotline never
+            # surfaced. These high-precision lay-DV phrases close that gap.
+            "left a bruise", "gave me a bruise", "left a mark on me",
+            "grabbed me", "grabbed my arm", "afraid to call the police",
+            "afraid to call the cops", "won't let me leave", "wont let me leave",
         ],
         "regex_patterns": [
             r"(partner|spouse|husband|wife|boyfriend|girlfriend)\s+(hit|beat|hurt|threaten|choke|strangle)",
             r"afraid\s+(of|to\s+leave)\s+(my\s+)?(partner|spouse|husband|wife)",
+            # BUG-20: lay-described intimate-partner violence.
+            r"(left|gave)\s+(me\s+)?(a\s+)?(bruise|mark|welt)",
+            r"(bruise|mark|welt)\s+on\s+(my|your|her|his)\s+(arm|face|neck|body|wrist)",
+            r"(grab|grabb)(ed|ing)?\s+(me|my|her|his|your)\s*(arm|wrist|neck)?",
+            r"(don'?t|do\s+not|dare)\s+(you\s+)?call\s+the\s+(cops|police)",
+            r"(never\s+see\s+(them|the\s+kids|the\s+children)\s+again)",
         ],
         "folio_concept_iris": [],
         "area_of_law_iris": [],
