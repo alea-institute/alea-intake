@@ -336,3 +336,93 @@ class TestExportEndpoints:
 
         resp = await async_client.get(f"/api/v1/output/{doc_id}/export/xlsx", headers=headers)
         assert resp.status_code == 400
+
+    async def _generate_rich_doc(self, async_client: AsyncClient, headers: dict) -> int:
+        """Generate a document whose assembled context carries real structured
+        content (claims, deadlines, executive summary) so the JSON export seam
+        can be exercised end-to-end.
+        """
+        with (
+            patch("app.routers.output.DataAssembler") as mock_assembler_cls,
+            patch("app.routers.output.TriageScorer") as mock_triage_cls,
+            patch("app.routers.output.ActionItemGenerator") as mock_action_cls,
+            patch("app.routers.output.TemplateEngine") as mock_engine_cls,
+        ):
+            from app.services.output.schemas import (
+                CIRACSection,
+                DeadlineRef,
+                GapReport,
+                OutputContext,
+                OutputProfile,
+                TriageResult,
+            )
+
+            mock_assembler = AsyncMock()
+            mock_assembler_cls.return_value = mock_assembler
+            mock_assembler.assemble.return_value = OutputContext(
+                intake_id=7, run_id=7, org_id=1, matter_title="Rich Export Matter",
+                generated_at=datetime(2026, 1, 15), completeness_score=0.9,
+                claims_by_jurisdiction={
+                    "California": [
+                        CIRACSection(
+                            claim_id=1, claim_name="Breach of Warranty of Habitability",
+                            claim_type="primary", confidence=0.88, jurisdiction="California",
+                            issue_statement="Whether the landlord breached the warranty.",
+                            conclusion="The facts support a habitability claim.",
+                        )
+                    ]
+                },
+                deadlines=[
+                    DeadlineRef(
+                        event_text="Answer due", computed_date="2026-03-17", urgency="urgent"
+                    )
+                ],
+                executive_summary="Tenant has a strong habitability claim under California law.",
+                gap_report=GapReport(completeness_score=0.9),
+                profile=OutputProfile(profile_type="law_firm", language_level="professional"),
+            )
+            mock_triage = MagicMock()
+            mock_triage_cls.return_value = mock_triage
+            mock_triage.score.return_value = TriageResult()
+            mock_action = MagicMock()
+            mock_action_cls.return_value = mock_action
+            mock_action.generate.return_value = []
+            mock_engine = MagicMock()
+            mock_engine_cls.return_value = mock_engine
+            mock_engine.render_full.return_value = "# Rich export markdown"
+
+            gen_resp = await async_client.post(
+                "/api/v1/output/generate",
+                json={"run_id": 7, "intake_id": 7, "profile_types": ["law_firm"]},
+                headers=headers,
+            )
+            assert gen_resp.status_code == 201
+            return gen_resp.json()["documents"][0]["id"]
+
+    async def test_export_json_is_not_empty_shell(self, async_client: AsyncClient) -> None:
+        """BUG-18 regression: the JSON export must carry the structured content
+        assembled at generation, not an empty shell rebuilt at export time.
+
+        This exercises the generate->export seam that unit tests missed: the
+        adapter unit test hands a rich context in directly and passes, while the
+        real pipeline persisted only markdown and rebuilt an EMPTY context on
+        export. Assert claims / deadlines / executive_summary survive.
+        """
+        headers = await _register_and_get_headers(async_client)
+        doc_id = await self._generate_rich_doc(async_client, headers)
+
+        resp = await async_client.get(f"/api/v1/output/{doc_id}/export/json", headers=headers)
+        assert resp.status_code == 200
+        assert "application/json" in resp.headers["content-type"]
+        data = json.loads(resp.content.decode("utf-8"))
+
+        # The core regression assertions: these were {} / [] / "" before the fix.
+        assert data["claims_by_jurisdiction"], "JSON export lost claims_by_jurisdiction"
+        assert "California" in data["claims_by_jurisdiction"]
+        assert data["claims_by_jurisdiction"]["California"][0]["claim_name"] == (
+            "Breach of Warranty of Habitability"
+        )
+        assert data["deadlines"], "JSON export lost deadlines"
+        assert data["deadlines"][0]["computed_date"] == "2026-03-17"
+        assert data["executive_summary"], "JSON export lost executive_summary"
+        assert data["matter_title"] == "Rich Export Matter"

@@ -201,11 +201,23 @@ async def generate_output(
         markdown = engine.render_full(context, profile)
 
         # Step 6: Persist OutputDocument
+        #
+        # BUG-18: the JSON export serializes the structured OutputContext, but
+        # historically only `markdown_content` was persisted — the export
+        # endpoint then rebuilt an EMPTY minimal context, so every JSON export
+        # was an empty shell (claims_by_jurisdiction={}, deadlines=[],
+        # executive_summary="") while the PDF (which renders markdown) was
+        # complete. Fix: serialize the FINAL context (post triage / action
+        # items / language adaptation) into `rendered_json` here at generation
+        # time. This is the exact payload JSONAdapter produces, so the export
+        # endpoint's cache-hit path returns full structured content.
+        rendered_json = context.model_dump_json(indent=2)
         doc = OutputDocument(
             run_id=request.run_id,
             intake_id=request.intake_id,
             profile_type=profile.profile_type,
             markdown_content=markdown,
+            rendered_json=rendered_json,
             metadata_json={
                 "completeness_score": context.completeness_score,
                 "matter_title": context.matter_title,
