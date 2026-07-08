@@ -1,0 +1,882 @@
+<title>Ground-Truth Validation Review — Persona UAT Round 2</title>
+<style>
+  :root{
+    --serif: Charter,"Bitstream Charter","Sitka Text",Cambria,Georgia,serif;
+    --sans:"Trebuchet MS","Franklin Gothic Medium","Segoe UI",Tahoma,sans-serif;
+    --mono:"Consolas","Liberation Mono","DejaVu Sans Mono",Menlo,monospace;
+    --paper:#f2f4f6;
+    --panel:#e8ecf0;
+    --panel-2:#dfe4ea;
+    --rule:#c7cfd8;
+    --ink:#181b21;
+    --ink-2:#4a525d;
+    --ink-3:#6b7480;
+    --accent:#35507a;
+    --accent-deep:#20344f;
+    --pass:#2f7d54;
+    --fail:#ab2f27;
+    --pending:#9a6a10;
+    --noise:#6b4a86;
+    --shadow:0 1px 0 rgba(24,27,33,.04),0 6px 22px -14px rgba(24,27,33,.35);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--serif);font-size:17px;line-height:1.55;
+    background-image:
+      radial-gradient(circle at 12% -5%,rgba(53,80,122,.06),transparent 45%),
+      radial-gradient(circle at 92% 0%,rgba(107,74,134,.05),transparent 40%),
+      repeating-linear-gradient(0deg,transparent 0 39px,rgba(24,27,33,.018) 39px 40px);
+    overflow-x:hidden;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px 96px}
+  .prose{max-width:65ch}
+  h1,h2,h3,h4,.label,.pill,.chip,button,th,.kicker,legend{font-family:var(--sans)}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+  code,.mono{font-family:var(--mono);font-size:.86em}
+  a{color:var(--accent);text-underline-offset:2px}
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{
+    outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+  /* ---- Masthead ---- */
+  header.mast{
+    border-bottom:3px solid var(--accent-deep);
+    padding:40px 22px 26px;max-width:1120px;margin:0 auto;
+  }
+  .kicker{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  header.mast h1{
+    font-size:clamp(30px,4.6vw,46px);line-height:1.02;margin:.28em 0 .1em;
+    letter-spacing:-.015em;font-weight:700;color:var(--ink);
+  }
+  header.mast .sub{font-size:17px;color:var(--ink-2);max-width:66ch;margin:.2em 0 0}
+  .metastrip{
+    display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:18px;
+    font-family:var(--sans);font-size:12.5px;color:var(--ink-3);
+  }
+  .metastrip b{color:var(--ink-2);font-weight:600}
+
+  /* ---- shared ---- */
+  section{margin-top:52px}
+  h2.secnum{
+    font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+    font-weight:700;margin:0 0 4px;display:flex;align-items:baseline;gap:10px;
+  }
+  h2.secnum::before{content:attr(data-n);
+    font-variant-numeric:tabular-nums;color:var(--ink-3);font-size:12px;
+    border:1px solid var(--rule);border-radius:3px;padding:1px 6px;background:#fff}
+  .sechead{font-family:var(--serif);font-size:clamp(22px,2.6vw,29px);font-weight:700;
+    letter-spacing:-.01em;margin:.1em 0 .5em}
+  .sechead-note{color:var(--ink-2);font-size:15.5px;max-width:65ch;margin:.2em 0 0}
+
+  /* ---- verdict-at-a-glance cards ---- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+  @media(max-width:820px){.cards{grid-template-columns:1fr}}
+  .card{
+    background:#fff;border:1px solid var(--rule);border-radius:8px;padding:16px 16px 14px;
+    box-shadow:var(--shadow);border-top:4px solid var(--accent);display:flex;flex-direction:column;
+  }
+  .card.fail{border-top-color:var(--fail)}
+  .card.warn{border-top-color:var(--pending)}
+  .card .who{font-family:var(--sans);font-weight:700;font-size:16.5px;letter-spacing:-.01em}
+  .card .meta{font-size:12.5px;color:var(--ink-3);font-family:var(--sans);margin-top:1px}
+  .card .score{margin:10px 0 4px;font-family:var(--sans);font-size:12.5px;color:var(--ink-2)}
+  .card .score b{font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .gaterow{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 10px}
+  .pill{
+    font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.02em;
+    padding:2px 7px 2px 6px;border-radius:11px;border:1px solid;display:inline-flex;align-items:center;gap:4px;
+    background:#fff;
+  }
+  .pill::before{content:"";width:7px;height:7px;border-radius:50%;flex:none}
+  .pill.pass{color:#1f5b3c;border-color:#9dc7ae}
+  .pill.pass::before{background:var(--pass)}
+  .pill.fail{color:#8a231c;border-color:#dda9a4;background:repeating-linear-gradient(135deg,#fff 0 4px,#fbeceb 4px 8px)}
+  .pill.fail::before{background:var(--fail)}
+  .pill.warn{color:#77510a;border-color:#e0c98d}
+  .pill.warn::before{background:var(--pending);box-shadow:0 0 0 1px #fff inset}
+  .card .blocks{font-size:14px;color:var(--ink-2);margin-top:auto;padding-top:6px;border-top:1px dashed var(--rule)}
+  .card .blocks b{font-family:var(--sans);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--fail);font-weight:700}
+  .card.warn .blocks b{color:var(--pending)}
+
+  .legend-key{display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:16px;font-family:var(--sans);font-size:12px;color:var(--ink-2)}
+  .legend-key span{display:inline-flex;align-items:center;gap:6px}
+  .kdot{width:9px;height:9px;border-radius:50%;flex:none}
+
+  /* ---- persona trail ---- */
+  .persona{margin-top:40px;border:1px solid var(--rule);border-radius:10px;background:#fff;overflow:hidden;box-shadow:var(--shadow)}
+  .persona > .phead{
+    background:linear-gradient(180deg,#fbfcfd,#eef2f6);border-bottom:1px solid var(--rule);
+    padding:16px 20px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
+  }
+  .phead .pname{font-family:var(--sans);font-weight:700;font-size:19px;letter-spacing:-.01em}
+  .phead .pfacts{font-size:13px;color:var(--ink-3);font-family:var(--sans)}
+  .phead .verdict-tag{margin-left:auto;font-family:var(--sans);font-size:12px;font-weight:700;
+    padding:3px 10px;border-radius:20px;border:1px solid}
+  .verdict-tag.fail{color:#8a231c;border-color:#dda9a4;background:#fbeceb}
+  .verdict-tag.warn{color:#77510a;border-color:#e0c98d;background:#fdf7e8}
+  .pbody{padding:6px 20px 22px}
+  .stage{margin-top:22px}
+  .stage > .stitle{
+    font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);display:flex;align-items:center;gap:8px;margin:0 0 8px;
+  }
+  .stage > .stitle .s-n{color:#fff;background:var(--accent);border-radius:50%;width:18px;height:18px;
+    display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+
+  ul.facts{margin:0;padding-left:1.15em;max-width:65ch}
+  ul.facts li{margin:3px 0}
+  .quotes{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-width:70ch}
+  blockquote.q{
+    margin:0;font-family:var(--serif);font-style:italic;color:var(--ink);
+    border-left:3px solid var(--accent);background:var(--panel);padding:7px 12px;border-radius:0 5px 5px 0;font-size:15px;
+  }
+  blockquote.q cite{display:block;font-style:normal;font-family:var(--sans);font-size:11px;color:var(--ink-3);margin-top:3px;letter-spacing:.03em}
+
+  /* crosswalk table */
+  .scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;margin-top:4px;background:#fff}
+  table.xw{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+  table.xw th,table.xw td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--rule)}
+  table.xw thead th{
+    position:sticky;top:0;background:var(--accent-deep);color:#fff;font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;font-weight:600;z-index:1;border-bottom:none;
+  }
+  table.xw tbody tr:last-child td{border-bottom:none}
+  table.xw .gt{width:34%;font-family:var(--serif)}
+  table.xw .law{width:24%;font-size:12.5px;color:var(--ink-2);font-family:var(--sans)}
+  table.xw .res{width:10%}
+  table.xw .did{width:32%;font-size:13px;color:var(--ink-2)}
+  .unspoken{display:inline-block;font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--accent-deep);background:#dbe6f2;border:1px solid #b8ccdf;
+    border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
+  .gate-mark{display:inline-block;font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.05em;
+    color:#fff;background:var(--accent-deep);border-radius:3px;padding:0 4px;margin-right:5px;vertical-align:1px}
+  /* result chips w/ form-encoding: chip text + border-style + hatch */
+  tr.r-found{background:linear-gradient(90deg,rgba(47,125,84,.07),transparent 60%)}
+  tr.r-found td.res{border-left:4px solid var(--pass)}
+  tr.r-missed{background:repeating-linear-gradient(135deg,rgba(171,47,39,.05) 0 6px,transparent 6px 12px)}
+  tr.r-missed td.res{border-left:4px dashed var(--fail)}
+  tr.r-partial td.res{border-left:4px double var(--pending)}
+  tr.r-partial{background:linear-gradient(90deg,rgba(154,106,16,.06),transparent 60%)}
+  .rchip{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    padding:2px 6px;border-radius:3px;white-space:nowrap;display:inline-block;border:1px solid}
+  .rchip.found{color:#1f5b3c;border-color:#9dc7ae;background:#e9f4ee}
+  .rchip.missed{color:#8a231c;border-color:#dda9a4;background:#fbeceb}
+  .rchip.partial{color:#77510a;border-color:#e0c98d;background:#fdf7e8}
+
+  /* noise block */
+  .noise{margin-top:14px;border:1px dotted var(--noise);border-radius:8px;background:#f8f5fb;
+    padding:12px 14px;background-image:radial-gradient(rgba(107,74,134,.10) 1px,transparent 1px);background-size:9px 9px}
+  .noise h5{font-family:var(--sans);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--noise);
+    margin:0 0 6px;font-weight:700}
+  .noise-list{display:flex;flex-wrap:wrap;gap:6px}
+  .noise-chip{font-family:var(--sans);font-size:12px;color:#3f2c52;background:#fff;border:1px dotted var(--noise);
+    border-radius:4px;padding:2px 7px}
+  .noise-chip b{color:var(--noise);font-variant-numeric:tabular-nums}
+  .noise p{font-size:13px;color:var(--ink-2);margin:8px 0 0;max-width:70ch}
+
+  /* judge ruling + verdict control */
+  .ruling{border:1px solid var(--rule);border-left:4px solid var(--fail);border-radius:0 8px 8px 0;
+    background:#fff;padding:14px 16px;margin-top:14px}
+  .ruling.warn{border-left-color:var(--pending)}
+  .ruling .rhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px}
+  .ruling .rgate{font-family:var(--sans);font-weight:700;font-size:14px}
+  .ruling .rverdict{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 8px;border-radius:20px;border:1px solid}
+  .rverdict.fail{color:#8a231c;border-color:#dda9a4;background:#fbeceb}
+  .rverdict.warn{color:#77510a;border-color:#e0c98d;background:#fdf7e8}
+  .ruling .rcrit{font-family:var(--sans);font-size:12px;color:var(--ink-3);margin-left:auto}
+  .ruling .rwhy{font-size:14.5px;color:var(--ink);margin:8px 0 0;max-width:68ch}
+  .ruling .evidence{margin-top:10px;font-family:var(--mono);font-size:12.5px;color:var(--ink-2);
+    background:var(--panel);border-radius:5px;padding:9px 11px;white-space:pre-wrap;border:1px solid var(--rule)}
+  .ruling .evidence .elab{font-family:var(--sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-3);display:block;margin-bottom:4px;font-weight:700}
+
+  /* agree/disagree control */
+  .control{margin-top:12px;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:10px 12px}
+  .control fieldset{border:0;margin:0;padding:0}
+  .control legend{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);padding:0;margin-bottom:6px}
+  .opts{display:flex;flex-wrap:wrap;gap:7px}
+  .opts label{font-family:var(--sans);font-size:13px;display:inline-flex;align-items:center;gap:6px;
+    background:#fff;border:1px solid var(--rule);border-radius:20px;padding:4px 12px 4px 9px;cursor:pointer;user-select:none}
+  .opts label:hover{border-color:var(--accent)}
+  .opts input{accent-color:var(--accent);margin:0}
+  .opts input:checked + span{font-weight:700}
+  .opts label:has(input:checked){background:#eaf0f7;border-color:var(--accent)}
+  .control textarea{width:100%;margin-top:8px;font-family:var(--serif);font-size:14px;color:var(--ink);
+    border:1px solid var(--rule);border-radius:5px;padding:8px 10px;min-height:44px;resize:vertical;background:#fff}
+  .control textarea::placeholder{color:var(--ink-3);font-style:italic}
+
+  /* decisions */
+  .decision{border:1px solid var(--rule);border-radius:9px;background:#fff;padding:16px 18px;margin-top:16px;box-shadow:var(--shadow)}
+  .decision .dhead{display:flex;gap:10px;align-items:baseline}
+  .decision .dq{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:-.01em}
+  .decision .dtag{font-family:var(--mono);font-size:11px;color:var(--ink-3);border:1px solid var(--rule);border-radius:3px;padding:0 5px;flex:none}
+  .decision .dbody{margin:8px 0 0;font-size:15px;color:var(--ink-2);max-width:70ch}
+  .rec{margin-top:10px;font-family:var(--sans);font-size:13.5px;background:#eaf0f7;border:1px solid #bcd0e6;
+    border-left:4px solid var(--accent);border-radius:0 5px 5px 0;padding:8px 12px;color:var(--accent-deep)}
+  .rec b{text-transform:uppercase;font-size:10.5px;letter-spacing:.08em;color:var(--accent);display:block;margin-bottom:1px}
+
+  /* composer */
+  .composer{border:2px solid var(--accent-deep);border-radius:11px;background:#fff;padding:20px 22px;margin-top:12px;box-shadow:var(--shadow)}
+  .composer h3{font-family:var(--sans);margin:0 0 4px;font-size:18px}
+  .composer p{font-size:14.5px;color:var(--ink-2);margin:0 0 14px;max-width:70ch}
+  .actionbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px}
+  button.copybtn{
+    font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:.01em;color:#fff;
+    background:linear-gradient(180deg,#3d5c8a,var(--accent-deep));border:1px solid var(--accent-deep);
+    border-radius:8px;padding:13px 24px;cursor:pointer;box-shadow:0 8px 18px -10px rgba(32,52,79,.8);
+  }
+  button.copybtn:hover{filter:brightness(1.08)}
+  button.copybtn:active{transform:translateY(1px)}
+  .copystate{font-family:var(--sans);font-size:13px;color:var(--pass);font-weight:700;opacity:0;transition:opacity .2s}
+  .copystate.show{opacity:1}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+  textarea#assembled{width:100%;margin-top:14px;min-height:150px;font-family:var(--mono);font-size:12.5px;
+    border:1px solid var(--rule);border-radius:6px;padding:12px;background:var(--panel);color:var(--ink);white-space:pre;overflow:auto}
+  .fyi{border:1px solid var(--rule);border-radius:9px;background:#fbfaf6;padding:14px 18px;margin-top:18px}
+  .fyi h4{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--pending);margin:0 0 6px;font-weight:700}
+  .fyi ul{margin:0;padding-left:1.15em;font-size:14px;color:var(--ink-2);max-width:72ch}
+  .fyi li{margin:4px 0}
+
+  footer.foot{margin-top:64px;border-top:2px solid var(--accent-deep);padding-top:18px;
+    font-family:var(--sans);font-size:13px;color:var(--ink-2);max-width:74ch}
+  footer.foot b{color:var(--ink)}
+  .runmeta{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:10px}
+  hr.thin{border:0;border-top:1px solid var(--rule);margin:0}
+</style>
+
+<header class="mast">
+  <div class="kicker">alea-intake · Persona UAT · Round 2 re-judge vs rubric v1.2 (LOCKED)</div>
+  <h1>Ground-Truth Validation Review</h1>
+  <p class="sub">You asked: <em>"How do I see the ground truth? How can I give feedback without seeing what happened?"</em> This page lays the full chain side by side for all three personas — what the client said, what the answer key expected, what the system produced, and what the judge ruled — so you can agree or disagree with each verdict and settle the open decisions.</p>
+  <div class="metastrip">
+    <span><b>Env</b> Railway alea-intake-dev · gpt-4o-mini · commit 682039e</span>
+    <span><b>Runs</b> 26 / 27 / 28</span>
+    <span><b>Evidence commit</b> 5973b13 → re-judge 0f3cac5</span>
+    <span><b>Gates</b> LT 4/6 · IMM 2/6 · FC 3/6</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 1. VERDICT AT A GLANCE ============ -->
+<section id="glance">
+  <h2 class="secnum" data-n="1">Verdict at a glance</h2>
+  <div class="sechead">Six gates, three clients, one screen</div>
+  <p class="sechead-note prose">Each gate is pass / fail / pending. A single gate failure caps the whole run at "borderline" — the rubric treats a gate as a way the product could actively mislead a self-represented person. The six GATE criteria are RUB-01, 04, 05, 08, 09, 15.</p>
+
+  <div class="cards">
+    <!-- LT -->
+    <div class="card warn">
+      <div class="who">Danika Osgood</div>
+      <div class="meta">landlord-tenant · MN ch. 504B · "today" Mar 22 2026 · run 26</div>
+      <div class="score"><b class="num">4</b> / 6 gates pass · 25 claims · 3 deadlines</div>
+      <div class="gaterow">
+        <span class="pill pass">01 issues</span>
+        <span class="pill pass">04 no-fab</span>
+        <span class="pill fail">05 FOLIO fit</span>
+        <span class="pill pass">08 deadlines</span>
+        <span class="pill warn">09 accuracy</span>
+        <span class="pill fail">15 export</span>
+      </div>
+      <div class="blocks"><b>What blocks it</b> — FOLIO mappings resolve but land on wrong concepts (Insurance, Vital Status); JSON export ships an empty shell and memos leak a rewriter error.</div>
+    </div>
+    <!-- IMM -->
+    <div class="card fail">
+      <div class="who">Marisol "Mari" Gómez</div>
+      <div class="meta">immigration · Fort Snelling EOIR · "today" early Jul 2026 · run 27</div>
+      <div class="score"><b class="num">2</b> / 6 gates pass · 21 claims · 4 deadlines · 0 questions</div>
+      <div class="gaterow">
+        <span class="pill fail">01 issues</span>
+        <span class="pill pass">04 no-fab</span>
+        <span class="pill fail">05 FOLIO fit</span>
+        <span class="pill fail">08 deadlines</span>
+        <span class="pill pass">09 accuracy</span>
+        <span class="pill fail">15 export</span>
+      </div>
+      <div class="blocks"><b>What blocks it</b> — VAWA self-petition entirely absent; asylum one-year lapse never computed; a patent "Markman Hearing" surfaced URGENT; export empty.</div>
+    </div>
+    <!-- FC -->
+    <div class="card fail">
+      <div class="who">Dahlia Renshaw</div>
+      <div class="meta">family-custody · Hennepin Co. MN · "today" Jul 5 2026 · run 28</div>
+      <div class="score"><b class="num">3</b> / 6 gates pass · 23 claims · 3 deadlines</div>
+      <div class="gaterow">
+        <span class="pill fail">01 issues</span>
+        <span class="pill pass">04 no-fab</span>
+        <span class="pill fail">05 FOLIO fit</span>
+        <span class="pill warn">08 deadlines</span>
+        <span class="pill warn">09 accuracy</span>
+        <span class="pill fail">15 export</span>
+      </div>
+      <div class="blocks"><b>What blocks it</b> — § 518.17 DV custody factor never connected to the assault; abduction threat mislabeled "Parental Alienation"; "Macedonia" &amp; "Europe" surfaced URGENT; export empty.</div>
+    </div>
+  </div>
+
+  <div class="legend-key">
+    <span><span class="kdot" style="background:var(--pass)"></span> pass</span>
+    <span><span class="kdot" style="background:var(--fail)"></span> fail (gate)</span>
+    <span><span class="kdot" style="background:var(--pending)"></span> pending / borderline — flagged for your call</span>
+  </div>
+</section>
+
+<!-- ============ 2. VALIDATION TRAILS ============ -->
+<section id="trails">
+  <h2 class="secnum" data-n="2">Validation trails</h2>
+  <div class="sechead">The full chain, per client</div>
+  <p class="sechead-note prose">For each persona: (a) what the client actually said, (b) the hidden ground truth from ANSWER-KEYS, (c) what the system produced aligned row-by-row, and (d) the judge's ruling on each failed gate with its cited evidence — each with an agree / disagree control that feeds the composer below.</p>
+
+  <!-- ===================== LANDLORD-TENANT ===================== -->
+  <article class="persona" id="p-lt">
+    <div class="phead">
+      <span class="pname">Danika Osgood</span>
+      <span class="pfacts">landlord-tenant · Birchcrest Terrace unit 4 · MN Stat. ch. 504B · hearing Apr 1 2026</span>
+      <span class="verdict-tag warn">4 / 6 — borderline</span>
+    </div>
+    <div class="pbody">
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">a</span> What the client said</div>
+        <ul class="facts">
+          <li>Got court papers taped to her door; hearing <span class="num">Apr 1</span> at Halden County housing court for <b>nonpayment</b>.</li>
+          <li>Withheld <span class="num">$300</span> of <span class="num">$1,200</span> rent because <b>mold in the bathroom ceiling</b> since October went unfixed; 7-year-old son Marcus has asthma, coughing worse since December.</li>
+          <li><b>Heat out 5 days</b> (Jan 18–23) in ~10° weather; landlord said "call the emergency line," which never answered.</li>
+          <li>Called the city Feb 20 → inspector cited landlord Feb 25 → <b>14-day notice appeared Mar 3</b>, days later.</li>
+          <li>Paid an extra <span class="num">$500 cash</span> "pet deposit," no receipt; lease runs through Jun 2026.</li>
+        </ul>
+        <div class="quotes">
+          <blockquote class="q">"i paid MOST of it i just held back $300 out of the $1200 bc he has been ignoring the mold in our bathroom ceiling since like october"<cite>narrative ¶1</cite></blockquote>
+          <blockquote class="q">"i called the city on feb 20… someone from the city actually came out feb 25 and i guess wrote him up… and literally like a week later, march 3rd, thats when the 14 day notice showed up"<cite>narrative ¶2 — the retaliation timeline</cite></blockquote>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">b+c</span> Ground truth vs. what the system produced</div>
+        <div class="scroll">
+          <table class="xw">
+            <thead><tr><th class="gt">Expected issue (answer key)</th><th class="law">Governing law · FOLIO concept</th><th class="res">Result</th><th class="did">What the system actually did</th></tr></thead>
+            <tbody>
+              <tr class="r-found"><td class="gt">Eviction / unlawful detainer for nonpayment (only $300 disputed)</td><td class="law">MN ch. 504B · Eviction / Unlawful Detainer</td><td class="res"><span class="rchip found">found</span></td><td class="did">Framed via the Apr 1 hearing deadline + generic "Landlord-Tenant Claims"; not named as a defense claim.</td></tr>
+              <tr class="r-found"><td class="gt"><span class="gate-mark">gate</span>Breach of warranty of habitability — mold + 5-day heat outage, child asthma<span class="unspoken">unspoken</span></td><td class="law">§ 504B.161; escrow § 504B.385/.425 · Warranty of Habitability</td><td class="res"><span class="rchip found">found</span></td><td class="did">Surfaced strongly: "Breach of Implied Warranty of Habitability" (0.90) + habitability, safe-environment, and negligence variants.</td></tr>
+              <tr class="r-found"><td class="gt"><span class="gate-mark">gate</span>Retaliatory eviction — city call → citation → notice days later<span class="unspoken">unspoken</span></td><td class="law">§ 504B.285 subd.2 / § 504B.441 · Retaliatory Eviction</td><td class="res"><span class="rchip found">found</span></td><td class="did">"Retaliatory Eviction" (0.80) + "Retaliatory Behavior Extending Beyond Rent Issues" (0.85), fact-linked to the timeline.</td></tr>
+              <tr class="r-missed"><td class="gt">Security-deposit irregularity — $500 cash pet deposit, no receipt/interest</td><td class="law">§ 504B.178/.172 · Security Deposit</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Only gestured at as "Lack of Documentation for Additional Fees" (0.65, no IRI); statute + deposit rules never raised.</td></tr>
+              <tr class="r-missed"><td class="gt">Amount internally inconsistent ($300 vs $350 vs $1,200)</td><td class="law">Defective/vague notice — § 504B (stretch)</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Inconsistency never flagged; "material lease violation" box left unexplained to the client.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="scroll" style="margin-top:12px">
+          <table class="xw">
+            <thead><tr><th class="gt">Expected deadline (answer key)</th><th class="law">Governing authority</th><th class="res">Result</th><th class="did">What the system computed</th></tr></thead>
+            <tbody>
+              <tr class="r-found"><td class="gt">14-day notice posted Mar 3 → cure/vacate by <b class="num">Mar 17 2026</b></td><td class="law">Notice cure/vacate window</td><td class="res"><span class="rchip found">found</span></td><td class="did">Computed <span class="num">2026-03-17</span> correctly. But urgency mislabeled "lapsed" and citation is self-referential ("the date printed on your notice"), no statute.</td></tr>
+              <tr class="r-found"><td class="gt">Court hearing <b class="num">Apr 1 2026</b> 9:00am (no separate MN answer deadline)</td><td class="law">§ 504B.321 hearing window</td><td class="res"><span class="rchip found">found</span></td><td class="did">Computed <span class="num">2026-04-01</span>, prominent; correctly did <em>not</em> invent an answer deadline. Also mislabeled "lapsed" though it is future.</td></tr>
+              <tr class="r-found"><td class="gt">Distractor: lease runs to Jun 30 2026 (mid-lease, NOT operative)</td><td class="law">— should be excluded —</td><td class="res"><span class="rchip found">found</span></td><td class="did">Correctly excluded the lease-end date from operative deadlines. Good.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="noise">
+          <h5>Noise surfaced as potential claims (RUB-05 semantic-fit failure)</h5>
+          <div class="noise-list">
+            <span class="noise-chip">Underinsured Motorist Claims <b>0.7</b></span>
+            <span class="noise-chip">No-Fault Claim <b>0.7</b></span>
+            <span class="noise-chip">Insurance Malpractice <b>0.7</b></span>
+            <span class="noise-chip">Social Security Claims <b>0.7</b></span>
+            <span class="noise-chip">Product Liability Claims <b>0.7</b></span>
+            <span class="noise-chip">Vital Status <b>0.7</b></span>
+            <span class="noise-chip">Individual Person Characteristics <b>0.7</b></span>
+            <span class="noise-chip">Breach of Warranty by Home Seller <b>0.7</b></span>
+          </div>
+          <p>All IRIs resolve (23/23) — but these concepts do not fit a mold-and-retaliation eviction. The judge's cited mismatches: "Habitable Living Conditions" → <em>Living (vital status)</em> at 90%, "Rent Withholding" → <em>Insurance Claims</em>, "Retaliatory Behavior" → <em>Lease</em> at 85%, "Utility Disruption" → <em>Service</em>.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">d</span> Judge's rulings — the gates that failed</div>
+
+        <div class="ruling" data-verdict="Danika Osgood (landlord-tenant) · RUB-05 FOLIO validity + semantic fit · FAIL">
+          <div class="rhead"><span class="rgate">RUB-05 · FOLIO validity + semantic fit</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2 · v1.2 amendment</span></div>
+          <p class="rwhy">IRIs all resolve mechanically, but the surfaced mappings are substantially semantic mismatches presented at 70–90% confidence. Under the v1.2 semantic-fit sub-criterion, resolvability alone no longer satisfies RUB-05.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>"Habitable Living Conditions" → Living (vital status, 90%) · "Rent Withholding" → Insurance Claims · "Retaliatory Behavior" → Lease (85%) · "Utility Disruption" → Service. 23/23 resolve; 2 claims carry no IRI at all.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-lt-05" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-lt-05" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-lt-05" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-lt-05" placeholder="Your reasoning (optional) — e.g. is 70–90% confidence on a mismatch a hard gate, or a warning?"></textarea>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ruling" data-verdict="Danika Osgood (landlord-tenant) · RUB-15 Export integrity · FAIL">
+          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2</span></div>
+          <p class="rwhy">PDFs round-trip fine, but the JSON export is an empty shell that does not match the 25 claims / 3 deadlines on screen (BUG-18), and the memos leak a rewriter error string.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>export JSON: "claims_by_jurisdiction": {}, "deadlines": [], "action_items": [], "executive_summary": "" — vs 25 claims on screen. Memos 51/53 leak: "It seems there was an issue with the text provided. Please provide the legal text you'd like rewritten."</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-lt-15" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-lt-15" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-lt-15" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-lt-15" placeholder="Your reasoning (optional)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ruling warn" data-verdict="Danika Osgood (landlord-tenant) · RUB-09 Deadline accuracy · PASS (borderline, flagged for you)">
+          <div class="rhead"><span class="rgate">RUB-09 · Deadline accuracy &amp; primary-source grounding</span><span class="rverdict warn">Pass — borderline</span><span class="rcrit">weight 2 · flagged for Damien</span></div>
+          <p class="rwhy">No wrong date or authority is asserted, so it passes as scored. But zero primary-source statutes are cited, rule_ids are self-referential, and there is no "what state are you in?" question. A strict reading of the landlord-tenant addendum (RUB-LT-16) would gate this. Your call on strictness.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>citation = "The date printed on your court notice… (confirm against the document itself)"; rule_id = "stated_court_date" / "generic_notice_window"; no § 504B.321 or § 504B.135 cited; jurisdiction resolved but state never confirmed with the client.</div>
+          <div class="control">
+            <fieldset><legend>Should "correct date, no statute cited" pass or gate?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-lt-09" value="Agree — pass"><span>Agree (pass)</span></label>
+                <label><input type="radio" name="v-lt-09" value="Disagree — should gate"><span>Disagree (gate it)</span></label>
+                <label><input type="radio" name="v-lt-09" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-lt-09" placeholder="Your reasoning (optional) — does a correct-but-uncited deadline mislead a self-rep client?"></textarea>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===================== IMMIGRATION ===================== -->
+  <article class="persona" id="p-imm">
+    <div class="phead">
+      <span class="pname">Marisol "Mari" Gómez</span>
+      <span class="pfacts">immigration · A 000-111-222 · Fort Snelling EOIR · hearing Aug 20 2026</span>
+      <span class="verdict-tag fail">2 / 6 — fail</span>
+    </div>
+    <div class="pbody">
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">a</span> What the client said</div>
+        <ul class="facts">
+          <li>Hearing letter: Fort Snelling, <span class="num">Aug 20 2026</span> 9am; if she misses it she can be removed <b>in absentia</b>.</li>
+          <li>Entered near Eagle Pass <span class="num">Aug 14 2019</span> with her son; got an NTA. A non-lawyer "Rigoberto" took $600, claimed to file asylum, vanished ~2021 — <b>notario fraud</b>.</li>
+          <li>Married <b>Danilo, an LPR of 10 years</b>, in 2022; he began <b>hitting her</b> — "first time last year," again Mar 15 2026.</li>
+          <li>Called Bloomington PD Mar 15; he was arrested; she <b>cooperated</b> — the U-visa predicate.</li>
+          <li>Works cleaning houses on a <b>borrowed SSN</b>; ~7 years in the U.S.; son (12) still in Honduras.</li>
+        </ul>
+        <div class="quotes">
+          <blockquote class="q">"I marry my husband Danilo in 2022, he already have his green card ten years now… he start drinking bad… he hit me first time last year, then again March 15 this year, I call the Bloomington police…"<cite>narrative ¶4 — VAWA + U-visa predicate, never named</cite></blockquote>
+          <blockquote class="q">"A man, not a lawyer, his name Rigoberto, charge me six hundred dollars, say he file my asylum paper… I never got nothing back."<cite>narrative ¶3 — notario fraud + asylum-exception evidence</cite></blockquote>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">b+c</span> Ground truth vs. what the system produced</div>
+        <div class="scroll">
+          <table class="xw">
+            <thead><tr><th class="gt">Expected issue (answer key)</th><th class="law">Governing law · FOLIO concept</th><th class="res">Result</th><th class="did">What the system actually did</th></tr></thead>
+            <tbody>
+              <tr class="r-found"><td class="gt">Removal proceedings / respond to NTA</td><td class="law">INA § 239 · NTA, Removal Proceedings</td><td class="res"><span class="rchip found">found</span></td><td class="did">"In-absentia Removal Risks" (0.90) + "Motion to Reopen/Reschedule Hearing" surfaced and prominent.</td></tr>
+              <tr class="r-missed"><td class="gt"><span class="gate-mark">gate</span>Asylum one-year deadline LAPSED (entry 08/14/19 → 08/14/20) → exception<span class="unspoken">unspoken</span></td><td class="law">INA § 208(a)(2)(B)/(D) · One-Year Deadline, Extraordinary Circumstances</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Never raised as an eligibility issue or computed as lapsed. Only "Asylum Application Malpractice" (0.80) touches asylum at all.</td></tr>
+              <tr class="r-missed"><td class="gt"><span class="gate-mark">gate</span>VAWA self-petition — battered spouse of an LPR<span class="unspoken">unspoken</span></td><td class="law">INA § 204(a)(1)(B) · VAWA Self-Petition / I-360</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Entirely absent — despite "married to LPR + battery" plainly in the narrative. The single largest miss.</td></tr>
+              <tr class="r-found"><td class="gt">U nonimmigrant status — victim of qualifying crime, cooperated w/ police</td><td class="law">INA § 101(a)(15)(U) · U Status / I-918B</td><td class="res"><span class="rchip found">found</span></td><td class="did">"Eligibility for U Visa" (0.75) surfaced. I-918B certification step not detailed.</td></tr>
+              <tr class="r-partial"><td class="gt">Unauthorized employment (borrowed SSN) → § 245(c)(2) bar, VAWA-exempt</td><td class="law">INA § 245(c)(2) · Unauthorized Employment</td><td class="res"><span class="rchip partial">partial</span></td><td class="did">"Unauthorized Employment Concerns" (0.85) surfaced — but mis-mapped to "Rize" (a Turkish city IRI) and the § 245(c)(2)/VAWA-exemption linkage is missed.</td></tr>
+              <tr class="r-partial"><td class="gt">Notario fraud / UPL by "Rigoberto"</td><td class="law">Consumer referral + asylum-exception evidence</td><td class="res"><span class="rchip partial">partial</span></td><td class="did">Gestured at via "Asylum Application Malpractice" (0.80); not framed as UPL or as extraordinary-circumstances evidence.</td></tr>
+              <tr class="r-missed"><td class="gt">Pereira / Niz-Chavez NTA defect (was time/date/place on the 2019 NTA?)</td><td class="law">Pereira v. Sessions · defective NTA</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Not raised; no gap question asked (0 questions generated at all).</td></tr>
+              <tr class="r-missed"><td class="gt">Non-LPR cancellation § 240A(b) — ~7 yrs presence, monitor</td><td class="law">INA § 240A(b) · Cancellation of Removal</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Not surfaced or monitored.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="scroll" style="margin-top:12px">
+          <table class="xw">
+            <thead><tr><th class="gt">Expected deadline (answer key)</th><th class="law">Governing authority</th><th class="res">Result</th><th class="did">What the system computed</th></tr></thead>
+            <tbody>
+              <tr class="r-found"><td class="gt">HARD: hearing <b class="num">Aug 20 2026</b> 9am Fort Snelling — miss = in-absentia removal</td><td class="law">8 C.F.R. § 1003.18; INA § 239</td><td class="res"><span class="rchip found">found</span></td><td class="did">Computed <span class="num">2026-08-20</span>, cited, prominent, high urgency. This is the one deadline done right (RUB-09 passes).</td></tr>
+              <tr class="r-missed"><td class="gt"><span class="gate-mark">gate</span>LAPSED: asylum 1-yr = <b class="num">Aug 14 2020</b> (~6 yrs past)</td><td class="law">INA § 208(a)(2)(B)</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Never surfaced or computed — the RUB-08 gate failure. See decision Q2.</td></tr>
+              <tr class="r-missed"><td class="gt">Soft: U-cert I-918B — request promptly (valid ~6 mo once signed)</td><td class="law">no statutory deadline</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Not surfaced. Two "deadlines" it did emit ("He hit me…") are events mis-ingested, computed = None.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="noise">
+          <h5>Noise surfaced as potential claims (RUB-05 semantic-fit failure)</h5>
+          <div class="noise-list">
+            <span class="noise-chip">Markman Hearing <b>0.7</b> · URGENT</span>
+            <span class="noise-chip">Child Custody &amp; Visitation <b>0.85</b></span>
+            <span class="noise-chip">Cross-Border Child Support <b>0.6</b></span>
+            <span class="noise-chip">Criminal Assault <b>0.7</b></span>
+            <span class="noise-chip">Litigation Events <b>0.7</b></span>
+            <span class="noise-chip">Pleadings <b>0.7</b></span>
+            <span class="noise-chip">Trial Court Practice Documents <b>0.7</b></span>
+          </div>
+          <p>"Markman Hearing" is a <em>patent-litigation</em> proceeding, surfaced URGENT on an asylum/DV intake. "Unauthorized Employment" mapped to "Rize," a Turkish city. Judge: 19/21 resolve but ~9/19 mismatched or placeholder.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">d</span> Judge's rulings — the gates that failed</div>
+
+        <div class="ruling" data-verdict="Marisol Gómez (immigration) · RUB-01 Issue completeness · FAIL">
+          <div class="rhead"><span class="rgate">RUB-01 · Issue completeness</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 3 · core value prop</span></div>
+          <p class="rwhy">The unspoken case-dispositive relief pathways are missing. VAWA self-petition is entirely absent despite the narrative stating she married an LPR who battered her; the asylum one-year bar is never raised as an eligibility issue; withholding/CAT and NTA defects also missed.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>Surfaced: in-absentia, U-visa, DVPO, notario fraud. Absent: VAWA self-petition (married-to-LPR + battery in narrative ¶4); asylum one-year bar; withholding/CAT; Pereira NTA defect. This is the RUB-01 doctrine-depth question — see decision Q1.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-imm-01" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-imm-01" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-imm-01" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-imm-01" placeholder="Your reasoning (optional) — is missing VAWA a hard gate, or acceptable if surfaced as a question? (ties to Q1)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ruling" data-verdict="Marisol Gómez (immigration) · RUB-08 Deadline surfacing · FAIL">
+          <div class="rhead"><span class="rgate">RUB-08 · Deadline detection &amp; computation</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 3</span></div>
+          <p class="rwhy">The hearing date is computed and prominent, but the answer key's hard item — the asylum one-year filing bar, lapsed since Aug 14 2020 — is never surfaced or computed. A lapsed-but-malpractice-relevant deadline still needs to be flagged.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>hearing 2026-08-20 computed + cited + prominent; asylum 1-yr lapse (Aug 14 2020) absent. The other three emitted "deadlines" are narrative events ("He hit me again on March 15") with computed = None.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-imm-08" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-imm-08" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-imm-08" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-imm-08" placeholder="Your reasoning (optional) — must an expired deadline still be computed + surfaced? (ties to Q2)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ruling" data-verdict="Marisol Gómez (immigration) · RUB-05 FOLIO validity + semantic fit · FAIL">
+          <div class="rhead"><span class="rgate">RUB-05 · FOLIO validity + semantic fit</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2 · v1.2</span></div>
+          <p class="rwhy">19/21 IRIs resolve, but roughly nine are mismatched or placeholder — including a patent "Markman Hearing" flagged URGENT and "Unauthorized Employment" mapped to a Turkish city.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>"Unauthorized Employment" → Rize, a Turkish city (85%); "Asylum Application Malpractice" → generic "Application"; Markman Hearing surfaced URGENT; 2 claims carry no IRI.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-imm-05" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-imm-05" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-imm-05" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-imm-05" placeholder="Your reasoning (optional)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ruling" data-verdict="Marisol Gómez (immigration) · RUB-15 Export integrity · FAIL">
+          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2</span></div>
+          <p class="rwhy">PDFs complete, but JSON exports are empty shells (BUG-18) and the rewriter error leaks 16× into memo_56 including the exported PDF.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>export JSON empty; memo_56 contains "It seems there was an issue with the text provided. Please provide the legal text you'd like rewritten." repeated 16 times, carried into the PDF.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-imm-15" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-imm-15" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-imm-15" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-imm-15" placeholder="Your reasoning (optional)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===================== FAMILY-CUSTODY ===================== -->
+  <article class="persona" id="p-fc">
+    <div class="phead">
+      <span class="pname">Dahlia Renshaw</span>
+      <span class="pfacts">family-custody · Hennepin Co. MN · Response due Jul 15 · ICMC Jul 22 2026</span>
+      <span class="verdict-tag fail">3 / 6 — fail</span>
+    </div>
+    <div class="pbody">
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">a</span> What the client said</div>
+        <ul class="facts">
+          <li>Never married to Corey; two kids (Miles 7, Ava 4); she has had them ~90% of the time.</li>
+          <li>Served <span class="num">Jun 15</span> with a <b>Petition to Establish Custody</b>; 30 days to respond; he seeks <b>sole custody + supervised time</b> for her. ICMC <span class="num">Jul 22</span>.</li>
+          <li><b>Jun 28</b>: Corey grabbed her arm hard enough to <b>bruise (photographed)</b>, threatened to take the kids so she'd "never see them again."</li>
+          <li>Kids witnessed it — Miles crying, Ava upset. She did <b>not</b> call police; has saved threatening texts since.</li>
+          <li>Can't afford a lawyer; sister suggests moving; she doesn't want to uproot the kids' school.</li>
+        </ul>
+        <div class="quotes">
+          <blockquote class="q">"he grabbed my arm so hard he left a bruise (I have pictures) and he was screaming that if I 'tried anything'… he'd take the kids and I'd 'never see them again,' Miles was crying in his room the whole time"<cite>narrative ¶2 — OFP grounds + DV custody factor + flight risk, never labeled</cite></blockquote>
+          <blockquote class="q">"I have 30 days to file a Response or he could get everything he's asking for including… full custody, sole, and I'd only get supervised time with my own kids"<cite>narrative ¶1 — default consequence</cite></blockquote>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">b+c</span> Ground truth vs. what the system produced</div>
+        <div class="scroll">
+          <table class="xw">
+            <thead><tr><th class="gt">Expected issue (answer key)</th><th class="law">Governing law · FOLIO concept</th><th class="res">Result</th><th class="did">What the system actually did</th></tr></thead>
+            <tbody>
+              <tr class="r-partial"><td class="gt">Custody / parenting time — best-interest determination (non-marital)</td><td class="law">§ 518.17 via § 257.541 · Legal/Physical Custody</td><td class="res"><span class="rchip partial">partial</span></td><td class="did">Surfaced as "Child Custody <em>Modification</em>" (1.0) — but this is an initial establishment, not a modification. Wrong legal frame (RUB-02).</td></tr>
+              <tr class="r-partial"><td class="gt"><span class="gate-mark">gate</span>Grounds for Order for Protection — Jun 28 grab + threat + texts<span class="unspoken">unspoken</span></td><td class="law">§ 518B.01 · Order for Protection (ex parte)</td><td class="res"><span class="rchip partial">partial</span></td><td class="did">"Domestic Violence Incident" (1.0) + "Restraining Order" (0.80) surfaced the DV, but not connected to the § 518B.01 OFP pathway or its 14-day hearing window.</td></tr>
+              <tr class="r-missed"><td class="gt"><span class="gate-mark">gate</span>Domestic-abuse custody factor — same incident bears on custody<span class="unspoken">unspoken</span></td><td class="law">§ 518.17 subd.1(a)(4) · Best-Interest / DV factor</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Never connected the Jun 28 assault to the custody presumption. This is the core RUB-01 failure.</td></tr>
+              <tr class="r-missed"><td class="gt">Parental-abduction / flight risk ("I'll take them")</td><td class="law">interim parenting-time terms</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Mislabeled as "Parental Alienation" (wrong concept) — no flight-risk issue raised.</td></tr>
+              <tr class="r-found"><td class="gt">Timely Response to avoid default</td><td class="law">MN R. Civ. P. · Default Judgment</td><td class="res"><span class="rchip found">found</span></td><td class="did">Surfaced + Jul 15 deadline computed (below).</td></tr>
+              <tr class="r-found"><td class="gt">Evidence preservation (injury photos, saved texts)</td><td class="law">Digital-Comms + Injury Documentation</td><td class="res"><span class="rchip found">found</span></td><td class="did">"Documentation and Evidence" (0.90) surfaced.</td></tr>
+              <tr class="r-missed"><td class="gt">Child endangerment / children witnessing DV — expedited relief basis</td><td class="law">§ 518.17 · Child Endangerment</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Not surfaced as an expedited/emergency basis.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="scroll" style="margin-top:12px">
+          <table class="xw">
+            <thead><tr><th class="gt">Expected deadline (answer key)</th><th class="law">Governing authority</th><th class="res">Result</th><th class="did">What the system computed</th></tr></thead>
+            <tbody>
+              <tr class="r-found"><td class="gt">Response to Petition: served Jun 15 + 30 days = <b class="num">Jul 15 2026</b></td><td class="law">MN R. Civ. P. 12 window</td><td class="res"><span class="rchip found">found</span></td><td class="did">Computed <span class="num">2026-07-15</span>, top-of-memo, high urgency. But mislabeled "a date you were given directly" — it was computed served+30, and jurisdiction is null.</td></tr>
+              <tr class="r-found"><td class="gt">ICMC <b class="num">Jul 22 2026</b> 9am (proceeds regardless of OFP)</td><td class="law">stated court date</td><td class="res"><span class="rchip found">found</span></td><td class="did">Computed <span class="num">2026-07-22</span>, prominent.</td></tr>
+              <tr class="r-missed"><td class="gt">OFP urgency: incident Jun 28 → ex parte immediately, full hearing ≤14 days of filing</td><td class="law">§ 518B.01</td><td class="res"><span class="rchip missed">missed</span></td><td class="did">Not computed; "Corey grabbed my arm" ingested as a deadline with computed = None. 14-day OFP window absent (contingent).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="noise">
+          <h5>Noise surfaced as potential claims (RUB-05 semantic-fit failure)</h5>
+          <div class="noise-list">
+            <span class="noise-chip">Macedonia <b>0.7</b> · URGENT</span>
+            <span class="noise-chip">Europe <b>0.7</b> · URGENT</span>
+            <span class="noise-chip">Parental Alienation <b>0.7</b></span>
+            <span class="noise-chip">Order <b>0.7</b></span>
+            <span class="noise-chip">Provisional Remedies <b>0.7</b></span>
+            <span class="noise-chip">Child Support Responsibilities <b>0.6</b></span>
+            <span class="noise-chip">Child Welfare Services <b>0.7</b></span>
+          </div>
+          <p>Two <em>geographic</em> concepts — "Macedonia" and "Europe" — are attached as claims at 70% and flagged URGENT in all three memos and their PDFs. The abduction threat is mapped to "Parental Alienation." Judge: 23/23 resolve, but the surfaced set is semantically off.</p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stitle"><span class="s-n">d</span> Judge's rulings — the gates that failed</div>
+
+        <div class="ruling" data-verdict="Dahlia Renshaw (family-custody) · RUB-01 Issue completeness · FAIL">
+          <div class="rhead"><span class="rgate">RUB-01 · Issue completeness</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 3</span></div>
+          <p class="rwhy">The § 518.17 domestic-abuse custody factor is never connected to the Jun 28 incident, the abduction threat is mislabeled "Parental Alienation" (so no flight-risk issue), and the custody matter itself is misframed as a modification.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>§ 518.17 DV custody factor never connected to the Jun 28 incident; abduction threat → "Parental Alienation" (no flight-risk issue); "Macedonia"/"Europe" surfaced URGENT; custody misframed as Modification.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-fc-01" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-fc-01" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-fc-01" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-fc-01" placeholder="Your reasoning (optional) — DV was surfaced; is failing to connect it to the custody factor a full gate? (ties to Q1)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ruling" data-verdict="Dahlia Renshaw (family-custody) · RUB-05 FOLIO validity + semantic fit · FAIL">
+          <div class="rhead"><span class="rgate">RUB-05 · FOLIO validity + semantic fit</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2 · v1.2</span></div>
+          <p class="rwhy">All 23 IRIs resolve, but geographic concepts are attached as claims and flagged URGENT, and the abduction threat is mapped to the wrong concept.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>"Macedonia" + "Europe" attached as claims at 70% and URGENT-flagged in all 3 memos/PDFs; bare "Order"; "Parental Alienation" for the abduction threat.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-fc-05" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-fc-05" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-fc-05" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-fc-05" placeholder="Your reasoning (optional)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ruling" data-verdict="Dahlia Renshaw (family-custody) · RUB-15 Export integrity · FAIL">
+          <div class="rhead"><span class="rgate">RUB-15 · Export integrity</span><span class="rverdict fail">Fail (gate)</span><span class="rcrit">weight 2</span></div>
+          <p class="rwhy">PDFs complete, but JSON exports are empty shells (BUG-18) and the rewriter error appears as the "Conclusion" of 10+ sections in memo_59 and its PDF.</p>
+          <div class="evidence"><span class="elab">Judge-cited evidence</span>export JSON empty; memo_59 renders "It seems there was an issue with the text provided…" under a "#### Conclusion" heading across 10+ sections, carried into the PDF.</div>
+          <div class="control">
+            <fieldset><legend>Do you agree with this verdict?</legend>
+              <div class="opts">
+                <label><input type="radio" name="v-fc-15" value="Agree"><span>Agree</span></label>
+                <label><input type="radio" name="v-fc-15" value="Disagree"><span>Disagree</span></label>
+                <label><input type="radio" name="v-fc-15" value="Unsure"><span>Unsure</span></label>
+              </div>
+              <textarea data-note="v-fc-15" placeholder="Your reasoning (optional)"></textarea>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ============ 3. DECISIONS ============ -->
+<section id="decisions">
+  <h2 class="secnum" data-n="3">Open decisions</h2>
+  <div class="sechead">Four calls only you can make</div>
+  <p class="sechead-note prose">Each has a recommendation. Your pick + any notes flow into the composer below alongside your per-verdict agreements.</p>
+
+  <div class="decision" id="q1">
+    <div class="dhead"><span class="dq">Q1 — RUB-01 doctrine depth</span><span class="dtag">gate policy</span></div>
+    <p class="dbody">Must the system spot <b>unstated doctrine</b> — VAWA relief, the asylum one-year bar, § 518.17 DV custody factors — that a client never names? Today, missing these hard-gates RUB-01 for immigration and family-custody.</p>
+    <div class="rec"><b>Claude recommends — option (b)</b> Surface-as-question suffices. Require the system to raise the unstated doctrine as a flagged issue or a follow-up question ("You mentioned your husband has a green card and hurt you — a VAWA self-petition may apply; a lawyer should check"), but don't demand full doctrinal analysis at intake. Hard-gating full doctrine (a) over-promises for a gpt-4o-mini intake tool; deferring entirely (c) buries the core value prop.</p>
+    <div class="control">
+      <fieldset><legend>Your call</legend>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="(a) yes — hard-gate full doctrine"><span>(a) Hard-gate</span></label>
+          <label><input type="radio" name="q1" value="(b) surface-as-question suffices [Claude rec]"><span>(b) Surface-as-question</span></label>
+          <label><input type="radio" name="q1" value="(c) defer to attorney-review scope"><span>(c) Defer to attorney review</span></label>
+        </div>
+        <textarea data-note="q1" placeholder="Notes (optional)"></textarea>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="decision" id="q2">
+    <div class="dhead"><span class="dq">Q2 — RUB-08 lapsed deadlines</span><span class="dtag">gate policy</span></div>
+    <p class="dbody">Must <b>LAPSED</b> deadlines — e.g. Mari's asylum window that expired Aug 2020 — still be computed and surfaced, even though the date is in the past?</p>
+    <div class="rec"><b>Claude recommends — yes, flagged as lapsed</b> A missed-and-expired deadline is malpractice-relevant: it tells the client (and any reviewing attorney) that a right was likely lost and routes to the exception analysis (extraordinary/changed circumstances). Compute it, label it clearly "this deadline has passed," and surface the fallback — don't silently drop it because it's in the past.</p>
+    <div class="control">
+      <fieldset><legend>Your call</legend>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="Yes — compute + surface lapsed, flagged [Claude rec]"><span>Yes — flag as lapsed</span></label>
+          <label><input type="radio" name="q2" value="No — only surface live deadlines"><span>No — live only</span></label>
+          <label><input type="radio" name="q2" value="Unsure"><span>Unsure</span></label>
+        </div>
+        <textarea data-note="q2" placeholder="Notes (optional)"></textarea>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="decision" id="q3">
+    <div class="dhead"><span class="dq">Q3 — Hydration re-gen</span><span class="dtag">spend approval</span></div>
+    <p class="dbody">Approve a <b>&lt; $0.10</b> targeted re-generation to fix 5 charset defects plus the native-review rejects (the leaked rewriter-error strings)?</p>
+    <div class="rec"><b>Claude recommends — approve</b> Sub-dime spend, isolated to the defective spans, and it clears visible garbage from the memos/PDFs a client would see. Low cost, direct quality win.</p>
+    <div class="control">
+      <fieldset><legend>Your call</legend>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="Approve <$0.10 targeted re-gen [Claude rec]"><span>Approve</span></label>
+          <label><input type="radio" name="q3" value="Hold"><span>Hold</span></label>
+          <label><input type="radio" name="q3" value="Approve with changes (see notes)"><span>Approve w/ changes</span></label>
+        </div>
+        <textarea data-note="q3" placeholder="Notes (optional)"></textarea>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="decision" id="q4">
+    <div class="dhead"><span class="dq">Q4 — Redesign mockup pick</span><span class="dtag">design</span></div>
+    <p class="dbody">Reminder: three home-page directions for damienriehl.com await your pick or blend — <b>A Editorial Authority</b>, <b>B Rule of Law</b>, <b>C Computable Law</b>.</p>
+    <p class="dbody" style="margin-top:8px"><b>Published Artifact URLs:</b> in yesterday's session (chat / HANDOFF) — they were published via the Artifact tool but not written back into any brief file, so I can't cite them here. The source HTML lives locally if you want to reopen them:</p>
+    <ul class="fyi" style="border-left:4px solid var(--accent);list-style:none;padding-left:18px">
+      <li><code>websites/docs/sketches/direction-a-editorial-authority.html</code></li>
+      <li><code>websites/docs/sketches/direction-b-rule-of-law.html</code></li>
+      <li><code>websites/docs/sketches/direction-c-computable-law.html</code></li>
+    </ul>
+    <div class="rec"><b>Claude recommends — no recommendation yet</b> This is a design/taste call that's yours. If you tell me the pick (or a blend, e.g. "A layout + C's type"), I'll take it from there.</div>
+    <div class="control">
+      <fieldset><legend>Your pick</legend>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="A — Editorial Authority"><span>A — Editorial</span></label>
+          <label><input type="radio" name="q4" value="B — Rule of Law"><span>B — Rule of Law</span></label>
+          <label><input type="radio" name="q4" value="C — Computable Law"><span>C — Computable</span></label>
+          <label><input type="radio" name="q4" value="Blend (see notes)"><span>Blend</span></label>
+        </div>
+        <textarea data-note="q4" placeholder="Notes (optional) — e.g. 'A layout with C's typography'"></textarea>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="fyi">
+    <h4>FYI — also blocked on you (not for this page's feedback, just so you have it)</h4>
+    <ul>
+      <li><b>book-indexer PyPI release</b> — blocked on your pypi.org pending-publisher setup (repo <code>book-indexer</code>, workflow <code>publish.yml</code>, environment <code>pypi</code>), then <code>gh release create v0.1.0</code>. CI still needs greening (pre-existing).</li>
+      <li><b>Retargeting session agenda</b> — 16 upstream-queue PRs to review, the three-book pass, and the CatholicOS READMEs are queued and waiting on a working session with you.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 4. COMPOSER ============ -->
+<section id="composer">
+  <h2 class="secnum" data-n="4">Send your feedback</h2>
+  <div class="sechead">One button, one paste</div>
+  <div class="composer">
+    <h3>Copy my feedback</h3>
+    <p>This gathers every agree/disagree you set above, your notes, and your four decisions into a plain-text summary. Click the button, then paste it back to Claude in chat — that's the whole loop, no backend, nothing leaves this page until you paste it.</p>
+    <div class="actionbar">
+      <button class="copybtn" id="copyBtn" type="button">Copy my feedback to clipboard</button>
+      <span class="copystate" id="copyState">Copied — now paste it to Claude in chat.</span>
+    </div>
+    <textarea id="assembled" readonly aria-label="Assembled feedback summary — editable copy target"></textarea>
+  </div>
+</section>
+
+<footer class="foot">
+  <hr class="thin">
+  <p style="margin-top:14px"><b>Overnight work, in flight.</b> The engineering fixes behind these failures — <b>BUG-18</b> (wire the real analysis payload into the JSON exporter), <b>BUG-19</b>, <b>BUG-20</b> (domain-mismatched resource list), and <b>BUG-21</b> (semantic-fit gating on FOLIO mappings) — are running autonomously right now. This page validates <b>round 2 exactly as it was judged</b>; it does not reflect those in-progress fixes. Your verdicts here tell me whether the judge called it right before the next re-run.</p>
+  <p class="runmeta">Sources: personas/ANSWER-KEYS.md · runs/{landlord-tenant,immigration,family-custody}/run.json (26/27/28) · manifest.json (re-judge v1.2) · docs/rubrics/intake-quality-v1.md (v1.2 LOCKED). Rendered for review — self-contained, no external requests.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function assemble(){
+    var out=[];
+    out.push("=== alea-intake Persona UAT — Damien's validation feedback ===");
+    out.push("Round 2 re-judge vs rubric v1.2 (LOCKED) · runs 26/27/28");
+    out.push("");
+    out.push("--- PER-VERDICT AGREEMENTS ---");
+    var verdicts=document.querySelectorAll("[data-verdict]");
+    var anyV=false;
+    verdicts.forEach(function(block){
+      var label=block.getAttribute("data-verdict");
+      var radios=block.querySelectorAll('input[type=radio]');
+      var choice=null;
+      radios.forEach(function(r){ if(r.checked) choice=r.value; });
+      var noteEl=block.querySelector('textarea[data-note]');
+      var note=noteEl?noteEl.value.trim():"";
+      if(choice||note){
+        anyV=true;
+        out.push("• "+label);
+        out.push("    you: "+(choice||"(no choice)")+(note?"  — "+note:""));
+      }
+    });
+    if(!anyV) out.push("(none set)");
+    out.push("");
+    out.push("--- DECISIONS ---");
+    var qs=[["q1","Q1 RUB-01 doctrine depth"],["q2","Q2 RUB-08 lapsed deadlines"],["q3","Q3 hydration re-gen spend"],["q4","Q4 redesign mockup pick"]];
+    qs.forEach(function(q){
+      var name=q[0], title=q[1];
+      var sel=document.querySelector('input[name="'+name+'"]:checked');
+      var noteEl=document.querySelector('textarea[data-note="'+name+'"]');
+      var note=noteEl?noteEl.value.trim():"";
+      out.push("• "+title);
+      out.push("    you: "+(sel?sel.value:"(no choice)")+(note?"  — "+note:""));
+    });
+    out.push("");
+    out.push("--- END ---");
+    return out.join("\n");
+  }
+  var ta=document.getElementById("assembled");
+  var btn=document.getElementById("copyBtn");
+  var state=document.getElementById("copyState");
+  function refresh(){ ta.value=assemble(); }
+  document.addEventListener("input",function(e){
+    if(e.target.matches("input[type=radio],textarea[data-note]")) refresh();
+  });
+  document.addEventListener("change",function(e){
+    if(e.target.matches("input[type=radio]")) refresh();
+  });
+  refresh();
+  btn.addEventListener("click",function(){
+    refresh();
+    var done=function(){ state.classList.add("show"); setTimeout(function(){state.classList.remove("show");},4000); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(ta.value).then(done,function(){ ta.focus(); ta.select(); done(); });
+    } else {
+      ta.focus(); ta.select();
+      try{ document.execCommand("copy"); }catch(e){}
+      done();
+    }
+  });
+})();
+</script>
