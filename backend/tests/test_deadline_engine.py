@@ -31,7 +31,9 @@ def test_mn_family_response_served_plus_30():
     assert d.computed is True
     assert d.computed_date == date(2026, 7, 15)
     assert d.rule_id == "mn_family_response_30d"
-    assert d.citation is not None and "303.03" in d.citation
+    # BUG-24: correct authority is Minn. Stat. § 518.12 (NOT Rule 303.03, which
+    # governs family-court motion timing, not the answer deadline).
+    assert d.citation is not None and "518.12" in d.citation
     assert d.urgency == "high"
     assert GENERIC_HEDGE in d.hedge
 
@@ -226,3 +228,46 @@ def test_asylum_entry_mentioning_notice_to_appear_uses_one_year_rule():
     d = _one([ev])
     assert d.rule_id == "asylum_one_year"
     assert d.computed_date == date(2026, 9, 1)
+
+
+# ---------------------------------------------------------------------------
+# Q5 (RUB-09) — provisional tiered citation standard (Damien 2026-07-08):
+#   codified-law deadlines carry the correct primary-source citation;
+#   uncited/no-rule events are hedged (never bare authoritative dates).
+# ---------------------------------------------------------------------------
+
+
+def test_q5_codified_rules_carry_correct_primary_source_citations():
+    """Every codified-law deadline computes WITH its correct statutory citation."""
+    cases = [
+        (DeadlineEvent(event_type="asylum_entry", trigger="entry",
+                       date=date(2024, 1, 2), jurisdiction_hint="US"),
+         None, "208(a)(2)(B)"),
+        (DeadlineEvent(event_type="custody_response", trigger="served",
+                       date=date(2026, 6, 15), jurisdiction_hint="MN"),
+         "MN", "518.12"),
+        (DeadlineEvent(event_type="eviction_summons", trigger="served",
+                       raw_text="eviction summons", date=date(2026, 7, 2),
+                       jurisdiction_hint="MN"),
+         "MN", "504B.321"),
+    ]
+    for ev, jur, needle in cases:
+        d = compute_deadlines([ev], jurisdiction=jur, today=TODAY)[0]
+        assert d.computed is True, ev.event_type
+        assert d.citation and needle in d.citation, (ev.event_type, d.citation)
+        # Never a bare authoritative date: a hedge is always attached.
+        assert d.hedge and GENERIC_HEDGE in d.hedge
+
+
+def test_q5_uncited_event_is_hedged_not_bare():
+    """A no-rule event surfaces hedged with NO fabricated citation (uncited=hedged)."""
+    ev = DeadlineEvent(
+        event_type="some_state_filing",
+        raw_text="I think I have to file something in Texas soon.",
+        trigger="deadline",
+        date=None,
+    )
+    d = compute_deadlines([ev], today=TODAY)[0]
+    assert d.computed is False
+    assert d.citation is None          # no invented authority
+    assert d.hedge == GENERIC_HEDGE    # hedged, not a bare date

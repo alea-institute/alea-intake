@@ -62,11 +62,21 @@ For each event return:
   "custody_response", "notice_to_vacate", "asylum_entry", "removal_hearing",
   "master_calendar_hearing", "filing_deadline", "injury".
 - raw_text: the exact narrative snippet the event came from.
-- trigger: the triggering act -- one of "served", "notice_posted", "hearing",
-  "filed", "incident", "entry", "deadline". Use "hearing" for a scheduled court
-  appearance date and "deadline" for an explicitly stated response/filing
-  deadline date.
-- date: the trigger date in ISO 8601 (YYYY-MM-DD), or null if not stated.
+- trigger: the triggering act -- one of "served", "service", "notice_posted",
+  "hearing", "filed", "incident", "entry", "deadline".
+  * When the client was SERVED with a petition, summons, or complaint (divorce,
+    custody, dissolution, eviction, civil suit), use trigger="served" and set
+    `date` to the DATE THEY WERE SERVED — NOT the response deadline. The engine
+    computes the response deadline from the service date (e.g. a served
+    Minnesota family petition = answer due 30 days later). Do this even if the
+    client also states "I have to respond by <date>"; the service date is what
+    the deadline rule needs.
+  * Use "hearing" for a scheduled court appearance date (the stated date IS the
+    deadline).
+  * Reserve "deadline" ONLY for an explicitly stated filing/response deadline
+    that stands alone with no service/trigger date to compute from.
+- date: the trigger date in ISO 8601 (YYYY-MM-DD), or null if not stated. For a
+  "served" event this is the service date, not the downstream response deadline.
 - jurisdiction_hint: the U.S. state (two-letter, e.g. "MN") or "US"/"federal"
   for immigration-court / federal matters. Infer it from the narrative (a
   Minnesota address, a Hennepin County court, an immigration court, ICE/EOIR,

@@ -13,8 +13,10 @@ reader to confirm the exact date, which is where such adjustments land.
 Citations (verify before relying):
   - MN eviction summons -> hearing window: Minn. Stat. § 504B.321 (hearing set
     7-14 days after issuance of the summons).
-  - MN family/civil response: Minn. Gen. R. Prac. 303.03 (answer served within
-    30 days of service of the petition).
+  - MN dissolution/family response: Minn. Stat. § 518.12 (respondent's answer
+    served within 30 days of service of the petition). NOTE: the earlier
+    attribution to Minn. Gen. R. Prac. 303.03 was WRONG — Rule 303 governs
+    family-court motion-practice timing, not the answer deadline (BUG-24).
   - Asylum one-year filing deadline: INA § 208(a)(2)(B); 8 U.S.C.
     § 1158(a)(2)(B).
   - Generic notice/cure window: the period stated in the notice or lease.
@@ -210,14 +212,17 @@ RULES: list[DeadlineRule] = [
     DeadlineRule(
         id="mn_family_response_30d",
         jurisdiction="MN",
-        citation="Minn. Gen. R. Prac. 303.03 (answer due 30 days after service)",
+        citation="Minn. Stat. § 518.12 (respondent's answer due 30 days after service of the petition)",
         urgency="high",
-        hedge_text=_VERIFY,
+        hedge_text=(
+            "In a Minnesota dissolution/family matter the answer is generally due "
+            "30 days after you were served with the petition. " + _VERIFY
+        ),
         applies=lambda ev, jur: (
             _is_mn(ev, jur) and ev.trigger in {"served", "service"}
         ),
         compute=lambda d, ev: d + timedelta(days=30),
-        description="MN family/civil response due 30 days after service of process.",
+        description="MN dissolution/family response due 30 days after service of the petition (Minn. Stat. § 518.12).",
     ),
     DeadlineRule(
         id="asylum_one_year",
