@@ -550,3 +550,84 @@ def test_gap_entry_action_item_ref_default_none():
     report = GapReportBuilder.build(gaps, [], claims, {}, convergence_score=0.5)
 
     assert report.consolidated_gaps[0].action_item_ref is None
+
+
+# ---------------------------------------------------------------------------
+# BUG-23 (RUB-15 GATE): executive_summary must be substantive, not empty
+# ---------------------------------------------------------------------------
+
+
+def _section(name, conf, jur="MN"):
+    from app.services.output.schemas import CIRACSection
+
+    return CIRACSection(
+        claim_id=1,
+        claim_name=name,
+        claim_type="identified",
+        confidence=conf,
+        jurisdiction=jur,
+        issue_statement=f"Whether {name} applies",
+    )
+
+
+def test_build_executive_summary_is_nonempty_with_issues():
+    """An analysis with claims yields a non-empty, factual summary (BUG-23)."""
+    from app.services.output.data_assembler import build_executive_summary
+    from app.services.output.schemas import GapReport
+
+    summary = build_executive_summary(
+        claims_by_jurisdiction={"MN": [_section("Warranty of Habitability", 0.9),
+                                        _section("Retaliatory Eviction", 0.7)]},
+        additional_by_jurisdiction={},
+        deadlines=[],
+        safety_alerts=[],
+        gap_report=GapReport(open_questions=["Q1", "Q2"]),
+        completeness_score=0.75,
+    )
+    assert summary.strip()
+    assert "2 potential legal issues" in summary
+    assert "Warranty of Habitability" in summary  # strongest named first
+    assert "75%" in summary
+    assert "2 follow-up questions" in summary
+
+
+def test_build_executive_summary_surfaces_lapsed_deadline_with_citation():
+    """A lapsed deadline is called out up-front and keeps its citation (BUG-23/Q2/Q5)."""
+    from app.services.output.data_assembler import build_executive_summary
+    from app.services.output.schemas import DeadlineRef, GapReport
+
+    lapsed = DeadlineRef(
+        event_text="Asylum one-year filing deadline",
+        computed_date="2020-08-14",
+        citation="INA § 208(a)(2)(B)",
+        computed=True,
+        urgency="lapsed",
+    )
+    summary = build_executive_summary(
+        claims_by_jurisdiction={"US": [_section("Asylum", 0.8, jur="US")]},
+        additional_by_jurisdiction={},
+        deadlines=[lapsed],
+        safety_alerts=[],
+        gap_report=GapReport(),
+        completeness_score=0.5,
+    )
+    assert "already" in summary.lower() and "passed" in summary.lower()
+    assert "2020-08-14" in summary
+    assert "INA § 208(a)(2)(B)" in summary  # citation preserved verbatim
+
+
+def test_build_executive_summary_no_issues_still_nonempty():
+    """Even with zero claims the summary is non-empty (never fails the gate blank)."""
+    from app.services.output.data_assembler import build_executive_summary
+    from app.services.output.schemas import GapReport
+
+    summary = build_executive_summary(
+        claims_by_jurisdiction={},
+        additional_by_jurisdiction={},
+        deadlines=[],
+        safety_alerts=[],
+        gap_report=GapReport(open_questions=["Need more info"]),
+        completeness_score=0.0,
+    )
+    assert summary.strip()
+    assert "No legal issues" in summary

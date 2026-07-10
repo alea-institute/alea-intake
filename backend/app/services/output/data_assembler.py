@@ -182,6 +182,124 @@ def _normalize(text: str) -> str:
     return collapsed.rstrip(".?!:;,")
 
 
+def build_executive_summary(
+    claims_by_jurisdiction: dict[str, list[CIRACSection]],
+    additional_by_jurisdiction: dict[str, list[AdditionalClaimRef]],
+    deadlines: list[DeadlineRef],
+    safety_alerts: list[SafetyAlertRef],
+    gap_report: GapReport,
+    completeness_score: float,
+) -> str:
+    """Synthesize a factual, professional-register executive summary (BUG-23).
+
+    The assembler previously hardcoded ``executive_summary=""``, so every memo
+    and export shipped with an empty summary — a GATE failure under RUB-15
+    (Damien ruling Q6, 2026-07-08). This builds a grounded summary from data
+    the pipeline already produced: no new facts are invented (RUB-04), and any
+    primary-source citation carried on a deadline is preserved verbatim so the
+    downstream language adapter's citation-restore pass keeps it intact.
+
+    Deterministic and LLM-free: consumer profiles rewrite this to plain language
+    via ``LanguageAdapter`` (which only runs when the field is non-empty).
+    """
+    all_sections: list[CIRACSection] = []
+    for secs in claims_by_jurisdiction.values():
+        all_sections.extend(secs)
+    total_issues = sum(len(v) for v in claims_by_jurisdiction.values()) + sum(
+        len(v) for v in additional_by_jurisdiction.values()
+    )
+    jurisdictions = sorted(
+        j for j in claims_by_jurisdiction.keys() if j and j != "General"
+    )
+
+    parts: list[str] = []
+
+    # 1. Issues found, naming the strongest by confidence.
+    if total_issues:
+        top = sorted(all_sections, key=lambda s: -s.confidence)[:3]
+        top_names = [s.claim_name for s in top if s.claim_name]
+        issue_word = "legal issue" if total_issues == 1 else "legal issues"
+        lead = f"This intake surfaced {total_issues} potential {issue_word}"
+        if jurisdictions:
+            lead += f" across {', '.join(jurisdictions)}"
+        if top_names:
+            lead += ". The most strongly supported " + (
+                "issue is " if len(top_names) == 1 else "issues are "
+            ) + _oxford_join(top_names)
+        parts.append(lead.rstrip(".") + ".")
+    else:
+        parts.append(
+            "No legal issues were confidently identified from the information "
+            "provided so far; the follow-up questions below are needed before "
+            "the matter can be assessed."
+        )
+
+    # 2. Deadlines FIRST-CLASS — lapsed/urgent items are the highest-stakes
+    #    content and must appear in the summary (RUB-08). Citation preserved.
+    if deadlines:
+        lapsed = [d for d in deadlines if d.urgency == "lapsed"]
+        computed = [d for d in deadlines if d.computed and d.computed_date]
+        if lapsed:
+            d = lapsed[0]
+            sent = (
+                f"IMPORTANT: at least one deadline appears to have already "
+                f"passed — {d.event_text}"
+            )
+            if d.computed_date:
+                sent += f" (computed {d.computed_date})"
+            if d.citation:
+                sent += f" [{d.citation}]"
+            parts.append(sent.rstrip(".") + ". Confirm this immediately, as "
+                         "missed deadlines can end a case.")
+        elif computed:
+            d = sorted(
+                computed, key=lambda x: _URGENCY_ORDER.get(x.urgency, 99)
+            )[0]
+            sent = f"A time-sensitive deadline was computed: {d.event_text}"
+            if d.computed_date:
+                sent += f" by {d.computed_date}"
+            if d.citation:
+                sent += f" [{d.citation}]"
+            parts.append(sent.rstrip(".") + ".")
+        else:
+            parts.append(
+                f"{len(deadlines)} time-sensitive item(s) were detected; confirm "
+                "the exact dates with the court or a lawyer."
+            )
+
+    # 3. Safety — calm, actionable.
+    if safety_alerts:
+        parts.append(
+            "Safety concerns were detected in this narrative; see the safety "
+            "resources below."
+        )
+
+    # 4. Completeness + open questions.
+    open_q = len(getattr(gap_report, "open_questions", []) or [])
+    if open_q:
+        q_word = "question" if open_q == 1 else "questions"
+        parts.append(
+            f"Analysis completeness is {completeness_score:.0%}; {open_q} "
+            f"follow-up {q_word} below would strengthen the assessment."
+        )
+    elif completeness_score:
+        parts.append(f"Analysis completeness is {completeness_score:.0%}.")
+
+    return " ".join(parts).strip()
+
+
+def _oxford_join(items: list[str]) -> str:
+    """Join names as 'A', 'A and B', or 'A, B, and C'."""
+    items = [i for i in items if i]
+    if not items:
+        return ""
+    if len(items) == 1:
+        return items[0]
+    if len(items) == 2:
+        return f"{items[0]} and {items[1]}"
+    return ", ".join(items[:-1]) + ", and " + items[-1]
+
+
 async def _gather_narrative_text(session: AsyncSession, intake_id: int) -> str:
     """Concatenate the intake's non-system message text + active fact assertions.
 
@@ -577,6 +695,17 @@ class DataAssembler:
         # Completeness score
         completeness = run.convergence_score if run and run.convergence_score else 0.0
 
+        # BUG-23 (RUB-15 GATE, Damien Q6): synthesize a real executive summary
+        # from the assembled data. An empty summary now fails the export gate.
+        executive_summary = build_executive_summary(
+            claims_by_jurisdiction=claims_by_jurisdiction,
+            additional_by_jurisdiction=additional_by_jurisdiction,
+            deadlines=deadlines,
+            safety_alerts=safety_alerts,
+            gap_report=gap_report,
+            completeness_score=completeness,
+        )
+
         return OutputContext(
             intake_id=intake_id,
             run_id=run_id,
@@ -591,7 +720,7 @@ class DataAssembler:
             action_items=[],
             gap_report=gap_report,
             completeness_score=completeness,
-            executive_summary="",
+            executive_summary=executive_summary,
             profile=profile,
         )
 
