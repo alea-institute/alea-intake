@@ -160,8 +160,8 @@ class GapAnalyzeStage:
             )
             new_gaps.append(gap)
 
-        # 4. Procedural requirements via LLM
-        procedural_gaps = await self._detect_procedural_gaps(
+        # 4. Procedural requirements + unstated legal doctrine via LLM
+        procedural_gaps = await self._detect_procedural_and_doctrine_gaps(
             claims, iteration, run, existing_signatures
         )
         new_gaps.extend(procedural_gaps)
@@ -190,29 +190,58 @@ class GapAnalyzeStage:
             "summary": f"Found {len(new_gaps)} gaps across {len(gap_types)} types. Coverage: {coverage_pct:.1%}",
         }
 
-    async def _detect_procedural_gaps(
+    async def _detect_procedural_and_doctrine_gaps(
         self,
         claims: list[AnalysisClaim],
         iteration: AnalysisIteration,
         run: AnalysisRun,
         existing_signatures: set[tuple],
     ) -> list[AnalysisGap]:
-        """Use LLM to detect procedural requirement gaps.
+        """Use LLM to detect procedural-requirement AND unstated-doctrine gaps.
 
-        Asks the LLM about deadlines, filing requirements, statutes of
-        limitations, and other procedural gaps for the identified claims.
+        Two purposes, one call:
+          1. Procedural requirements (deadlines, filings, SOL, jurisdiction).
+          2. Q1 (RUB-01, Damien 2026-07-08): surface UNSTATED legal DOCTRINE
+             that the facts imply but the client did not name — specific relief,
+             eligibility criteria, and statutory exceptions a legal-aid attorney
+             would investigate. Damien's ruling: surfacing the doctrine AS A
+             QUESTION suffices. These gaps flow into question_gen and become
+             consumer-facing follow-up questions, so a matter's latent doctrine
+             (e.g. VAWA self-petition eligibility, asylum one-year-bar
+             exceptions for changed/extraordinary circumstances, the
+             best-interest / domestic-abuse custody factors under Minn. Stat.
+             § 518.17) is probed even when no explicit claim was spotted for it.
         """
         if not claims:
             return []
 
-        claims_desc = ", ".join(c.claim_name for c in claims)
+        # Pass claim rationales too so the doctrine probe sees the fact context,
+        # not just claim labels.
+        claims_desc = "; ".join(
+            f"{c.claim_name}" + (f" ({c.rationale})" if c.rationale else "")
+            for c in claims
+        )[:2000]
         prompt = (
-            f"Analyze the following legal claims for procedural requirements that may be missing: {claims_desc}. "
-            f"Identify any filing deadlines, statute of limitations concerns, jurisdictional requirements, "
-            f"or other procedural gaps. Return only gaps of type 'procedural_requirement'.\n\n"
+            "You are assisting a legal-aid intake system. Two tasks over the "
+            "identified legal claims below:\n"
+            "1. PROCEDURAL: identify any filing deadlines, statute-of-limitations "
+            "concerns, jurisdictional requirements, or other procedural gaps.\n"
+            "2. UNSTATED DOCTRINE: identify specific legal doctrine the facts "
+            "imply but the client likely did not name — particular forms of "
+            "relief, ELIGIBILITY criteria, and statutory EXCEPTIONS an attorney "
+            "would investigate (e.g. eligibility for a specific immigration "
+            "relief such as VAWA self-petition or a U/T visa; exceptions to a "
+            "filing bar such as the asylum one-year-bar 'changed or extraordinary "
+            "circumstances' exception; the statutory best-interest and "
+            "domestic-abuse factors that govern a custody decision). Phrase each "
+            "as a concrete question a non-lawyer could be asked to determine "
+            "whether the doctrine applies. Only surface doctrine the facts fairly "
+            "raise; never invent facts.\n\n"
+            f"Identified claims: {claims_desc}.\n\n"
+            "Return EVERY gap with gap_type 'procedural_requirement'.\n"
             'Return ONLY a JSON object with EXACTLY this structure:\n'
             '{"gaps": [{"gap_type": "procedural_requirement", "claim_name": "name or null", '
-            '"element_name": null, "description": "what is missing", "priority": 50}], '
+            '"element_name": null, "description": "the question / what is missing", "priority": 50}], '
             '"coverage_pct": 0.0, "summary": "one-line overview"}'
         )
 

@@ -339,6 +339,63 @@ async def test_detect_procedural_requirements(
 
 
 @pytest.mark.asyncio
+async def test_q1_doctrine_probe_prompt_and_gap(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    claims_with_elements: tuple[list[AnalysisClaim], list[ClaimElement]],
+    mock_llm_service: MagicMock,
+):
+    """Q1 (RUB-01): the gap probe elicits UNSTATED DOCTRINE as questions.
+
+    Asserts (a) the probe prompt instructs the model to surface unstated
+    doctrine / eligibility / exceptions, and (b) a returned doctrine gap flows
+    through as a persisted procedural_requirement gap that question_gen can turn
+    into a consumer question.
+    """
+    claims, elements = claims_with_elements
+    from app.services.analysis.schemas import GapAnalysisResult, GapSchema
+
+    captured: dict = {}
+
+    async def _capture(*args, **kwargs):
+        captured["prompt"] = kwargs.get("prompt") or (args[0] if args else "")
+        return GapAnalysisResult(
+            gaps=[
+                GapSchema(
+                    gap_type="procedural_requirement",
+                    claim_name=None,
+                    description=(
+                        "Do you qualify for a VAWA self-petition based on abuse "
+                        "by a U.S.-citizen spouse?"
+                    ),
+                    priority=80,
+                ),
+            ],
+            coverage_pct=0.0,
+            summary="Doctrine probe",
+        )
+
+    mock_llm_service.json_async = AsyncMock(side_effect=_capture)
+
+    stage = GapAnalyzeStage(llm_service=mock_llm_service, db_session=async_session)
+    result = await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        claims=claims,
+        elements=elements,
+        mappings=[],
+        existing_gaps=[],
+    )
+
+    prompt = captured.get("prompt", "")
+    assert "UNSTATED DOCTRINE" in prompt
+    assert "ELIGIBILITY" in prompt or "eligibility" in prompt
+    assert "EXCEPTION" in prompt.upper()
+    assert result["gap_types"].get("procedural_requirement", 0) >= 1
+
+
+@pytest.mark.asyncio
 async def test_gap_priority_ordering(
     async_session: AsyncSession,
     analysis_run: AnalysisRun,
