@@ -301,3 +301,43 @@ async def test_backfill_empty_intake(db_session, intake_scaffold):
 
     assert created == 0
     mock_call.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_backfill_uses_normalized_text_for_uploads(db_session, intake_scaffold):
+    """BUG-27: for an uploaded document the body text lives in normalized_text
+    while content_encrypted holds only the filename. Backfill must extract from
+    the document body, not the filename (which yields zero facts)."""
+    svc = IntakeSessionService(db_session)
+    intake_id = intake_scaffold["intake"].id
+
+    # Simulate an upload: content = filename; extracted body in normalized_text.
+    msg = await svc.store_message(
+        session_id=intake_scaffold["session"].id,
+        sender_type="consumer",
+        modality="document",
+        content="petition.pdf",
+        party_id=intake_scaffold["party"].id,
+    )
+    body = "I was injured on January 15, 2026 at the grocery store with a wet floor."
+    msg.normalized_text = body.encode("utf-8")
+    await db_session.flush()
+
+    mock_llm = _mock_llm_service()
+    with patch.object(
+        FactExtractionService,
+        "_call_llm_extraction",
+        new_callable=AsyncMock,
+    ) as mock_call:
+        mock_call.return_value = _extraction_json()
+        created = await backfill_intake_facts(
+            db_session, intake_id, mock_llm, folio=None, embedding_service=None
+        )
+
+    # The LLM must have been fed the document BODY, not the filename.
+    assert mock_call.await_count == 1
+    fed_text = mock_call.await_args.args[0] if mock_call.await_args.args else \
+        mock_call.await_args.kwargs.get("text", "")
+    assert "grocery store" in fed_text
+    assert "petition.pdf" not in fed_text
+    assert created > 0

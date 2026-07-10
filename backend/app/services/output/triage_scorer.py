@@ -142,27 +142,60 @@ class TriageScorer:
             claims.extend(sections)
         return claims
 
-    @staticmethod
-    def _extract_practice_areas(claims: list[CIRACSection]) -> Counter[str]:
-        """Extract practice areas from claims using claim_type and folio_iri.
+    # BUG-25: keyword -> practice-area map. Each tuple is (area label, keywords).
+    # Ordered most-specific first; the first matching area wins. Used only as a
+    # human-readable classifier for the triage destination — NEVER claim_type
+    # (which is the provenance enum "identified"/"discovered", not an area).
+    _PRACTICE_AREA_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
+        ("Immigration", ("asylum", "removal", "deportation", "visa", "vawa",
+                          "uscis", "immigration", "notario", "naturaliz", "green card")),
+        ("Family Law", ("custody", "divorce", "dissolution", "child support",
+                        "parenting", "paternity", "guardian", "adoption",
+                        "order for protection", "domestic abuse", "alimony",
+                        "spousal", "visitation", "family")),
+        ("Landlord-Tenant / Housing", ("evict", "eviction", "habitability",
+                                       "rent", "lease", "tenant", "landlord",
+                                       "notice to vacate", "repair", "mold",
+                                       "warranty of habitability", "escrow")),
+        ("Employment", ("termination", "wrongful discharge", "wage", "overtime",
+                        "harassment", "discrimination", "retaliation",
+                        "unemployment", "flsa", "employer", "workplace",
+                        "employment")),
+        ("Consumer / Debt", ("debt", "collection", "fdcpa", "creditor", "loan",
+                             "fraud", "deceptive", "warranty", "repossess")),
+        ("Public Benefits", ("snap", "medicaid", "medicare", "benefits",
+                             "disability", "ssi", "ssdi", "welfare")),
+    )
 
-        Derives practice area from:
-        - folio_iri containing "AreaOfLaw" path
-        - claim_type as fallback
+    @classmethod
+    def _classify_practice_area(cls, claim: CIRACSection) -> str:
+        """Classify a claim into a human-readable practice area (BUG-25).
+
+        Prefers an explicit AreaOfLaw IRI path when present, then a keyword
+        match on the claim name. Falls back to "General Civil" — never the
+        claim_type provenance enum.
+        """
+        if claim.folio_iri and "AreaOfLaw" in claim.folio_iri:
+            match = re.search(r"AreaOfLaw[/.](\w+)", claim.folio_iri)
+            if match:
+                return match.group(1)
+        name = (claim.claim_name or "").lower()
+        for area, keywords in cls._PRACTICE_AREA_KEYWORDS:
+            if any(kw in name for kw in keywords):
+                return area
+        return "General Civil"
+
+    @classmethod
+    def _extract_practice_areas(cls, claims: list[CIRACSection]) -> Counter[str]:
+        """Extract human-readable practice areas from claims (BUG-25).
+
+        Never emits the claim_type provenance enum. Derives area from the
+        AreaOfLaw IRI path when available, else a keyword classifier over the
+        claim name, else "General Civil".
         """
         areas: Counter[str] = Counter()
         for claim in claims:
-            area = None
-            # Try folio_iri first (more specific)
-            if claim.folio_iri and "AreaOfLaw" in claim.folio_iri:
-                # Extract area name from IRI like .../AreaOfLaw/Employment
-                match = re.search(r"AreaOfLaw[/.](\w+)", claim.folio_iri)
-                if match:
-                    area = match.group(1)
-            # Fall back to claim_type
-            if not area:
-                area = claim.claim_type
-            areas[area] += 1
+            areas[cls._classify_practice_area(claim)] += 1
         return areas
 
     @staticmethod

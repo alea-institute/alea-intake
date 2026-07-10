@@ -402,3 +402,39 @@ class TestActionItemGenerator:
         gen = ActionItemGenerator()
         items = gen.generate(gap_report, {})
         assert items == []
+
+
+# ---------------------------------------------------------------------------
+# BUG-25: triage practice-area must NOT leak the claim_type provenance enum
+# ---------------------------------------------------------------------------
+
+
+def _claim(name, claim_type="identified", folio_iri=None):
+    return CIRACSection(
+        claim_id=1, claim_name=name, claim_type=claim_type, confidence=0.8,
+        jurisdiction="MN", folio_iri=folio_iri, issue_statement="x",
+    )
+
+
+def test_extract_practice_areas_never_leaks_claim_type():
+    """BUG-25: 'identified'/'discovered' must never appear as a practice area."""
+    claims = [
+        _claim("Eviction Defense", "identified"),
+        _claim("Warranty of Habitability", "discovered"),
+        _claim("Child Custody Modification", "identified"),
+        _claim("Asylum Application", "discovered"),
+        _claim("Wrongful Termination", "identified"),
+    ]
+    areas = TriageScorer._extract_practice_areas(claims)
+    assert "identified" not in areas
+    assert "discovered" not in areas
+    assert "Landlord-Tenant / Housing" in areas
+    assert "Family Law" in areas
+    assert "Immigration" in areas
+    assert "Employment" in areas
+
+
+def test_classify_practice_area_unknown_is_general_not_enum():
+    """An unrecognized claim classifies to 'General Civil', never claim_type."""
+    area = TriageScorer._classify_practice_area(_claim("Zorbnak Widget Dispute", "discovered"))
+    assert area == "General Civil"

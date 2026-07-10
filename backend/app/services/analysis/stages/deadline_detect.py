@@ -264,7 +264,10 @@ class DeadlineDetectStage:
                 )
             ).scalars().all()
             for msg in messages:
-                raw = msg.content_encrypted or b""
+                # BUG-27: prefer extracted document text (normalized_text) so
+                # uploads feed deadline detection; content_encrypted is the
+                # filename for uploads.
+                raw = msg.normalized_text or msg.content_encrypted or b""
                 text = raw.decode("utf-8", errors="replace").strip()
                 if text:
                     parts.append(text)

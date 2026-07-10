@@ -325,7 +325,10 @@ async def _gather_narrative_text(session: AsyncSession, intake_id: int) -> str:
             )
         ).scalars().all()
         for msg in messages:
-            raw = msg.content_encrypted or b""
+            # BUG-27: prefer extracted document text (normalized_text) so the
+            # safety pass sees upload content; content_encrypted is the filename
+            # for uploads.
+            raw = msg.normalized_text or msg.content_encrypted or b""
             text = raw.decode("utf-8", errors="replace").strip() if isinstance(raw, bytes) else str(raw).strip()
             if text:
                 parts.append(text)
@@ -769,10 +772,24 @@ class DataAssembler:
             select(FactClaimMapping).where(FactClaimMapping.claim_id.in_(claim_ids))
         )
         mappings = result.scalars().all()
-        by_element: dict[int, list[FactClaimMapping]] = defaultdict(list)
+
+        # BUG-26: FactMapStage re-runs every convergence iteration and persists a
+        # fresh mapping row each pass with no upsert, so the SAME (element, fact)
+        # pair accumulated 11-20 duplicate rows -> the memo rendered the same
+        # fact span a dozen times under one element. Collapse to one row per
+        # (element_id, fact_id), keeping the highest-confidence representative.
+        best_by_pair: dict[tuple[int, int], FactClaimMapping] = {}
         for m in mappings:
-            if m.element_id is not None:
-                by_element[m.element_id].append(m)
+            if m.element_id is None:
+                continue
+            pair = (m.element_id, m.fact_id)
+            existing = best_by_pair.get(pair)
+            if existing is None or (m.confidence or 0.0) > (existing.confidence or 0.0):
+                best_by_pair[pair] = m
+
+        by_element: dict[int, list[FactClaimMapping]] = defaultdict(list)
+        for (element_id, _fact_id), m in best_by_pair.items():
+            by_element[element_id].append(m)
         return dict(by_element)
 
     async def _load_facts(self, intake_id: int) -> dict[int, ExtractedFact]:

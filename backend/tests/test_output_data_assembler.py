@@ -631,3 +631,45 @@ def test_build_executive_summary_no_issues_still_nonempty():
     )
     assert summary.strip()
     assert "No legal issues" in summary
+
+
+# ---------------------------------------------------------------------------
+# BUG-26: fact->element mappings duplicated 11-20x per element must collapse
+# ---------------------------------------------------------------------------
+
+
+async def test_load_mappings_dedupes_duplicate_fact_element_pairs(async_session):
+    """BUG-26: N convergence iterations persist N duplicate mapping rows for the
+    same (element, fact) pair; _load_mappings must collapse to one (highest
+    confidence)."""
+    from app.models.analysis import FactClaimMapping
+    from app.services.output.data_assembler import DataAssembler
+
+    data = await _seed_full_analysis(async_session)
+    claim = data["claims"][0]
+    elem = data["elements"][0]
+    fact = data["facts"][0]
+
+    # Simulate 12 convergence-iteration re-persists of the SAME pair.
+    for i in range(12):
+        async_session.add(
+            FactClaimMapping(
+                fact_id=fact.id,
+                claim_id=claim.id,
+                element_id=elem.id,
+                confidence=0.50 + i * 0.01,  # varying; max is the last
+                mapping_rationale="dup",
+                iteration_number=i + 1,
+            )
+        )
+    await async_session.flush()
+
+    assembler = DataAssembler(async_session)
+    by_element = await assembler._load_mappings([c.id for c in data["claims"]])
+
+    rows = by_element.get(elem.id, [])
+    pairs = [(m.element_id, m.fact_id) for m in rows]
+    # Exactly one row for the (elem, fact) pair despite 12+ duplicates.
+    assert pairs.count((elem.id, fact.id)) == 1
+    kept = next(m for m in rows if m.fact_id == fact.id)
+    assert kept.confidence == max(0.90, 0.50 + 11 * 0.01)  # highest-confidence kept

@@ -94,7 +94,12 @@ async def backfill_intake_facts(
     for msg in messages:
         if msg.id in already:
             continue
-        raw = msg.content_encrypted or b""
+        # BUG-27: uploaded documents store the extracted body text in
+        # normalized_text while content_encrypted holds only the filename, so
+        # reading content_encrypted alone fed fact extraction the filename
+        # ("petition.pdf") and uploads contributed ZERO facts. Prefer the
+        # extracted text; fall back to content_encrypted for plain messages.
+        raw = msg.normalized_text or msg.content_encrypted or b""
         text = raw.decode("utf-8", errors="replace").strip()
         if not text:
             continue
