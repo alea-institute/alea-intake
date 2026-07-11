@@ -329,7 +329,10 @@ PROBES: list[DoctrineProbe] = [
             or (
                 "no receipt" in t
                 and "cash" in t
-                and _any(t, "landlord", "lease", "rent", "evict", "apartment", "tenant")
+                # Round 7 fix: bare "rent" matched "diffe-rent"/"cur-rent" in an
+                # elder matter; require an unambiguous tenancy word so an ATM
+                # "cash / no receipt" fact cannot trigger a deposit probe.
+                and _any(t, "landlord", "lease", "the rent", "pay rent", "evict", "apartment", "tenant")
             )
         ),
         priority=82,
