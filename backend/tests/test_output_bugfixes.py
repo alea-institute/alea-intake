@@ -460,7 +460,7 @@ def _ctx_with_prose():
         generated_at=datetime.now(timezone.utc),
         claims_by_jurisdiction={"California": [section]},
         gap_report=GapReport(),
-        executive_summary="The client likely has a viable claim.",
+        executive_summary="The client likely has a viable claim supported by several facts in the record.",
         profile=COURT_SELF_HELP_PROFILE,
     )
 
@@ -490,7 +490,9 @@ async def test_language_adapter_skips_professional_profile():
 
     assert llm.acomplete.await_count == 0
     # Prose unchanged.
-    assert adapted.executive_summary == "The client likely has a viable claim."
+    assert adapted.executive_summary == (
+        "The client likely has a viable claim supported by several facts in the record."
+    )
 
 
 async def test_plain_prompt_targets_sixth_grade():

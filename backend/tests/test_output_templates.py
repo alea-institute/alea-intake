@@ -190,7 +190,7 @@ def _make_context(
     include_triage: bool = True,
     include_action_items: bool = True,
     include_gaps: bool = True,
-    executive_summary: str = "This matter involves an employment discrimination claim.",
+    executive_summary: str = "This matter involves an employment discrimination claim with several supporting facts.",
 ) -> OutputContext:
     return OutputContext(
         intake_id=100,
@@ -400,7 +400,7 @@ class TestTemplateEngine:
 
     def test_executive_summary_included(self):
         """Executive summary placeholder included at top when non-empty."""
-        ctx = _make_context(executive_summary="This is a test summary.")
+        ctx = _make_context(executive_summary="This is a test summary long enough to be worth rewriting in plain language.")
         profile = OutputProfile(
             profile_type="law_firm",
             language_level="professional",
@@ -410,7 +410,7 @@ class TestTemplateEngine:
         )
         engine = TemplateEngine()
         result = engine.render_full(ctx, profile)
-        assert "This is a test summary." in result
+        assert "This is a test summary long enough to be worth rewriting in plain language." in result
 
     def test_law_firm_profile_no_triage(self):
         """law_firm profile renders full CIRAC memo without triage."""

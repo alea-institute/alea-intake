@@ -140,15 +140,22 @@ class ActionItemGenerator:
 
     @staticmethod
     def _map_priority(gap_priority: int) -> str:
-        """Map numeric gap priority to action item priority label.
+        """Map numeric gap priority (0-100 scale) to an action priority label.
 
-        - >= 8 -> urgent
-        - >= 5 -> important
-        - < 5  -> helpful
+        Gap priorities are 0-100 (gap_analyze uses confidence*100; the LLM
+        procedural default is 50; doctrine probes are 80-90). The original
+        thresholds (>=8 urgent, >=5 important) assumed a 0-10 scale, so EVERY
+        gap became "[URGENT]" -- the round-4c blanket-URGENT defect all three
+        judges flagged (genuine emergencies sat visually equal to
+        "potential claim not explored" noise).
+
+        - >= 80 -> urgent    (doctrine probes, near-certain-claim evidence gaps)
+        - >= 50 -> important (default procedural gaps, mid-confidence claims)
+        - <  50 -> helpful
         """
-        if gap_priority >= 8:
+        if gap_priority >= 80:
             return "urgent"
-        if gap_priority >= 5:
+        if gap_priority >= 50:
             return "important"
         return "helpful"
 

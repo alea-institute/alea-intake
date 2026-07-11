@@ -316,6 +316,25 @@ PROBES: list[DoctrineProbe] = [
         priority=82,
     ),
     DoctrineProbe(
+        id="rent_escrow_repair_remedy",
+        authority="Minn. Stat. § 504B.385 (rent escrow); § 504B.425 (remedies); § 504B.161 (covenants of habitability)",
+        question=(
+            "You mentioned holding back rent because the landlord is ignoring "
+            "repairs. Withholding on your own can be used against you in an "
+            "eviction — but there is a legal way to do it: in Minnesota you can "
+            "deposit the rent with the court (rent escrow, Minn. Stat. "
+            "§ 504B.385) and ask the court to order repairs; other states have "
+            "an equivalent. Have you asked the court about depositing your rent "
+            "instead of just holding it back?"
+        ),
+        applies=lambda t: (
+            _any(t, "held back", "withheld", "withholding", "holding back", "not paying the rent", "stopped paying")
+            and "rent" in t
+            and _any(t, "mold", "heat", "repair", "broken", "leak", "pest", "roach", "unsafe", "ignoring", "won't fix", "wont fix", "never fixed")
+        ),
+        priority=84,
+    ),
+    DoctrineProbe(
         id="defective_eviction_notice",
         authority="State eviction-notice content requirements (e.g., Minn. Stat. § 504B.321; the notice must state the specific grounds)",
         question=(

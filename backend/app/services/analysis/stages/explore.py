@@ -192,6 +192,14 @@ class ExploreStage:
                     folio_iri = None
                 confidence = verdict.adjusted_confidence
 
+            # RUB-05 (round-4c LT judge): traversal-discovered claims surfaced
+            # at 70% confidence read as CONFIDENT client legal issues (e.g.
+            # "Breach of Implied Warranty of Habitability by Home Seller" for a
+            # RENTER). A traversal neighbor is a lead, not a finding: cap its
+            # confidence below the weak-mapping threshold so it renders as a
+            # speculative "possible related area", never with false confidence.
+            confidence = min(float(confidence or 0.0), 0.4)
+
             # BUG-28: hedge unsupported evidence assertions in discovered-claim
             # rationale before persistence (RUB-04 GATE), same guard as issue_spot.
             raw_rationale = new_claim.get(

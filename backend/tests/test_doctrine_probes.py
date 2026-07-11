@@ -124,3 +124,18 @@ def test_deposit_probe_does_not_fire_without_rental_context():
     assert "security_deposit_irregularity" not in _ids(
         "I paid cash with no receipt for a used car."
     )
+
+
+def test_lt_rent_escrow_probe_fires_on_held_back_rent():
+    """Round-4c LT RUB-01 residual: rent-escrow remedy (504B.385) absent. The
+    probe must fire on the verbatim 'held back $300 ... ignoring the mold'."""
+    t = ("they say i owe rent but thats not even true i paid MOST of it i just "
+         "held back $300 out of the $1200 bc he has been ignoring the mold in "
+         "our bathroom ceiling since like october")
+    assert "rent_escrow_repair_remedy" in _ids(t)
+
+
+def test_rent_escrow_probe_needs_habitability_context():
+    assert "rent_escrow_repair_remedy" not in _ids(
+        "I withheld rent because I lost my job."
+    )

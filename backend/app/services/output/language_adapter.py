@@ -57,6 +57,14 @@ _REFUSAL_SIGNATURES: tuple[str, ...] = (
     "as an ai, i",
     "could you please provide",
     "it appears that no text",
+    # Round-4c leak (memo_101 x14, memo_104 x8): a new phrasing of the same
+    # refusal — "It seems there is no legal text provided for me to simplify.
+    # Please share the legal text you would like me to rewrite..."
+    "it seems there is no legal text",
+    "no legal text provided",
+    "please share the legal text",
+    "text you would like me to rewrite",
+    "text you'd like me to rewrite",
 )
 
 
@@ -191,6 +199,12 @@ class LanguageAdapter:
             Rewritten text, or the original on any failure.
         """
         if not text or not text.strip():
+            return text
+        # Short mechanical strings ("No elements defined", "0 of 3 elements
+        # supported (45% confidence)") carry no prose to simplify — sending
+        # them to the rewriter is what provoked the round-4c refusal leak
+        # ("It seems there is no legal text provided...") and wastes a call.
+        if len(text.strip()) < 60:
             return text
         if llm_service is None:
             return text

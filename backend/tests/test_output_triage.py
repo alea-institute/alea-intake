@@ -340,19 +340,25 @@ class TestActionItemGenerator:
         assert len(referrals) >= 1
 
     def test_priority_mapping_urgent(self):
-        """gap priority >= 8 -> action priority 'urgent'."""
+        """Gap priorities are 0-100: >=80 urgent, >=50 important, <50 helpful.
+        (The old >=8 threshold made EVERY gap [URGENT] — round-4c defect.)"""
         gap_report = GapReport(
-            consolidated_gaps=[_make_gap(1, priority=8)],
+            consolidated_gaps=[
+                _make_gap(1, priority=85),
+                _make_gap(2, priority=50),
+                _make_gap(3, priority=8),
+            ],
             completeness_score=0.5,
         )
         gen = ActionItemGenerator()
         items = gen.generate(gap_report, {})
-        assert items[0].priority == "urgent"
+        by_priority = sorted(i.priority for i in items)
+        assert by_priority == ["helpful", "important", "urgent"]
 
     def test_priority_mapping_important(self):
         """gap priority >= 5 (but < 8) -> action priority 'important'."""
         gap_report = GapReport(
-            consolidated_gaps=[_make_gap(1, priority=5)],
+            consolidated_gaps=[_make_gap(1, priority=55)],
             completeness_score=0.5,
         )
         gen = ActionItemGenerator()
