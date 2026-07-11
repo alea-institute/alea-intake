@@ -3,7 +3,7 @@
   "title": "alea-intake — Persona UAT Campaign (live validation)",
   "rubric_version": "intake-quality-v1.3 (LOCKED, Damien rulings 2026-07-10)",
   "exported_count": 0,
-  "total_findings": 22,
+  "total_findings": 33,
   "comments": [],
   "_schema": {
     "comments[]": {
