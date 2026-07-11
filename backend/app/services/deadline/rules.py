@@ -177,13 +177,11 @@ def _has_court_context(event: DeadlineEvent) -> bool:
     dates fall through to the passthrough hedge instead of being asserted as a
     court deadline with a fabricated court-order citation.
     """
-    # Round 7 fix: do NOT trust a bare "appearance" trigger as court context — the
-    # extractor labeled a realtor "listing appointment" trigger="appearance",
-    # which then got asserted as "the court's own summons". Trust only
-    # unambiguous court triggers; otherwise require an actual court WORD in the
-    # text ("appointment"/"listing"/"sign papers" carry none).
-    if event.trigger in {"hearing", "court_date"}:
-        return True
+    # Round 7 fix: do NOT trust the extractor's trigger label alone — it tagged a
+    # realtor "listing appointment" as trigger="appearance" AND (on a re-run) as
+    # trigger="hearing", which then got asserted as "the court's own summons".
+    # Require an actual court WORD in the event text; a listing/realtor
+    # "appointment to sign papers" carries none and falls through to passthrough.
     text = _text(event)
     return any(
         kw in text
@@ -195,6 +193,8 @@ def _has_court_context(event: DeadlineEvent) -> bool:
             "judge",
             "docket",
             "arraign",
+            "appearance",
+            "scheduling order",
         )
     )
 
