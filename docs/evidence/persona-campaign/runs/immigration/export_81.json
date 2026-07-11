@@ -1,0 +1,1435 @@
+{
+ "intake_id": 167,
+ "run_id": 36,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T02:50:57.782932Z",
+ "claims_by_jurisdiction": {
+  "Federal": [
+   {
+    "claim_id": 1524,
+    "claim_name": "Asylum Process Misrepresentation",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "Federal",
+    "folio_iri": null,
+    "issue_statement": "Marisol paid an individual named Rigoberto to file her asylum application and did not receive confirmation or service after the payment. This suggests a possible misrepresentation or unlawful practice regarding her immigration case.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 781,
+      "element_name": "Payment for Services",
+      "element_description": "Proof that the individual paid for legal assistance or service.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 870,
+        "fact_text": "A man named Rigoberto charged me six hundred dollars.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact states that Rigoberto charged Marisol six hundred dollars, indicating payment for legal services."
+       }
+      ]
+     },
+     {
+      "element_id": 782,
+      "element_name": "Failure to Provide Services",
+      "element_description": "Evidence that the individual did not carry out the service as agreed, leading to potential harm.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 871,
+        "fact_text": "Rigoberto said he filed my asylum paper for me.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact indicates that Rigoberto claimed to file Marisol\u2019s asylum paperwork but she has not received any confirmation or documentation proving he did."
+       },
+       {
+        "fact_id": 872,
+        "fact_text": "I never got anything back after.",
+        "confidence": 0.85,
+        "mapping_rationale": "Marisol\u2019s statement about not receiving anything back from Rigoberto after he filed for asylum indicates a failure to provide the agreed services."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1700,
+      "gap_type": "procedural_requirement",
+      "description": "What are the deadlines and procedural requirements for addressing potential misrepresentation in your asylum application?",
+      "priority": 50,
+      "claim_id": 1524,
+      "element_id": null,
+      "claim_name": "Asylum Process Misrepresentation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 2 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "Minnesota": [
+   {
+    "claim_id": 1522,
+    "claim_name": "Order of Protection",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": "Minnesota",
+    "folio_iri": "https://folio.openlegalstandard.org/RB04s7iLq0V5p3mVXkyxY77",
+    "issue_statement": "Given the history of domestic violence incidents, including physical abuse and ongoing legal proceedings involving her husband, Marisol may seek an Order of Protection for her safety.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 776,
+      "element_name": "Abuse",
+      "element_description": "Evidence of recent or past physical abuse by the spouse.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 880,
+        "fact_text": "He hit me for the first time last year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact clearly establishes evidence of recent physical abuse as it states that Danilo hit Marisol for the first time last year."
+       },
+       {
+        "fact_id": 881,
+        "fact_text": "He hit me again on March 15 this year.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact confirms ongoing abuse by stating that Danilo hit Marisol again on March 15 this year."
+       }
+      ]
+     },
+     {
+      "element_id": 777,
+      "element_name": "Imminent Danger",
+      "element_description": "Demonstration that the victim faces imminent danger of further harm.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 882,
+        "fact_text": "I called the Bloomington police that night.",
+        "confidence": 0.85,
+        "mapping_rationale": "Marisol calling the Bloomington police indicates that she felt threatened or in danger from Danilo."
+       },
+       {
+        "fact_id": 883,
+        "fact_text": "The police arrested Danilo.",
+        "confidence": 0.85,
+        "mapping_rationale": "The arrest of Danilo by police reinforces the idea of imminent danger, as there was a need for law enforcement intervention."
+       }
+      ]
+     },
+     {
+      "element_id": 778,
+      "element_name": "Personal Relationship",
+      "element_description": "Existence of a domestic relationship with the perpetrator.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 915,
+        "fact_text": "Marisol P. Gomez and Danilo Cruz Martinez are spouses and married in 2022.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact confirms the marriage between Marisol and Danilo, establishing the domestic relationship required for this claim."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1698,
+      "gap_type": "procedural_requirement",
+      "description": "What is the filing deadline for seeking an Order of Protection in your jurisdiction?",
+      "priority": 50,
+      "claim_id": 1522,
+      "element_id": null,
+      "claim_name": "Order of Protection",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 3 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1528,
+      "claim_name": "Order",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1690,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Order' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1528,
+        "element_id": null,
+        "claim_name": "Order",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Order of Protection",
+      "children": []
+     },
+     {
+      "claim_id": 1529,
+      "claim_name": "Trial Court Created Documents",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1691,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1529,
+        "element_id": null,
+        "claim_name": "Trial Court Created Documents",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Order of Protection",
+      "children": []
+     },
+     {
+      "claim_id": 1527,
+      "claim_name": "Family Law and Matrimonial Claims",
+      "claim_type": "discovered",
+      "confidence": 0.3,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1689,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1527,
+        "element_id": null,
+        "claim_name": "Family Law and Matrimonial Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Order of Protection",
+      "children": []
+     },
+     {
+      "claim_id": 1525,
+      "claim_name": "Matrimonial Emergency Applications",
+      "claim_type": "discovered",
+      "confidence": 0.3,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1687,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1525,
+        "element_id": null,
+        "claim_name": "Matrimonial Emergency Applications",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Order of Protection",
+      "children": []
+     },
+     {
+      "claim_id": 1526,
+      "claim_name": "Remedies in Family Law",
+      "claim_type": "discovered",
+      "confidence": 0.3,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1688,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1526,
+        "element_id": null,
+        "claim_name": "Remedies in Family Law",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Order of Protection",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1523,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "claim_type": "identified",
+    "confidence": 0.3,
+    "jurisdiction": "Minnesota",
+    "folio_iri": null,
+    "issue_statement": "While not explicitly stated, the filing of a police report and involvement of law enforcement indicate that living conditions may not be safe or secure due to domestic violence, which can relate to tenancy issues in habitability claims.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 779,
+      "element_name": "Habitability Standard",
+      "element_description": "The landlord's obligation to maintain a safe and habitable living environment.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 780,
+      "element_name": "Uninhabitable Conditions",
+      "element_description": "Evidence that conditions in the rental property pose a danger to tenants' health or safety.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1684,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Habitability Standard' is not yet supported by any facts",
+      "priority": 30,
+      "claim_id": 1523,
+      "element_id": 779,
+      "claim_name": "Breach of Implied Warranty of Habitability",
+      "element_name": "Habitability Standard",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1685,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Uninhabitable Conditions' is not yet supported by any facts",
+      "priority": 30,
+      "claim_id": 1523,
+      "element_id": 780,
+      "claim_name": "Breach of Implied Warranty of Habitability",
+      "element_name": "Uninhabitable Conditions",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1686,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Breach of Implied Warranty of Habitability' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1523,
+      "element_id": null,
+      "claim_name": "Breach of Implied Warranty of Habitability",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1699,
+      "gap_type": "procedural_requirement",
+      "description": "Are there any specific filing deadlines related to tenant claims regarding habitability that you need to be aware of?",
+      "priority": 50,
+      "claim_id": 1523,
+      "element_id": null,
+      "claim_name": "Breach of Implied Warranty of Habitability",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "0 of 2 elements supported (0% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1530,
+    "claim_name": "Domestic Abuse Impact on Immigration Status",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
+    "issue_statement": "As a victim of domestic violence, there may be avenues like VAWA (Violence Against Women Act) that could provide her with options to adjust her immigration status.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1692,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Domestic Abuse Impact on Immigration Status' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1530,
+      "element_id": null,
+      "claim_name": "Domestic Abuse Impact on Immigration Status",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1701,
+      "gap_type": "procedural_requirement",
+      "description": "Are there any statutory deadlines or procedural requirements you need to meet to apply for VAWA relief?",
+      "priority": 50,
+      "claim_id": 1530,
+      "element_id": null,
+      "claim_name": "Domestic Abuse Impact on Immigration Status",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1535,
+    "claim_name": "Impact of Criminal Proceedings on Immigration Case",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq",
+    "issue_statement": "As a victim of domestic violence, Marisol may qualify for certain protections or reliefs in her immigration case, and the outcome of Danilo's criminal case may directly or indirectly impact her legal situation.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1533,
+    "claim_name": "Change of Address Notification",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Filing address changes timely is critical to avoid missing important court communications which could negatively impact her immigration case.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1536,
+    "claim_name": "Possible Fraud in Asylum Representation",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RqGxSnAp9vX42GRKHqwvBe",
+    "issue_statement": "Exploring this claim may uncover further legal responsibilities or actions required against Rigoberto, and it may also affect the legitimacy of her asylum application.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1696,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Possible Fraud in Asylum Representation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1536,
+      "element_id": null,
+      "claim_name": "Possible Fraud in Asylum Representation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1537,
+    "claim_name": "Financial Hardship and Employment Legalities",
+    "claim_type": "discovered",
+    "confidence": 0.65,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The intersection of her economic necessity, potential legal violations in employment, and immigration status present a complex legal issue that warrants further inquiry.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1697,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Financial Hardship and Employment Legalities' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1537,
+      "element_id": null,
+      "claim_name": "Financial Hardship and Employment Legalities",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1531,
+    "claim_name": "Assault Charges and Legal Support",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Given the ongoing criminal case against her husband for domestic assault, there could be legal protections and resources available for Marisol to ensure her and her children's safety.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1693,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Assault Charges and Legal Support' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1531,
+      "element_id": null,
+      "claim_name": "Assault Charges and Legal Support",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1532,
+    "claim_name": "Failure to File Asylum Application",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The lack of progress on her asylum application could contribute to her vulnerability in the removal proceedings and should be reviewed with her attorney.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1694,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to File Asylum Application' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1532,
+      "element_id": null,
+      "claim_name": "Failure to File Asylum Application",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1702,
+      "gap_type": "procedural_requirement",
+      "description": "What is the deadline for filing an asylum application and are there consequences for failing to meet that deadline?",
+      "priority": 50,
+      "claim_id": 1532,
+      "element_id": null,
+      "claim_name": "Failure to File Asylum Application",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "General": [
+   {
+    "claim_name": "Child Custody Considerations",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [
+  {
+   "protocol_name": "Domestic Violence / Intimate Partner Violence",
+   "severity_tier": "critical",
+   "matched_terms": [
+    "domestic violence"
+   ],
+   "hotlines": [
+    {
+     "name": "National Domestic Violence Hotline",
+     "phone": "1-800-799-7233",
+     "text": "START to 88788",
+     "url": "https://www.thehotline.org"
+    },
+    {
+     "name": "National Dating Abuse Helpline",
+     "phone": "1-866-331-9474",
+     "text": "LOVEIS to 22522"
+    }
+   ],
+   "emergency": "If you are in immediate danger, call 911.",
+   "safety_planning": "A safety plan can help you prepare for emergencies. The National DV Hotline can help create one."
+  },
+  {
+   "protocol_name": "Immigration Detention Risk",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "removal proceedings",
+    "asylum"
+   ],
+   "hotlines": [
+    {
+     "name": "National Immigrant Women's Advocacy Project",
+     "url": "https://niwaplibrary.wcl.american.edu"
+    },
+    {
+     "name": "Immigration Advocates Network",
+     "url": "https://www.immigrationadvocates.org"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "the next hearing in your case as follows: DATE: August 20, 2026 TIME: 9:00 a.m.",
+   "event_type": "removal_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-08-20",
+   "computed_date": "2026-08-20",
+   "rule_id": "immigration_hearing_date",
+   "citation": "The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "you must notify the Immigration Court and DHS in writing within 5 days if you change your address.",
+   "event_type": "notice_to_vacate",
+   "trigger": "notice_posted",
+   "trigger_date": "2026-07-11",
+   "computed_date": "2026-07-16",
+   "rule_id": "generic_notice_window",
+   "citation": "Cure/vacate period stated in your notice or lease (confirm the exact deadline printed on the notice).",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "the incident occurred on March 15, 2026, at approximately 22:40 hours.",
+   "event_type": "incident",
+   "trigger": "incident",
+   "trigger_date": "2026-03-15",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "Immigration",
+    "destination_type": "practice_area",
+    "score": 0.49,
+    "rationale": "Immigration practice area (50% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.5,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.41999999999999993,
+    "rationale": "General Civil practice area (30% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.3,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Landlord-Tenant / Housing",
+    "destination_type": "practice_area",
+    "score": 0.35,
+    "rationale": "Landlord-Tenant / Housing practice area (10% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.1,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Employment",
+    "destination_type": "practice_area",
+    "score": 0.35,
+    "rationale": "Employment practice area (10% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.1,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "Immigration",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Habitability Standard' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Implied Warranty of Habitability",
+   "element_ref": "Habitability Standard"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Uninhabitable Conditions' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Implied Warranty of Habitability",
+   "element_ref": "Uninhabitable Conditions"
+  },
+  {
+   "item_number": 3,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: the next hearing in your case as follows: DATE: August 20, 2026 TIME: 9:00 a.m. (estimated 2026-08-20; The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.). This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-08-20",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: you must notify the Immigration Court and DHS in writing within 5 days if you change your address. (estimated 2026-07-16; Cure/vacate period stated in your notice or lease (confirm the exact deadline printed on the notice).). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-07-16",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Breach of Implied Warranty of Habitability' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Implied Warranty of Habitability",
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Matrimonial Emergency Applications",
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Remedies in Family Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Family Law and Matrimonial Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Order' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Order",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Trial Court Created Documents",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Domestic Abuse Impact on Immigration Status' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Abuse Impact on Immigration Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Assault Charges and Legal Support' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Assault Charges and Legal Support",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to File Asylum Application' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Failure to File Asylum Application",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Child Custody Considerations' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Custody Considerations",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Possible Fraud in Asylum Representation' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Possible Fraud in Asylum Representation",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Financial Hardship and Employment Legalities' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Financial Hardship and Employment Legalities",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "What is the filing deadline for seeking an Order of Protection in your jurisdiction?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Order of Protection",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Are there any specific filing deadlines related to tenant claims regarding habitability that you need to be aware of?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Implied Warranty of Habitability",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "What are the deadlines and procedural requirements for addressing potential misrepresentation in your asylum application?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Asylum Process Misrepresentation",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "Are there any statutory deadlines or procedural requirements you need to meet to apply for VAWA relief?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Abuse Impact on Immigration Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "What is the deadline for filing an asylum application and are there consequences for failing to meet that deadline?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Failure to File Asylum Application",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Breach of Implied Warranty of Habitability": [
+    {
+     "gap_id": 1684,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Habitability Standard' is not yet supported by any facts",
+     "priority": 30,
+     "claim_id": 1523,
+     "element_id": 779,
+     "claim_name": "Breach of Implied Warranty of Habitability",
+     "element_name": "Habitability Standard",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1685,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Uninhabitable Conditions' is not yet supported by any facts",
+     "priority": 30,
+     "claim_id": 1523,
+     "element_id": 780,
+     "claim_name": "Breach of Implied Warranty of Habitability",
+     "element_name": "Uninhabitable Conditions",
+     "action_item_ref": 2,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1686,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Breach of Implied Warranty of Habitability' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1523,
+     "element_id": null,
+     "claim_name": "Breach of Implied Warranty of Habitability",
+     "element_name": null,
+     "action_item_ref": 5,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1699,
+     "gap_type": "procedural_requirement",
+     "description": "Are there any specific filing deadlines related to tenant claims regarding habitability that you need to be aware of?",
+     "priority": 50,
+     "claim_id": 1523,
+     "element_id": null,
+     "claim_name": "Breach of Implied Warranty of Habitability",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Matrimonial Emergency Applications": [
+    {
+     "gap_id": 1687,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1525,
+     "element_id": null,
+     "claim_name": "Matrimonial Emergency Applications",
+     "element_name": null,
+     "action_item_ref": 6,
+     "open_questions": []
+    }
+   ],
+   "Remedies in Family Law": [
+    {
+     "gap_id": 1688,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1526,
+     "element_id": null,
+     "claim_name": "Remedies in Family Law",
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    }
+   ],
+   "Family Law and Matrimonial Claims": [
+    {
+     "gap_id": 1689,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1527,
+     "element_id": null,
+     "claim_name": "Family Law and Matrimonial Claims",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    }
+   ],
+   "Order": [
+    {
+     "gap_id": 1690,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Order' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1528,
+     "element_id": null,
+     "claim_name": "Order",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Trial Court Created Documents": [
+    {
+     "gap_id": 1691,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1529,
+     "element_id": null,
+     "claim_name": "Trial Court Created Documents",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Domestic Abuse Impact on Immigration Status": [
+    {
+     "gap_id": 1692,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Domestic Abuse Impact on Immigration Status' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1530,
+     "element_id": null,
+     "claim_name": "Domestic Abuse Impact on Immigration Status",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1701,
+     "gap_type": "procedural_requirement",
+     "description": "Are there any statutory deadlines or procedural requirements you need to meet to apply for VAWA relief?",
+     "priority": 50,
+     "claim_id": 1530,
+     "element_id": null,
+     "claim_name": "Domestic Abuse Impact on Immigration Status",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Assault Charges and Legal Support": [
+    {
+     "gap_id": 1693,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Assault Charges and Legal Support' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1531,
+     "element_id": null,
+     "claim_name": "Assault Charges and Legal Support",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Failure to File Asylum Application": [
+    {
+     "gap_id": 1694,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to File Asylum Application' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1532,
+     "element_id": null,
+     "claim_name": "Failure to File Asylum Application",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1702,
+     "gap_type": "procedural_requirement",
+     "description": "What is the deadline for filing an asylum application and are there consequences for failing to meet that deadline?",
+     "priority": 50,
+     "claim_id": 1532,
+     "element_id": null,
+     "claim_name": "Failure to File Asylum Application",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Child Custody Considerations": [
+    {
+     "gap_id": 1695,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Child Custody Considerations' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1534,
+     "element_id": null,
+     "claim_name": "Child Custody Considerations",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Possible Fraud in Asylum Representation": [
+    {
+     "gap_id": 1696,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Possible Fraud in Asylum Representation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1536,
+     "element_id": null,
+     "claim_name": "Possible Fraud in Asylum Representation",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Financial Hardship and Employment Legalities": [
+    {
+     "gap_id": 1697,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Financial Hardship and Employment Legalities' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1537,
+     "element_id": null,
+     "claim_name": "Financial Hardship and Employment Legalities",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Order of Protection": [
+    {
+     "gap_id": 1698,
+     "gap_type": "procedural_requirement",
+     "description": "What is the filing deadline for seeking an Order of Protection in your jurisdiction?",
+     "priority": 50,
+     "claim_id": 1522,
+     "element_id": null,
+     "claim_name": "Order of Protection",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Asylum Process Misrepresentation": [
+    {
+     "gap_id": 1700,
+     "gap_type": "procedural_requirement",
+     "description": "What are the deadlines and procedural requirements for addressing potential misrepresentation in your asylum application?",
+     "priority": 50,
+     "claim_id": 1524,
+     "element_id": null,
+     "claim_name": "Asylum Process Misrepresentation",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1686,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Breach of Implied Warranty of Habitability' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1523,
+    "element_id": null,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "element_name": null,
+    "action_item_ref": 5,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1687,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1525,
+    "element_id": null,
+    "claim_name": "Matrimonial Emergency Applications",
+    "element_name": null,
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1688,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1526,
+    "element_id": null,
+    "claim_name": "Remedies in Family Law",
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1689,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1527,
+    "element_id": null,
+    "claim_name": "Family Law and Matrimonial Claims",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1690,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Order' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1528,
+    "element_id": null,
+    "claim_name": "Order",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1691,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1529,
+    "element_id": null,
+    "claim_name": "Trial Court Created Documents",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1692,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Domestic Abuse Impact on Immigration Status' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1530,
+    "element_id": null,
+    "claim_name": "Domestic Abuse Impact on Immigration Status",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1693,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Assault Charges and Legal Support' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1531,
+    "element_id": null,
+    "claim_name": "Assault Charges and Legal Support",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1694,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to File Asylum Application' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1532,
+    "element_id": null,
+    "claim_name": "Failure to File Asylum Application",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1695,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Child Custody Considerations' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1534,
+    "element_id": null,
+    "claim_name": "Child Custody Considerations",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1696,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Possible Fraud in Asylum Representation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1536,
+    "element_id": null,
+    "claim_name": "Possible Fraud in Asylum Representation",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1697,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Financial Hardship and Employment Legalities' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1537,
+    "element_id": null,
+    "claim_name": "Financial Hardship and Employment Legalities",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1698,
+    "gap_type": "procedural_requirement",
+    "description": "What is the filing deadline for seeking an Order of Protection in your jurisdiction?",
+    "priority": 50,
+    "claim_id": 1522,
+    "element_id": null,
+    "claim_name": "Order of Protection",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1699,
+    "gap_type": "procedural_requirement",
+    "description": "Are there any specific filing deadlines related to tenant claims regarding habitability that you need to be aware of?",
+    "priority": 50,
+    "claim_id": 1523,
+    "element_id": null,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1700,
+    "gap_type": "procedural_requirement",
+    "description": "What are the deadlines and procedural requirements for addressing potential misrepresentation in your asylum application?",
+    "priority": 50,
+    "claim_id": 1524,
+    "element_id": null,
+    "claim_name": "Asylum Process Misrepresentation",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1701,
+    "gap_type": "procedural_requirement",
+    "description": "Are there any statutory deadlines or procedural requirements you need to meet to apply for VAWA relief?",
+    "priority": 50,
+    "claim_id": 1530,
+    "element_id": null,
+    "claim_name": "Domestic Abuse Impact on Immigration Status",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1702,
+    "gap_type": "procedural_requirement",
+    "description": "What is the deadline for filing an asylum application and are there consequences for failing to meet that deadline?",
+    "priority": 50,
+    "claim_id": 1532,
+    "element_id": null,
+    "claim_name": "Failure to File Asylum Application",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1684,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Habitability Standard' is not yet supported by any facts",
+    "priority": 30,
+    "claim_id": 1523,
+    "element_id": 779,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "element_name": "Habitability Standard",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1685,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Uninhabitable Conditions' is not yet supported by any facts",
+    "priority": 30,
+    "claim_id": 1523,
+    "element_id": 780,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "element_name": "Uninhabitable Conditions",
+    "action_item_ref": 2,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Can you describe any issues you have experienced in your home that make it difficult to live there?",
+   "Have you faced any severe issues, such as leaks, pest infestations, or other health hazards in your home?",
+   "Have you communicated any of these issues to your landlord, and if so, what was their response?",
+   "Are there any urgent family matters, such as divorce or child custody issues, that you are currently facing?",
+   "Have you experienced any domestic violence or abuse that might impact your situation?",
+   "Do you have any concerns about the custody or care of your children during this time?",
+   "Have you ever applied for asylum or faced issues with your asylum application?",
+   "Were you misrepresented or poorly advised during your asylum application process?",
+   "What challenges have you encountered concerning your employment status, especially related to your immigration?",
+   "Are you aware of any upcoming deadlines for filing for a protection order?",
+   "Have you received any information about important deadlines related to tenant claims concerning living conditions?",
+   "Do you know the deadline for submitting your asylum application and the consequences of missing that deadline?"
+  ],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "This intake surfaced 11 potential legal issues across Federal, Minnesota. The most strongly supported issues are Domestic Abuse Impact on Immigration Status, Order of Protection, and Impact of Criminal Proceedings on Immigration Case. A time-sensitive deadline was computed: the next hearing in your case as follows: DATE: August 20, 2026 TIME: 9:00 a.m. by 2026-08-20 [The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.]. Safety concerns were detected in this narrative; see the safety resources below. Analysis completeness is 100%; 12 follow-up questions below would strengthen the assessment.",
+ "profile": {
+  "profile_type": "law_firm",
+  "language_level": "professional",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": true,
+   "triage_routing": false,
+   "action_items": true,
+   "gap_appendix": true,
+   "authorities_table": true
+  },
+  "reading_grade_level": null,
+  "org_branding": null
+ }
+}

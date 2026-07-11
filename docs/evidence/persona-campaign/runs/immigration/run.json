@@ -1,6 +1,6 @@
 {
   "persona": "immigration",
-  "email": "persona_immigration_1783509431@example.com",
+  "email": "persona_immigration_1783738007@example.com",
   "base": "https://alea-intake-dev-production.up.railway.app",
   "steps": {
     "register": {
@@ -14,9 +14,9 @@
     "create_intake": {
       "http": 201,
       "ok": true,
-      "intake_id": 150,
-      "session_id": 112,
-      "party_id": 150,
+      "intake_id": 167,
+      "session_id": 124,
+      "party_id": 167,
       "practice_area_id": null
     },
     "narrative": {
@@ -39,12 +39,12 @@
     ],
     "analyze": {
       "http": 202,
-      "run_id": 34,
+      "run_id": 36,
       "status": "converged",
       "detail": null
     },
     "final_status": {
-      "run_id": 34,
+      "run_id": 36,
       "status": "converged",
       "iteration": 10,
       "max_iterations": 10,
@@ -56,499 +56,497 @@
     "output_generate": [
       {
         "profile": "law_firm",
-        "id": 75,
-        "run_id": 34,
-        "intake_id": 150,
+        "id": 81,
+        "run_id": 36,
+        "intake_id": 167,
         "profile_type": "law_firm",
         "completeness_score": 1.0,
-        "created_at": "2026-07-08T11:21:56.004287Z"
+        "created_at": "2026-07-11T02:50:57.694251Z"
       },
       {
         "profile": "court_self_help",
-        "id": 76,
-        "run_id": 34,
-        "intake_id": 150,
+        "id": 82,
+        "run_id": 36,
+        "intake_id": 167,
         "profile_type": "court_self_help",
         "completeness_score": 1.0,
-        "created_at": "2026-07-08T11:21:56.618748Z"
+        "created_at": "2026-07-11T02:50:58.196276Z"
       },
       {
         "profile": "legal_aid",
-        "id": 77,
-        "run_id": 34,
-        "intake_id": 150,
+        "id": 83,
+        "run_id": 36,
+        "intake_id": 167,
         "profile_type": "legal_aid",
         "completeness_score": 1.0,
-        "created_at": "2026-07-08T11:22:18.267329Z"
+        "created_at": "2026-07-11T02:51:12.836922Z"
       }
     ]
   },
   "safety_alerts": [],
   "analysis": {
-    "run_id": 34,
+    "run_id": 36,
     "status": "converged",
     "claims": [
       {
-        "id": 1486,
-        "claim_name": "In-absentia Removal Risk",
-        "claim_type": "identified",
-        "folio_iri": null,
-        "jurisdiction": "federal",
-        "confidence": 0.9,
-        "is_potential": false,
-        "rationale": "The facts indicate that failure to attend the scheduled immigration court hearing could lead to removal in absentia.",
-        "elements": [
-          {
-            "id": 759,
-            "element_name": "Final Order of Removal",
-            "is_satisfied": false,
-            "satisfaction_confidence": null
-          },
-          {
-            "id": 757,
-            "element_name": "Notice of Hearing",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.78
-          },
-          {
-            "id": 758,
-            "element_name": "Failure to Appear",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.78
-          }
-        ]
-      },
-      {
-        "id": 1487,
-        "claim_name": "Asylum Application Negligence",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": "federal",
-        "confidence": 0.3,
-        "is_potential": true,
-        "rationale": "The facts indicate that Marisol potentially relied on Rigoberto to file her asylum application but did not receive confirmation or documentation.",
-        "elements": [
-          {
-            "id": 760,
-            "element_name": "Reliance on Third Party",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.71
-          },
-          {
-            "id": 761,
-            "element_name": "Failure to File or Communicate",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 762,
-            "element_name": "Resulting Harm or Prejudice",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          }
-        ]
-      },
-      {
-        "id": 1488,
-        "claim_name": "Order for Protection / Restraining Order",
+        "id": 1522,
+        "claim_name": "Order of Protection",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RB04s7iLq0V5p3mVXkyxY77",
-        "jurisdiction": "state (Minnesota)",
+        "jurisdiction": "Minnesota",
         "confidence": 0.85,
         "is_potential": true,
-        "rationale": "The documented incidents of domestic violence (i.e., assaults by Danilo) indicate that Marisol may seek legal protection.",
+        "rationale": "Given the history of domestic violence incidents, including physical abuse and ongoing legal proceedings involving her husband, Marisol may seek an Order of Protection for her safety.",
         "elements": [
           {
-            "id": 764,
-            "element_name": "Threat to Safety",
-            "is_satisfied": false,
-            "satisfaction_confidence": null
+            "id": 776,
+            "element_name": "Abuse",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
           },
           {
-            "id": 765,
-            "element_name": "Legal Options for Protection",
-            "is_satisfied": false,
-            "satisfaction_confidence": null
+            "id": 777,
+            "element_name": "Imminent Danger",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
           },
           {
-            "id": 763,
-            "element_name": "History of Domestic Abuse",
+            "id": 778,
+            "element_name": "Personal Relationship",
             "is_satisfied": true,
             "satisfaction_confidence": 0.85
           }
         ]
       },
       {
-        "id": 1489,
+        "id": 1523,
+        "claim_name": "Breach of Implied Warranty of Habitability",
+        "claim_type": "identified",
+        "folio_iri": null,
+        "jurisdiction": "Minnesota",
+        "confidence": 0.3,
+        "is_potential": true,
+        "rationale": "While not explicitly stated, the filing of a police report and involvement of law enforcement indicate that living conditions may not be safe or secure due to domestic violence, which can relate to tenancy issues in habitability claims.",
+        "elements": [
+          {
+            "id": 779,
+            "element_name": "Habitability Standard",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          },
+          {
+            "id": 780,
+            "element_name": "Uninhabitable Conditions",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          }
+        ]
+      },
+      {
+        "id": 1524,
+        "claim_name": "Asylum Process Misrepresentation",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": "Federal",
+        "confidence": 0.4,
+        "is_potential": true,
+        "rationale": "Marisol paid an individual named Rigoberto to file her asylum application and did not receive confirmation or service after the payment. This suggests a possible misrepresentation or unlawful practice regarding her immigration case.",
+        "elements": [
+          {
+            "id": 781,
+            "element_name": "Payment for Services",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 782,
+            "element_name": "Failure to Provide Services",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          }
+        ]
+      },
+      {
+        "id": 1525,
         "claim_name": "Matrimonial Emergency Applications",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RCQJU54O6qCvotCfmDwYZwj",
+        "folio_iri": null,
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.3,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Order for Protection / Restraining Order (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
         "elements": []
       },
       {
-        "id": 1490,
+        "id": 1526,
         "claim_name": "Remedies in Family Law",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RBOczjtsHXQh2ojzTubbrxI",
+        "folio_iri": null,
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.3,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Order for Protection / Restraining Order (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
         "elements": []
       },
       {
-        "id": 1491,
+        "id": 1527,
         "claim_name": "Family Law and Matrimonial Claims",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RCUXzL8Z4Ddh2CK6TBhofjU",
+        "folio_iri": null,
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.3,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Order for Protection / Restraining Order (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
         "elements": []
       },
       {
-        "id": 1492,
+        "id": 1528,
         "claim_name": "Order",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDmsvdtBrrw46UnCDJ0LKrJ",
+        "folio_iri": null,
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.4,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Order for Protection / Restraining Order (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
         "elements": []
       },
       {
-        "id": 1493,
+        "id": 1529,
         "claim_name": "Trial Court Created Documents",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RDBXUrFP9mCZLCxzqy8nbEX",
+        "folio_iri": null,
         "jurisdiction": null,
-        "confidence": 0.7,
+        "confidence": 0.4,
         "is_potential": true,
-        "rationale": "Discovered via FOLIO ontology traversal from Order for Protection / Restraining Order (depth 1)",
+        "rationale": "Discovered via FOLIO ontology traversal from Order of Protection (depth 1)",
         "elements": []
       },
       {
-        "id": 1494,
-        "claim_name": "Domestic Violence and Impact on Immigration Status",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq",
-        "jurisdiction": null,
-        "confidence": 0.85,
-        "is_potential": true,
-        "rationale": "Given her history of domestic violence and the involvement of the police, Marisol might qualify for protections under the Violence Against Women Act (VAWA), which allows victims of domestic violence to pursue their immigration case independently of their abuser.",
-        "elements": []
-      },
-      {
-        "id": 1495,
-        "claim_name": "Use of Fraudulent Social Security Number",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9ya2bhBlRQfwOwM8T7zhJa",
-        "jurisdiction": null,
-        "confidence": 0.9,
-        "is_potential": true,
-        "rationale": "The use of a fake social security number can become a significant legal issue, especially in the context of immigration proceedings. This may also complicate her ability to apply for work authorization or other benefits in the future.",
-        "elements": []
-      },
-      {
-        "id": 1496,
-        "claim_name": "Impact of Ongoing Criminal Proceedings",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RBV3MQlbGLIUVo5fSiBZ2V4",
-        "jurisdiction": null,
-        "confidence": 0.8,
-        "is_potential": true,
-        "rationale": "The outcome of her husband's case may have implications for Marisol's immigration status, especially if there are any allegations that could involve her or if it invokes any legal stereotypes that could affect her case.",
-        "elements": []
-      },
-      {
-        "id": 1497,
-        "claim_name": "Custody and Travel Issues with Son in Honduras",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
-        "jurisdiction": null,
-        "confidence": 0.75,
-        "is_potential": true,
-        "rationale": "Marisol's desire to reunite with her son may implicate family law issues, and understanding her immigration status's effect on custody or travel plans is crucial.",
-        "elements": []
-      },
-      {
-        "id": 1498,
-        "claim_name": "Asylum Application Deadline and Status",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/Rx69EnEj3H3TpcgTfUSoYx",
-        "jurisdiction": null,
-        "confidence": 0.85,
-        "is_potential": true,
-        "rationale": "Without any communication regarding her asylum application, there might be statutory deadlines or requirements she needs to fulfill to maintain her eligibility or pursue the application further.",
-        "elements": []
-      },
-      {
-        "id": 1499,
-        "claim_name": "Domestic Violence Implications",
+        "id": 1530,
+        "claim_name": "Domestic Abuse Impact on Immigration Status",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
         "jurisdiction": null,
-        "confidence": 0.85,
+        "confidence": 0.9,
         "is_potential": true,
-        "rationale": "Given the incidents of domestic violence and her currently precarious immigration situation, it is crucial to explore how these intersect and what protections or remedies exist for individuals in Marisol's situation.",
+        "rationale": "As a victim of domestic violence, there may be avenues like VAWA (Violence Against Women Act) that could provide her with options to adjust her immigration status.",
         "elements": []
       },
       {
-        "id": 1500,
-        "claim_name": "Consequences of Using a Fake SSN",
+        "id": 1531,
+        "claim_name": "Assault Charges and Legal Support",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RBeH9htBENggQCUNKD1Uj0N",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.4,
+        "is_potential": true,
+        "rationale": "Given the ongoing criminal case against her husband for domestic assault, there could be legal protections and resources available for Marisol to ensure her and her children's safety.",
+        "elements": []
+      },
+      {
+        "id": 1532,
+        "claim_name": "Failure to File Asylum Application",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.4,
+        "is_potential": true,
+        "rationale": "The lack of progress on her asylum application could contribute to her vulnerability in the removal proceedings and should be reviewed with her attorney.",
+        "elements": []
+      },
+      {
+        "id": 1533,
+        "claim_name": "Change of Address Notification",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.75,
+        "is_potential": true,
+        "rationale": "Filing address changes timely is critical to avoid missing important court communications which could negatively impact her immigration case.",
+        "elements": []
+      },
+      {
+        "id": 1534,
+        "claim_name": "Child Custody Considerations",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.3,
+        "is_potential": true,
+        "rationale": "As a victim of domestic violence, Marisol might need to explore her rights regarding custody and visitation, considering her husband\u2019s criminal charges.",
+        "elements": []
+      },
+      {
+        "id": 1535,
+        "claim_name": "Impact of Criminal Proceedings on Immigration Case",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq",
         "jurisdiction": null,
         "confidence": 0.8,
         "is_potential": true,
-        "rationale": "This is a serious issue that requires legal expertise to navigate the potential ramifications on her immigration status and employment prospects, as well as the ethical concerns regarding her use of a false identity.",
+        "rationale": "As a victim of domestic violence, Marisol may qualify for certain protections or reliefs in her immigration case, and the outcome of Danilo's criminal case may directly or indirectly impact her legal situation.",
         "elements": []
       },
       {
-        "id": 1501,
-        "claim_name": "Asylum Application Follow-up",
+        "id": 1536,
+        "claim_name": "Possible Fraud in Asylum Representation",
         "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/R9Ictcp1iwOnYdrf1bxOTVA",
+        "folio_iri": "https://folio.openlegalstandard.org/RqGxSnAp9vX42GRKHqwvBe",
         "jurisdiction": null,
         "confidence": 0.7,
         "is_potential": true,
-        "rationale": "The lack of communication and evidence of her asylum application being properly filed could jeopardize her legal standing in the U.S. and should be followed up on.",
+        "rationale": "Exploring this claim may uncover further legal responsibilities or actions required against Rigoberto, and it may also affect the legitimacy of her asylum application.",
+        "elements": []
+      },
+      {
+        "id": 1537,
+        "claim_name": "Financial Hardship and Employment Legalities",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.65,
+        "is_potential": true,
+        "rationale": "The intersection of her economic necessity, potential legal violations in employment, and immigration status present a complex legal issue that warrants further inquiry.",
         "elements": []
       }
     ],
     "gaps": [
       {
-        "id": 1640,
+        "id": 1684,
         "gap_type": "unsupported_element",
-        "description": "Element 'Final Order of Removal' is not yet supported by any facts",
-        "priority": 90,
+        "description": "Element 'Habitability Standard' is not yet supported by any facts",
+        "priority": 30,
         "status": "open"
       },
       {
-        "id": 1641,
+        "id": 1685,
         "gap_type": "unsupported_element",
-        "description": "Element 'Threat to Safety' is not yet supported by any facts",
-        "priority": 85,
+        "description": "Element 'Uninhabitable Conditions' is not yet supported by any facts",
+        "priority": 30,
         "status": "open"
       },
       {
-        "id": 1642,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Legal Options for Protection' is not yet supported by any facts",
-        "priority": 85,
+        "id": 1686,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Breach of Implied Warranty of Habitability' has not been explored with fact mappings",
+        "priority": 50,
         "status": "open"
       },
       {
-        "id": 1643,
+        "id": 1687,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Matrimonial Emergency Applications' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1644,
+        "id": 1688,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Remedies in Family Law' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1645,
+        "id": 1689,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Family Law and Matrimonial Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1646,
+        "id": 1690,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Order' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1647,
+        "id": 1691,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Trial Court Created Documents' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1648,
+        "id": 1692,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Domestic Violence and Impact on Immigration Status' has not been explored with fact mappings",
+        "description": "Potential claim 'Domestic Abuse Impact on Immigration Status' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1649,
+        "id": 1693,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Impact of Ongoing Criminal Proceedings' has not been explored with fact mappings",
+        "description": "Potential claim 'Assault Charges and Legal Support' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1650,
+        "id": 1694,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Asylum Application Deadline and Status' has not been explored with fact mappings",
+        "description": "Potential claim 'Failure to File Asylum Application' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1651,
+        "id": 1695,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Consequences of Using a Fake SSN' has not been explored with fact mappings",
+        "description": "Potential claim 'Child Custody Considerations' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1652,
+        "id": 1696,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Asylum Application Follow-up' has not been explored with fact mappings",
+        "description": "Potential claim 'Possible Fraud in Asylum Representation' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1653,
-        "gap_type": "procedural_requirement",
-        "description": "Missing information on specific filing deadlines for the asylum application, which are crucial for compliance.",
+        "id": 1697,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Financial Hardship and Employment Legalities' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1654,
+        "id": 1698,
         "gap_type": "procedural_requirement",
-        "description": "Lack of clarity on the jurisdictional requirements for filing in cases involving domestic violence.",
+        "description": "What is the filing deadline for seeking an Order of Protection in your jurisdiction?",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1655,
+        "id": 1699,
         "gap_type": "procedural_requirement",
-        "description": "No mention of urgent filing deadlines for matrimonial emergency applications, which may impact the outcomes.",
+        "description": "Are there any specific filing deadlines related to tenant claims regarding habitability that you need to be aware of?",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1656,
+        "id": 1700,
         "gap_type": "procedural_requirement",
-        "description": "Unclear statute of limitations for civil claims related to the use of fraudulent social security numbers.",
+        "description": "What are the deadlines and procedural requirements for addressing potential misrepresentation in your asylum application?",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1657,
+        "id": 1701,
         "gap_type": "procedural_requirement",
-        "description": "Missing information on jurisdictional requirements regarding international custody issues.",
+        "description": "Are there any statutory deadlines or procedural requirements you need to meet to apply for VAWA relief?",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1658,
+        "id": 1702,
         "gap_type": "procedural_requirement",
-        "description": "Specific deadlines for asylum applications are not mentioned, which are critical for timely filing.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1659,
-        "gap_type": "procedural_requirement",
-        "description": "Lack of procedural clarity regarding jurisdiction in domestic violence cases and their implications.",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1660,
-        "gap_type": "procedural_requirement",
-        "description": "Not specified if there's a statute of limitations applying to civil actions resulting from using a fake social security number.",
+        "description": "What is the deadline for filing an asylum application and are there consequences for failing to meet that deadline?",
         "priority": 50,
         "status": "open"
       }
     ],
     "questions": [
       {
-        "id": 622,
-        "question_text": "Can you tell me more about any orders or decisions you've received from immigration authorities?",
-        "topic_group": "Final Order of Removal",
+        "id": 642,
+        "question_text": "Can you describe any issues you have experienced in your home that make it difficult to live there?",
+        "topic_group": "Habitability and Living Conditions",
         "priority": 1,
-        "rationale": "Understanding your immigration history and any orders can help clarify the situation regarding the Final Order of Removal.",
+        "rationale": "Understanding the specific problems will help us determine if the conditions in your home meet the habitability standard.",
         "status": "pending"
       },
       {
-        "id": 623,
-        "question_text": "Have you experienced any threats or acts of violence that you believe pose a safety concern for you or your family?",
-        "topic_group": "Threat to Safety",
+        "id": 643,
+        "question_text": "Have you faced any severe issues, such as leaks, pest infestations, or other health hazards in your home?",
+        "topic_group": "Habitability and Living Conditions",
         "priority": 1,
-        "rationale": "We need to gather details about any specific threats to understand the urgency and nature of your situation related to the Threat to Safety.",
+        "rationale": "These details are vital to establish if your living conditions are uninhabitable.",
         "status": "pending"
       },
       {
-        "id": 624,
-        "question_text": "What kind of help are you looking for to protect yourself or your loved ones?",
-        "topic_group": "Legal Options for Protection",
-        "priority": 1,
-        "rationale": "This will help us identify what legal options or protections might be available to you.",
+        "id": 644,
+        "question_text": "Have you communicated any of these issues to your landlord, and if so, what was their response?",
+        "topic_group": "Habitability and Living Conditions",
+        "priority": 2,
+        "rationale": "This will help us assess whether your landlord has fulfilled their responsibilities regarding habitability.",
         "status": "pending"
       },
       {
-        "id": 625,
-        "question_text": "Have you been involved in any instances of domestic violence, and do you need legal help because of that?",
-        "topic_group": "Domestic Violence and Family Law Claims",
+        "id": 645,
+        "question_text": "Are there any urgent family matters, such as divorce or child custody issues, that you are currently facing?",
+        "topic_group": "Family Law and Legal Claims",
         "priority": 1,
-        "rationale": "Exploring this topic can uncover various claims related to domestic violence that may affect your legal status and rights.",
+        "rationale": "This helps us explore potential claims related to family law and ensure your immediate concerns are addressed.",
         "status": "pending"
       },
       {
-        "id": 626,
-        "question_text": "Are there any family law issues, like custody or support, you are currently facing or anticipate?",
-        "topic_group": "Domestic Violence and Family Law Claims",
-        "priority": 1,
-        "rationale": "This question aims to explore various family law claims that could impact your current situation.",
+        "id": 646,
+        "question_text": "Have you experienced any domestic violence or abuse that might impact your situation?",
+        "topic_group": "Family Law and Legal Claims",
+        "priority": 2,
+        "rationale": "Understanding any history of domestic abuse is crucial for exploring legal options, including protections and immigration effects.",
         "status": "pending"
       },
       {
-        "id": 627,
-        "question_text": "Do you know if you have an asylum application filed, or are you considering applying?",
-        "topic_group": "Asylum Application Concerns",
-        "priority": 1,
-        "rationale": "We need to understand your current status regarding your asylum application to explore options available to you.",
+        "id": 647,
+        "question_text": "Do you have any concerns about the custody or care of your children during this time?",
+        "topic_group": "Family Law and Legal Claims",
+        "priority": 2,
+        "rationale": "Gaining clarity on custody matters can enable us to assist you more effectively with related claims.",
         "status": "pending"
       },
       {
-        "id": 628,
-        "question_text": "Are you aware of any deadlines or important dates related to your asylum application?",
-        "topic_group": "Asylum Application Concerns",
+        "id": 648,
+        "question_text": "Have you ever applied for asylum or faced issues with your asylum application?",
+        "topic_group": "Asylum and Immigration Issues",
         "priority": 1,
-        "rationale": "Knowing about deadlines is critical for ensuring compliance and exploring legal options effectively.",
+        "rationale": "This helps identify if there are potential claims we should evaluate regarding your asylum status.",
         "status": "pending"
       },
       {
-        "id": 629,
-        "question_text": "Have you been informed about any specific requirements for filing your case based on where you live?",
-        "topic_group": "Filing and Jurisdiction Concerns",
-        "priority": 1,
-        "rationale": "Clarifying jurisdictional requirements is essential for understanding how to proceed with your legal claims.",
+        "id": 649,
+        "question_text": "Were you misrepresented or poorly advised during your asylum application process?",
+        "topic_group": "Asylum and Immigration Issues",
+        "priority": 2,
+        "rationale": "Understanding any misrepresentation issues will help assess fraud and its implications for your case.",
         "status": "pending"
       },
       {
-        "id": 630,
-        "question_text": "Do you feel you need to file anything urgently, such as for matrimonial or emergency situations?",
-        "topic_group": "Filing and Jurisdiction Concerns",
+        "id": 650,
+        "question_text": "What challenges have you encountered concerning your employment status, especially related to your immigration?",
+        "topic_group": "Asylum and Immigration Issues",
+        "priority": 2,
+        "rationale": "This information is key in exploring potential claims involving financial hardship and appropriate legal support.",
+        "status": "pending"
+      },
+      {
+        "id": 651,
+        "question_text": "Are you aware of any upcoming deadlines for filing for a protection order?",
+        "topic_group": "Legal Procedures and Deadlines",
         "priority": 1,
-        "rationale": "Identifying any urgent needs can help address immediate legal concerns you might have.",
+        "rationale": "Knowing these deadlines is critical to ensure you can seek necessary protections effectively.",
+        "status": "pending"
+      },
+      {
+        "id": 652,
+        "question_text": "Have you received any information about important deadlines related to tenant claims concerning living conditions?",
+        "topic_group": "Legal Procedures and Deadlines",
+        "priority": 1,
+        "rationale": "This is important to address your tenant rights and any related claims effectively.",
+        "status": "pending"
+      },
+      {
+        "id": 653,
+        "question_text": "Do you know the deadline for submitting your asylum application and the consequences of missing that deadline?",
+        "topic_group": "Legal Procedures and Deadlines",
+        "priority": 2,
+        "rationale": "This helps us evaluate if you might face issues regarding your immigration status.",
         "status": "pending"
       }
     ],
     "deadlines": [
       {
-        "id": 63,
-        "event_text": "The court date is August 20, 2026.",
+        "id": 69,
+        "event_text": "the next hearing in your case as follows: DATE: August 20, 2026 TIME: 9:00 a.m.",
         "event_type": "removal_hearing",
         "trigger": "hearing",
         "trigger_date": "2026-08-20",
@@ -561,23 +559,23 @@
         "jurisdiction": "MN"
       },
       {
-        "id": 64,
-        "event_text": "Danilo hit me again on March 15 this year.",
-        "event_type": "domestic_abuse_incident",
-        "trigger": "incident",
-        "trigger_date": "2026-03-15",
-        "computed_date": null,
-        "rule_id": null,
-        "citation": null,
-        "computed": false,
-        "urgency": "unknown",
+        "id": 70,
+        "event_text": "you must notify the Immigration Court and DHS in writing within 5 days if you change your address.",
+        "event_type": "notice_to_vacate",
+        "trigger": "notice_posted",
+        "trigger_date": "2026-07-11",
+        "computed_date": "2026-07-16",
+        "rule_id": "generic_notice_window",
+        "citation": "Cure/vacate period stated in your notice or lease (confirm the exact deadline printed on the notice).",
+        "computed": true,
+        "urgency": "high",
         "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
         "jurisdiction": "MN"
       },
       {
-        "id": 65,
-        "event_text": "I called the Bloomington police that night.",
-        "event_type": "domestic_abuse_report",
+        "id": 71,
+        "event_text": "the incident occurred on March 15, 2026, at approximately 22:40 hours.",
+        "event_type": "incident",
         "trigger": "incident",
         "trigger_date": "2026-03-15",
         "computed_date": null,
@@ -592,14 +590,14 @@
   },
   "outputs": [
     {
-      "doc_id": 75,
+      "doc_id": 81,
       "profile": "law_firm",
       "completeness": 1.0,
-      "memo_chars": 31493,
+      "memo_chars": 23663,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 68475,
+          "bytes": 62618,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "json_substance": null,
@@ -607,7 +605,7 @@
         },
         "json": {
           "http": 200,
-          "bytes": 82142,
+          "bytes": 50152,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "json_substance": true,
@@ -616,14 +614,14 @@
       }
     },
     {
-      "doc_id": 76,
+      "doc_id": 82,
       "profile": "court_self_help",
       "completeness": 1.0,
-      "memo_chars": 6707,
+      "memo_chars": 8951,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 31505,
+          "bytes": 36455,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "json_substance": null,
@@ -631,7 +629,7 @@
         },
         "json": {
           "http": 200,
-          "bytes": 83895,
+          "bytes": 52143,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "json_substance": true,
@@ -640,14 +638,14 @@
       }
     },
     {
-      "doc_id": 77,
+      "doc_id": 83,
       "profile": "legal_aid",
       "completeness": 1.0,
-      "memo_chars": 33067,
+      "memo_chars": 27658,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 70893,
+          "bytes": 68548,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "json_substance": null,
@@ -655,7 +653,7 @@
         },
         "json": {
           "http": 200,
-          "bytes": 82973,
+          "bytes": 52818,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "json_substance": true,
@@ -685,10 +683,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "301",
+        "id": "321",
         "client_id": "c0",
-        "timestamp": "2026-07-08 11:17:14.217096+00:00",
-        "message_id": 301,
+        "timestamp": "2026-07-11 02:46:48.662530+00:00",
+        "message_id": 321,
         "sequence_number": 1
       }
     },
@@ -697,7 +695,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 302
+        "message_id": 322
       }
     },
     {
@@ -711,10 +709,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "303",
+        "id": "323",
         "client_id": "c1",
-        "timestamp": "2026-07-08 11:17:14.927308+00:00",
-        "message_id": 303,
+        "timestamp": "2026-07-11 02:46:48.954541+00:00",
+        "message_id": 323,
         "sequence_number": 3
       }
     },
@@ -723,7 +721,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 304
+        "message_id": 324
       }
     },
     {
@@ -737,10 +735,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "305",
+        "id": "325",
         "client_id": "c2",
-        "timestamp": "2026-07-08 11:17:15.270248+00:00",
-        "message_id": 305,
+        "timestamp": "2026-07-11 02:46:49.259134+00:00",
+        "message_id": 325,
         "sequence_number": 5
       }
     },
@@ -749,7 +747,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 306
+        "message_id": 326
       }
     },
     {

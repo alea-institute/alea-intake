@@ -1,0 +1,1691 @@
+{
+ "intake_id": 166,
+ "run_id": 35,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T02:45:55.606120Z",
+ "claims_by_jurisdiction": {
+  "Halden County, State": [
+   {
+    "claim_id": 1502,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "claim_type": "discovered",
+    "confidence": 0.95,
+    "jurisdiction": "Halden County, State",
+    "folio_iri": "https://folio.openlegalstandard.org/RBRosNDPt8cNUuRnoPqYufN",
+    "issue_statement": "The presence of mold and failure to provide adequate heat constitutes a breach of the implied warranty of habitability, which requires landlords to maintain rental properties in safe and habitable conditions.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 766,
+      "element_name": "Uninhabitable Conditions",
+      "element_description": "The rental unit must have conditions that make it uninhabitable, such as mold or lack of heat.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 854,
+        "fact_text": "A city inspector visited Danika on February 25, 2026 regarding the mold and heat issue.",
+        "confidence": 0.85,
+        "mapping_rationale": "The city inspector's visit regarding mold issues demonstrates uninhabitable conditions."
+       },
+       {
+        "fact_id": 796,
+        "fact_text": "The landlord has been ignoring the mold in the bathroom ceiling since October.",
+        "confidence": 0.85,
+        "mapping_rationale": "The landlord ignoring the mold indicates the presence of uninhabitable conditions."
+       },
+       {
+        "fact_id": 850,
+        "fact_text": "Danika stated that Marcus was sick during the heat outage.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danika stating that Marcus was sick during the heat outage suggests that these conditions may be uninhabitable."
+       }
+      ]
+     },
+     {
+      "element_id": 767,
+      "element_name": "Landlord's Responsibility",
+      "element_description": "The landlord must be shown as responsible for addressing and repairing these conditions.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 796,
+        "fact_text": "The landlord has been ignoring the mold in the bathroom ceiling since October.",
+        "confidence": 0.85,
+        "mapping_rationale": "The landlord's ongoing neglect of the mold issue shows a lack of responsibility in maintaining habitable conditions."
+       },
+       {
+        "fact_id": 853,
+        "fact_text": "Wendell sent a repair person on January 23, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "Wendell sending a repair person shows he is taking some action to remedy the uninhabitable conditions."
+       },
+       {
+        "fact_id": 848,
+        "fact_text": "Wendell acknowledged he would address the mold issue when possible.",
+        "confidence": 0.81,
+        "mapping_rationale": "Wendell acknowledging he will address the mold problem indicates his responsibility in fixing the conditions."
+       }
+      ]
+     },
+     {
+      "element_id": 768,
+      "element_name": "Tenant's Notice",
+      "element_description": "The tenant must have notified the landlord of these conditions, allowing a reasonable time for repair.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 852,
+        "fact_text": "Danika called the emergency maintenance line four times with no response.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danika's multiple calls to the emergency maintenance line indicate she attempted to notify the landlord of the issues."
+       },
+       {
+        "fact_id": 851,
+        "fact_text": "Wendell instructed Danika to call the emergency maintenance line for the heat issue.",
+        "confidence": 0.81,
+        "mapping_rationale": "Danika was instructed to call the emergency line for the heat issue, showing notice of the maintenance need."
+       },
+       {
+        "fact_id": 845,
+        "fact_text": "Danika reported a mold issue in the bathroom ceiling on November 12, 2025.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danika reporting the mold issue to Wendell shows she notified the landlord of the problem."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1661,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Tenant's Notice' is not yet supported by any facts",
+      "priority": 95,
+      "claim_id": 1502,
+      "element_id": 768,
+      "claim_name": "Breach of Implied Warranty of Habitability",
+      "element_name": "Tenant's Notice",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1679,
+      "gap_type": "procedural_requirement",
+      "description": "What is the state-specific statute of limitations for filing a claim regarding breach of implied warranty of habitability?",
+      "priority": 50,
+      "claim_id": 1502,
+      "element_id": null,
+      "claim_name": "Breach of Implied Warranty of Habitability",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 3 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1506,
+      "claim_name": "Breach of Implied Warranty of Habitability by Home Seller",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R78sQua6LVfK3i7KL9lqmZN",
+      "issue_statement": "Discovered via FOLIO ontology traversal from Breach of Implied Warranty of Habitability (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1666,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Breach of Implied Warranty of Habitability by Home Seller' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1506,
+        "element_id": null,
+        "claim_name": "Breach of Implied Warranty of Habitability by Home Seller",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Breach of Implied Warranty of Habitability",
+      "children": []
+     },
+     {
+      "claim_id": 1507,
+      "claim_name": "Breach of Warranty",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7NPSSODp2sRYDRSQ2hvF3b",
+      "issue_statement": "Discovered via FOLIO ontology traversal from Breach of Implied Warranty of Habitability (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1667,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Breach of Warranty' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1507,
+        "element_id": null,
+        "claim_name": "Breach of Warranty",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Breach of Implied Warranty of Habitability",
+      "children": []
+     },
+     {
+      "claim_id": 1509,
+      "claim_name": "Contract & Quasi-Contract Claims",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RZ1dOPJ6HH6lMJGSLNxfwV",
+      "issue_statement": "Discovered via FOLIO ontology traversal from Breach of Implied Warranty of Habitability (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1669,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Contract & Quasi-Contract Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1509,
+        "element_id": null,
+        "claim_name": "Contract & Quasi-Contract Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Breach of Implied Warranty of Habitability",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1505,
+    "claim_name": "Material Lease Violation",
+    "claim_type": "identified",
+    "confidence": 0.4,
+    "jurisdiction": "Halden County, State",
+    "folio_iri": null,
+    "issue_statement": "Danika has violated terms of her lease regarding payment of rent and maintaining property conditions.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 774,
+      "element_name": "Lease Agreement Terms",
+      "element_description": "There exists a signed lease agreement outlining responsibilities for payment and maintenance.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 841,
+        "fact_text": "The eviction action is based on nonpayment of rent and material violation of lease terms.",
+        "confidence": 0.81,
+        "mapping_rationale": "The eviction action is based on nonpayment of rent, implying the existence of a lease agreement."
+       },
+       {
+        "fact_id": 813,
+        "fact_text": "The 14-day notice was taped to the door on March 3.",
+        "confidence": 0.85,
+        "mapping_rationale": "The 14-day notice taped to the door suggests a violation related to terms set in the lease agreement."
+       }
+      ]
+     },
+     {
+      "element_id": 775,
+      "element_name": "Failure to Pay Rent",
+      "element_description": "The tenant failed to pay the agreed rent amount without following the appropriate legal processes.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 855,
+        "fact_text": "Danika is paying $900 of the $1200 rent by money order this month and withholding $300.",
+        "confidence": 0.85,
+        "mapping_rationale": "Danika's withholding of $300 from her rent payment constitutes a failure to pay her full rent amount."
+       },
+       {
+        "fact_id": 836,
+        "fact_text": "Eviction proceedings may commence if Danika Osgood fails to pay or vacate.",
+        "confidence": 0.85,
+        "mapping_rationale": "Eviction proceedings without payment affirm the lease violation elements."
+       },
+       {
+        "fact_id": 840,
+        "fact_text": "Danika Osgood owes a total of $1,250.00 as of the date of the summons.",
+        "confidence": 0.85,
+        "mapping_rationale": "The total amount owed indicates nonpayment of rent, meeting the element of failure to pay."
+       },
+       {
+        "fact_id": 813,
+        "fact_text": "The 14-day notice was taped to the door on March 3.",
+        "confidence": 0.81,
+        "mapping_rationale": "The notice taped to the door indicates the failure to pay rent as outlined in the lease agreement."
+       },
+       {
+        "fact_id": 841,
+        "fact_text": "The eviction action is based on nonpayment of rent and material violation of lease terms.",
+        "confidence": 0.85,
+        "mapping_rationale": "The eviction action for nonpayment of rent is a clear indication of a material lease violation."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1664,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Lease Agreement Terms' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1505,
+      "element_id": 774,
+      "claim_name": "Material Lease Violation",
+      "element_name": "Lease Agreement Terms",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1665,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Failure to Pay Rent' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1505,
+      "element_id": 775,
+      "claim_name": "Material Lease Violation",
+      "element_name": "Failure to Pay Rent",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1682,
+      "gap_type": "procedural_requirement",
+      "description": "What are the specific lease terms that were violated, and is there a grace period in the lease for addressing such violations?",
+      "priority": 50,
+      "claim_id": 1505,
+      "element_id": null,
+      "claim_name": "Material Lease Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 2 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1503,
+    "claim_name": "Retaliatory Eviction",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "Halden County, State",
+    "folio_iri": null,
+    "issue_statement": "The timing and context of the eviction action following Danika's complaints about mold and other issues may suggest it is retaliatory in nature.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 770,
+      "element_name": "Timing of Eviction",
+      "element_description": "The eviction occurs soon after the complaints were made, suggesting a retaliatory motive.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 769,
+      "element_name": "Tenant's Complaints",
+      "element_description": "The tenant had made complaints regarding the living conditions.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.7,
+      "fact_mappings": [
+       {
+        "fact_id": 863,
+        "fact_text": "Fact #863",
+        "confidence": 0.7,
+        "mapping_rationale": "Danika\u2019s complaints about mold and heat indicate tenant complaints preceding the eviction action."
+       }
+      ]
+     },
+     {
+      "element_id": 771,
+      "element_name": "Absence of Valid Grounds",
+      "element_description": "The eviction lacks legitimate or lawful grounds when considering the tenant's rights.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1662,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Timing of Eviction' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1503,
+      "element_id": 770,
+      "claim_name": "Retaliatory Eviction",
+      "element_name": "Timing of Eviction",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1663,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Absence of Valid Grounds' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1503,
+      "element_id": 771,
+      "claim_name": "Retaliatory Eviction",
+      "element_name": "Absence of Valid Grounds",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1680,
+      "gap_type": "procedural_requirement",
+      "description": "What is the timeline for filing a claim of retaliatory eviction after the landlord's action?",
+      "priority": 50,
+      "claim_id": 1503,
+      "element_id": null,
+      "claim_name": "Retaliatory Eviction",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "1 of 3 elements supported (23% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1504,
+    "claim_name": "Withholding Rent",
+    "claim_type": "identified",
+    "confidence": 0.4,
+    "jurisdiction": "Halden County, State",
+    "folio_iri": null,
+    "issue_statement": "Danika is withholding rent due to unresolved mold issues, which she believes affects her son's health.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 772,
+      "element_name": "Legitimate Concerns",
+      "element_description": "The tenant must have legitimate reasons for withholding rent, such as ongoing health hazards.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 798,
+        "fact_text": "The landlord responded to the mold issue saying it 'probably needs bleach' and 'I'll get to it when I can, slow season.'",
+        "confidence": 0.85,
+        "mapping_rationale": "The landlord's nonchalant response regarding the mold suggests legitimate health concerns for the tenant."
+       },
+       {
+        "fact_id": 856,
+        "fact_text": "Danika has withheld $300 until the mold is fixed.",
+        "confidence": 0.85,
+        "mapping_rationale": "Withholding rent until mold is fixed signifies a legitimate concern regarding living conditions."
+       },
+       {
+        "fact_id": 801,
+        "fact_text": "The responder believes the mold is causing Marcus's increased coughing.",
+        "confidence": 0.71,
+        "mapping_rationale": "The responder believes the mold is causing health issues for Marcus, which provides a legitimate concern for withholding rent."
+       },
+       {
+        "fact_id": 846,
+        "fact_text": "Wendell said the mold probably just needs cleaning with bleach.",
+        "confidence": 0.77,
+        "mapping_rationale": "Wendell indicated the mold probably just needs cleaning, reinforcing the ongoing concern for health hazards."
+       },
+       {
+        "fact_id": 800,
+        "fact_text": "Marcus has asthma and has been coughing worse since December.",
+        "confidence": 0.81,
+        "mapping_rationale": "Marcus's asthma and worsening cough due to mold present a legitimate health concern for withholding rent."
+       }
+      ]
+     },
+     {
+      "element_id": 773,
+      "element_name": "Notification to Landlord",
+      "element_description": "The tenant must adequately notify the landlord of the issues that have prompted the withholding of rent.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 797,
+        "fact_text": "The responder sent texts to the landlord on November 12 and December 2 regarding the mold.",
+        "confidence": 0.85,
+        "mapping_rationale": "The respondent's texts to the landlord about mold issues demonstrate adequate notifications of concerns."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1681,
+      "gap_type": "procedural_requirement",
+      "description": "What documentation or evidence do you have to support the withholding of rent due to unresolved mold issues?",
+      "priority": 50,
+      "claim_id": 1504,
+      "element_id": null,
+      "claim_name": "Withholding Rent",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 2 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1512,
+    "claim_name": "Potential Retaliatory Action for Reporting Housing Codes Violations",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDsDXHKUsZoJfz87jnz7zjj",
+    "issue_statement": "The eviction appears to be closely linked to the responder's reports of mold and heating issues, warranting investigation into possible retaliatory eviction claims.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1511,
+    "claim_name": "Negligence",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7nqxxlAfhYqqSA2UQ5UxpX",
+    "issue_statement": "The landlord's failure to respond to maintenance requests and his comment downplaying the mold issue may indicate a lack of due care.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1671,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Negligence' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1511,
+      "element_id": null,
+      "claim_name": "Negligence",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1683,
+      "gap_type": "procedural_requirement",
+      "description": "What is the relevant statute of limitations for filing a negligence claim against the landlord regarding the mold issue?",
+      "priority": 50,
+      "claim_id": 1511,
+      "element_id": null,
+      "claim_name": "Negligence",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1518,
+    "claim_name": "Potential Landlord Negligence",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RC8bnzMEhgjx01vV9ngLiR3",
+    "issue_statement": "The landlord's inaction regarding the mold could create liability for health issues experienced by the responder's son, especially given the doctor's documentation of asthma.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1675,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Landlord Negligence' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1518,
+      "element_id": null,
+      "claim_name": "Potential Landlord Negligence",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1514,
+    "claim_name": "Failure to Provide Habitability Maintenance",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The timeline of maintenance requests and the eventual response may suggest ongoing neglect in maintaining the rental property.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1672,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to Provide Habitability Maintenance' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1514,
+      "element_id": null,
+      "claim_name": "Failure to Provide Habitability Maintenance",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1520,
+    "claim_name": "Failure to Mitigate Damages",
+    "claim_type": "discovered",
+    "confidence": 0.65,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R8ON9C39HUAjJYhP2BPONKP",
+    "issue_statement": "This issue could impact the landlord's claims of material lease violation if it shows a pattern of neglect that led to tenant withholding rent.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1677,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to Mitigate Damages' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1520,
+      "element_id": null,
+      "claim_name": "Failure to Mitigate Damages",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1521,
+    "claim_name": "Possible Claims Under the Americans with Disabilities Act (ADA)",
+    "claim_type": "discovered",
+    "confidence": 0.65,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "There may be obligations related to disability accommodation when health is affected by living conditions, particularly given the son's asthma.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1678,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Possible Claims Under the Americans with Disabilities Act (ADA)' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1521,
+      "element_id": null,
+      "claim_name": "Possible Claims Under the Americans with Disabilities Act (ADA)",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1516,
+    "claim_name": "Unjust Enrichment",
+    "claim_type": "discovered",
+    "confidence": 0.6,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RBSOM3eOMB9YymH9rPssgvE",
+    "issue_statement": "The lack of receipt for the cat fee may show that Wendell is benefiting without fulfilling an obligation, which could require further legal scrutiny.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1674,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Unjust Enrichment' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1516,
+      "element_id": null,
+      "claim_name": "Unjust Enrichment",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "Halden County, State": [
+   {
+    "claim_name": "Property & Premises Liability Claims",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDSBerlLWg1ntpLqDQn1eVn",
+    "parent_claim_name": "Breach of Implied Warranty of Habitability"
+   },
+   {
+    "claim_name": "Product Liability Claims",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": "Breach of Implied Warranty of Habitability"
+   }
+  ],
+  "General": [
+   {
+    "claim_name": "Discrimination or Vulnerable Tenant Status",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Failure to Provide Essential Services",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Habitability Claim based on Children's Health",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Unlawful Retaliation",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [
+  {
+   "protocol_name": "Housing Instability",
+   "severity_tier": "advisory",
+   "matched_terms": [
+    "eviction"
+   ],
+   "hotlines": [
+    {
+     "name": "HUD Housing Counseling",
+     "phone": "1-800-569-4287"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "the case is set for April 1st at 9am at halden county court, housing division",
+   "event_type": "eviction_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-04-01",
+   "computed_date": "2026-04-01",
+   "rule_id": "stated_court_date",
+   "citation": "The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "the 14-day notice showed up taped to the door saying i owe $350 (300 back rent + 50 late fee) and i have 14 days to pay it all or move out",
+   "event_type": "notice_to_vacate",
+   "trigger": "notice_posted",
+   "trigger_date": "2026-03-03",
+   "computed_date": "2026-03-17",
+   "rule_id": "generic_notice_window",
+   "citation": "Cure/vacate period stated in your notice or lease (confirm the exact deadline printed on the notice).",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "my son marcus is 7 and has asthma and hes been coughing so much worse since like december",
+   "event_type": "injury",
+   "trigger": "incident",
+   "trigger_date": null,
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": null
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "Landlord-Tenant / Housing",
+    "destination_type": "practice_area",
+    "score": 0.49,
+    "rationale": "Landlord-Tenant / Housing practice area (55% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.5454545454545454,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.4263636363636364,
+    "rationale": "General Civil practice area (36% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.36363636363636365,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Public Benefits",
+    "destination_type": "practice_area",
+    "score": 0.33090909090909093,
+    "rationale": "Public Benefits practice area (9% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.09090909090909091,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "Landlord-Tenant / Housing",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Tenant's Notice' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Implied Warranty of Habitability",
+   "element_ref": "Tenant's Notice"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Timing of Eviction' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Retaliatory Eviction",
+   "element_ref": "Timing of Eviction"
+  },
+  {
+   "item_number": 3,
+   "category": "documents_to_gather",
+   "description": "Element 'Absence of Valid Grounds' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Retaliatory Eviction",
+   "element_ref": "Absence of Valid Grounds"
+  },
+  {
+   "item_number": 4,
+   "category": "documents_to_gather",
+   "description": "Element 'Lease Agreement Terms' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Material Lease Violation",
+   "element_ref": "Lease Agreement Terms"
+  },
+  {
+   "item_number": 5,
+   "category": "documents_to_gather",
+   "description": "Element 'Failure to Pay Rent' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Material Lease Violation",
+   "element_ref": "Failure to Pay Rent"
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: the case is set for April 1st at 9am at halden county court, housing division (estimated 2026-04-01; The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. This is a date you were given directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-04-01",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: the 14-day notice showed up taped to the door saying i owe $350 (300 back rent + 50 late fee) and i have 14 days to pay it all or move out (estimated 2026-03-17; Cure/vacate period stated in your notice or lease (confirm the exact deadline printed on the notice).). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-03-17",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Breach of Implied Warranty of Habitability by Home Seller' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Implied Warranty of Habitability by Home Seller",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Breach of Warranty' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Warranty",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Product Liability Claims' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Product Liability Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Contract & Quasi-Contract Claims' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Contract & Quasi-Contract Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Property & Premises Liability Claims' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Property & Premises Liability Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Negligence' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Negligence",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to Provide Habitability Maintenance' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Failure to Provide Habitability Maintenance",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Unlawful Retaliation' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Unlawful Retaliation",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Unjust Enrichment' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Unjust Enrichment",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Landlord Negligence' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Landlord Negligence",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Discrimination or Vulnerable Tenant Status' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Discrimination or Vulnerable Tenant Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to Mitigate Damages' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Failure to Mitigate Damages",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Possible Claims Under the Americans with Disabilities Act (ADA)' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Possible Claims Under the Americans with Disabilities Act (ADA)",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "What is the state-specific statute of limitations for filing a claim regarding breach of implied warranty of habitability?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Breach of Implied Warranty of Habitability",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "What is the timeline for filing a claim of retaliatory eviction after the landlord's action?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Retaliatory Eviction",
+   "element_ref": null
+  },
+  {
+   "item_number": 23,
+   "category": "follow_up_steps",
+   "description": "What documentation or evidence do you have to support the withholding of rent due to unresolved mold issues?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Withholding Rent",
+   "element_ref": null
+  },
+  {
+   "item_number": 24,
+   "category": "follow_up_steps",
+   "description": "What are the specific lease terms that were violated, and is there a grace period in the lease for addressing such violations?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Material Lease Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 25,
+   "category": "follow_up_steps",
+   "description": "What is the relevant statute of limitations for filing a negligence claim against the landlord regarding the mold issue?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Negligence",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Breach of Implied Warranty of Habitability": [
+    {
+     "gap_id": 1661,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Tenant's Notice' is not yet supported by any facts",
+     "priority": 95,
+     "claim_id": 1502,
+     "element_id": 768,
+     "claim_name": "Breach of Implied Warranty of Habitability",
+     "element_name": "Tenant's Notice",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1679,
+     "gap_type": "procedural_requirement",
+     "description": "What is the state-specific statute of limitations for filing a claim regarding breach of implied warranty of habitability?",
+     "priority": 50,
+     "claim_id": 1502,
+     "element_id": null,
+     "claim_name": "Breach of Implied Warranty of Habitability",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Retaliatory Eviction": [
+    {
+     "gap_id": 1662,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Timing of Eviction' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1503,
+     "element_id": 770,
+     "claim_name": "Retaliatory Eviction",
+     "element_name": "Timing of Eviction",
+     "action_item_ref": 2,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1663,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Absence of Valid Grounds' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1503,
+     "element_id": 771,
+     "claim_name": "Retaliatory Eviction",
+     "element_name": "Absence of Valid Grounds",
+     "action_item_ref": 3,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1680,
+     "gap_type": "procedural_requirement",
+     "description": "What is the timeline for filing a claim of retaliatory eviction after the landlord's action?",
+     "priority": 50,
+     "claim_id": 1503,
+     "element_id": null,
+     "claim_name": "Retaliatory Eviction",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ],
+   "Material Lease Violation": [
+    {
+     "gap_id": 1664,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Lease Agreement Terms' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1505,
+     "element_id": 774,
+     "claim_name": "Material Lease Violation",
+     "element_name": "Lease Agreement Terms",
+     "action_item_ref": 4,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1665,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Failure to Pay Rent' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1505,
+     "element_id": 775,
+     "claim_name": "Material Lease Violation",
+     "element_name": "Failure to Pay Rent",
+     "action_item_ref": 5,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1682,
+     "gap_type": "procedural_requirement",
+     "description": "What are the specific lease terms that were violated, and is there a grace period in the lease for addressing such violations?",
+     "priority": 50,
+     "claim_id": 1505,
+     "element_id": null,
+     "claim_name": "Material Lease Violation",
+     "element_name": null,
+     "action_item_ref": 24,
+     "open_questions": []
+    }
+   ],
+   "Breach of Implied Warranty of Habitability by Home Seller": [
+    {
+     "gap_id": 1666,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Breach of Implied Warranty of Habitability by Home Seller' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1506,
+     "element_id": null,
+     "claim_name": "Breach of Implied Warranty of Habitability by Home Seller",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    }
+   ],
+   "Breach of Warranty": [
+    {
+     "gap_id": 1667,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Breach of Warranty' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1507,
+     "element_id": null,
+     "claim_name": "Breach of Warranty",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Product Liability Claims": [
+    {
+     "gap_id": 1668,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Product Liability Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1508,
+     "element_id": null,
+     "claim_name": "Product Liability Claims",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Contract & Quasi-Contract Claims": [
+    {
+     "gap_id": 1669,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Contract & Quasi-Contract Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1509,
+     "element_id": null,
+     "claim_name": "Contract & Quasi-Contract Claims",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Property & Premises Liability Claims": [
+    {
+     "gap_id": 1670,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Property & Premises Liability Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1510,
+     "element_id": null,
+     "claim_name": "Property & Premises Liability Claims",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Negligence": [
+    {
+     "gap_id": 1671,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Negligence' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1511,
+     "element_id": null,
+     "claim_name": "Negligence",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1683,
+     "gap_type": "procedural_requirement",
+     "description": "What is the relevant statute of limitations for filing a negligence claim against the landlord regarding the mold issue?",
+     "priority": 50,
+     "claim_id": 1511,
+     "element_id": null,
+     "claim_name": "Negligence",
+     "element_name": null,
+     "action_item_ref": 25,
+     "open_questions": []
+    }
+   ],
+   "Failure to Provide Habitability Maintenance": [
+    {
+     "gap_id": 1672,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to Provide Habitability Maintenance' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1514,
+     "element_id": null,
+     "claim_name": "Failure to Provide Habitability Maintenance",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Unlawful Retaliation": [
+    {
+     "gap_id": 1673,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Unlawful Retaliation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1515,
+     "element_id": null,
+     "claim_name": "Unlawful Retaliation",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Unjust Enrichment": [
+    {
+     "gap_id": 1674,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Unjust Enrichment' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1516,
+     "element_id": null,
+     "claim_name": "Unjust Enrichment",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Potential Landlord Negligence": [
+    {
+     "gap_id": 1675,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Landlord Negligence' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1518,
+     "element_id": null,
+     "claim_name": "Potential Landlord Negligence",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Discrimination or Vulnerable Tenant Status": [
+    {
+     "gap_id": 1676,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Discrimination or Vulnerable Tenant Status' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1519,
+     "element_id": null,
+     "claim_name": "Discrimination or Vulnerable Tenant Status",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Failure to Mitigate Damages": [
+    {
+     "gap_id": 1677,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to Mitigate Damages' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1520,
+     "element_id": null,
+     "claim_name": "Failure to Mitigate Damages",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Possible Claims Under the Americans with Disabilities Act (ADA)": [
+    {
+     "gap_id": 1678,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Possible Claims Under the Americans with Disabilities Act (ADA)' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1521,
+     "element_id": null,
+     "claim_name": "Possible Claims Under the Americans with Disabilities Act (ADA)",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Withholding Rent": [
+    {
+     "gap_id": 1681,
+     "gap_type": "procedural_requirement",
+     "description": "What documentation or evidence do you have to support the withholding of rent due to unresolved mold issues?",
+     "priority": 50,
+     "claim_id": 1504,
+     "element_id": null,
+     "claim_name": "Withholding Rent",
+     "element_name": null,
+     "action_item_ref": 23,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1661,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Tenant's Notice' is not yet supported by any facts",
+    "priority": 95,
+    "claim_id": 1502,
+    "element_id": 768,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "element_name": "Tenant's Notice",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1666,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Breach of Implied Warranty of Habitability by Home Seller' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1506,
+    "element_id": null,
+    "claim_name": "Breach of Implied Warranty of Habitability by Home Seller",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1667,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Breach of Warranty' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1507,
+    "element_id": null,
+    "claim_name": "Breach of Warranty",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1668,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Product Liability Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1508,
+    "element_id": null,
+    "claim_name": "Product Liability Claims",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1669,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Contract & Quasi-Contract Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1509,
+    "element_id": null,
+    "claim_name": "Contract & Quasi-Contract Claims",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1670,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Property & Premises Liability Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1510,
+    "element_id": null,
+    "claim_name": "Property & Premises Liability Claims",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1671,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Negligence' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1511,
+    "element_id": null,
+    "claim_name": "Negligence",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1672,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to Provide Habitability Maintenance' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1514,
+    "element_id": null,
+    "claim_name": "Failure to Provide Habitability Maintenance",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1673,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Unlawful Retaliation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1515,
+    "element_id": null,
+    "claim_name": "Unlawful Retaliation",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1674,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Unjust Enrichment' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1516,
+    "element_id": null,
+    "claim_name": "Unjust Enrichment",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1675,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Landlord Negligence' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1518,
+    "element_id": null,
+    "claim_name": "Potential Landlord Negligence",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1676,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Discrimination or Vulnerable Tenant Status' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1519,
+    "element_id": null,
+    "claim_name": "Discrimination or Vulnerable Tenant Status",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1677,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to Mitigate Damages' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1520,
+    "element_id": null,
+    "claim_name": "Failure to Mitigate Damages",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1678,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Possible Claims Under the Americans with Disabilities Act (ADA)' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1521,
+    "element_id": null,
+    "claim_name": "Possible Claims Under the Americans with Disabilities Act (ADA)",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1679,
+    "gap_type": "procedural_requirement",
+    "description": "What is the state-specific statute of limitations for filing a claim regarding breach of implied warranty of habitability?",
+    "priority": 50,
+    "claim_id": 1502,
+    "element_id": null,
+    "claim_name": "Breach of Implied Warranty of Habitability",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1680,
+    "gap_type": "procedural_requirement",
+    "description": "What is the timeline for filing a claim of retaliatory eviction after the landlord's action?",
+    "priority": 50,
+    "claim_id": 1503,
+    "element_id": null,
+    "claim_name": "Retaliatory Eviction",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1681,
+    "gap_type": "procedural_requirement",
+    "description": "What documentation or evidence do you have to support the withholding of rent due to unresolved mold issues?",
+    "priority": 50,
+    "claim_id": 1504,
+    "element_id": null,
+    "claim_name": "Withholding Rent",
+    "element_name": null,
+    "action_item_ref": 23,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1682,
+    "gap_type": "procedural_requirement",
+    "description": "What are the specific lease terms that were violated, and is there a grace period in the lease for addressing such violations?",
+    "priority": 50,
+    "claim_id": 1505,
+    "element_id": null,
+    "claim_name": "Material Lease Violation",
+    "element_name": null,
+    "action_item_ref": 24,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1683,
+    "gap_type": "procedural_requirement",
+    "description": "What is the relevant statute of limitations for filing a negligence claim against the landlord regarding the mold issue?",
+    "priority": 50,
+    "claim_id": 1511,
+    "element_id": null,
+    "claim_name": "Negligence",
+    "element_name": null,
+    "action_item_ref": 25,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1662,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Timing of Eviction' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1503,
+    "element_id": 770,
+    "claim_name": "Retaliatory Eviction",
+    "element_name": "Timing of Eviction",
+    "action_item_ref": 2,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1663,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Absence of Valid Grounds' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1503,
+    "element_id": 771,
+    "claim_name": "Retaliatory Eviction",
+    "element_name": "Absence of Valid Grounds",
+    "action_item_ref": 3,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1664,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Lease Agreement Terms' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1505,
+    "element_id": 774,
+    "claim_name": "Material Lease Violation",
+    "element_name": "Lease Agreement Terms",
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1665,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Failure to Pay Rent' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1505,
+    "element_id": 775,
+    "claim_name": "Material Lease Violation",
+    "element_name": "Failure to Pay Rent",
+    "action_item_ref": 5,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "What specific notice did you give your landlord about the issues in your apartment?",
+   "Have you experienced any unsafe or unhealthy living conditions, such as mold or lack of heat?",
+   "Can you describe any maintenance requests you\u2019ve made to your landlord and how they were responded to?",
+   "Have you or anyone else been injured as a result of unsafe conditions in your home?",
+   "What specific items or conditions in your home are causing you concern about safety?",
+   "Have you faced any negative consequences from your landlord after raising issues about your home?",
+   "Do you believe you have been treated unfairly or differently by your landlord due to your background, such as race, disability, or family status?",
+   "What evidence do you have to show the issues you are experiencing, such as photos, emails, or repair requests?",
+   "Could you share the specific terms in your lease that relate to maintenance and eviction processes?",
+   "Do you know the timeline for when you first reported your issues to your landlord?",
+   "What do you understand about the time limits for filing claims regarding issues like neglect or habitability?"
+  ],
+  "completeness_score": 0.75
+ },
+ "completeness_score": 0.75,
+ "executive_summary": "This intake surfaced 17 potential legal issues across Halden County, State. The most strongly supported issues are Breach of Implied Warranty of Habitability, Potential Retaliatory Action for Reporting Housing Codes Violations, and Negligence. IMPORTANT: at least one deadline appears to have already passed \u2014 the case is set for April 1st at 9am at halden county court, housing division (computed 2026-04-01) [The date printed on your court notice, summons, hearing notice, or order (confirm against the document itself).]. Confirm this immediately, as missed deadlines can end a case. Safety concerns were detected in this narrative; see the safety resources below. Analysis completeness is 75%; 11 follow-up questions below would strengthen the assessment.",
+ "profile": {
+  "profile_type": "law_firm",
+  "language_level": "professional",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": true,
+   "triage_routing": false,
+   "action_items": true,
+   "gap_appendix": true,
+   "authorities_table": true
+  },
+  "reading_grade_level": null,
+  "org_branding": null
+ }
+}
