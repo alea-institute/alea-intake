@@ -293,6 +293,60 @@ PROBES: list[DoctrineProbe] = [
         ),
         priority=84,
     ),
+    DoctrineProbe(
+        id="security_deposit_irregularity",
+        authority="Minn. Stat. § 504B.178 (security deposits: receipt, interest, return); § 504B.172",
+        question=(
+            "You mentioned paying extra money (like a cash pet deposit) with no "
+            "receipt. Deposits are regulated — in Minnesota the landlord must "
+            "account for them, pay interest, and return them with an itemized "
+            "statement (Minn. Stat. § 504B.178); other states have an "
+            "equivalent. A cash payment with no receipt can still count. How "
+            "much did you pay, when, and do you have any proof (texts, "
+            "witnesses, bank withdrawal)?"
+        ),
+        applies=lambda t: (
+            _any(t, "pet deposit", "security deposit", "damage deposit")
+            or (
+                "no receipt" in t
+                and "cash" in t
+                and _any(t, "landlord", "lease", "rent", "evict", "apartment", "tenant")
+            )
+        ),
+        priority=82,
+    ),
+    DoctrineProbe(
+        id="defective_eviction_notice",
+        authority="State eviction-notice content requirements (e.g., Minn. Stat. § 504B.321; the notice must state the specific grounds)",
+        question=(
+            "Your notice appears to give a vague reason (like a 'material lease "
+            "violation' box with no specifics). A notice usually must state the "
+            "specific grounds so you can respond — a vague or defective notice "
+            "can be challenged. What exactly does the notice say, and does it "
+            "list any specific violation, amount, or cure period?"
+        ),
+        applies=lambda t: (
+            "material lease violation" in t
+            or (
+                _any(t, *_EVICTION)
+                and "notice" in t
+                and _any(
+                    t,
+                    "no clue what",
+                    "what that even means",
+                    "doesn't say what",
+                    "didn't say what",
+                    "does not say what",
+                    "no details",
+                    "no specifics",
+                    "just a box",
+                    "checked a box",
+                    "checkbox",
+                )
+            )
+        ),
+        priority=82,
+    ),
 ]
 
 

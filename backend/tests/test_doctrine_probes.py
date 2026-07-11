@@ -100,3 +100,27 @@ def test_pereira_probe_requires_immigration_context():
     assert "pereira_nta_defect" in _ids(
         "Immigration gave me papers, NTA it say, about my removal proceeding."
     )
+
+
+LT_DEPOSIT_NOTICE_EXCERPT = """
+the notice just had a box checked saying "material lease violation" which i
+have no clue what that even means, i never violated anything?? also side note
+when we moved in july 2025 he made us pay an extra $500 CASH for having our
+cat, no receipt or nothing, just handed it to him. now there is an eviction
+case against me and my landlord wants me out.
+"""
+
+
+def test_lt_deposit_and_defective_notice_probes_fire():
+    """Round-5a LT RUB-01 residual: the $500 cash pet deposit (504B.178) and
+    the vague 'material lease violation' notice surfaced in NO form. Both
+    probes must fire on the verbatim narrative wording."""
+    ids = _ids(LT_DEPOSIT_NOTICE_EXCERPT)
+    assert "security_deposit_irregularity" in ids
+    assert "defective_eviction_notice" in ids
+
+
+def test_deposit_probe_does_not_fire_without_rental_context():
+    assert "security_deposit_irregularity" not in _ids(
+        "I paid cash with no receipt for a used car."
+    )
