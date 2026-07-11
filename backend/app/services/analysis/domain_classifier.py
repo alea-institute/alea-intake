@@ -168,7 +168,12 @@ _STRONG: dict[str, tuple[str, ...]] = {
 # Weak markers: two hits (or one weak + one strong of the same domain) raise the
 # domain. These are supportive but individually ambiguous.
 _WEAK: dict[str, tuple[str, ...]] = {
-    "landlord_tenant": ("rent", "tenant", "apartment", "mold", "heat", "notice", "vacate"),
+    # Round 7 fix: bare "rent" (matches "diffe-rent", "cur-rent", "pa-rent") and
+    # bare "notice" (any letter is a "notice") mis-classified elder / employment /
+    # consumer matters as landlord_tenant, letting the eviction cure-window rules
+    # fire cross-domain. Use only tenancy-specific phrases; the genuine LT persona
+    # still classifies via its STRONG markers (landlord, eviction, back rent, ...).
+    "landlord_tenant": ("tenant", "apartment", "my landlord", "the landlord", "mold", "no heat", "renter", "notice to vacate", "notice to quit"),
     "immigration": ("hearing letter", "court at fort snelling", "border", "notario", "i-589", "i-918", "i-360"),
     "family": ("the kids", "our children", "our kids", "the petition", "served with", "petitioner", "spouse", "husband", "wife"),
     "elder_exploitation": ("my son", "my pension", "widowed", "my house", "hip surgery", "bank flagged", "revoke", "listing papers"),

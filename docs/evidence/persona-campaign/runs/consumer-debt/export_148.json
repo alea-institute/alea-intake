@@ -1,0 +1,2173 @@
+{
+ "intake_id": 232,
+ "run_id": 65,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T21:32:57.698479Z",
+ "claims_by_jurisdiction": {
+  "federal": [
+   {
+    "claim_id": 2014,
+    "claim_name": "Fair Debt Collection Practices Act Violation",
+    "claim_type": "identified",
+    "confidence": 0.4,
+    "jurisdiction": "federal",
+    "folio_iri": null,
+    "issue_statement": "North Star Receivables called many times each day. They called the person at work and also called family members. This may be harassment. It might break the Fair Debt Collection Practices Act.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1085,
+      "element_name": "Debt Collector",
+      "element_description": "The defendant is a debt collector as defined by the Fair Debt Collection Practices Act.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1086,
+      "element_name": "Harassment",
+      "element_description": "The debt collector engaged in conduct that can be reasonably interpreted as harassment.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.81,
+      "fact_mappings": [
+       {
+        "fact_id": 3020,
+        "fact_text": "North Star Receivables has been calling the person 6 or 7 times a day.",
+        "confidence": 0.81,
+        "mapping_rationale": "North Star Receivables has been calling the person excessively, indicating harassment."
+       },
+       {
+        "fact_id": 3023,
+        "fact_text": "North Star Receivables called the person three times today before lunch.",
+        "confidence": 0.81,
+        "mapping_rationale": "North Star Receivables called the person multiple times in one day, which can be seen as harassment."
+       }
+      ]
+     },
+     {
+      "element_id": 1087,
+      "element_name": "Communication Timing",
+      "element_description": "Calls were made at inappropriate times (e.g., too early in the morning).",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.81,
+      "fact_mappings": [
+       {
+        "fact_id": 3024,
+        "fact_text": "North Star Receivables called the person at 7:15 in the morning.",
+        "confidence": 0.81,
+        "mapping_rationale": "The call from North Star Receivables was made very early in the morning, which is inappropriate."
+       }
+      ]
+     },
+     {
+      "element_id": 1088,
+      "element_name": "Use of Third Parties",
+      "element_description": "The debt collector communicated about the debt with third parties (the person's sister).",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.81,
+      "fact_mappings": [
+       {
+        "fact_id": 3025,
+        "fact_text": "North Star Receivables called the person's part-time job at Lundeen's Hardware.",
+        "confidence": 0.81,
+        "mapping_rationale": "North Star Receivables contacted the person's employer, which is a violation of communication standards with third parties."
+       },
+       {
+        "fact_id": 3027,
+        "fact_text": "North Star Receivables told the person's sister, Renee, that the person owes money.",
+        "confidence": 0.81,
+        "mapping_rationale": "The debt collector informed the person's sister about the debt, indicating a violation of privacy."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2445,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Debt Collector' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 2014,
+      "element_id": 1085,
+      "claim_name": "Fair Debt Collection Practices Act Violation",
+      "element_name": "Debt Collector",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2474,
+      "gap_type": "procedural_requirement",
+      "description": "What is the applicable statute of limitations for filing a Fair Debt Collection Practices Act claim in our jurisdiction?",
+      "priority": 50,
+      "claim_id": 2014,
+      "element_id": null,
+      "claim_name": "Fair Debt Collection Practices Act Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 4 elements supported (61% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "state": [
+   {
+    "claim_id": 2015,
+    "claim_name": "Garnishment Defense",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": "state",
+    "folio_iri": "https://folio.openlegalstandard.org/R7OJQHant3Dx172WXuPbWgx",
+    "issue_statement": "Mr. Drummond might take your wages. You need to know your legal rights. You should also learn about protections for social security disability payments.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1089,
+      "element_name": "Valid Debt",
+      "element_description": "The creditor holds a valid debt against the debtor.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.81,
+      "fact_mappings": [
+       {
+        "fact_id": 3031,
+        "fact_text": "The letter came in the mail on June 25.",
+        "confidence": 0.81,
+        "mapping_rationale": "The letter dated June 20 indicates communication regarding the debt amount."
+       },
+       {
+        "fact_id": 3033,
+        "fact_text": "The person owes $2,483.17 according to the letter.",
+        "confidence": 0.81,
+        "mapping_rationale": "The fact states that the person owes a specific debt amount, indicating a valid debt exists."
+       }
+      ]
+     },
+     {
+      "element_id": 1090,
+      "element_name": "Garnishment Process",
+      "element_description": "The creditor has initiated or threatened to initiate wage garnishment.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.81,
+      "fact_mappings": [
+       {
+        "fact_id": 3043,
+        "fact_text": "Mr. Drummond said that if the person doesn't set something up, they are going to garnish wages and freeze the bank account by the end of the month.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mr. Drummond threatened garnishment of wages, indicating the initiation of the garnishment process."
+       },
+       {
+        "fact_id": 3070,
+        "fact_text": "Mr. Drummond said if I don't pay they will start the garnishment process on my wages.",
+        "confidence": 0.81,
+        "mapping_rationale": "Mr. Drummond explicitly warned of starting the garnishment process, indicating an imminent threat."
+       }
+      ]
+     },
+     {
+      "element_id": 1091,
+      "element_name": "Exempt Income",
+      "element_description": "A portion of the debtor's income is exempt from garnishment (e.g., social security disability benefits).",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.78,
+      "fact_mappings": [
+       {
+        "fact_id": 3048,
+        "fact_text": "The person needs their disability money safe.",
+        "confidence": 0.78,
+        "mapping_rationale": "The person stated the need to keep their disability income safe, indicating it is exempt from garnishment."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2475,
+      "gap_type": "procedural_requirement",
+      "description": "What is the filing deadline to contest garnishment in our jurisdiction?",
+      "priority": 50,
+      "claim_id": 2015,
+      "element_id": null,
+      "claim_name": "Garnishment Defense",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 3 elements supported (80% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 2022,
+      "claim_name": "Civil Remedies / Relief Sought",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RDbz1PVc6y57oOb9jAIl0eN",
+      "issue_statement": "I found this using FOLIO ontology. I looked up Garnishment Defense. I checked at depth 1.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2458,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2022,
+        "element_id": null,
+        "claim_name": "Civil Remedies / Relief Sought",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Garnishment Defense",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 2016,
+    "claim_name": "Negligent Infliction of Emotional Distress",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": "state",
+    "folio_iri": "https://folio.openlegalstandard.org/RCSRe5gA8rHlqeKGEVst9Z9",
+    "issue_statement": "The person is upset. They get constant calls from a debt collector. They also receive threats. This may be called negligent infliction of emotional distress.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1092,
+      "element_name": "Extreme and Outrageous Conduct",
+      "element_description": "The conduct of the debt collector was extreme and outrageous.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1093,
+      "element_name": "Causation",
+      "element_description": "The plaintiff suffered emotional distress as a result of the defendant's conduct.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1094,
+      "element_name": "Severity of Emotional Distress",
+      "element_description": "The emotional distress suffered was severe.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2446,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Extreme and Outrageous Conduct' is not yet supported by any facts",
+      "priority": 70,
+      "claim_id": 2016,
+      "element_id": 1092,
+      "claim_name": "Negligent Infliction of Emotional Distress",
+      "element_name": "Extreme and Outrageous Conduct",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2447,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Causation' is not yet supported by any facts",
+      "priority": 70,
+      "claim_id": 2016,
+      "element_id": 1093,
+      "claim_name": "Negligent Infliction of Emotional Distress",
+      "element_name": "Causation",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2448,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Severity of Emotional Distress' is not yet supported by any facts",
+      "priority": 70,
+      "claim_id": 2016,
+      "element_id": 1094,
+      "claim_name": "Negligent Infliction of Emotional Distress",
+      "element_name": "Severity of Emotional Distress",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2452,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Negligent Infliction of Emotional Distress' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2016,
+      "element_id": null,
+      "claim_name": "Negligent Infliction of Emotional Distress",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2476,
+      "gap_type": "procedural_requirement",
+      "description": "What is the statute of limitations for bringing a claim of negligent infliction of emotional distress in our jurisdiction?",
+      "priority": 50,
+      "claim_id": 2016,
+      "element_id": null,
+      "claim_name": "Negligent Infliction of Emotional Distress",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "0 of 3 elements supported (0% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 2027,
+      "claim_name": "Civil Claims",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R8jYAnNATrfoBxAtIKpf72X",
+      "issue_statement": "Negligent Infliction of Emotional Distress is when someone causes you emotional pain by being careless. This means they did not mean to hurt you, but their actions affected your feelings.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2463,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2027,
+        "element_id": null,
+        "claim_name": "Civil Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Negligent Infliction of Emotional Distress",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 2017,
+    "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+    "claim_type": "discovered",
+    "confidence": 0.6,
+    "jurisdiction": "state",
+    "folio_iri": "https://folio.openlegalstandard.org/RCovPJMo8mH3uZhlySLgWIa",
+    "issue_statement": "Calling and talking about the debt may break Minnesota's consumer protection laws.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1095,
+      "element_name": "Consumer Transaction",
+      "element_description": "The transaction must be a consumer transaction under state law.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1096,
+      "element_name": "Deceptive Practices",
+      "element_description": "Deceptive or unfair practices in collection activities must be established.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2449,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Consumer Transaction' is not yet supported by any facts",
+      "priority": 60,
+      "claim_id": 2017,
+      "element_id": 1095,
+      "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+      "element_name": "Consumer Transaction",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2450,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Deceptive Practices' is not yet supported by any facts",
+      "priority": 60,
+      "claim_id": 2017,
+      "element_id": 1096,
+      "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+      "element_name": "Deceptive Practices",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2453,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Possible Violation of Minnesota Consumer Protection Laws' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2017,
+      "element_id": null,
+      "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2477,
+      "gap_type": "procedural_requirement",
+      "description": "What specific procedural requirements must be met to file a complaint under Minnesota's consumer protection laws?",
+      "priority": 50,
+      "claim_id": 2017,
+      "element_id": null,
+      "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "0 of 2 elements supported (0% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 2029,
+      "claim_name": "Area of Law",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "I found this by exploring a system called FOLIO. I looked for issues that might break Minnesota Consumer Protection Laws. I went one level deep in my search.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2465,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2029,
+        "element_id": null,
+        "claim_name": "Area of Law",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+      "children": []
+     },
+     {
+      "claim_id": 2028,
+      "claim_name": "Commercial and Trade Law",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RqNYDJtQ1pAsGPKZNEUlET",
+      "issue_statement": "I found this by exploring a system called FOLIO. I looked for issues that might break Minnesota Consumer Protection Laws. I went one level deep in my search.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2464,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Commercial and Trade Law' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2028,
+        "element_id": null,
+        "claim_name": "Commercial and Trade Law",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+      "children": []
+     }
+    ]
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 2036,
+    "claim_name": "Invasion of Privacy",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RpxsywUcXpBB0v63tUwyOY",
+    "issue_statement": "Talking to others about your private info without your okay can break privacy laws. This could lead to legal issues for invasion of privacy. People have not focused on this in past claims, but it can be a big risk.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2471,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Invasion of Privacy' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2036,
+      "element_id": null,
+      "claim_name": "Invasion of Privacy",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2030,
+    "claim_name": "Potential Violation of the Telephone Consumer Protection Act (TCPA)",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7cNZxZB8pyyRYwDBimKNJj",
+    "issue_statement": "The TCPA (Telephone Consumer Protection Act) helps you against automated calls. You have rules about when these calls can happen. This is important at work.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2466,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Violation of the Telephone Consumer Protection Act (TCPA)' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2030,
+      "element_id": null,
+      "claim_name": "Potential Violation of the Telephone Consumer Protection Act (TCPA)",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2031,
+    "claim_name": "Unfair or Deceptive Trade Practices",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RCAOqXkvkQK9Vb4UBLOanLX",
+    "issue_statement": "Telling the sister about the debt is not fair. Contacting you many times each day is also unfair.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2467,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Unfair or Deceptive Trade Practices' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2031,
+      "element_id": null,
+      "claim_name": "Unfair or Deceptive Trade Practices",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2034,
+    "claim_name": "Harassment Claim",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv",
+    "issue_statement": "Frequent calls can be seen as harassment. This is true if calls happen at bad times. It also matters if the calls go to your work.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2469,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Harassment Claim' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2034,
+      "element_id": null,
+      "claim_name": "Harassment Claim",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2032,
+    "claim_name": "Privacy Violation",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDsDXHKUsZoJfz87jnz7zjj",
+    "issue_statement": "If you share your private debt information with people who don\u2019t need to know, you could get in trouble for privacy claims.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2468,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Privacy Violation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2032,
+      "element_id": null,
+      "claim_name": "Privacy Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2040,
+    "claim_name": "Intentional Infliction of Emotional Distress",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R84N0KXivn5IJaQn8xVwPDg",
+    "issue_statement": "You can take legal action for emotional harm from constant calls and meetings. This is called intentional infliction of emotional distress. People may not have thought about this in their claims.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2473,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Intentional Infliction of Emotional Distress' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2040,
+      "element_id": null,
+      "claim_name": "Intentional Infliction of Emotional Distress",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2035,
+    "claim_name": "Consumer Fraud",
+    "claim_type": "discovered",
+    "confidence": 0.68,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RB03UisqUWDKFmOoDqLsrEd",
+    "issue_statement": "Making false claims about how much money you owe is wrong. Using harsh ways to collect money can show bad intentions.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2470,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Consumer Fraud' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 2035,
+      "element_id": null,
+      "claim_name": "Consumer Fraud",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "state": [
+   {
+    "claim_name": "Employer Withholding",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7Mm9Zf0HlgIvCoXnWbJoMX",
+    "parent_claim_name": "Garnishment Defense"
+   },
+   {
+    "claim_name": "Enforcement of Judgment",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R9pQxz2fUIrk1LjvVP8hikg",
+    "parent_claim_name": "Garnishment Defense"
+   },
+   {
+    "claim_name": "Infliction of Emotional Distress",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R9IldpgAfUyz3upHKvXdn8y",
+    "parent_claim_name": "Negligent Infliction of Emotional Distress"
+   },
+   {
+    "claim_name": "Labor and Employment Law Regulatory Objectives",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RC1RuXMxvyeWXk4LhcJIxIu",
+    "parent_claim_name": "Garnishment Defense"
+   },
+   {
+    "claim_name": "Negligent Infliction of Emotional Distress on a Bystander",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDuyHZDRBvSF1vlAJM9Jpix",
+    "parent_claim_name": "Negligent Infliction of Emotional Distress"
+   },
+   {
+    "claim_name": "Negligent Infliction of Emotional Distress on a Direct Victim",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R1bRKsKBIEa3Qmhs9fyU3H",
+    "parent_claim_name": "Negligent Infliction of Emotional Distress"
+   },
+   {
+    "claim_name": "Personal Injury Claims",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R8alUnZrt8GVEzHYhh1KTva",
+    "parent_claim_name": "Negligent Infliction of Emotional Distress"
+   },
+   {
+    "claim_name": "Tax Law Regulatory Objectives",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDK6eFy9n1upjAdRoNbPxQd",
+    "parent_claim_name": "Garnishment Defense"
+   }
+  ],
+  "General": [
+   {
+    "claim_name": "Negotiated Settlement and Good Faith Payments",
+    "claim_type": "discovered",
+    "confidence": 0.65,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Disability Income Protections from Garnishment",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Potential False Representation",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Unconscionable Debt Collection Practices",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [],
+ "deadlines": [
+  {
+   "event_text": "Mr. Drummond said if I don't set something up, they are going to garnish my wages and freeze the bank account by the end of the month.",
+   "event_type": "garnishment_notice",
+   "trigger": "notice_posted",
+   "trigger_date": "2026-07-31",
+   "computed_date": "2026-08-14",
+   "rule_id": "generic_notice_window",
+   "citation": "The cure/vacate period stated in your written notice or lease \u2014 the notice/lease term is the operative source of this period (confirm the exact deadline printed on the notice; your state's landlord-tenant statute governs the minimum period).",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "The settlement opportunity offers a good-faith payment of $50.00 by July 3, 2026.",
+   "event_type": "filing_deadline",
+   "trigger": "deadline",
+   "trigger_date": "2026-07-03",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "North Star Receivables has been calling the person 6 or 7 times a day.",
+   "event_type": "debt_collection_call",
+   "trigger": "service",
+   "trigger_date": "2026-07-08",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.49,
+    "rationale": "General Civil practice area (55% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.5454545454545454,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Consumer / Debt",
+    "destination_type": "practice_area",
+    "score": 0.39454545454545453,
+    "rationale": "Consumer / Debt practice area (27% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.2727272727272727,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Public Benefits",
+    "destination_type": "practice_area",
+    "score": 0.33090909090909093,
+    "rationale": "Public Benefits practice area (9% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.09090909090909091,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Employment",
+    "destination_type": "practice_area",
+    "score": 0.33090909090909093,
+    "rationale": "Employment practice area (9% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.09090909090909091,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "General Civil",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: Mr. Drummond said if I don't set something up, they are going to garnish my wages and freeze the bank account by the end of the month. (estimated 2026-08-14; The cure/vacate period stated in your written notice or lease \u2014 the notice/lease term is the operative source of this period (confirm the exact deadline printed on the notice; your state's landlord-tenant statute governs the minimum period).). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-08-14",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 2,
+   "category": "follow_up_steps",
+   "description": "The collector said they will garnish your wages or freeze your bank account 'by the end of the month.' In Minnesota a collector generally CANNOT garnish or freeze anything without first suing you and getting a court judgment (Minn. Stat. \u00a7 571.71) \u2014 and you said no court papers were ever served. Threatening action they cannot legally take is itself an FDCPA violation (15 U.S.C. \u00a7 1692e). Have you ever been served with any lawsuit or court papers about this debt? [Authority: 15 U.S.C. \u00a7 1692e(4)\u2013(5) (threat of action that cannot legally be taken); Minn. Stat. \u00a7 571.71 (garnishment generally requires a judgment first)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 3,
+   "category": "follow_up_steps",
+   "description": "The way this collector is contacting you may itself be illegal under the federal Fair Debt Collection Practices Act: calling before 8am or after 9pm, calling you at work after being told to stop, telling another person (like your sister) about the debt, or calling many times a day can each violate the law (15 U.S.C. \u00a7 1692c/\u00a7 1692d). Keep your call log. Can you note the dates, times, and who they contacted? [Authority: 15 U.S.C. \u00a7 1692c(a) (calls before 8am/after 9pm, at work after notice); \u00a7 1692b/\u00a7 1692c(b) (third-party disclosure of the debt); \u00a7 1692d (harassing volume)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "You said your income is Social Security disability plus a little part-time pay. Social Security and SSDI are protected by law from most debt collection (42 U.S.C. \u00a7 407), and Minnesota gives extra protection to low wages and exempt funds in a bank account (Minn. Stat. \u00a7 571.912/\u00a7 571.922). You may be effectively 'judgment-proof.' Is Social Security your only regular income, and is it direct-deposited? [Authority: 42 U.S.C. \u00a7 407(a) (Social Security/SSDI exempt from garnishment); Minn. Stat. \u00a7 571.912/\u00a7 571.922 (exemption-notice process; wage-exemption floor)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "documents_to_gather",
+   "description": "Element 'Extreme and Outrageous Conduct' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Negligent Infliction of Emotional Distress",
+   "element_ref": "Extreme and Outrageous Conduct"
+  },
+  {
+   "item_number": 6,
+   "category": "documents_to_gather",
+   "description": "Element 'Causation' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Negligent Infliction of Emotional Distress",
+   "element_ref": "Causation"
+  },
+  {
+   "item_number": 7,
+   "category": "documents_to_gather",
+   "description": "Element 'Severity of Emotional Distress' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Negligent Infliction of Emotional Distress",
+   "element_ref": "Severity of Emotional Distress"
+  },
+  {
+   "item_number": 8,
+   "category": "documents_to_gather",
+   "description": "Element 'Consumer Transaction' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Possible Violation of Minnesota Consumer Protection Laws",
+   "element_ref": "Consumer Transaction"
+  },
+  {
+   "item_number": 9,
+   "category": "documents_to_gather",
+   "description": "Element 'Deceptive Practices' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Possible Violation of Minnesota Consumer Protection Laws",
+   "element_ref": "Deceptive Practices"
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential False Representation' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential False Representation",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Negligent Infliction of Emotional Distress' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Negligent Infliction of Emotional Distress",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Possible Violation of Minnesota Consumer Protection Laws' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Possible Violation of Minnesota Consumer Protection Laws",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Employer Withholding",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Labor and Employment Law Regulatory Objectives' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Labor and Employment Law Regulatory Objectives",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Tax Law Regulatory Objectives' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Tax Law Regulatory Objectives",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Enforcement of Judgment' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Enforcement of Judgment",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Civil Remedies / Relief Sought",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Direct Victim' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Negligent Infliction of Emotional Distress on a Direct Victim",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Bystander' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Negligent Infliction of Emotional Distress on a Bystander",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Infliction of Emotional Distress' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Infliction of Emotional Distress",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Personal Injury Claims' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Personal Injury Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Civil Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 23,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Commercial and Trade Law' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Commercial and Trade Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 24,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Area of Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 25,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Violation of the Telephone Consumer Protection Act (TCPA)' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Violation of the Telephone Consumer Protection Act (TCPA)",
+   "element_ref": null
+  },
+  {
+   "item_number": 26,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Unfair or Deceptive Trade Practices' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unfair or Deceptive Trade Practices",
+   "element_ref": null
+  },
+  {
+   "item_number": 27,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Privacy Violation' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Privacy Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 28,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Harassment Claim' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Harassment Claim",
+   "element_ref": null
+  },
+  {
+   "item_number": 29,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Consumer Fraud' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Consumer Fraud",
+   "element_ref": null
+  },
+  {
+   "item_number": 30,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Invasion of Privacy' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Invasion of Privacy",
+   "element_ref": null
+  },
+  {
+   "item_number": 31,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Unconscionable Debt Collection Practices' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unconscionable Debt Collection Practices",
+   "element_ref": null
+  },
+  {
+   "item_number": 32,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Intentional Infliction of Emotional Distress' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Intentional Infliction of Emotional Distress",
+   "element_ref": null
+  },
+  {
+   "item_number": 33,
+   "category": "follow_up_steps",
+   "description": "What is the applicable statute of limitations for filing a Fair Debt Collection Practices Act claim in our jurisdiction?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Fair Debt Collection Practices Act Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 34,
+   "category": "follow_up_steps",
+   "description": "What is the filing deadline to contest garnishment in our jurisdiction?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Garnishment Defense",
+   "element_ref": null
+  },
+  {
+   "item_number": 35,
+   "category": "follow_up_steps",
+   "description": "What is the statute of limitations for bringing a claim of negligent infliction of emotional distress in our jurisdiction?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Negligent Infliction of Emotional Distress",
+   "element_ref": null
+  },
+  {
+   "item_number": 36,
+   "category": "follow_up_steps",
+   "description": "What specific procedural requirements must be met to file a complaint under Minnesota's consumer protection laws?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Possible Violation of Minnesota Consumer Protection Laws",
+   "element_ref": null
+  },
+  {
+   "item_number": 37,
+   "category": "documents_to_gather",
+   "description": "Element 'Debt Collector' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Fair Debt Collection Practices Act Violation",
+   "element_ref": "Debt Collector"
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Fair Debt Collection Practices Act Violation": [
+    {
+     "gap_id": 2445,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Debt Collector' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 2014,
+     "element_id": 1085,
+     "claim_name": "Fair Debt Collection Practices Act Violation",
+     "element_name": "Debt Collector",
+     "action_item_ref": 37,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2474,
+     "gap_type": "procedural_requirement",
+     "description": "What is the applicable statute of limitations for filing a Fair Debt Collection Practices Act claim in our jurisdiction?",
+     "priority": 50,
+     "claim_id": 2014,
+     "element_id": null,
+     "claim_name": "Fair Debt Collection Practices Act Violation",
+     "element_name": null,
+     "action_item_ref": 33,
+     "open_questions": []
+    }
+   ],
+   "Negligent Infliction of Emotional Distress": [
+    {
+     "gap_id": 2446,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Extreme and Outrageous Conduct' is not yet supported by any facts",
+     "priority": 70,
+     "claim_id": 2016,
+     "element_id": 1092,
+     "claim_name": "Negligent Infliction of Emotional Distress",
+     "element_name": "Extreme and Outrageous Conduct",
+     "action_item_ref": 5,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2447,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Causation' is not yet supported by any facts",
+     "priority": 70,
+     "claim_id": 2016,
+     "element_id": 1093,
+     "claim_name": "Negligent Infliction of Emotional Distress",
+     "element_name": "Causation",
+     "action_item_ref": 6,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2448,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Severity of Emotional Distress' is not yet supported by any facts",
+     "priority": 70,
+     "claim_id": 2016,
+     "element_id": 1094,
+     "claim_name": "Negligent Infliction of Emotional Distress",
+     "element_name": "Severity of Emotional Distress",
+     "action_item_ref": 7,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2452,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Negligent Infliction of Emotional Distress' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2016,
+     "element_id": null,
+     "claim_name": "Negligent Infliction of Emotional Distress",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2476,
+     "gap_type": "procedural_requirement",
+     "description": "What is the statute of limitations for bringing a claim of negligent infliction of emotional distress in our jurisdiction?",
+     "priority": 50,
+     "claim_id": 2016,
+     "element_id": null,
+     "claim_name": "Negligent Infliction of Emotional Distress",
+     "element_name": null,
+     "action_item_ref": 35,
+     "open_questions": []
+    }
+   ],
+   "Possible Violation of Minnesota Consumer Protection Laws": [
+    {
+     "gap_id": 2449,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Consumer Transaction' is not yet supported by any facts",
+     "priority": 60,
+     "claim_id": 2017,
+     "element_id": 1095,
+     "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+     "element_name": "Consumer Transaction",
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2450,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Deceptive Practices' is not yet supported by any facts",
+     "priority": 60,
+     "claim_id": 2017,
+     "element_id": 1096,
+     "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+     "element_name": "Deceptive Practices",
+     "action_item_ref": 9,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2453,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Possible Violation of Minnesota Consumer Protection Laws' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2017,
+     "element_id": null,
+     "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2477,
+     "gap_type": "procedural_requirement",
+     "description": "What specific procedural requirements must be met to file a complaint under Minnesota's consumer protection laws?",
+     "priority": 50,
+     "claim_id": 2017,
+     "element_id": null,
+     "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+     "element_name": null,
+     "action_item_ref": 36,
+     "open_questions": []
+    }
+   ],
+   "Potential False Representation": [
+    {
+     "gap_id": 2451,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential False Representation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2033,
+     "element_id": null,
+     "claim_name": "Potential False Representation",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Employer Withholding": [
+    {
+     "gap_id": 2454,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2018,
+     "element_id": null,
+     "claim_name": "Employer Withholding",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    }
+   ],
+   "Labor and Employment Law Regulatory Objectives": [
+    {
+     "gap_id": 2455,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Labor and Employment Law Regulatory Objectives' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2019,
+     "element_id": null,
+     "claim_name": "Labor and Employment Law Regulatory Objectives",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Tax Law Regulatory Objectives": [
+    {
+     "gap_id": 2456,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Tax Law Regulatory Objectives' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2020,
+     "element_id": null,
+     "claim_name": "Tax Law Regulatory Objectives",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Enforcement of Judgment": [
+    {
+     "gap_id": 2457,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Enforcement of Judgment' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2021,
+     "element_id": null,
+     "claim_name": "Enforcement of Judgment",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Civil Remedies / Relief Sought": [
+    {
+     "gap_id": 2458,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2022,
+     "element_id": null,
+     "claim_name": "Civil Remedies / Relief Sought",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Negligent Infliction of Emotional Distress on a Direct Victim": [
+    {
+     "gap_id": 2459,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Direct Victim' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2023,
+     "element_id": null,
+     "claim_name": "Negligent Infliction of Emotional Distress on a Direct Victim",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Negligent Infliction of Emotional Distress on a Bystander": [
+    {
+     "gap_id": 2460,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Bystander' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2024,
+     "element_id": null,
+     "claim_name": "Negligent Infliction of Emotional Distress on a Bystander",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Infliction of Emotional Distress": [
+    {
+     "gap_id": 2461,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Infliction of Emotional Distress' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2025,
+     "element_id": null,
+     "claim_name": "Infliction of Emotional Distress",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Personal Injury Claims": [
+    {
+     "gap_id": 2462,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Personal Injury Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2026,
+     "element_id": null,
+     "claim_name": "Personal Injury Claims",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Civil Claims": [
+    {
+     "gap_id": 2463,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2027,
+     "element_id": null,
+     "claim_name": "Civil Claims",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ],
+   "Commercial and Trade Law": [
+    {
+     "gap_id": 2464,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Commercial and Trade Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2028,
+     "element_id": null,
+     "claim_name": "Commercial and Trade Law",
+     "element_name": null,
+     "action_item_ref": 23,
+     "open_questions": []
+    }
+   ],
+   "Area of Law": [
+    {
+     "gap_id": 2465,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2029,
+     "element_id": null,
+     "claim_name": "Area of Law",
+     "element_name": null,
+     "action_item_ref": 24,
+     "open_questions": []
+    }
+   ],
+   "Potential Violation of the Telephone Consumer Protection Act (TCPA)": [
+    {
+     "gap_id": 2466,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Violation of the Telephone Consumer Protection Act (TCPA)' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2030,
+     "element_id": null,
+     "claim_name": "Potential Violation of the Telephone Consumer Protection Act (TCPA)",
+     "element_name": null,
+     "action_item_ref": 25,
+     "open_questions": []
+    }
+   ],
+   "Unfair or Deceptive Trade Practices": [
+    {
+     "gap_id": 2467,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Unfair or Deceptive Trade Practices' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2031,
+     "element_id": null,
+     "claim_name": "Unfair or Deceptive Trade Practices",
+     "element_name": null,
+     "action_item_ref": 26,
+     "open_questions": []
+    }
+   ],
+   "Privacy Violation": [
+    {
+     "gap_id": 2468,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Privacy Violation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2032,
+     "element_id": null,
+     "claim_name": "Privacy Violation",
+     "element_name": null,
+     "action_item_ref": 27,
+     "open_questions": []
+    }
+   ],
+   "Harassment Claim": [
+    {
+     "gap_id": 2469,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Harassment Claim' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2034,
+     "element_id": null,
+     "claim_name": "Harassment Claim",
+     "element_name": null,
+     "action_item_ref": 28,
+     "open_questions": []
+    }
+   ],
+   "Consumer Fraud": [
+    {
+     "gap_id": 2470,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Consumer Fraud' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2035,
+     "element_id": null,
+     "claim_name": "Consumer Fraud",
+     "element_name": null,
+     "action_item_ref": 29,
+     "open_questions": []
+    }
+   ],
+   "Invasion of Privacy": [
+    {
+     "gap_id": 2471,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Invasion of Privacy' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2036,
+     "element_id": null,
+     "claim_name": "Invasion of Privacy",
+     "element_name": null,
+     "action_item_ref": 30,
+     "open_questions": []
+    }
+   ],
+   "Unconscionable Debt Collection Practices": [
+    {
+     "gap_id": 2472,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Unconscionable Debt Collection Practices' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2037,
+     "element_id": null,
+     "claim_name": "Unconscionable Debt Collection Practices",
+     "element_name": null,
+     "action_item_ref": 31,
+     "open_questions": []
+    }
+   ],
+   "Intentional Infliction of Emotional Distress": [
+    {
+     "gap_id": 2473,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Intentional Infliction of Emotional Distress' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2040,
+     "element_id": null,
+     "claim_name": "Intentional Infliction of Emotional Distress",
+     "element_name": null,
+     "action_item_ref": 32,
+     "open_questions": []
+    }
+   ],
+   "Garnishment Defense": [
+    {
+     "gap_id": 2475,
+     "gap_type": "procedural_requirement",
+     "description": "What is the filing deadline to contest garnishment in our jurisdiction?",
+     "priority": 50,
+     "claim_id": 2015,
+     "element_id": null,
+     "claim_name": "Garnishment Defense",
+     "element_name": null,
+     "action_item_ref": 34,
+     "open_questions": []
+    }
+   ],
+   "Uncategorized": [
+    {
+     "gap_id": 2478,
+     "gap_type": "procedural_requirement",
+     "description": "The way this collector is contacting you may itself be illegal under the federal Fair Debt Collection Practices Act: calling before 8am or after 9pm, calling you at work after being told to stop, telling another person (like your sister) about the debt, or calling many times a day can each violate the law (15 U.S.C. \u00a7 1692c/\u00a7 1692d). Keep your call log. Can you note the dates, times, and who they contacted? [Authority: 15 U.S.C. \u00a7 1692c(a) (calls before 8am/after 9pm, at work after notice); \u00a7 1692b/\u00a7 1692c(b) (third-party disclosure of the debt); \u00a7 1692d (harassing volume)]",
+     "priority": 86,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 3,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2479,
+     "gap_type": "procedural_requirement",
+     "description": "The collector said they will garnish your wages or freeze your bank account 'by the end of the month.' In Minnesota a collector generally CANNOT garnish or freeze anything without first suing you and getting a court judgment (Minn. Stat. \u00a7 571.71) \u2014 and you said no court papers were ever served. Threatening action they cannot legally take is itself an FDCPA violation (15 U.S.C. \u00a7 1692e). Have you ever been served with any lawsuit or court papers about this debt? [Authority: 15 U.S.C. \u00a7 1692e(4)\u2013(5) (threat of action that cannot legally be taken); Minn. Stat. \u00a7 571.71 (garnishment generally requires a judgment first)]",
+     "priority": 88,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 2,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2480,
+     "gap_type": "procedural_requirement",
+     "description": "You said your income is Social Security disability plus a little part-time pay. Social Security and SSDI are protected by law from most debt collection (42 U.S.C. \u00a7 407), and Minnesota gives extra protection to low wages and exempt funds in a bank account (Minn. Stat. \u00a7 571.912/\u00a7 571.922). You may be effectively 'judgment-proof.' Is Social Security your only regular income, and is it direct-deposited? [Authority: 42 U.S.C. \u00a7 407(a) (Social Security/SSDI exempt from garnishment); Minn. Stat. \u00a7 571.912/\u00a7 571.922 (exemption-notice process; wage-exemption floor)]",
+     "priority": 86,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 4,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 2479,
+    "gap_type": "procedural_requirement",
+    "description": "The collector said they will garnish your wages or freeze your bank account 'by the end of the month.' In Minnesota a collector generally CANNOT garnish or freeze anything without first suing you and getting a court judgment (Minn. Stat. \u00a7 571.71) \u2014 and you said no court papers were ever served. Threatening action they cannot legally take is itself an FDCPA violation (15 U.S.C. \u00a7 1692e). Have you ever been served with any lawsuit or court papers about this debt? [Authority: 15 U.S.C. \u00a7 1692e(4)\u2013(5) (threat of action that cannot legally be taken); Minn. Stat. \u00a7 571.71 (garnishment generally requires a judgment first)]",
+    "priority": 88,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 2,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2478,
+    "gap_type": "procedural_requirement",
+    "description": "The way this collector is contacting you may itself be illegal under the federal Fair Debt Collection Practices Act: calling before 8am or after 9pm, calling you at work after being told to stop, telling another person (like your sister) about the debt, or calling many times a day can each violate the law (15 U.S.C. \u00a7 1692c/\u00a7 1692d). Keep your call log. Can you note the dates, times, and who they contacted? [Authority: 15 U.S.C. \u00a7 1692c(a) (calls before 8am/after 9pm, at work after notice); \u00a7 1692b/\u00a7 1692c(b) (third-party disclosure of the debt); \u00a7 1692d (harassing volume)]",
+    "priority": 86,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 3,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2480,
+    "gap_type": "procedural_requirement",
+    "description": "You said your income is Social Security disability plus a little part-time pay. Social Security and SSDI are protected by law from most debt collection (42 U.S.C. \u00a7 407), and Minnesota gives extra protection to low wages and exempt funds in a bank account (Minn. Stat. \u00a7 571.912/\u00a7 571.922). You may be effectively 'judgment-proof.' Is Social Security your only regular income, and is it direct-deposited? [Authority: 42 U.S.C. \u00a7 407(a) (Social Security/SSDI exempt from garnishment); Minn. Stat. \u00a7 571.912/\u00a7 571.922 (exemption-notice process; wage-exemption floor)]",
+    "priority": 86,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2446,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Extreme and Outrageous Conduct' is not yet supported by any facts",
+    "priority": 70,
+    "claim_id": 2016,
+    "element_id": 1092,
+    "claim_name": "Negligent Infliction of Emotional Distress",
+    "element_name": "Extreme and Outrageous Conduct",
+    "action_item_ref": 5,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2447,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Causation' is not yet supported by any facts",
+    "priority": 70,
+    "claim_id": 2016,
+    "element_id": 1093,
+    "claim_name": "Negligent Infliction of Emotional Distress",
+    "element_name": "Causation",
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2448,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Severity of Emotional Distress' is not yet supported by any facts",
+    "priority": 70,
+    "claim_id": 2016,
+    "element_id": 1094,
+    "claim_name": "Negligent Infliction of Emotional Distress",
+    "element_name": "Severity of Emotional Distress",
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2449,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Consumer Transaction' is not yet supported by any facts",
+    "priority": 60,
+    "claim_id": 2017,
+    "element_id": 1095,
+    "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+    "element_name": "Consumer Transaction",
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2450,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Deceptive Practices' is not yet supported by any facts",
+    "priority": 60,
+    "claim_id": 2017,
+    "element_id": 1096,
+    "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+    "element_name": "Deceptive Practices",
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2451,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential False Representation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2033,
+    "element_id": null,
+    "claim_name": "Potential False Representation",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2452,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Negligent Infliction of Emotional Distress' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2016,
+    "element_id": null,
+    "claim_name": "Negligent Infliction of Emotional Distress",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2453,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Possible Violation of Minnesota Consumer Protection Laws' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2017,
+    "element_id": null,
+    "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2454,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2018,
+    "element_id": null,
+    "claim_name": "Employer Withholding",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2455,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Labor and Employment Law Regulatory Objectives' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2019,
+    "element_id": null,
+    "claim_name": "Labor and Employment Law Regulatory Objectives",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2456,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Tax Law Regulatory Objectives' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2020,
+    "element_id": null,
+    "claim_name": "Tax Law Regulatory Objectives",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2457,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Enforcement of Judgment' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2021,
+    "element_id": null,
+    "claim_name": "Enforcement of Judgment",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2458,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2022,
+    "element_id": null,
+    "claim_name": "Civil Remedies / Relief Sought",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2459,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Direct Victim' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2023,
+    "element_id": null,
+    "claim_name": "Negligent Infliction of Emotional Distress on a Direct Victim",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2460,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Negligent Infliction of Emotional Distress on a Bystander' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2024,
+    "element_id": null,
+    "claim_name": "Negligent Infliction of Emotional Distress on a Bystander",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2461,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Infliction of Emotional Distress' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2025,
+    "element_id": null,
+    "claim_name": "Infliction of Emotional Distress",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2462,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Personal Injury Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2026,
+    "element_id": null,
+    "claim_name": "Personal Injury Claims",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2463,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2027,
+    "element_id": null,
+    "claim_name": "Civil Claims",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2464,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Commercial and Trade Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2028,
+    "element_id": null,
+    "claim_name": "Commercial and Trade Law",
+    "element_name": null,
+    "action_item_ref": 23,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2465,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2029,
+    "element_id": null,
+    "claim_name": "Area of Law",
+    "element_name": null,
+    "action_item_ref": 24,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2466,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Violation of the Telephone Consumer Protection Act (TCPA)' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2030,
+    "element_id": null,
+    "claim_name": "Potential Violation of the Telephone Consumer Protection Act (TCPA)",
+    "element_name": null,
+    "action_item_ref": 25,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2467,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Unfair or Deceptive Trade Practices' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2031,
+    "element_id": null,
+    "claim_name": "Unfair or Deceptive Trade Practices",
+    "element_name": null,
+    "action_item_ref": 26,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2468,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Privacy Violation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2032,
+    "element_id": null,
+    "claim_name": "Privacy Violation",
+    "element_name": null,
+    "action_item_ref": 27,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2469,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Harassment Claim' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2034,
+    "element_id": null,
+    "claim_name": "Harassment Claim",
+    "element_name": null,
+    "action_item_ref": 28,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2470,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Consumer Fraud' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2035,
+    "element_id": null,
+    "claim_name": "Consumer Fraud",
+    "element_name": null,
+    "action_item_ref": 29,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2471,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Invasion of Privacy' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2036,
+    "element_id": null,
+    "claim_name": "Invasion of Privacy",
+    "element_name": null,
+    "action_item_ref": 30,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2472,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Unconscionable Debt Collection Practices' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2037,
+    "element_id": null,
+    "claim_name": "Unconscionable Debt Collection Practices",
+    "element_name": null,
+    "action_item_ref": 31,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2473,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Intentional Infliction of Emotional Distress' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2040,
+    "element_id": null,
+    "claim_name": "Intentional Infliction of Emotional Distress",
+    "element_name": null,
+    "action_item_ref": 32,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2474,
+    "gap_type": "procedural_requirement",
+    "description": "What is the applicable statute of limitations for filing a Fair Debt Collection Practices Act claim in our jurisdiction?",
+    "priority": 50,
+    "claim_id": 2014,
+    "element_id": null,
+    "claim_name": "Fair Debt Collection Practices Act Violation",
+    "element_name": null,
+    "action_item_ref": 33,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2475,
+    "gap_type": "procedural_requirement",
+    "description": "What is the filing deadline to contest garnishment in our jurisdiction?",
+    "priority": 50,
+    "claim_id": 2015,
+    "element_id": null,
+    "claim_name": "Garnishment Defense",
+    "element_name": null,
+    "action_item_ref": 34,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2476,
+    "gap_type": "procedural_requirement",
+    "description": "What is the statute of limitations for bringing a claim of negligent infliction of emotional distress in our jurisdiction?",
+    "priority": 50,
+    "claim_id": 2016,
+    "element_id": null,
+    "claim_name": "Negligent Infliction of Emotional Distress",
+    "element_name": null,
+    "action_item_ref": 35,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2477,
+    "gap_type": "procedural_requirement",
+    "description": "What specific procedural requirements must be met to file a complaint under Minnesota's consumer protection laws?",
+    "priority": 50,
+    "claim_id": 2017,
+    "element_id": null,
+    "claim_name": "Possible Violation of Minnesota Consumer Protection Laws",
+    "element_name": null,
+    "action_item_ref": 36,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2445,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Debt Collector' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 2014,
+    "element_id": 1085,
+    "claim_name": "Fair Debt Collection Practices Act Violation",
+    "element_name": "Debt Collector",
+    "action_item_ref": 37,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Have you ever been served with any lawsuit or court papers about this debt?",
+   "Can you note the dates, times, and whom the collector contacted about the debt?",
+   "Is Social Security your only regular source of income, and is it directly deposited into your bank account?",
+   "Can you describe any extreme or outrageous behavior you've experienced from the debt collector?",
+   "How has the debt collector's actions affected your emotional well-being?",
+   "Can you explain how the debt collector's actions have directly affected your life?",
+   "Can you describe any misleading information provided by the collector regarding the debt?",
+   "Have you experienced any emotional distress as a direct result of the collector's actions?",
+   "Are you aware of any specific consumer protection laws that may apply to your situation?"
+  ],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "This report found 23 possible legal issues. These issues are at the federal or state level. The strongest issues are Invasion of Privacy, Possible breaking of the Telephone Consumer Protection Act (TCPA), and Garnishment Defense. There is a deadline you must meet. Mr. Drummond said if you do not act, they will take your wages. They might also freeze your bank account by the end of the month. The deadline is based on your written notice or lease. You need to check the exact date on the notice. Your state's landlord-tenant rules will state the minimum time allowed. The analysis is complete. There are 9 follow-up questions that could help your case.",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}
