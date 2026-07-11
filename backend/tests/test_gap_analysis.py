@@ -392,6 +392,16 @@ async def test_q1_doctrine_probe_prompt_and_gap(
     assert "UNSTATED DOCTRINE" in prompt
     assert "ELIGIBILITY" in prompt or "eligibility" in prompt
     assert "EXCEPTION" in prompt.upper()
+    # r1 (2026-07-10): the probe must cover EVERY doctrine-level sub-issue,
+    # including the non-obvious linkages Damien enumerated — VAWA self-petition,
+    # the asylum one-year-bar exception, the § 245(c)(2) unauthorized-employment
+    # adjustment bar AND its VAWA exemption, and the Pereira/Niz-Chavez NTA defect.
+    assert "VAWA" in prompt
+    assert "one-year-bar" in prompt or "one-year bar" in prompt
+    assert "245(c)(2)" in prompt
+    assert "EXEMPT" in prompt.upper()  # VAWA exemption from the § 245(c)(2) bar
+    assert "Pereira" in prompt and "Niz-Chavez" in prompt
+    assert "518.17" in prompt  # § 518.17 domestic-abuse custody factor
     assert result["gap_types"].get("procedural_requirement", 0) >= 1
 
 
