@@ -121,15 +121,19 @@ def test_stated_court_date_does_not_mislabel_severance_deadline():
 def test_stated_court_date_does_not_mislabel_realtor_listing_appointment():
     """Round 7 residual (BUG-32): a realtor 'listing' appointment the extractor
     tagged trigger='appearance' must NOT be asserted as 'the court's own summons'."""
-    ev = DeadlineEvent(
-        event_type="appointment",
-        raw_text="there is an appointment on July 16th where I sign listing papers with the realtor",
-        trigger="appearance",
-        date=date(2026, 7, 16),
-    )
-    d = _one([ev], today=date(2026, 7, 6), domains=ELDER)
-    assert d.rule_id != "stated_court_date"
-    assert d.computed is False
+    # The extractor mislabeled this realtor appointment as trigger 'appearance'
+    # on one run and 'hearing' on another; NEITHER should be asserted as a court
+    # date, because the TEXT carries no court word.
+    for bad_trigger in ("appearance", "hearing"):
+        ev = DeadlineEvent(
+            event_type="appointment",
+            raw_text="there is an appointment on July 16th where I sign listing papers with the realtor",
+            trigger=bad_trigger,
+            date=date(2026, 7, 16),
+        )
+        d = _one([ev], today=date(2026, 7, 6), domains=ELDER)
+        assert d.rule_id != "stated_court_date", f"leaked on trigger={bad_trigger}"
+        assert d.computed is False
 
 
 def test_fdcpa_validation_30d_from_receipt():

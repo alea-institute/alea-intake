@@ -243,12 +243,18 @@ class DeadlineDetectStage:
 
         # --- Classify practice-area domain(s) from the narrative (round 7,
         #     BUG-32). Intakes run unbound, so the cross-domain guard infers the
-        #     domain from the same gathered text and scopes rule matching to it —
+        #     domain from the gathered text and scopes rule matching to it —
         #     e.g. the MN family-response rule (§ 518.12) will not fire on a
-        #     wage-theft termination or a POA signing. ---
+        #     wage-theft termination or a POA signing.
+        #     Classify from the CLIENT narrative + uploaded documents ONLY, never
+        #     the LLM-extracted fact assertions: those are derivative and noisy
+        #     (a confabulated "landlord"/"deposit" fact in an elder matter would
+        #     otherwise mis-raise landlord_tenant and let the eviction cure-window
+        #     rule fire on a bank letter). ---
         from app.services.analysis.domain_classifier import classify_domains
 
-        domains = classify_domains(text)
+        classify_text = await self._gather_text(intake_id, include_facts=False)
+        domains = classify_domains(classify_text)
 
         # --- Compute (deterministic) ---
         computed = compute_deadlines(
@@ -313,11 +319,16 @@ class DeadlineDetectStage:
             source_end=schema.source_end,
         )
 
-    async def _gather_text(self, intake_id: int) -> str:
+    async def _gather_text(self, intake_id: int, include_facts: bool = True) -> str:
         """Concatenate the intake's consumer/professional message text + fact assertions.
 
         Mirrors backfill's message selection (non-system messages in order) so
         detection sees the same narrative the pipeline extracted facts from.
+
+        ``include_facts=False`` returns the client narrative + uploaded-document
+        text ONLY (no LLM-extracted fact assertions) — used for domain
+        classification, which must not be swayed by derivative/confabulated facts
+        (round 7 BUG-32/33 cross-domain guard).
         """
         session_ids = (
             await self._session.execute(
@@ -345,6 +356,9 @@ class DeadlineDetectStage:
                 text = raw.decode("utf-8", errors="replace").strip()
                 if text:
                     parts.append(text)
+
+        if not include_facts:
+            return "\n".join(parts)
 
         # Extracted fact assertions add normalized dates/events the LLM may reuse.
         facts = (

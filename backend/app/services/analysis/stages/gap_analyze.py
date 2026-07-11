@@ -338,10 +338,14 @@ class GapAnalyzeStage:
 
         return procedural_gaps
 
-    async def _gather_narrative(self, intake_id: int) -> str:
+    async def _gather_narrative(self, intake_id: int, include_facts: bool = True) -> str:
         """Concatenate consumer/professional message text + document text +
         extracted fact assertions (mirrors DeadlineDetectStage._gather_text so
-        the doctrine probes see the same narrative the pipeline analyzed)."""
+        the doctrine probes see the same narrative the pipeline analyzed).
+
+        ``include_facts=False`` returns the client narrative + document text ONLY
+        (no LLM-extracted fact assertions) — used for domain classification so a
+        confabulated fact cannot mis-raise a foreign practice area (round 7)."""
         from sqlalchemy import select
 
         from app.models.fact import ExtractedFact
@@ -370,6 +374,9 @@ class GapAnalyzeStage:
                 text = raw.decode("utf-8", errors="replace").strip()
                 if text:
                     parts.append(text)
+
+        if not include_facts:
+            return "\n".join(parts)
 
         facts = (
             await self.db_session.execute(
@@ -412,8 +419,15 @@ class GapAnalyzeStage:
         # Infer practice-area domain(s) so probes never bleed cross-domain
         # (round 7, BUG-33): an OFP/custody probe cannot fire in a wage-theft or
         # consumer-debt matter, an immigration probe cannot fire on a stray
-        # acronym in an unrelated document.
-        domains = classify_domains(narrative)
+        # acronym in an unrelated document. Classify from the narrative +
+        # documents ONLY (exclude derivative/confabulated facts).
+        try:
+            classify_text = await self._gather_narrative(
+                run.intake_id, include_facts=False
+            )
+        except Exception:  # pragma: no cover
+            classify_text = narrative
+        domains = classify_domains(classify_text)
 
         seen = {g.description for g in existing_gaps} | {
             g.description for g in pending_gaps
