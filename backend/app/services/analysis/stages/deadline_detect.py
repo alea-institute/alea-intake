@@ -89,6 +89,23 @@ Rules:
 1. Only extract events explicitly supported by the text. Never invent dates.
 2. Normalize dates to ISO 8601. If only a partial date is given, apply the
    year-anchoring guidance above rather than returning null.
+3. PAST events MATTER — extract them even when they are years old. A deadline
+   that already ran (lapsed) must still be computed and flagged: it changes the
+   legal analysis (exception pathways, malpractice exposure). In particular:
+   * ALWAYS extract the client's date of ENTRY into the United States as an
+     event (event_type="asylum_entry", trigger="entry", date=the entry date)
+     whenever the narrative involves asylum, removal, or immigration relief —
+     even if entry was many years ago ("I came to this country August 14,
+     2019" -> asylum_entry / entry / 2019-08-14). The asylum one-year bar is
+     computed from it.
+   * Extract past incidents/injuries with their dates (statute-of-limitations
+     analysis needs them).
+4. Do NOT emit a notice/cure-window event (trigger="notice_posted") for an
+   immigration hearing notice, Notice to Appear, or any court HEARING letter —
+   those are hearing events (trigger="hearing"); there is no cure/vacate
+   window to compute from a hearing notice. Reserve "notice_posted" for
+   landlord/tenant-style notices (notice to quit/vacate/cure) and similar
+   documents that actually start a cure period.
 
 Return a JSON object matching: {{"events": [ ... ]}}."""
 
