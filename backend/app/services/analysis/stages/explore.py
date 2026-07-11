@@ -17,6 +17,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from app.models.analysis import AnalysisClaim
+from app.services.analysis.rationale_guard import ground_rationale
 from app.services.exploration.engine import ExplorationEngine
 from app.services.exploration.schemas import ExplorationConfig
 from app.services.screening.protocol_service import ProtocolService
@@ -191,16 +192,29 @@ class ExploreStage:
                     folio_iri = None
                 confidence = verdict.adjusted_confidence
 
+            # BUG-28: hedge unsupported evidence assertions in discovered-claim
+            # rationale before persistence (RUB-04 GATE), same guard as issue_spot.
+            raw_rationale = new_claim.get(
+                "rationale",
+                f"Discovered via {new_claim.get('source_layer', 'exploration')} exploration",
+            )
+            grounded_rationale, hedges = ground_rationale(
+                raw_rationale, [f.assertion_text for f in facts]
+            )
+            if hedges:
+                logger.info(
+                    "Rationale grounding guard hedged discovered claim %r: %s",
+                    new_claim.get("claim_name"),
+                    "; ".join(hedges),
+                )
+
             claim = AnalysisClaim(
                 run_id=run.id,
                 claim_name=new_claim.get("claim_name", "Unknown"),
                 claim_type="discovered",
                 folio_iri=folio_iri,
                 confidence=confidence,
-                rationale=new_claim.get(
-                    "rationale",
-                    f"Discovered via {new_claim.get('source_layer', 'exploration')} exploration",
-                ),
+                rationale=grounded_rationale,
                 is_potential=True,
                 metadata_json={
                     "source_layer": new_claim.get("source_layer"),

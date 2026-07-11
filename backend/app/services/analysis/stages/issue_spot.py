@@ -13,6 +13,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from app.models.analysis import AnalysisClaim, ClaimElement
+from app.services.analysis.rationale_guard import ground_rationale
 from app.services.analysis.schemas import IssueSpotResult
 
 if TYPE_CHECKING:
@@ -46,6 +47,8 @@ Latent-issue triggers (a general checklist -- if the facts show the trigger, ALS
 - Child custody combined with flight or abduction indicators (threats to leave the state or country, hidden passports, prior disappearance, foreign ties) -> emergency/ex parte custody and child-abduction-risk relief (e.g., UCCJEA emergency jurisdiction, passport holds).
 
 Apply these as principled, generalizable heuristics -- not a fixed script. Only surface an issue when the facts fairly raise it. Do NOT fabricate or speculate beyond what the facts support: no invented parties, injuries, dates, or claims unsupported by the record. When in doubt, lower the confidence rather than omit a fairly-raised issue, but never assert an issue the facts do not support.
+
+RATIONALE GROUNDING (STRICT -- fabrication is the worst failure in this product): the rationale prose may reference ONLY facts actually present in the record. NEVER assert that evidence, documentation, corroboration, records, testimony, or proof EXISTS unless a fact explicitly states so. In particular, do NOT upgrade a client's own report into documented proof: if the client says they have a condition but the record shows no documentation, write "the client reports X" or "the reported X" -- NEVER "the doctor's documentation of X", "the doctor has noted X", "medical records show X", or "the police report confirms X". When a supporting document is not in the record, omit the reference rather than embellish. Prefer duller, provably-grounded prose over confident prose that overstates the evidence.
 
 Also provide:
 - jurisdictions: All jurisdictions detected across all claims (for parallel analysis)
@@ -259,6 +262,19 @@ class IssueSpotStage:
                     folio_iri = None
                 confidence = verdict.adjusted_confidence
 
+            # BUG-28: deterministic grounding backstop -- hedge any rationale
+            # clause that asserts evidence/documentation the fact record does
+            # not contain (RUB-04 GATE). No-op when the LLM prose is grounded.
+            grounded_rationale, hedges = ground_rationale(
+                spotted.rationale, [f.assertion_text for f in facts]
+            )
+            if hedges:
+                logger.info(
+                    "Rationale grounding guard hedged claim %r: %s",
+                    spotted.claim_name,
+                    "; ".join(hedges),
+                )
+
             # Persist AnalysisClaim
             claim = AnalysisClaim(
                 run_id=run.id,
@@ -267,7 +283,7 @@ class IssueSpotStage:
                 folio_iri=folio_iri,
                 jurisdiction=spotted.jurisdiction,
                 confidence=confidence,
-                rationale=spotted.rationale,
+                rationale=grounded_rationale,
                 is_potential=spotted.is_potential,
                 iteration_discovered=iteration.iteration_number,
             )
