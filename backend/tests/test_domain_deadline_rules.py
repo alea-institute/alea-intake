@@ -124,9 +124,11 @@ def test_stated_court_date_does_not_mislabel_realtor_listing_appointment():
     # The extractor mislabeled this realtor appointment as trigger 'appearance'
     # on one run and 'hearing' on another; NEITHER should be asserted as a court
     # date, because the TEXT carries no court word.
+    # event_type is the LLM's label and must NOT be trusted as court context —
+    # only the client's raw_text ("listing papers", no court word) counts.
     for bad_trigger in ("appearance", "hearing"):
         ev = DeadlineEvent(
-            event_type="appointment",
+            event_type="hearing",
             raw_text="there is an appointment on July 16th where I sign listing papers with the realtor",
             trigger=bad_trigger,
             date=date(2026, 7, 16),
