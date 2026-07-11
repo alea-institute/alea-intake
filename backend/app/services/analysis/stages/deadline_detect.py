@@ -17,7 +17,7 @@ analysis never crashes).
 from __future__ import annotations
 
 import logging
-from datetime import date, datetime
+from datetime import date
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import select
@@ -241,8 +241,19 @@ class DeadlineDetectStage:
         if not events:
             return []
 
+        # --- Classify practice-area domain(s) from the narrative (round 7,
+        #     BUG-32). Intakes run unbound, so the cross-domain guard infers the
+        #     domain from the same gathered text and scopes rule matching to it —
+        #     e.g. the MN family-response rule (§ 518.12) will not fire on a
+        #     wage-theft termination or a POA signing. ---
+        from app.services.analysis.domain_classifier import classify_domains
+
+        domains = classify_domains(text)
+
         # --- Compute (deterministic) ---
-        computed = compute_deadlines(events, jurisdiction=jurisdiction, today=ref_today)
+        computed = compute_deadlines(
+            events, jurisdiction=jurisdiction, today=ref_today, domains=domains
+        )
 
         # --- Persist ---
         created: list[Deadline] = []

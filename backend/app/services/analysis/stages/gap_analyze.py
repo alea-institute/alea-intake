@@ -19,7 +19,7 @@ from app.models.analysis import (
     ClaimElement,
     FactClaimMapping,
 )
-from app.services.analysis.schemas import GapAnalysisResult, GapSchema
+from app.services.analysis.schemas import GapAnalysisResult
 
 if TYPE_CHECKING:
     from app.services.llm_service import LLMService
@@ -87,6 +87,29 @@ class GapAnalyzeStage:
             existing_signatures.add(
                 (eg.gap_type, eg.claim_id, eg.element_id)
             )
+
+        # D04 (one source of truth for element support status): an
+        # "unsupported_element" gap raised in an EARLIER iteration ("Element X is
+        # not yet supported by any facts") becomes STALE once fact-mapping marks
+        # that element satisfied / attaches a mapping. Left open, it renders in
+        # the memo alongside the same element shown "Supported (85%)" — the
+        # self-contradiction Damien flagged. Close the stale gap here so the gap
+        # list and the element status derive from the SAME predicate.
+        for eg in existing_gaps:
+            if eg.status != "open":
+                continue
+            if eg.gap_type == "unsupported_element" and eg.element_id is not None:
+                elem = element_by_id.get(eg.element_id)
+                now_supported = (elem is not None and elem.is_satisfied) or (
+                    eg.element_id in mappings_by_element_id
+                )
+                if now_supported:
+                    eg.status = "addressed"
+                    self.db_session.add(eg)
+            elif eg.gap_type == "unexplored_claim" and eg.claim_id is not None:
+                if eg.claim_id in mappings_by_claim_id:
+                    eg.status = "addressed"
+                    self.db_session.add(eg)
 
         # 1. Unsupported elements
         for elem in elements:
@@ -377,6 +400,7 @@ class GapAnalyzeStage:
         pending gaps (probes are stable strings, so text-dedupe is exact).
         """
         from app.services.analysis.doctrine_probes import run_probes
+        from app.services.analysis.domain_classifier import classify_domains
 
         try:
             narrative = await self._gather_narrative(run.intake_id)
@@ -385,11 +409,17 @@ class GapAnalyzeStage:
         if not narrative.strip():
             return []
 
+        # Infer practice-area domain(s) so probes never bleed cross-domain
+        # (round 7, BUG-33): an OFP/custody probe cannot fire in a wage-theft or
+        # consumer-debt matter, an immigration probe cannot fire on a stray
+        # acronym in an unrelated document.
+        domains = classify_domains(narrative)
+
         seen = {g.description for g in existing_gaps} | {
             g.description for g in pending_gaps
         }
         out: list[AnalysisGap] = []
-        for probe in run_probes(narrative):
+        for probe in run_probes(narrative, domains=domains):
             description = f"{probe.question} [Authority: {probe.authority}]"
             if description in seen:
                 continue

@@ -31,6 +31,7 @@ def compute_deadlines(
     events: list[DeadlineEvent],
     jurisdiction: str | None = None,
     today: date | None = None,
+    domains: frozenset[str] | None = None,
 ) -> list[ComputedDeadline]:
     """Compute deadlines for a list of detected events.
 
@@ -38,6 +39,9 @@ def compute_deadlines(
         events: Normalized detected events (dates as ``datetime.date``).
         jurisdiction: Jurisdiction context for rule matching (event hint wins).
         today: Reference "now" for the lapsed-SOL check. Defaults to date.today().
+        domains: Practice-area domains inferred from the narrative (round 7,
+            BUG-32 cross-domain guard). Passed through to ``find_rule``; None
+            means no domain restriction (legacy pure-date-math behavior).
 
     Returns:
         ComputedDeadlines sorted by urgency (lapsed/high first).
@@ -46,7 +50,7 @@ def compute_deadlines(
     out: list[ComputedDeadline] = []
 
     for ev in events:
-        rule = find_rule(ev, jurisdiction)
+        rule = find_rule(ev, jurisdiction, domains)
         event_text = ev.raw_text or ev.event_type or "Time-sensitive event"
         jur = ev.jurisdiction_hint or jurisdiction
 

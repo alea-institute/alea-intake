@@ -14,6 +14,7 @@ Reference "today" is baked into each narrative so deadline math is deterministic
 3. **[GATE] Retaliatory eviction** — city code call Feb 20 → inspector cited landlord Feb 25 → 14-day notice Mar 3 (days later). § 504B.285 subd.2 / § 504B.441. Temporal proximity is the key fact.
 4. Security-deposit irregularity — $500 cash "pet deposit," no receipt/interest. § 504B.178/.172.
 5. (stretch) Defective/vague notice — "material lease violation" box with no particulars.
+6. **[D07, added 2026-07-11] Service-by-posting defect** — the summons was "taped to the door." Minn. Stat. § 504B.331 permits posting ("nail-and-mail") service only after diligent attempts at personal service, when the tenant cannot be found, AND with a mailed copy. Surface (as a claim, flagged issue, or question) whether those prerequisites were met; a defect can defeat the eviction. Client never labels it — the "taped to my door" fact raises it. Raises the judging bar from round 7 onward (r1 full-doctrine-depth).
 
 **Deadlines to surface + compute:**
 - 14-day notice: posted **Mar 3** → cure/vacate by **Mar 17, 2026**.

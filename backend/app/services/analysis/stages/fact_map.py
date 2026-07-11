@@ -207,9 +207,41 @@ class FactMapStage:
                         element_id = elem.id
                         break
 
-            # Get fact confidence
+            # D03 (fact->element linkage integrity, RUB-03): a valid linkage must
+            # connect a REAL client fact to the element it actually supports. Drop
+            # three kinds of bogus linkage the LLM occasionally emits:
+            #   (a) a fact_id that does not correspond to any extracted fact
+            #       (a hallucinated reference),
+            #   (b) a named element that does not exist on the resolved claim
+            #       (element_name given but no match — the linkage points at an
+            #       element the claim does not have), and
+            #   (c) an empty mapping_rationale (a genuine linkage explains, in
+            #       prose, HOW the fact supports the element).
             source_fact = fact_by_id.get(mapping_schema.fact_id)
-            fact_confidence = source_fact.confidence if source_fact else 0.5
+            if source_fact is None:
+                logger.debug(
+                    "Dropping mapping with unknown fact_id=%s (RUB-03 linkage guard)",
+                    mapping_schema.fact_id,
+                )
+                continue
+            if mapping_schema.element_name and element_id is None:
+                logger.debug(
+                    "Dropping mapping naming element %r absent from claim %r "
+                    "(RUB-03 linkage guard)",
+                    mapping_schema.element_name,
+                    claim.claim_name,
+                )
+                continue
+            if not (mapping_schema.mapping_rationale or "").strip():
+                logger.debug(
+                    "Dropping mapping with empty rationale for fact #%s (RUB-03 "
+                    "linkage guard)",
+                    mapping_schema.fact_id,
+                )
+                continue
+
+            # Get fact confidence
+            fact_confidence = source_fact.confidence
 
             # Get concept confidence (default 0.5 if FOLIO unavailable)
             concept_confidence = 0.5
