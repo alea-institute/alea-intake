@@ -1,0 +1,1414 @@
+{
+ "intake_id": 238,
+ "run_id": 68,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T21:56:55.882065Z",
+ "claims_by_jurisdiction": {
+  "federal": [
+   {
+    "claim_id": 2080,
+    "claim_name": "Fair Debt Collection Practices Act (FDCPA) Violation",
+    "claim_type": "identified",
+    "confidence": 0.4,
+    "jurisdiction": "federal",
+    "folio_iri": null,
+    "issue_statement": "The client says they are being bothered by a debt collector named North Star Receivables, which has been calling several times a day, even at their workplace. This behavior might be considered an unfair practice in debt collection according to the Fair Debt Collection Practices Act (FDCPA).",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1127,
+      "element_name": "Calling at inconvenient times",
+      "element_description": "The debt collector contacted the consumer at times known to be inconvenient or outside prescribed hours.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1125,
+      "element_name": "Communication in connection with debt collection",
+      "element_description": "The debt collector communicates with the consumer regarding an alleged debt.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3224,
+        "fact_text": "North Star Receivables has been calling me 6 or 7 times a day.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact states that North Star Receivables has been calling frequently, indicating communication related to debt collection."
+       },
+       {
+        "fact_id": 3225,
+        "fact_text": "The calls are about an old credit card from Meridian Bank.",
+        "confidence": 0.71,
+        "mapping_rationale": "The calls are specific to an old credit card debt, showing the communication is about an alleged debt."
+       },
+       {
+        "fact_id": 3296,
+        "fact_text": "The voicemail said 'legal remedies are being prepared.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This voicemail indicates legal actions regarding the debt, clearly relating to debt collection communication."
+       },
+       {
+        "fact_id": 3299,
+        "fact_text": "This is an attempt to collect a debt.",
+        "confidence": 0.85,
+        "mapping_rationale": "This statement indicates a clear connection to debt collection practices."
+       }
+      ]
+     },
+     {
+      "element_id": 1128,
+      "element_name": "Failure to provide required notices",
+      "element_description": "The debt collector failed to provide proper notice or validation of the debt as required by law.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3275,
+        "fact_text": "The letter says I owe $2,483.",
+        "confidence": 0.85,
+        "mapping_rationale": "The letter detailing the debt indicates a communication that should have included required notices."
+       }
+      ]
+     },
+     {
+      "element_id": 1126,
+      "element_name": "Harassment or abuse",
+      "element_description": "The debt collector engaged in conduct that was intended to harass, oppress, or abuse the consumer.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3298,
+        "fact_text": "The communication is from a debt collector.",
+        "confidence": 0.85,
+        "mapping_rationale": "The voicemail about legal remedies being prepared can be seen as a threat of harassment."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2544,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Calling at inconvenient times' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 2080,
+      "element_id": 1127,
+      "claim_name": "Fair Debt Collection Practices Act (FDCPA) Violation",
+      "element_name": "Calling at inconvenient times",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2559,
+      "gap_type": "procedural_requirement",
+      "description": "What is the timeline for filing a complaint under the FDCPA, and has it been filed within the statute of limitations?",
+      "priority": 50,
+      "claim_id": 2080,
+      "element_id": null,
+      "claim_name": "Fair Debt Collection Practices Act (FDCPA) Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 4 elements supported (64% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "state": [
+   {
+    "claim_id": 2081,
+    "claim_name": "Potential Wage Garnishment Defense",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": "state",
+    "folio_iri": "https://folio.openlegalstandard.org/R7OJQHant3Dx172WXuPbWgx",
+    "issue_statement": "The client is worried about the possibility of having their wages taken out of their pay (wage garnishment) and mentions that they depend on disability income. This suggests that the client might have reasons to fight against the garnishment, based on financial difficulties or other exemptions (legal reasons that prevent garnishment).",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1131,
+      "element_name": "Income exemption status",
+      "element_description": "The consumer may claim exemptions based on income, such as being on Social Security disability.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1129,
+      "element_name": "Existence of a debt",
+      "element_description": "There must be a valid debt owed by the consumer.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3300,
+        "fact_text": "The total amount of debt now is $2,483.17.",
+        "confidence": 0.85,
+        "mapping_rationale": "The assertion of a specific amount of debt supports the existence of a valid debt that is required for this claim."
+       },
+       {
+        "fact_id": 3235,
+        "fact_text": "The letter is dated June 20.",
+        "confidence": 0.85,
+        "mapping_rationale": "The letter dated June 20 explicitly states the existing debt amount, validating the debt."
+       },
+       {
+        "fact_id": 3301,
+        "fact_text": "The amount of debt on itemization date is $2,061.42.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides a clear amount related to the debt that is claimed by the creditor."
+       }
+      ]
+     },
+     {
+      "element_id": 1130,
+      "element_name": "Notice of intent to garnish wages",
+      "element_description": "The creditor must have properly notified the consumer of the intent to garnish wages.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3245,
+        "fact_text": "Mr. Drummond says if I don't set something up, they're gonna garnish my wages and freeze my bank account by the end of the month.",
+        "confidence": 0.78,
+        "mapping_rationale": "Mr. Drummond's warning about wage garnishment indicates notice that could support the claim related to wage garnishment defense."
+       },
+       {
+        "fact_id": 3246,
+        "fact_text": "Mr. Drummond says there's nothing I can do to stop the wage garnishment and bank account freeze.",
+        "confidence": 0.78,
+        "mapping_rationale": "The statement reveals that there is an impending garnishment process that Mr. Drummond communicated."
+       },
+       {
+        "fact_id": 3278,
+        "fact_text": "Mr. Drummond said if I don't pay they will start the garnishment process on my wages.",
+        "confidence": 0.85,
+        "mapping_rationale": "This statement directly addresses the intent to initiate wage garnishment, fulfilling the element's criteria."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2545,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Income exemption status' is not yet supported by any facts",
+      "priority": 85,
+      "claim_id": 2081,
+      "element_id": 1131,
+      "claim_name": "Potential Wage Garnishment Defense",
+      "element_name": "Income exemption status",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2560,
+      "gap_type": "procedural_requirement",
+      "description": "What is the time frame for responding to any notice of wage garnishment, and has the client acted timely to protect against it?",
+      "priority": 50,
+      "claim_id": 2081,
+      "element_id": null,
+      "claim_name": "Potential Wage Garnishment Defense",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 3 elements supported (57% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 2088,
+      "claim_name": "Civil Remedies / Relief Sought",
+      "claim_type": "discovered",
+      "confidence": 0.3,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Found through the FOLIO ontology process, starting from Potential Wage Garnishment Defense (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2555,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2088,
+        "element_id": null,
+        "claim_name": "Civil Remedies / Relief Sought",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Potential Wage Garnishment Defense",
+      "children": []
+     },
+     {
+      "claim_id": 2084,
+      "claim_name": "Employer Withholding",
+      "claim_type": "discovered",
+      "confidence": 0.3,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Found through the FOLIO ontology process, starting from Potential Wage Garnishment Defense (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2551,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2084,
+        "element_id": null,
+        "claim_name": "Employer Withholding",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Potential Wage Garnishment Defense",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 2083,
+    "claim_name": "Privacy Violation",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": "state",
+    "folio_iri": "https://folio.openlegalstandard.org/RDsDXHKUsZoJfz87jnz7zjj",
+    "issue_statement": "Calls made to the consumer's sister, along with how the debt collection was handled, could indicate a possible legal claim for invasion of privacy (when someone\u2019s personal information is disclosed without their consent) based on the information that was shared with people outside of the situation.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1136,
+      "element_name": "Expectation of privacy",
+      "element_description": "The consumer had an expectation of privacy in their financial circumstances.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1137,
+      "element_name": "Damages incurred",
+      "element_description": "The consumer must demonstrate harm or damages as a result of the privacy violation.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1135,
+      "element_name": "Disclosure of private information",
+      "element_description": "The debt collector disclosed information about the debt to a third party without consent.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.78,
+      "fact_mappings": [
+       {
+        "fact_id": 3231,
+        "fact_text": "They called my sister Renee and told her I owe money.",
+        "confidence": 0.78,
+        "mapping_rationale": "The debt collector contacting a family member about owing money violates privacy regarding the debt."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2548,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Expectation of privacy' is not yet supported by any facts",
+      "priority": 75,
+      "claim_id": 2083,
+      "element_id": 1136,
+      "claim_name": "Privacy Violation",
+      "element_name": "Expectation of privacy",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2549,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Damages incurred' is not yet supported by any facts",
+      "priority": 75,
+      "claim_id": 2083,
+      "element_id": 1137,
+      "claim_name": "Privacy Violation",
+      "element_name": "Damages incurred",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2562,
+      "gap_type": "procedural_requirement",
+      "description": "What is the deadline for bringing a claim for invasion of privacy in relation to the debt collector's actions, and has the client met that deadline?",
+      "priority": 50,
+      "claim_id": 2083,
+      "element_id": null,
+      "claim_name": "Privacy Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "1 of 3 elements supported (26% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 2090,
+      "claim_name": "Objectives",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Found through FOLIO ontology exploration from Privacy Violation (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2557,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Objectives' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2090,
+        "element_id": null,
+        "claim_name": "Objectives",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Privacy Violation",
+      "children": []
+     },
+     {
+      "claim_id": 2089,
+      "claim_name": "Deontic Specification",
+      "claim_type": "discovered",
+      "confidence": 0.3,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Found through FOLIO ontology exploration from Privacy Violation (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2556,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Deontic Specification' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 2089,
+        "element_id": null,
+        "claim_name": "Deontic Specification",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Privacy Violation",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 2082,
+    "claim_name": "Harassment by Debt Collector",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "The number and type of calls, which include calls made to the consumer's sister and to their workplace, indicate possible claims of harassment under Minnesota state law about debt collection practices.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1133,
+      "element_name": "Call at workplace",
+      "element_description": "The debt collector called the consumer at their workplace after being told not to.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3282,
+        "fact_text": "Mr. Drummond called me at Lundeen's on Mon Jun 29 at 1:10 pm.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact indicates that Mr. Drummond called the consumer at work, demonstrating harassment despite previous objections."
+       },
+       {
+        "fact_id": 3284,
+        "fact_text": "I said don't call me at work.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact shows the consumer explicitly stating they do not want calls at work, which the debt collector disregards."
+       }
+      ]
+     },
+     {
+      "element_id": 1132,
+      "element_name": "Frequent and repeated calls",
+      "element_description": "The debt collector placed numerous calls to the consumer in a short timeframe.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3227,
+        "fact_text": "North Star Receivables called me three times today.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact notes that North Star Receivables called three times in one day, indicating harassment through frequent calls."
+       },
+       {
+        "fact_id": 3224,
+        "fact_text": "North Star Receivables has been calling me 6 or 7 times a day.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact that North Star Receivables called 6 or 7 times a day clearly shows a pattern of harassment."
+       },
+       {
+        "fact_id": 3228,
+        "fact_text": "North Star Receivables called me at 7:15 in the morning.",
+        "confidence": 0.78,
+        "mapping_rationale": "This fact contributes to the frequency of harassment as it details an early morning call by the debt collector."
+       },
+       {
+        "fact_id": 3286,
+        "fact_text": "A woman called me on Tue Jun 30 at 6:40 pm.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact represents another instance of a call from the debt collector, contributing to a pattern of repeated contact."
+       }
+      ]
+     },
+     {
+      "element_id": 1134,
+      "element_name": "Call to third parties",
+      "element_description": "The debt collector contacted third parties, including a family member, about the debt.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 3231,
+        "fact_text": "They called my sister Renee and told her I owe money.",
+        "confidence": 0.78,
+        "mapping_rationale": "The fact shows that North Star Receivables contacted a family member, which is inappropriate and indicative of harassment."
+       },
+       {
+        "fact_id": 3291,
+        "fact_text": "Mr. Drummond called my sister Renee on Thu Jul 2.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact describes the debt collector contacting the consumer's sister again, indicating a breach of privacy."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2561,
+      "gap_type": "procedural_requirement",
+      "description": "What is the statute of limitations for filing a claim regarding harassment under Minnesota debt collection law?",
+      "priority": 50,
+      "claim_id": 2082,
+      "element_id": null,
+      "claim_name": "Harassment by Debt Collector",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 3 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 2092,
+    "claim_name": "Inappropriate Communication at Work",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Since the consumer specifically asked not to receive calls at work, the debt collector's continued calls despite that request could be seen as harassment under the FDCPA (Fair Debt Collection Practices Act).",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2095,
+    "claim_name": "Wrongful Collection Practices",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RkFqkFfrtGlzCVzePQ2QD",
+    "issue_statement": "If the debt collector hasn\u2019t followed the correct legal procedures for collecting debt as required by state or federal law, their actions might be seen as wrong or could lead to legal action.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2094,
+    "claim_name": "Credit Reporting Issues",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Due to the differences in the reported amounts of debt, this might prompt a look into inaccuracies in credit reports that could impact the consumer's credit score.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2091,
+    "claim_name": "Debt Validation Request",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Since the consumer says they did not receive any lawsuit or notice, they might have the right to question the validity of the debt (the legal status of the debt). The debt collector must provide evidence of the debt if the consumer asks for it.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 2093,
+    "claim_name": "Potential Exemption of Disability Benefits from Garnishment",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Since the consumer depends completely on disability benefits for living costs, it\u2019s important to check if these funds are safe from garnishment (a legal process where money is taken from a debtor's wages) under federal law.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "state": [
+   {
+    "claim_name": "Enforcement of Judgment",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": "Potential Wage Garnishment Defense"
+   },
+   {
+    "claim_name": "Labor and Employment Law Regulatory Objectives",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": "Potential Wage Garnishment Defense"
+   },
+   {
+    "claim_name": "Tax Law Regulatory Objectives",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": "Potential Wage Garnishment Defense"
+   }
+  ]
+ },
+ "safety_alerts": [],
+ "deadlines": [
+  {
+   "event_text": "I haven't paid on that card since August 2020.",
+   "event_type": "injury",
+   "trigger": "incident",
+   "trigger_date": "2020-08-01",
+   "computed_date": "2026-08-01",
+   "rule_id": "debt_sol_6yr_restart_trap",
+   "citation": "Minn. Stat. \u00a7 541.05, subd. 1(1) (6-year limitations period on a contract/credit-card debt); Minn. Stat. \u00a7 541.053 (a payment or written acknowledgment can restart the clock \u2014 but cannot revive a debt already time-barred).",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "In Minnesota a credit-card/contract debt generally becomes time-barred about 6 years after your last payment or default \u2014 after that, the collector can ask but cannot force you to pay. WARNING: making even a small payment (or admitting the debt in writing) BEFORE that date can RESTART the whole 6-year clock. Do NOT pay or promise anything until a lawyer confirms the exact limitations date. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "The letter came in the mail June 25, its dated June 20, and it says I owe $2,483.17.",
+   "event_type": "notice_to_vacate",
+   "trigger": "notice_posted",
+   "trigger_date": "2026-06-20",
+   "computed_date": "2026-07-20",
+   "rule_id": "fdcpa_validation_30d",
+   "citation": "15 U.S.C. \u00a7 1692g(a)\u2013(b) (FDCPA debt-validation period: 30 days from RECEIPT of the collector's initial written notice; a timely written dispute forces collection to cease until the debt is verified).",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "Under the federal Fair Debt Collection Practices Act you generally have 30 days from when you RECEIVED the collector's first letter to dispute or demand verification of the debt in writing (this window runs from the date you received the letter, not the date printed on it). A written dispute mailed in time forces the collector to stop until they verify the debt. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "Mr. Drummond says if I don't set something up, they're gonna garnish my wages and freeze my bank account by the end of the month.",
+   "event_type": "filing_deadline",
+   "trigger": "deadline",
+   "trigger_date": "2026-07-31",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "Mr. Drummond said if I paid $50 'good faith' by July 3, they'd knock 30% off.",
+   "event_type": "filing_deadline",
+   "trigger": "deadline",
+   "trigger_date": "2026-07-03",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "Consumer / Debt",
+    "destination_type": "practice_area",
+    "score": 0.39555555555555555,
+    "rationale": "Consumer / Debt practice area (33% of claims); mixed jurisdictions (56% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.3333333333333333,
+    "jurisdiction_match": 0.5555555555555556,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.39555555555555555,
+    "rationale": "General Civil practice area (33% of claims); mixed jurisdictions (56% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.3333333333333333,
+    "jurisdiction_match": 0.5555555555555556,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Employment",
+    "destination_type": "practice_area",
+    "score": 0.3566666666666667,
+    "rationale": "Employment practice area (22% of claims); mixed jurisdictions (56% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.2222222222222222,
+    "jurisdiction_match": 0.5555555555555556,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Public Benefits",
+    "destination_type": "practice_area",
+    "score": 0.3177777777777778,
+    "rationale": "Public Benefits practice area (11% of claims); mixed jurisdictions (56% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.1111111111111111,
+    "jurisdiction_match": 0.5555555555555556,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "Consumer / Debt",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Income exemption status' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Wage Garnishment Defense",
+   "element_ref": "Income exemption status"
+  },
+  {
+   "item_number": 2,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: I haven't paid on that card since August 2020. (estimated 2026-08-01; Minn. Stat. \u00a7 541.05, subd. 1(1) (6-year limitations period on a contract/credit-card debt); Minn. Stat. \u00a7 541.053 (a payment or written acknowledgment can restart the clock \u2014 but cannot revive a debt already time-barred).). In Minnesota a credit-card/contract debt generally becomes time-barred about 6 years after your last payment or default \u2014 after that, the collector can ask but cannot force you to pay. WARNING: making even a small payment (or admitting the debt in writing) BEFORE that date can RESTART the whole 6-year clock. Do NOT pay or promise anything until a lawyer confirms the exact limitations date. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-08-01",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 3,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: The letter came in the mail June 25, its dated June 20, and it says I owe $2,483.17. (estimated 2026-07-20; 15 U.S.C. \u00a7 1692g(a)\u2013(b) (FDCPA debt-validation period: 30 days from RECEIPT of the collector's initial written notice; a timely written dispute forces collection to cease until the debt is verified).). Under the federal Fair Debt Collection Practices Act you generally have 30 days from when you RECEIVED the collector's first letter to dispute or demand verification of the debt in writing (this window runs from the date you received the letter, not the date printed on it). A written dispute mailed in time forces the collector to stop until they verify the debt. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-07-20",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "The collector said they will garnish your wages or freeze your bank account 'by the end of the month.' In Minnesota a collector generally CANNOT garnish or freeze anything without first suing you and getting a court judgment (Minn. Stat. \u00a7 571.71) \u2014 and you said no court papers were ever served. Threatening action they cannot legally take is itself an FDCPA violation (15 U.S.C. \u00a7 1692e). Have you ever been served with any lawsuit or court papers about this debt? [Authority: 15 U.S.C. \u00a7 1692e(4)\u2013(5) (threat of action that cannot legally be taken); Minn. Stat. \u00a7 571.71 (garnishment generally requires a judgment first)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "The way this collector is contacting you may itself be illegal under the federal Fair Debt Collection Practices Act: calling before 8am or after 9pm, calling you at work after being told to stop, telling another person (like your sister) about the debt, or calling many times a day can each violate the law (15 U.S.C. \u00a7 1692c/\u00a7 1692d). Keep your call log. Can you note the dates, times, and who they contacted? [Authority: 15 U.S.C. \u00a7 1692c(a) (calls before 8am/after 9pm, at work after notice); \u00a7 1692b/\u00a7 1692c(b) (third-party disclosure of the debt); \u00a7 1692d (harassing volume)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "You said your income is Social Security disability plus a little part-time pay. Social Security and SSDI are protected by law from most debt collection (42 U.S.C. \u00a7 407), and Minnesota gives extra protection to low wages and exempt funds in a bank account (Minn. Stat. \u00a7 571.912/\u00a7 571.922). You may be effectively 'judgment-proof.' Is Social Security your only regular income, and is it direct-deposited? [Authority: 42 U.S.C. \u00a7 407(a) (Social Security/SSDI exempt from garnishment); Minn. Stat. \u00a7 571.912/\u00a7 571.922 (exemption-notice process; wage-exemption floor)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "documents_to_gather",
+   "description": "Element 'Expectation of privacy' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Privacy Violation",
+   "element_ref": "Expectation of privacy"
+  },
+  {
+   "item_number": 8,
+   "category": "documents_to_gather",
+   "description": "Element 'Damages incurred' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Privacy Violation",
+   "element_ref": "Damages incurred"
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Employer Withholding",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Labor and Employment Law Regulatory Objectives' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Labor and Employment Law Regulatory Objectives",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Tax Law Regulatory Objectives' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Tax Law Regulatory Objectives",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Enforcement of Judgment' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Enforcement of Judgment",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Civil Remedies / Relief Sought",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Deontic Specification' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Deontic Specification",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Objectives' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Objectives",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "What is the timeline for filing a complaint under the FDCPA, and has it been filed within the statute of limitations?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Fair Debt Collection Practices Act (FDCPA) Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "What is the time frame for responding to any notice of wage garnishment, and has the client acted timely to protect against it?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Wage Garnishment Defense",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "What is the statute of limitations for filing a claim regarding harassment under Minnesota debt collection law?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Harassment by Debt Collector",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "What is the deadline for bringing a claim for invasion of privacy in relation to the debt collector's actions, and has the client met that deadline?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Privacy Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "documents_to_gather",
+   "description": "Element 'Calling at inconvenient times' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Fair Debt Collection Practices Act (FDCPA) Violation",
+   "element_ref": "Calling at inconvenient times"
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Fair Debt Collection Practices Act (FDCPA) Violation": [
+    {
+     "gap_id": 2544,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Calling at inconvenient times' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 2080,
+     "element_id": 1127,
+     "claim_name": "Fair Debt Collection Practices Act (FDCPA) Violation",
+     "element_name": "Calling at inconvenient times",
+     "action_item_ref": 20,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2559,
+     "gap_type": "procedural_requirement",
+     "description": "What is the timeline for filing a complaint under the FDCPA, and has it been filed within the statute of limitations?",
+     "priority": 50,
+     "claim_id": 2080,
+     "element_id": null,
+     "claim_name": "Fair Debt Collection Practices Act (FDCPA) Violation",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Potential Wage Garnishment Defense": [
+    {
+     "gap_id": 2545,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Income exemption status' is not yet supported by any facts",
+     "priority": 85,
+     "claim_id": 2081,
+     "element_id": 1131,
+     "claim_name": "Potential Wage Garnishment Defense",
+     "element_name": "Income exemption status",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2560,
+     "gap_type": "procedural_requirement",
+     "description": "What is the time frame for responding to any notice of wage garnishment, and has the client acted timely to protect against it?",
+     "priority": 50,
+     "claim_id": 2081,
+     "element_id": null,
+     "claim_name": "Potential Wage Garnishment Defense",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Privacy Violation": [
+    {
+     "gap_id": 2548,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Expectation of privacy' is not yet supported by any facts",
+     "priority": 75,
+     "claim_id": 2083,
+     "element_id": 1136,
+     "claim_name": "Privacy Violation",
+     "element_name": "Expectation of privacy",
+     "action_item_ref": 7,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2549,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Damages incurred' is not yet supported by any facts",
+     "priority": 75,
+     "claim_id": 2083,
+     "element_id": 1137,
+     "claim_name": "Privacy Violation",
+     "element_name": "Damages incurred",
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2562,
+     "gap_type": "procedural_requirement",
+     "description": "What is the deadline for bringing a claim for invasion of privacy in relation to the debt collector's actions, and has the client met that deadline?",
+     "priority": 50,
+     "claim_id": 2083,
+     "element_id": null,
+     "claim_name": "Privacy Violation",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Employer Withholding": [
+    {
+     "gap_id": 2551,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2084,
+     "element_id": null,
+     "claim_name": "Employer Withholding",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Labor and Employment Law Regulatory Objectives": [
+    {
+     "gap_id": 2552,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Labor and Employment Law Regulatory Objectives' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2085,
+     "element_id": null,
+     "claim_name": "Labor and Employment Law Regulatory Objectives",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Tax Law Regulatory Objectives": [
+    {
+     "gap_id": 2553,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Tax Law Regulatory Objectives' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2086,
+     "element_id": null,
+     "claim_name": "Tax Law Regulatory Objectives",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Enforcement of Judgment": [
+    {
+     "gap_id": 2554,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Enforcement of Judgment' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2087,
+     "element_id": null,
+     "claim_name": "Enforcement of Judgment",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Civil Remedies / Relief Sought": [
+    {
+     "gap_id": 2555,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2088,
+     "element_id": null,
+     "claim_name": "Civil Remedies / Relief Sought",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    }
+   ],
+   "Deontic Specification": [
+    {
+     "gap_id": 2556,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Deontic Specification' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2089,
+     "element_id": null,
+     "claim_name": "Deontic Specification",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Objectives": [
+    {
+     "gap_id": 2557,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Objectives' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 2090,
+     "element_id": null,
+     "claim_name": "Objectives",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Harassment by Debt Collector": [
+    {
+     "gap_id": 2561,
+     "gap_type": "procedural_requirement",
+     "description": "What is the statute of limitations for filing a claim regarding harassment under Minnesota debt collection law?",
+     "priority": 50,
+     "claim_id": 2082,
+     "element_id": null,
+     "claim_name": "Harassment by Debt Collector",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Uncategorized": [
+    {
+     "gap_id": 2563,
+     "gap_type": "procedural_requirement",
+     "description": "The way this collector is contacting you may itself be illegal under the federal Fair Debt Collection Practices Act: calling before 8am or after 9pm, calling you at work after being told to stop, telling another person (like your sister) about the debt, or calling many times a day can each violate the law (15 U.S.C. \u00a7 1692c/\u00a7 1692d). Keep your call log. Can you note the dates, times, and who they contacted? [Authority: 15 U.S.C. \u00a7 1692c(a) (calls before 8am/after 9pm, at work after notice); \u00a7 1692b/\u00a7 1692c(b) (third-party disclosure of the debt); \u00a7 1692d (harassing volume)]",
+     "priority": 86,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 5,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2564,
+     "gap_type": "procedural_requirement",
+     "description": "The collector said they will garnish your wages or freeze your bank account 'by the end of the month.' In Minnesota a collector generally CANNOT garnish or freeze anything without first suing you and getting a court judgment (Minn. Stat. \u00a7 571.71) \u2014 and you said no court papers were ever served. Threatening action they cannot legally take is itself an FDCPA violation (15 U.S.C. \u00a7 1692e). Have you ever been served with any lawsuit or court papers about this debt? [Authority: 15 U.S.C. \u00a7 1692e(4)\u2013(5) (threat of action that cannot legally be taken); Minn. Stat. \u00a7 571.71 (garnishment generally requires a judgment first)]",
+     "priority": 88,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 4,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2565,
+     "gap_type": "procedural_requirement",
+     "description": "You said your income is Social Security disability plus a little part-time pay. Social Security and SSDI are protected by law from most debt collection (42 U.S.C. \u00a7 407), and Minnesota gives extra protection to low wages and exempt funds in a bank account (Minn. Stat. \u00a7 571.912/\u00a7 571.922). You may be effectively 'judgment-proof.' Is Social Security your only regular income, and is it direct-deposited? [Authority: 42 U.S.C. \u00a7 407(a) (Social Security/SSDI exempt from garnishment); Minn. Stat. \u00a7 571.912/\u00a7 571.922 (exemption-notice process; wage-exemption floor)]",
+     "priority": 86,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 6,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 2564,
+    "gap_type": "procedural_requirement",
+    "description": "The collector said they will garnish your wages or freeze your bank account 'by the end of the month.' In Minnesota a collector generally CANNOT garnish or freeze anything without first suing you and getting a court judgment (Minn. Stat. \u00a7 571.71) \u2014 and you said no court papers were ever served. Threatening action they cannot legally take is itself an FDCPA violation (15 U.S.C. \u00a7 1692e). Have you ever been served with any lawsuit or court papers about this debt? [Authority: 15 U.S.C. \u00a7 1692e(4)\u2013(5) (threat of action that cannot legally be taken); Minn. Stat. \u00a7 571.71 (garnishment generally requires a judgment first)]",
+    "priority": 88,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2563,
+    "gap_type": "procedural_requirement",
+    "description": "The way this collector is contacting you may itself be illegal under the federal Fair Debt Collection Practices Act: calling before 8am or after 9pm, calling you at work after being told to stop, telling another person (like your sister) about the debt, or calling many times a day can each violate the law (15 U.S.C. \u00a7 1692c/\u00a7 1692d). Keep your call log. Can you note the dates, times, and who they contacted? [Authority: 15 U.S.C. \u00a7 1692c(a) (calls before 8am/after 9pm, at work after notice); \u00a7 1692b/\u00a7 1692c(b) (third-party disclosure of the debt); \u00a7 1692d (harassing volume)]",
+    "priority": 86,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 5,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2565,
+    "gap_type": "procedural_requirement",
+    "description": "You said your income is Social Security disability plus a little part-time pay. Social Security and SSDI are protected by law from most debt collection (42 U.S.C. \u00a7 407), and Minnesota gives extra protection to low wages and exempt funds in a bank account (Minn. Stat. \u00a7 571.912/\u00a7 571.922). You may be effectively 'judgment-proof.' Is Social Security your only regular income, and is it direct-deposited? [Authority: 42 U.S.C. \u00a7 407(a) (Social Security/SSDI exempt from garnishment); Minn. Stat. \u00a7 571.912/\u00a7 571.922 (exemption-notice process; wage-exemption floor)]",
+    "priority": 86,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2545,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Income exemption status' is not yet supported by any facts",
+    "priority": 85,
+    "claim_id": 2081,
+    "element_id": 1131,
+    "claim_name": "Potential Wage Garnishment Defense",
+    "element_name": "Income exemption status",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2548,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Expectation of privacy' is not yet supported by any facts",
+    "priority": 75,
+    "claim_id": 2083,
+    "element_id": 1136,
+    "claim_name": "Privacy Violation",
+    "element_name": "Expectation of privacy",
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2549,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Damages incurred' is not yet supported by any facts",
+    "priority": 75,
+    "claim_id": 2083,
+    "element_id": 1137,
+    "claim_name": "Privacy Violation",
+    "element_name": "Damages incurred",
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2551,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2084,
+    "element_id": null,
+    "claim_name": "Employer Withholding",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2552,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Labor and Employment Law Regulatory Objectives' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2085,
+    "element_id": null,
+    "claim_name": "Labor and Employment Law Regulatory Objectives",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2553,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Tax Law Regulatory Objectives' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2086,
+    "element_id": null,
+    "claim_name": "Tax Law Regulatory Objectives",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2554,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Enforcement of Judgment' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2087,
+    "element_id": null,
+    "claim_name": "Enforcement of Judgment",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2555,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2088,
+    "element_id": null,
+    "claim_name": "Civil Remedies / Relief Sought",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2556,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Deontic Specification' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2089,
+    "element_id": null,
+    "claim_name": "Deontic Specification",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2557,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Objectives' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 2090,
+    "element_id": null,
+    "claim_name": "Objectives",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2559,
+    "gap_type": "procedural_requirement",
+    "description": "What is the timeline for filing a complaint under the FDCPA, and has it been filed within the statute of limitations?",
+    "priority": 50,
+    "claim_id": 2080,
+    "element_id": null,
+    "claim_name": "Fair Debt Collection Practices Act (FDCPA) Violation",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2560,
+    "gap_type": "procedural_requirement",
+    "description": "What is the time frame for responding to any notice of wage garnishment, and has the client acted timely to protect against it?",
+    "priority": 50,
+    "claim_id": 2081,
+    "element_id": null,
+    "claim_name": "Potential Wage Garnishment Defense",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2561,
+    "gap_type": "procedural_requirement",
+    "description": "What is the statute of limitations for filing a claim regarding harassment under Minnesota debt collection law?",
+    "priority": 50,
+    "claim_id": 2082,
+    "element_id": null,
+    "claim_name": "Harassment by Debt Collector",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2562,
+    "gap_type": "procedural_requirement",
+    "description": "What is the deadline for bringing a claim for invasion of privacy in relation to the debt collector's actions, and has the client met that deadline?",
+    "priority": 50,
+    "claim_id": 2083,
+    "element_id": null,
+    "claim_name": "Privacy Violation",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2544,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Calling at inconvenient times' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 2080,
+    "element_id": 1127,
+    "claim_name": "Fair Debt Collection Practices Act (FDCPA) Violation",
+    "element_name": "Calling at inconvenient times",
+    "action_item_ref": 20,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Do you remember if any debt collectors ever called you outside of 8am to 9pm?",
+   "Have you ever informed the debt collector not to call you at your workplace? Did they continue to call there afterwards?",
+   "Have you noticed if the debt collector has shared information about your debt with anyone else, like friends or family?",
+   "Have you experienced any financial losses or difficulties as a result of the debt collection actions?",
+   "Have you received any notices about wage garnishment? If so, what was the timeframe given in that notice?",
+   "What kind of income do you currently have, and is it just Social Security disability, or do you have other sources?",
+   "Have you been served with any court papers or lawsuit notices regarding this debt?",
+   "Are you aware of the timelines for filing complaints related to debt collection harassment?",
+   "When was the last time you received a call from the debt collector? Can you provide details about the frequency of these calls?",
+   "What is your total monthly income, including any benefits or part-time work?",
+   "Is your Social Security disability payment your only regular source of income, and is it regularly deposited into your bank account?",
+   "Can you list the dates, times, and any people the debt collector has contacted regarding your debt?",
+   "Have you told the collector to stop contacting you at work? If so, what happened?",
+   "Have you ever felt that a collector invaded your privacy or made you uncomfortable? If so, please describe what happened.",
+   "What specific damages or negative impacts have you experienced as a result of the debt collector's actions?",
+   "Have you ever received any court papers or notices about this debt?",
+   "What is the deadline for responding to any notice of wage garnishment you received, and did you respond in time?"
+  ],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "This intake identified 12 possible legal issues at the federal and state levels. The issues that have the strongest support are Unprofessional Communication at Work, Possible Defense Against Wage Garnishment (which is when part of your earnings are taken to pay a debt), and Unfair Debt Collection Practices. There is an important deadline: I haven't made a payment on that credit card since August 2020, and by August 1, 2026, certain actions may affect my situation [Minn. Stat. \u00a7 541.05, subd. 1(1) (there is a 6-year limit to enforce a contract or credit-card debt); Minn. Stat. \u00a7 541.053 (making a payment or acknowledging the debt in writing can reset this time limit, but it cannot bring back a debt that is already too old to be enforced).]. The analysis is fully complete at 100%; answering the 17 follow-up questions listed below would help make the assessment even stronger.",
+ "profile": {
+  "profile_type": "legal_aid",
+  "language_level": "accessible",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": true,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": true,
+   "authorities_table": false
+  },
+  "reading_grade_level": null,
+  "org_branding": null
+ }
+}

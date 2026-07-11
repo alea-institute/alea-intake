@@ -129,6 +129,21 @@ def test_elder_ofp_does_not_require_spouse_or_custody():
     assert "dv_custody_best_interest_factor" not in ids
 
 
+def test_deposit_probe_not_triggered_by_atm_cash_in_elder():
+    """Round 7 residual (BUG-33): an elder ATM 'cash / no receipt' fact must not
+    trigger the landlord-tenant security-deposit probe via a bare 'rent' substring
+    (matched 'diffe-rent'/'cur-rent'). Even if landlord_tenant is spuriously
+    inferred, the probe predicate must require a real tenancy word."""
+    text = (
+        "my son took cash out at the atm every week with no receipt, different "
+        "amounts, current balance dropping. this is about a power of attorney and "
+        "my son Dale exploiting me."
+    )
+    # Force landlord_tenant into scope to prove the predicate itself is guarded.
+    ids = {p.id for p in run_probes(text, domains=frozenset({"landlord_tenant", "elder_exploitation"}))}
+    assert "security_deposit_irregularity" not in ids
+
+
 def test_lt_probes_do_not_bleed_into_employment():
     ids = _ids(EMPLOYMENT)
     assert "retaliatory_eviction_defense" not in ids
