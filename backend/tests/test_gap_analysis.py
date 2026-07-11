@@ -993,3 +993,86 @@ async def test_question_gen_caps_gap_batch(
     # Highest-priority gap present; lowest-priority gap excluded.
     assert "Gap number 39" in prompt
     assert "Gap number 00" not in prompt
+
+
+@pytest.mark.asyncio
+async def test_r1_deterministic_doctrine_backstop_emits_and_dedupes(
+    async_session: AsyncSession,
+    analysis_run: AnalysisRun,
+    analysis_iteration: AnalysisIteration,
+    claims_with_elements: tuple[list[AnalysisClaim], list[ClaimElement]],
+    mock_llm_service: MagicMock,
+):
+    """r1 (RUB-01 v1.3): the deterministic probe table emits cited doctrine
+    questions from the narrative even when the LLM probe returns nothing, and
+    a second pass does not duplicate them."""
+    claims, elements = claims_with_elements
+    from app.services.analysis.schemas import GapAnalysisResult
+
+    mock_llm_service.json_async = AsyncMock(
+        return_value=GapAnalysisResult(gaps=[], coverage_pct=0.0, summary="none")
+    )
+
+    stage = GapAnalyzeStage(llm_service=mock_llm_service, db_session=async_session)
+
+    narrative = (
+        "I marry my husband, he have his green card, he hit me, I call the "
+        "police and they arrest him, there was a police report. Immigration "
+        "give me papers, NTA it say. A man not a lawyer say he file my asylum "
+        "paper, I never got nothing back. A friend give me a social number "
+        "that's not really mine to get the job. This is an immigration removal case."
+    )
+
+    async def _fake_narrative(intake_id):
+        return narrative
+
+    stage._gather_narrative = _fake_narrative  # type: ignore[method-assign]
+
+    result = await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        claims=claims,
+        elements=elements,
+        mappings=[],
+        existing_gaps=[],
+    )
+
+    from sqlalchemy import select as _select
+
+    from app.models.analysis import AnalysisGap as _AG
+
+    gaps = (
+        (await async_session.execute(_select(_AG).where(_AG.run_id == analysis_run.id)))
+        .scalars()
+        .all()
+    )
+    descriptions = "\n".join(g.description for g in gaps)
+    # The five immigration doctrine linkages Damien enumerated (r1) all surface,
+    # each carrying its governing authority.
+    assert "VAWA self-petition" in descriptions
+    assert "U visa" in descriptions or "U nonimmigrant" in descriptions
+    assert "245(c)(2)" in descriptions
+    assert "Pereira" in descriptions
+    assert "208(a)(2)(B), (D)" in descriptions
+    assert result["gap_types"].get("procedural_requirement", 0) >= 5
+
+    # Second pass: no duplicates (dedupe by question text).
+    result2 = await stage.execute(
+        run=analysis_run,
+        iteration=analysis_iteration,
+        claims=claims,
+        elements=elements,
+        mappings=[],
+        existing_gaps=gaps,
+    )
+    gaps2 = (
+        (await async_session.execute(_select(_AG).where(_AG.run_id == analysis_run.id)))
+        .scalars()
+        .all()
+    )
+    from app.services.analysis.doctrine_probes import PROBES
+
+    vawa_probe = next(p for p in PROBES if p.id == "vawa_self_petition")
+    vawa_desc = f"{vawa_probe.question} [Authority: {vawa_probe.authority}]"
+    vawa_count = sum(1 for g in gaps2 if g.description == vawa_desc)
+    assert vawa_count == 1, f"probe duplicated: {vawa_count}"

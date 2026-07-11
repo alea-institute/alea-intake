@@ -166,6 +166,20 @@ class GapAnalyzeStage:
         )
         new_gaps.extend(procedural_gaps)
 
+        # 5. Deterministic doctrine-probe backstop (RUB-01, Damien r1
+        # 2026-07-10: EVERY doctrine-level sub-issue fairly raised must be
+        # surfaced). The LLM probe above is probabilistic; this cited,
+        # human-reviewed table guarantees the enumerated non-obvious linkages
+        # (VAWA, U status, § 245(c)(2)/VAWA exemption, Pereira NTA defect,
+        # asylum one-year-bar exceptions, OFP grounds, § 518.17 DV custody
+        # factor, flight risk, retaliatory eviction) whenever the gathered
+        # narrative fairly raises them. Dedupe is by question text so probes
+        # are emitted at most once per run.
+        doctrine_gaps = await self._detect_deterministic_doctrine_gaps(
+            iteration, run, existing_gaps, new_gaps
+        )
+        new_gaps.extend(doctrine_gaps)
+
         # Persist all new gaps
         for gap in new_gaps:
             self.db_session.add(gap)
@@ -300,3 +314,96 @@ class GapAnalyzeStage:
             procedural_gaps.append(gap)
 
         return procedural_gaps
+
+    async def _gather_narrative(self, intake_id: int) -> str:
+        """Concatenate consumer/professional message text + document text +
+        extracted fact assertions (mirrors DeadlineDetectStage._gather_text so
+        the doctrine probes see the same narrative the pipeline analyzed)."""
+        from sqlalchemy import select
+
+        from app.models.fact import ExtractedFact
+        from app.models.intake import IntakeSession, Message
+
+        session_ids = (
+            await self.db_session.execute(
+                select(IntakeSession.id).where(IntakeSession.intake_id == intake_id)
+            )
+        ).scalars().all()
+
+        parts: list[str] = []
+        if session_ids:
+            messages = (
+                await self.db_session.execute(
+                    select(Message)
+                    .where(
+                        Message.session_id.in_(session_ids),
+                        Message.sender_type != "system",
+                    )
+                    .order_by(Message.sequence_number)
+                )
+            ).scalars().all()
+            for msg in messages:
+                raw = msg.normalized_text or msg.content_encrypted or b""
+                text = raw.decode("utf-8", errors="replace").strip()
+                if text:
+                    parts.append(text)
+
+        facts = (
+            await self.db_session.execute(
+                select(ExtractedFact).where(
+                    ExtractedFact.intake_id == intake_id,
+                    ExtractedFact.is_active == True,  # noqa: E712
+                )
+            )
+        ).scalars().all()
+        for f in facts:
+            if f.assertion_text:
+                parts.append(f.assertion_text)
+
+        return "\n".join(parts)
+
+    async def _detect_deterministic_doctrine_gaps(
+        self,
+        iteration: AnalysisIteration,
+        run: AnalysisRun,
+        existing_gaps: list[AnalysisGap],
+        pending_gaps: list[AnalysisGap],
+    ) -> list[AnalysisGap]:
+        """Emit the deterministic doctrine-probe backstop (RUB-01, r1).
+
+        Runs the cited probe table over the gathered narrative and emits one
+        `procedural_requirement` gap per matched probe. Dedupe is by the probe
+        question text against BOTH previously persisted gaps and this batch's
+        pending gaps (probes are stable strings, so text-dedupe is exact).
+        """
+        from app.services.analysis.doctrine_probes import run_probes
+
+        try:
+            narrative = await self._gather_narrative(run.intake_id)
+        except Exception:  # pragma: no cover — backstop must never kill the run
+            return []
+        if not narrative.strip():
+            return []
+
+        seen = {g.description for g in existing_gaps} | {
+            g.description for g in pending_gaps
+        }
+        out: list[AnalysisGap] = []
+        for probe in run_probes(narrative):
+            description = f"{probe.question} [Authority: {probe.authority}]"
+            if description in seen:
+                continue
+            out.append(
+                AnalysisGap(
+                    run_id=run.id,
+                    gap_type="procedural_requirement",
+                    claim_id=None,
+                    element_id=None,
+                    description=description,
+                    priority=probe.priority,
+                    status="open",
+                    iteration_found=iteration.iteration_number,
+                )
+            )
+            seen.add(description)
+        return out
