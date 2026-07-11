@@ -1,0 +1,1733 @@
+{
+ "intake_id": 179,
+ "run_id": 39,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T03:30:33.022968Z",
+ "claims_by_jurisdiction": {
+  "Federal (Immigration Court)": [
+   {
+    "claim_id": 1576,
+    "claim_name": "Failure to Appear in Removal Proceedings",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": "Federal (Immigration Court)",
+    "folio_iri": null,
+    "issue_statement": "The facts show that if Marisol does not go to her scheduled hearing, she might be ordered to be removed without being present, which means there could be serious legal consequences for not following the rules.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 807,
+      "element_name": "Notice of Hearing",
+      "element_description": "The individual must have received proper notice of the scheduled hearing date.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1111,
+        "fact_text": "The Notice to Appear was served on August 15, 2019.",
+        "confidence": 0.85,
+        "mapping_rationale": "The Notice to Appear was served, indicating the speaker received official notice of the hearing."
+       }
+      ]
+     },
+     {
+      "element_id": 808,
+      "element_name": "Non-Appearance",
+      "element_description": "The individual fails to appear at the scheduled hearing.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1112,
+        "fact_text": "The next hearing in Marisol's case is scheduled for August 20, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact provides the date for the next hearing, which is crucial for understanding potential non-appearance."
+       }
+      ]
+     },
+     {
+      "element_id": 809,
+      "element_name": "Consequences of Non-Appearance",
+      "element_description": "The court issues a removal order as a result of the individual not attending the hearing.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1115,
+        "fact_text": "If Marisol fails to attend the hearing, an order of removal may be entered against her in her absence.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact outlines the consequences Marisol faces if she fails to appear at the hearing."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1768,
+      "gap_type": "procedural_requirement",
+      "description": "What is the scheduled date and time of Marisol's hearing, and what are the consequences if she does not appear?",
+      "priority": 50,
+      "claim_id": 1576,
+      "element_id": null,
+      "claim_name": "Failure to Appear in Removal Proceedings",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "The three elements needed for support are present (with 85% confidence).",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1575,
+    "claim_name": "Immigration Relief Application",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": "Federal (Immigration Court)",
+    "folio_iri": "https://folio.openlegalstandard.org/R8N4pMIOhTNbqcmDczSephq",
+    "issue_statement": "Marisol plans to apply for relief from removal (a request to stop her deportation), which is important because of her current immigration case and the possibility of being removed from the United States.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 804,
+      "element_name": "Eligibility",
+      "element_description": "The applicant must demonstrate eligibility for a specific form of relief from removal.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 805,
+      "element_name": "Application Submission",
+      "element_description": "The application must be properly filed and submitted to the immigration court.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 806,
+      "element_name": "Timeline Compliance",
+      "element_description": "The applicant must comply with all deadlines relevant to the application process within the immigration court.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1751,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Eligibility' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1575,
+      "element_id": 804,
+      "claim_name": "Immigration Relief Application",
+      "element_name": "Eligibility",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1752,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Application Submission' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1575,
+      "element_id": 805,
+      "claim_name": "Immigration Relief Application",
+      "element_name": "Application Submission",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1753,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Timeline Compliance' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1575,
+      "element_id": 806,
+      "claim_name": "Immigration Relief Application",
+      "element_name": "Timeline Compliance",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1754,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Immigration Relief Application' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1575,
+      "element_id": null,
+      "claim_name": "Immigration Relief Application",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1767,
+      "gap_type": "procedural_requirement",
+      "description": "What are the deadlines for submitting applications for relief from removal given Marisol's ongoing immigration proceedings?",
+      "priority": 50,
+      "claim_id": 1575,
+      "element_id": null,
+      "claim_name": "Immigration Relief Application",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "I'm sorry, but it seems there is no legal text provided for me to simplify. Please share the text you would like me to rewrite.",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1582,
+      "claim_name": "Adjustment of Status Pending",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7dIoqwvQvmYE03eXBHmcO",
+      "issue_statement": "Found by exploring the FOLIO (a system for organizing knowledge) ontology (a way to categorize information) starting from the Immigration Relief Application (the document used to request protection from deportation) at one level deep.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1760,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1582,
+        "element_id": null,
+        "claim_name": "Adjustment of Status Pending",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       },
+       {
+        "gap_id": 1769,
+        "gap_type": "procedural_requirement",
+        "description": "Is there a deadline for Marisol to respond to any notices or to comply with requirements related to her pending adjustment of status application?",
+        "priority": 50,
+        "claim_id": 1582,
+        "element_id": null,
+        "claim_name": "Adjustment of Status Pending",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Immigration Relief Application",
+      "children": []
+     },
+     {
+      "claim_id": 1580,
+      "claim_name": "Not in Destination Country",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R76ZlnhoJvqxs7byZOMfScw",
+      "issue_statement": "Found by exploring the FOLIO (a system for organizing knowledge) ontology (a way to categorize information) starting from the Immigration Relief Application (the document used to request protection from deportation) at one level deep.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1758,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1580,
+        "element_id": null,
+        "claim_name": "Not in Destination Country",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Immigration Relief Application",
+      "children": []
+     },
+     {
+      "claim_id": 1581,
+      "claim_name": "Out of Immigration Status",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7J5tsgW4oZHjUWIol2tkAg",
+      "issue_statement": "Found by exploring the FOLIO (a system for organizing knowledge) ontology (a way to categorize information) starting from the Immigration Relief Application (the document used to request protection from deportation) at one level deep.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1759,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Out of Immigration Status' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1581,
+        "element_id": null,
+        "claim_name": "Out of Immigration Status",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Immigration Relief Application",
+      "children": []
+     },
+     {
+      "claim_id": 1583,
+      "claim_name": "Temporary Protected Status",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7rFTVKN1Cc9kDZb75hc6jl",
+      "issue_statement": "Found by exploring the FOLIO (a system for organizing knowledge) ontology (a way to categorize information) starting from the Immigration Relief Application (the document used to request protection from deportation) at one level deep.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1761,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1583,
+        "element_id": null,
+        "claim_name": "Temporary Protected Status",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       },
+       {
+        "gap_id": 1770,
+        "gap_type": "procedural_requirement",
+        "description": "What are the criteria and deadlines for applying for Temporary Protected Status, if applicable to Marisol's situation?",
+        "priority": 50,
+        "claim_id": 1583,
+        "element_id": null,
+        "claim_name": "Temporary Protected Status",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Immigration Relief Application",
+      "children": []
+     },
+     {
+      "claim_id": 1579,
+      "claim_name": "Visa Waived",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R3TZludg4KJtTjPW1T2J9c",
+      "issue_statement": "Found by exploring the FOLIO (a system for organizing knowledge) ontology (a way to categorize information) starting from the Immigration Relief Application (the document used to request protection from deportation) at one level deep.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1757,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1579,
+        "element_id": null,
+        "claim_name": "Visa Waived",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Immigration Relief Application",
+      "children": []
+     }
+    ]
+   }
+  ],
+  "Minnesota": [
+   {
+    "claim_id": 1574,
+    "claim_name": "Domestic Violence and Assault",
+    "claim_type": "identified",
+    "confidence": 1.0,
+    "jurisdiction": "Minnesota",
+    "folio_iri": "https://folio.openlegalstandard.org/RNtr2KMwM33LplYnmmxxVY",
+    "issue_statement": "The facts clearly show that Marisol Gomez was attacked by Danilo Cruz Martinez, as evidenced by Marisol's visible injuries and the fact that Danilo was arrested by the police for this incident.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 801,
+      "element_name": "Intentional Act",
+      "element_description": "The defendant must have intentionally caused harm to the victim.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1091,
+        "fact_text": "The speaker called the Bloomington police the night Danilo hit her.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact that the speaker called the police after being hit implies that there was an intent to harm by Danilo."
+       },
+       {
+        "fact_id": 1122,
+        "fact_text": "Danilo Cruz Martinez is the suspect in the domestic assault.",
+        "confidence": 0.85,
+        "mapping_rationale": "Identifying Danilo as the suspect indicates an intentional act as he is accused of domestic violence."
+       },
+       {
+        "fact_id": 1125,
+        "fact_text": "Danilo Cruz Martinez struck Marisol Gomez during an argument after he had been drinking.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact clearly states that Danilo struck Marisol during an argument, supporting the intentional act element."
+       }
+      ]
+     },
+     {
+      "element_id": 802,
+      "element_name": "Physical Injury",
+      "element_description": "The victim must have suffered physical harm resulting from the defendant's actions.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1124,
+        "fact_text": "Marisol Gomez displayed visible redness and swelling to the left cheek and a small laceration above the left eyebrow.",
+        "confidence": 0.85,
+        "mapping_rationale": "Visible injuries to Marisol show that she suffered physical harm, fulfilling the physical injury requirement."
+       }
+      ]
+     },
+     {
+      "element_id": 803,
+      "element_name": "Relationship Requirement",
+      "element_description": "The parties involved must have a relationship, demonstrating a domestic context to the assault.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1121,
+        "fact_text": "Marisol P. Gomez is the victim of the domestic assault.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact identifies Marisol as the victim, showing the relationship context necessary for the domestic violence claim."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1766,
+      "gap_type": "procedural_requirement",
+      "description": "What is the timeline for filing any claims or protections related to the domestic violence incident, such as Orders for Protection?",
+      "priority": 50,
+      "claim_id": 1574,
+      "element_id": null,
+      "claim_name": "Domestic Violence and Assault",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "The three elements needed for support are present (with 85% confidence).",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1578,
+      "claim_name": "Crimes Against People",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R7MbuFEaL6NyU9tM2AXk7lk",
+      "issue_statement": "Found through the FOLIO ontology (a framework for organizing information) by exploring Domestic Violence and Assault (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1756,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1578,
+        "element_id": null,
+        "claim_name": "Crimes Against People",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Domestic Violence and Assault",
+      "children": []
+     },
+     {
+      "claim_id": 1577,
+      "claim_name": "Criminal Assault",
+      "claim_type": "discovered",
+      "confidence": 0.7,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/R8BLgPtZOuKFI8MtZNTaT0u",
+      "issue_statement": "Found through the FOLIO ontology (a framework for organizing information) by exploring Domestic Violence and Assault (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1755,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1577,
+        "element_id": null,
+        "claim_name": "Criminal Assault",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Domestic Violence and Assault",
+      "children": []
+     }
+    ]
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1585,
+    "claim_name": "Potential Immigration Consequences of Domestic Violence Charges",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7aFBns3Z2d9MuNI5sDEGxF",
+    "issue_statement": "Danilo's legal situation might affect Marisol, especially regarding how domestic violence could influence her credibility (trustworthiness) and her case for staying in the country.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1763,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Immigration Consequences of Domestic Violence Charges' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1585,
+      "element_id": null,
+      "claim_name": "Potential Immigration Consequences of Domestic Violence Charges",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1586,
+    "claim_name": "Child Custody and Support Concerns",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RCEchldQJ7ND4j4ohefIlEg",
+    "issue_statement": "Marisol's legal status (her standing in the eyes of the law) and current legal problems may impact her custody rights (her ability to keep and care for her children) or her ability to support her children well. This is a major concern because of her family situation.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1771,
+      "gap_type": "procedural_requirement",
+      "description": "What are the requirements for filing for custody or child support in the context of Marisol's immigration status and the domestic violence incident?",
+      "priority": 50,
+      "claim_id": 1586,
+      "element_id": null,
+      "claim_name": "Child Custody and Support Concerns",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1587,
+    "claim_name": "Adjustment of Status Implications",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The mix of domestic violence and immigration status creates complicated problems about her ability to get help, as previous incidents might affect her application status.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1764,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Adjustment of Status Implications' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1587,
+      "element_id": null,
+      "claim_name": "Adjustment of Status Implications",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1584,
+    "claim_name": "Victim Rights and Safety",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Considering the domestic violence incidents and her cooperation with the police, it is very important to make sure that Marisol uses the legal protections and resources available to her as a victim.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1762,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Victim Rights and Safety' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1584,
+      "element_id": null,
+      "claim_name": "Victim Rights and Safety",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1588,
+    "claim_name": "Potential Asylum Claim Ignored",
+    "claim_type": "discovered",
+    "confidence": 0.2,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Given Marisol's history and the violence she has experienced, there may be reasons for her to seek asylum (a form of protection in another country) that have not yet been explored. This requires a closer look at whether she qualifies for it.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1765,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Asylum Claim Ignored' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1588,
+      "element_id": null,
+      "claim_name": "Potential Asylum Claim Ignored",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {},
+ "safety_alerts": [
+  {
+   "protocol_name": "Domestic Violence / Intimate Partner Violence",
+   "severity_tier": "critical",
+   "matched_terms": [
+    "domestic violence"
+   ],
+   "hotlines": [
+    {
+     "name": "National Domestic Violence Hotline",
+     "phone": "1-800-799-7233",
+     "text": "START to 88788",
+     "url": "https://www.thehotline.org"
+    },
+    {
+     "name": "National Dating Abuse Helpline",
+     "phone": "1-866-331-9474",
+     "text": "LOVEIS to 22522"
+    }
+   ],
+   "emergency": "If you are in immediate danger, call 911.",
+   "safety_planning": "A safety plan can help you prepare for emergencies. The National DV Hotline can help create one."
+  },
+  {
+   "protocol_name": "Immigration Detention Risk",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "removal proceedings",
+    "asylum"
+   ],
+   "hotlines": [
+    {
+     "name": "National Immigrant Women's Advocacy Project",
+     "url": "https://niwaplibrary.wcl.american.edu"
+    },
+    {
+     "name": "Immigration Advocates Network",
+     "url": "https://www.immigrationadvocates.org"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "The speaker came to this country on August 14, 2019.",
+   "event_type": "asylum_entry",
+   "trigger": "entry",
+   "trigger_date": "2019-08-14",
+   "computed_date": "2020-08-14",
+   "rule_id": "asylum_one_year",
+   "citation": "INA \u00a7 208(a)(2)(B); 8 U.S.C. \u00a7 1158(a)(2)(B) (one-year filing deadline)",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Asylum applications generally must be filed within one year of arrival in the United States. Estimated \u2014 confirm the exact date with the court or a lawyer. Because this one-year asylum deadline appears to have already passed, you may still be able to apply if an EXCEPTION applies: 'changed circumstances' that materially affect eligibility, or 'extraordinary circumstances' that excuse the late filing (for example serious illness, or ineffective assistance / fraud by a notario or non-lawyer). This exception pathway is governed by INA \u00a7 208(a)(2)(D); 8 U.S.C. \u00a7 1158(a)(2)(D). Ask an immigration lawyer whether one of these exceptions applies to you \u2014 the late deadline may not be the end of your asylum claim.",
+   "jurisdiction": null
+  },
+  {
+   "event_text": "The next hearing in Marisol's case is scheduled for August 20, 2026.",
+   "event_type": "removal_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-08-20",
+   "computed_date": "2026-08-20",
+   "rule_id": "immigration_hearing_date",
+   "citation": "The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "A domestic assault occurred on March 15, 2026 at approximately 22:40 hrs.",
+   "event_type": "domestic_assault",
+   "trigger": "incident",
+   "trigger_date": "2026-03-15",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "Immigration",
+    "destination_type": "practice_area",
+    "score": 0.47124999999999995,
+    "rationale": "Immigration practice area (50% of claims); mixed jurisdictions (62% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.5,
+    "jurisdiction_match": 0.625,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.4275,
+    "rationale": "General Civil practice area (38% of claims); mixed jurisdictions (62% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.375,
+    "jurisdiction_match": 0.625,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Family Law",
+    "destination_type": "practice_area",
+    "score": 0.34,
+    "rationale": "Family Law practice area (12% of claims); mixed jurisdictions (62% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.125,
+    "jurisdiction_match": 0.625,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "Immigration",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Eligibility' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Immigration Relief Application",
+   "element_ref": "Eligibility"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Application Submission' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Immigration Relief Application",
+   "element_ref": "Application Submission"
+  },
+  {
+   "item_number": 3,
+   "category": "documents_to_gather",
+   "description": "Element 'Timeline Compliance' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Immigration Relief Application",
+   "element_ref": "Timeline Compliance"
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: The speaker came to this country on August 14, 2019. (estimated 2020-08-14; INA \u00a7 208(a)(2)(B); 8 U.S.C. \u00a7 1158(a)(2)(B) (one-year filing deadline)). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Asylum applications generally must be filed within one year of arrival in the United States. Estimated \u2014 confirm the exact date with the court or a lawyer. Because this one-year asylum deadline appears to have already passed, you may still be able to apply if an EXCEPTION applies: 'changed circumstances' that materially affect eligibility, or 'extraordinary circumstances' that excuse the late filing (for example serious illness, or ineffective assistance / fraud by a notario or non-lawyer). This exception pathway is governed by INA \u00a7 208(a)(2)(D); 8 U.S.C. \u00a7 1158(a)(2)(D). Ask an immigration lawyer whether one of these exceptions applies to you \u2014 the late deadline may not be the end of your asylum claim.",
+   "priority": "urgent",
+   "deadline": "2020-08-14",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: The next hearing in Marisol's case is scheduled for August 20, 2026. (estimated 2026-08-20; The hearing date on your Notice to Appear / EOIR hearing notice (8 C.F.R. \u00a7 1003.18; INA \u00a7 239). Failure to appear can result in an in-absentia removal order.). This is the hearing date printed on your immigration court notice \u2014 you must appear. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-08-20",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "You described being hurt by a spouse who is a U.S. citizen or green-card holder. Federal law (VAWA) may let you apply for immigration status on your own, without their help or knowledge \u2014 this is called a VAWA self-petition. Has a lawyer ever talked with you about whether you qualify? [Authority: INA \u00a7 204(a)(1); 8 U.S.C. \u00a7 1154 (VAWA self-petition)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "What you described \u2014 being physically hurt or threatened by a family or household member \u2014 may qualify you for an Order for Protection (a court order that can be issued the same day you ask, before any hearing). In Minnesota this is Minn. Stat. \u00a7 518B.01; other states have an equivalent. Would you like information about asking the court for one now, separate from any other case? [Authority: Minn. Stat. \u00a7 518B.01 (Order for Protection; ex parte relief available)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "You said you were the victim of a crime and helped the police. Victims of certain crimes who cooperate with law enforcement may qualify for a U visa (U nonimmigrant status). This needs a certification form (I-918B) signed by the police or prosecutor \u2014 has anyone requested one for you? [Authority: INA \u00a7 101(a)(15)(U); 8 U.S.C. \u00a7 1101(a)(15)(U) (U nonimmigrant status; Form I-918 Supplement B certification)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Asylum applications normally must be filed within one year of arriving in the U.S. If your first year has passed \u2014 including if someone who was not a real lawyer took your money and never filed \u2014 you may still qualify under the 'changed circumstances' or 'extraordinary circumstances' exceptions (fraud by a notario can count). Ask a lawyer about the one-year-bar exceptions. When did you arrive, and did anyone ever actually file an asylum application for you? [Authority: INA \u00a7 208(a)(2)(B), (D); 8 U.S.C. \u00a7 1158(a)(2)(B), (D) (one-year bar; changed/extraordinary-circumstances exceptions)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "You mentioned working with a Social Security number that is not yours. Working without authorization can normally block a green-card application filed inside the U.S. (the INA \u00a7 245(c)(2) bar) \u2014 BUT people approved under VAWA are exempt from that bar. A lawyer should review this together with any VAWA option. Have you told a lawyer about this work history? [Authority: INA \u00a7 245(c)(2); 8 U.S.C. \u00a7 1255(c)(2) (unauthorized-employment bar; VAWA self-petitioners exempt)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "About the immigration papers (Notice to Appear) you received: did that first notice state the exact TIME, DATE, and PLACE of your court hearing, or were those details missing or sent later? A notice missing those details can matter to your case (it can affect eligibility clocks) \u2014 bring the original papers to a lawyer. [Authority: Pereira v. Sessions, 138 S. Ct. 2105 (2018); Niz-Chavez v. Garland, 141 S. Ct. 1474 (2021) (defective Notice to Appear)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Immigration Relief Application' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Immigration Relief Application",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Criminal Assault",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Crimes Against People",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Visa Waived",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Not in Destination Country",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Out of Immigration Status' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Out of Immigration Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Adjustment of Status Pending",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Temporary Protected Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Victim Rights and Safety' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Victim Rights and Safety",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Immigration Consequences of Domestic Violence Charges' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Immigration Consequences of Domestic Violence Charges",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Adjustment of Status Implications' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Adjustment of Status Implications",
+   "element_ref": null
+  },
+  {
+   "item_number": 23,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Asylum Claim Ignored' has not been explored with fact mappings",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Potential Asylum Claim Ignored",
+   "element_ref": null
+  },
+  {
+   "item_number": 24,
+   "category": "follow_up_steps",
+   "description": "What is the timeline for filing any claims or protections related to the domestic violence incident, such as Orders for Protection?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Domestic Violence and Assault",
+   "element_ref": null
+  },
+  {
+   "item_number": 25,
+   "category": "follow_up_steps",
+   "description": "What are the deadlines for submitting applications for relief from removal given Marisol's ongoing immigration proceedings?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Immigration Relief Application",
+   "element_ref": null
+  },
+  {
+   "item_number": 26,
+   "category": "follow_up_steps",
+   "description": "What is the scheduled date and time of Marisol's hearing, and what are the consequences if she does not appear?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Failure to Appear in Removal Proceedings",
+   "element_ref": null
+  },
+  {
+   "item_number": 27,
+   "category": "follow_up_steps",
+   "description": "Is there a deadline for Marisol to respond to any notices or to comply with requirements related to her pending adjustment of status application?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Adjustment of Status Pending",
+   "element_ref": null
+  },
+  {
+   "item_number": 28,
+   "category": "follow_up_steps",
+   "description": "What are the criteria and deadlines for applying for Temporary Protected Status, if applicable to Marisol's situation?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Temporary Protected Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 29,
+   "category": "follow_up_steps",
+   "description": "What are the requirements for filing for custody or child support in the context of Marisol's immigration status and the domestic violence incident?",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Child Custody and Support Concerns",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Immigration Relief Application": [
+    {
+     "gap_id": 1751,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Eligibility' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1575,
+     "element_id": 804,
+     "claim_name": "Immigration Relief Application",
+     "element_name": "Eligibility",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1752,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Application Submission' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1575,
+     "element_id": 805,
+     "claim_name": "Immigration Relief Application",
+     "element_name": "Application Submission",
+     "action_item_ref": 2,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1753,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Timeline Compliance' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1575,
+     "element_id": 806,
+     "claim_name": "Immigration Relief Application",
+     "element_name": "Timeline Compliance",
+     "action_item_ref": 3,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1754,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Immigration Relief Application' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1575,
+     "element_id": null,
+     "claim_name": "Immigration Relief Application",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1767,
+     "gap_type": "procedural_requirement",
+     "description": "What are the deadlines for submitting applications for relief from removal given Marisol's ongoing immigration proceedings?",
+     "priority": 50,
+     "claim_id": 1575,
+     "element_id": null,
+     "claim_name": "Immigration Relief Application",
+     "element_name": null,
+     "action_item_ref": 25,
+     "open_questions": []
+    }
+   ],
+   "Criminal Assault": [
+    {
+     "gap_id": 1755,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1577,
+     "element_id": null,
+     "claim_name": "Criminal Assault",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    }
+   ],
+   "Crimes Against People": [
+    {
+     "gap_id": 1756,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1578,
+     "element_id": null,
+     "claim_name": "Crimes Against People",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Visa Waived": [
+    {
+     "gap_id": 1757,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1579,
+     "element_id": null,
+     "claim_name": "Visa Waived",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Not in Destination Country": [
+    {
+     "gap_id": 1758,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1580,
+     "element_id": null,
+     "claim_name": "Not in Destination Country",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Out of Immigration Status": [
+    {
+     "gap_id": 1759,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Out of Immigration Status' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1581,
+     "element_id": null,
+     "claim_name": "Out of Immigration Status",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Adjustment of Status Pending": [
+    {
+     "gap_id": 1760,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1582,
+     "element_id": null,
+     "claim_name": "Adjustment of Status Pending",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1769,
+     "gap_type": "procedural_requirement",
+     "description": "Is there a deadline for Marisol to respond to any notices or to comply with requirements related to her pending adjustment of status application?",
+     "priority": 50,
+     "claim_id": 1582,
+     "element_id": null,
+     "claim_name": "Adjustment of Status Pending",
+     "element_name": null,
+     "action_item_ref": 27,
+     "open_questions": []
+    }
+   ],
+   "Temporary Protected Status": [
+    {
+     "gap_id": 1761,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1583,
+     "element_id": null,
+     "claim_name": "Temporary Protected Status",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1770,
+     "gap_type": "procedural_requirement",
+     "description": "What are the criteria and deadlines for applying for Temporary Protected Status, if applicable to Marisol's situation?",
+     "priority": 50,
+     "claim_id": 1583,
+     "element_id": null,
+     "claim_name": "Temporary Protected Status",
+     "element_name": null,
+     "action_item_ref": 28,
+     "open_questions": []
+    }
+   ],
+   "Victim Rights and Safety": [
+    {
+     "gap_id": 1762,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Victim Rights and Safety' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1584,
+     "element_id": null,
+     "claim_name": "Victim Rights and Safety",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Potential Immigration Consequences of Domestic Violence Charges": [
+    {
+     "gap_id": 1763,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Immigration Consequences of Domestic Violence Charges' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1585,
+     "element_id": null,
+     "claim_name": "Potential Immigration Consequences of Domestic Violence Charges",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Adjustment of Status Implications": [
+    {
+     "gap_id": 1764,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Adjustment of Status Implications' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1587,
+     "element_id": null,
+     "claim_name": "Adjustment of Status Implications",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ],
+   "Potential Asylum Claim Ignored": [
+    {
+     "gap_id": 1765,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Asylum Claim Ignored' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1588,
+     "element_id": null,
+     "claim_name": "Potential Asylum Claim Ignored",
+     "element_name": null,
+     "action_item_ref": 23,
+     "open_questions": []
+    }
+   ],
+   "Domestic Violence and Assault": [
+    {
+     "gap_id": 1766,
+     "gap_type": "procedural_requirement",
+     "description": "What is the timeline for filing any claims or protections related to the domestic violence incident, such as Orders for Protection?",
+     "priority": 50,
+     "claim_id": 1574,
+     "element_id": null,
+     "claim_name": "Domestic Violence and Assault",
+     "element_name": null,
+     "action_item_ref": 24,
+     "open_questions": []
+    }
+   ],
+   "Failure to Appear in Removal Proceedings": [
+    {
+     "gap_id": 1768,
+     "gap_type": "procedural_requirement",
+     "description": "What is the scheduled date and time of Marisol's hearing, and what are the consequences if she does not appear?",
+     "priority": 50,
+     "claim_id": 1576,
+     "element_id": null,
+     "claim_name": "Failure to Appear in Removal Proceedings",
+     "element_name": null,
+     "action_item_ref": 26,
+     "open_questions": []
+    }
+   ],
+   "Child Custody and Support Concerns": [
+    {
+     "gap_id": 1771,
+     "gap_type": "procedural_requirement",
+     "description": "What are the requirements for filing for custody or child support in the context of Marisol's immigration status and the domestic violence incident?",
+     "priority": 50,
+     "claim_id": 1586,
+     "element_id": null,
+     "claim_name": "Child Custody and Support Concerns",
+     "element_name": null,
+     "action_item_ref": 29,
+     "open_questions": []
+    }
+   ],
+   "Uncategorized": [
+    {
+     "gap_id": 1772,
+     "gap_type": "procedural_requirement",
+     "description": "You described being hurt by a spouse who is a U.S. citizen or green-card holder. Federal law (VAWA) may let you apply for immigration status on your own, without their help or knowledge \u2014 this is called a VAWA self-petition. Has a lawyer ever talked with you about whether you qualify? [Authority: INA \u00a7 204(a)(1); 8 U.S.C. \u00a7 1154 (VAWA self-petition)]",
+     "priority": 90,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 6,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1773,
+     "gap_type": "procedural_requirement",
+     "description": "You said you were the victim of a crime and helped the police. Victims of certain crimes who cooperate with law enforcement may qualify for a U visa (U nonimmigrant status). This needs a certification form (I-918B) signed by the police or prosecutor \u2014 has anyone requested one for you? [Authority: INA \u00a7 101(a)(15)(U); 8 U.S.C. \u00a7 1101(a)(15)(U) (U nonimmigrant status; Form I-918 Supplement B certification)]",
+     "priority": 88,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1774,
+     "gap_type": "procedural_requirement",
+     "description": "You mentioned working with a Social Security number that is not yours. Working without authorization can normally block a green-card application filed inside the U.S. (the INA \u00a7 245(c)(2) bar) \u2014 BUT people approved under VAWA are exempt from that bar. A lawyer should review this together with any VAWA option. Have you told a lawyer about this work history? [Authority: INA \u00a7 245(c)(2); 8 U.S.C. \u00a7 1255(c)(2) (unauthorized-employment bar; VAWA self-petitioners exempt)]",
+     "priority": 86,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1775,
+     "gap_type": "procedural_requirement",
+     "description": "About the immigration papers (Notice to Appear) you received: did that first notice state the exact TIME, DATE, and PLACE of your court hearing, or were those details missing or sent later? A notice missing those details can matter to your case (it can affect eligibility clocks) \u2014 bring the original papers to a lawyer. [Authority: Pereira v. Sessions, 138 S. Ct. 2105 (2018); Niz-Chavez v. Garland, 141 S. Ct. 1474 (2021) (defective Notice to Appear)]",
+     "priority": 84,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1776,
+     "gap_type": "procedural_requirement",
+     "description": "Asylum applications normally must be filed within one year of arriving in the U.S. If your first year has passed \u2014 including if someone who was not a real lawyer took your money and never filed \u2014 you may still qualify under the 'changed circumstances' or 'extraordinary circumstances' exceptions (fraud by a notario can count). Ask a lawyer about the one-year-bar exceptions. When did you arrive, and did anyone ever actually file an asylum application for you? [Authority: INA \u00a7 208(a)(2)(B), (D); 8 U.S.C. \u00a7 1158(a)(2)(B), (D) (one-year bar; changed/extraordinary-circumstances exceptions)]",
+     "priority": 88,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1777,
+     "gap_type": "procedural_requirement",
+     "description": "What you described \u2014 being physically hurt or threatened by a family or household member \u2014 may qualify you for an Order for Protection (a court order that can be issued the same day you ask, before any hearing). In Minnesota this is Minn. Stat. \u00a7 518B.01; other states have an equivalent. Would you like information about asking the court for one now, separate from any other case? [Authority: Minn. Stat. \u00a7 518B.01 (Order for Protection; ex parte relief available)]",
+     "priority": 90,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1772,
+    "gap_type": "procedural_requirement",
+    "description": "You described being hurt by a spouse who is a U.S. citizen or green-card holder. Federal law (VAWA) may let you apply for immigration status on your own, without their help or knowledge \u2014 this is called a VAWA self-petition. Has a lawyer ever talked with you about whether you qualify? [Authority: INA \u00a7 204(a)(1); 8 U.S.C. \u00a7 1154 (VAWA self-petition)]",
+    "priority": 90,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1777,
+    "gap_type": "procedural_requirement",
+    "description": "What you described \u2014 being physically hurt or threatened by a family or household member \u2014 may qualify you for an Order for Protection (a court order that can be issued the same day you ask, before any hearing). In Minnesota this is Minn. Stat. \u00a7 518B.01; other states have an equivalent. Would you like information about asking the court for one now, separate from any other case? [Authority: Minn. Stat. \u00a7 518B.01 (Order for Protection; ex parte relief available)]",
+    "priority": 90,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1773,
+    "gap_type": "procedural_requirement",
+    "description": "You said you were the victim of a crime and helped the police. Victims of certain crimes who cooperate with law enforcement may qualify for a U visa (U nonimmigrant status). This needs a certification form (I-918B) signed by the police or prosecutor \u2014 has anyone requested one for you? [Authority: INA \u00a7 101(a)(15)(U); 8 U.S.C. \u00a7 1101(a)(15)(U) (U nonimmigrant status; Form I-918 Supplement B certification)]",
+    "priority": 88,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1776,
+    "gap_type": "procedural_requirement",
+    "description": "Asylum applications normally must be filed within one year of arriving in the U.S. If your first year has passed \u2014 including if someone who was not a real lawyer took your money and never filed \u2014 you may still qualify under the 'changed circumstances' or 'extraordinary circumstances' exceptions (fraud by a notario can count). Ask a lawyer about the one-year-bar exceptions. When did you arrive, and did anyone ever actually file an asylum application for you? [Authority: INA \u00a7 208(a)(2)(B), (D); 8 U.S.C. \u00a7 1158(a)(2)(B), (D) (one-year bar; changed/extraordinary-circumstances exceptions)]",
+    "priority": 88,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1774,
+    "gap_type": "procedural_requirement",
+    "description": "You mentioned working with a Social Security number that is not yours. Working without authorization can normally block a green-card application filed inside the U.S. (the INA \u00a7 245(c)(2) bar) \u2014 BUT people approved under VAWA are exempt from that bar. A lawyer should review this together with any VAWA option. Have you told a lawyer about this work history? [Authority: INA \u00a7 245(c)(2); 8 U.S.C. \u00a7 1255(c)(2) (unauthorized-employment bar; VAWA self-petitioners exempt)]",
+    "priority": 86,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1775,
+    "gap_type": "procedural_requirement",
+    "description": "About the immigration papers (Notice to Appear) you received: did that first notice state the exact TIME, DATE, and PLACE of your court hearing, or were those details missing or sent later? A notice missing those details can matter to your case (it can affect eligibility clocks) \u2014 bring the original papers to a lawyer. [Authority: Pereira v. Sessions, 138 S. Ct. 2105 (2018); Niz-Chavez v. Garland, 141 S. Ct. 1474 (2021) (defective Notice to Appear)]",
+    "priority": 84,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1751,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Eligibility' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1575,
+    "element_id": 804,
+    "claim_name": "Immigration Relief Application",
+    "element_name": "Eligibility",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1752,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Application Submission' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1575,
+    "element_id": 805,
+    "claim_name": "Immigration Relief Application",
+    "element_name": "Application Submission",
+    "action_item_ref": 2,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1753,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Timeline Compliance' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1575,
+    "element_id": 806,
+    "claim_name": "Immigration Relief Application",
+    "element_name": "Timeline Compliance",
+    "action_item_ref": 3,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1754,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Immigration Relief Application' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1575,
+    "element_id": null,
+    "claim_name": "Immigration Relief Application",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1755,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Criminal Assault' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1577,
+    "element_id": null,
+    "claim_name": "Criminal Assault",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1756,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Crimes Against People' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1578,
+    "element_id": null,
+    "claim_name": "Crimes Against People",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1757,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Visa Waived' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1579,
+    "element_id": null,
+    "claim_name": "Visa Waived",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1758,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Not in Destination Country' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1580,
+    "element_id": null,
+    "claim_name": "Not in Destination Country",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1759,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Out of Immigration Status' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1581,
+    "element_id": null,
+    "claim_name": "Out of Immigration Status",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1760,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Adjustment of Status Pending' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1582,
+    "element_id": null,
+    "claim_name": "Adjustment of Status Pending",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1761,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Temporary Protected Status' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1583,
+    "element_id": null,
+    "claim_name": "Temporary Protected Status",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1762,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Victim Rights and Safety' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1584,
+    "element_id": null,
+    "claim_name": "Victim Rights and Safety",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1763,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Immigration Consequences of Domestic Violence Charges' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1585,
+    "element_id": null,
+    "claim_name": "Potential Immigration Consequences of Domestic Violence Charges",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1764,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Adjustment of Status Implications' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1587,
+    "element_id": null,
+    "claim_name": "Adjustment of Status Implications",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1765,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Asylum Claim Ignored' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1588,
+    "element_id": null,
+    "claim_name": "Potential Asylum Claim Ignored",
+    "element_name": null,
+    "action_item_ref": 23,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1766,
+    "gap_type": "procedural_requirement",
+    "description": "What is the timeline for filing any claims or protections related to the domestic violence incident, such as Orders for Protection?",
+    "priority": 50,
+    "claim_id": 1574,
+    "element_id": null,
+    "claim_name": "Domestic Violence and Assault",
+    "element_name": null,
+    "action_item_ref": 24,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1767,
+    "gap_type": "procedural_requirement",
+    "description": "What are the deadlines for submitting applications for relief from removal given Marisol's ongoing immigration proceedings?",
+    "priority": 50,
+    "claim_id": 1575,
+    "element_id": null,
+    "claim_name": "Immigration Relief Application",
+    "element_name": null,
+    "action_item_ref": 25,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1768,
+    "gap_type": "procedural_requirement",
+    "description": "What is the scheduled date and time of Marisol's hearing, and what are the consequences if she does not appear?",
+    "priority": 50,
+    "claim_id": 1576,
+    "element_id": null,
+    "claim_name": "Failure to Appear in Removal Proceedings",
+    "element_name": null,
+    "action_item_ref": 26,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1769,
+    "gap_type": "procedural_requirement",
+    "description": "Is there a deadline for Marisol to respond to any notices or to comply with requirements related to her pending adjustment of status application?",
+    "priority": 50,
+    "claim_id": 1582,
+    "element_id": null,
+    "claim_name": "Adjustment of Status Pending",
+    "element_name": null,
+    "action_item_ref": 27,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1770,
+    "gap_type": "procedural_requirement",
+    "description": "What are the criteria and deadlines for applying for Temporary Protected Status, if applicable to Marisol's situation?",
+    "priority": 50,
+    "claim_id": 1583,
+    "element_id": null,
+    "claim_name": "Temporary Protected Status",
+    "element_name": null,
+    "action_item_ref": 28,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1771,
+    "gap_type": "procedural_requirement",
+    "description": "What are the requirements for filing for custody or child support in the context of Marisol's immigration status and the domestic violence incident?",
+    "priority": 50,
+    "claim_id": 1586,
+    "element_id": null,
+    "claim_name": "Child Custody and Support Concerns",
+    "element_name": null,
+    "action_item_ref": 29,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Has a lawyer ever talked with you about whether you qualify for a VAWA self-petition?",
+   "Would you like information about asking the court for an Order for Protection now, separate from any other case?",
+   "Has anyone requested a U visa certification form (I-918B) for you from the police or prosecutor?",
+   "When did you arrive in the U.S., and has anyone ever filed an asylum application on your behalf?",
+   "Have you discussed your work history with a lawyer, specifically about working with a Social Security number that does not belong to you?",
+   "Did the immigration notice you received state the exact time, date, and place of your court hearing?"
+  ],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "This intake identified 8 potential legal issues in Minnesota, specifically regarding Federal Immigration Court. The issues that have the most support are Domestic Violence and Assault, Failure to Appear in Removal Proceedings (not showing up for an important hearing), and Immigration Relief Application (requesting help to stay in the country). \n\nIMPORTANT: It's crucial to note that at least one deadline may have already passed. The individual arrived in the U.S. on August 14, 2019, meaning that the one-year period for filing certain applications ended on August 14, 2020. This is based on the law [INA \u00a7 208(a)(2)(B); 8 U.S.C. \u00a7 1158(a)(2)(B)]. Please confirm this right away because missing deadlines can jeopardize a case. \n\nThere are also safety concerns mentioned in this report, and resources for safety are available below. The analysis is complete, and answering the 6 follow-up questions below would improve the evaluation.",
+ "profile": {
+  "profile_type": "legal_aid",
+  "language_level": "accessible",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": true,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": true,
+   "authorities_table": false
+  },
+  "reading_grade_level": null,
+  "org_branding": null
+ }
+}
