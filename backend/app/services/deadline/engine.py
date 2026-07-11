@@ -60,6 +60,10 @@ def compute_deadlines(
                     f"WARNING: this deadline appears to have ALREADY PASSED as of "
                     f"{ref_today.isoformat()}. " + hedge
                 )
+                # RUB-08 (Damien r2 2026-07-10): a lapsed deadline must be routed
+                # to its exception/fallback pathway, with the governing authority.
+                if rule.lapsed_exception:
+                    hedge = hedge + " " + rule.lapsed_exception
             out.append(
                 ComputedDeadline(
                     event_text=event_text,

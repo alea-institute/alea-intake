@@ -76,6 +76,13 @@ class DeadlineRule:
     applies: Callable[[DeadlineEvent, str | None], bool]
     compute: Callable[[date, DeadlineEvent], date]
     description: str = ""
+    # When a deadline computed by this rule has already LAPSED, this text routes
+    # the client to the governing exception/fallback pathway (RUB-08, Damien r2
+    # 2026-07-10: a lapsed deadline must be computed, flagged, AND routed to its
+    # exception pathway with the governing primary source). The engine appends it
+    # to the hedge only when the computed date is in the past. None = no
+    # rule-specific lapsed pathway (the generic "ALREADY PASSED" warning stands).
+    lapsed_exception: str | None = None
 
 
 # Triggers whose date STARTS a clock rather than being the deadline itself. An
@@ -236,6 +243,17 @@ RULES: list[DeadlineRule] = [
         applies=lambda ev, jur: "asylum" in _text(ev),
         compute=lambda d, ev: _add_years(d, 1),
         description="Asylum one-year filing deadline measured from date of entry.",
+        lapsed_exception=(
+            "Because this one-year asylum deadline appears to have already passed, "
+            "you may still be able to apply if an EXCEPTION applies: 'changed "
+            "circumstances' that materially affect eligibility, or 'extraordinary "
+            "circumstances' that excuse the late filing (for example serious "
+            "illness, or ineffective assistance / fraud by a notario or non-lawyer). "
+            "This exception pathway is governed by INA § 208(a)(2)(D); "
+            "8 U.S.C. § 1158(a)(2)(D). Ask an immigration lawyer whether one of these "
+            "exceptions applies to you — the late deadline may not be the end of your "
+            "asylum claim."
+        ),
     ),
     DeadlineRule(
         id="generic_notice_window",

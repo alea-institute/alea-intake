@@ -87,6 +87,41 @@ def test_asylum_one_year_lapsed():
     assert GENERIC_HEDGE in d.hedge
 
 
+def test_asylum_lapsed_routes_to_208a2D_exception_pathway():
+    """RUB-08 (Damien r2): a lapsed asylum one-year bar must be ROUTED to the
+    exception pathway with the governing authority INA § 208(a)(2)(D)."""
+    ev = DeadlineEvent(
+        event_type="asylum_entry",
+        raw_text="I entered the U.S. on August 14, 2019.",
+        trigger="entry",
+        date=date(2019, 8, 14),
+        jurisdiction_hint="US",
+    )
+    d = _one([ev])
+    assert d.urgency == "lapsed"
+    # The exception pathway and its governing primary source are surfaced.
+    assert "208(a)(2)(D)" in d.hedge
+    assert "1158(a)(2)(D)" in d.hedge
+    # Both flavors of the exception are named for the reviewing attorney/client.
+    assert "changed circumstances" in d.hedge.lower()
+    assert "extraordinary circumstances" in d.hedge.lower()
+
+
+def test_non_lapsed_asylum_deadline_omits_exception_pathway():
+    """A still-live asylum deadline should NOT carry the lapsed-exception text —
+    the exception routing is conditioned on the deadline actually being past."""
+    ev = DeadlineEvent(
+        event_type="asylum_entry",
+        raw_text="I entered the U.S. recently.",
+        trigger="entry",
+        date=date(2026, 3, 1),  # +1yr = 2027-03-01, future vs TODAY 2026-07-05
+        jurisdiction_hint="US",
+    )
+    d = _one([ev])
+    assert d.urgency != "lapsed"
+    assert "208(a)(2)(D)" not in d.hedge
+
+
 def test_asylum_leap_day_clamps():
     """Feb 29 entry clamps to Feb 28 the following (non-leap) year."""
     ev = DeadlineEvent(
