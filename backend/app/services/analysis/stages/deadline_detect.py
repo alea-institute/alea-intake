@@ -92,12 +92,13 @@ Rules:
 3. PAST events MATTER — extract them even when they are years old. A deadline
    that already ran (lapsed) must still be computed and flagged: it changes the
    legal analysis (exception pathways, malpractice exposure). In particular:
-   * ALWAYS extract the client's date of ENTRY into the United States as an
-     event (event_type="asylum_entry", trigger="entry", date=the entry date)
-     whenever the narrative involves asylum, removal, or immigration relief —
-     even if entry was many years ago ("I came to this country August 14,
-     2019" -> asylum_entry / entry / 2019-08-14). The asylum one-year bar is
-     computed from it.
+   * ONLY IF this narrative is an immigration/asylum/removal matter: extract
+     the client's date of ENTRY into the United States as an event
+     (event_type="asylum_entry", trigger="entry", date=the entry date) — even
+     if entry was many years ago. The asylum one-year bar is computed from it.
+     If the narrative is NOT an immigration matter, NEVER emit an entry or
+     asylum event — do not turn a lease start, move-in date, or other date
+     into an "entry" (that would fabricate a deadline).
    * Extract past incidents/injuries with their dates (statute-of-limitations
      analysis needs them).
 4. Do NOT emit a notice/cure-window event (trigger="notice_posted") for an
@@ -192,6 +193,51 @@ class DeadlineDetectStage:
             return []
 
         events = [self._to_event(e) for e in parsed.events]
+
+        # Grounding guard (round 4b): the extraction prompt's asylum-entry
+        # emphasis caused gpt-4o-mini to FABRICATE an asylum_entry event in a
+        # landlord-tenant matter (lease start date echoed as a U.S. entry —
+        # RUB-04 gate). Deterministic filter: an immigration-flavored event is
+        # kept only when the SOURCE narrative actually contains immigration
+        # language; the event's own text cannot vouch for itself.
+        lowered_source = text.lower()
+        source_is_immigration = any(
+            kw in lowered_source
+            for kw in (
+                "immigration",
+                "asylum",
+                "deport",
+                "removal proceeding",
+                "notice to appear",
+                "uscis",
+                "eoir",
+                "green card",
+                "in absentia",
+                "immigration court",
+            )
+        )
+        if not source_is_immigration:
+            kept: list = []
+            for ev in events:
+                ev_text = f"{ev.event_type} {ev.raw_text}".lower()
+                is_immigration_flavored = (
+                    "asylum" in ev_text
+                    or "removal" in ev_text
+                    or "immigration" in ev_text
+                    or "deport" in ev_text
+                    or ev.trigger == "entry"  # U.S.-entry semantics per prompt
+                )
+                if is_immigration_flavored:
+                    logger.warning(
+                        "Dropping ungrounded immigration-flavored event %r for "
+                        "non-immigration intake %d (RUB-04 guard)",
+                        ev.event_type,
+                        intake_id,
+                    )
+                    continue
+                kept.append(ev)
+            events = kept
+
         if not events:
             return []
 

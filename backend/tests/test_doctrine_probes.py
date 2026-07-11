@@ -85,3 +85,18 @@ def test_every_probe_carries_authority_and_question():
         assert p.authority.strip(), p.id
         assert "?" in p.question, p.id  # phrased as a question (RUB-01 form)
         assert p.priority >= 80  # survives the question-gen batch cap
+
+
+def test_pereira_probe_does_not_fire_on_maintain_substring():
+    """Round-4b false positive: 'mai-NTA-in(tenance)' in lease documents
+    triggered the NTA-defect probe in a landlord-tenant matter."""
+    t = "The tenant agrees to maintain the premises. Maintenance requests go to the landlord. There is an eviction case."
+    assert "pereira_nta_defect" not in _ids(t)
+
+
+def test_pereira_probe_requires_immigration_context():
+    """A bare 'NTA' acronym without immigration context must not fire."""
+    assert "pereira_nta_defect" not in _ids("The NTA form was attached to the lease.")
+    assert "pereira_nta_defect" in _ids(
+        "Immigration gave me papers, NTA it say, about my removal proceeding."
+    )

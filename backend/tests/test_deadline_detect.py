@@ -131,7 +131,10 @@ async def test_detect_persists_deadlines(db_session, intake_scaffold):
         session_id=intake_scaffold["session"].id,
         sender_type="consumer",
         modality="text",
-        content="I was served custody papers on June 15, 2026 in Minnesota.",
+        content=(
+            "I was served custody papers on June 15, 2026 in Minnesota. I also "
+            "have an immigration asylum case; I entered the U.S. on August 14, 2019."
+        ),
         party_id=intake_scaffold["party"].id,
     )
 
@@ -258,3 +261,61 @@ def test_memo_renders_top_hedged_deadline_section():
     assert "2026-07-15" in md
     assert "confirm the exact date" in md
     assert "Minn. Gen. R. Prac. 303.03" in md
+
+
+@pytest.mark.asyncio
+async def test_ungrounded_asylum_event_dropped_for_non_immigration_intake(
+    db_session, intake_scaffold
+):
+    """Round-4b RUB-04 guard: the extractor fabricated an asylum_entry event in
+    a LANDLORD-TENANT matter (lease start echoed as U.S. entry -> phantom
+    lapsed asylum deadline). Immigration-flavored events must be dropped when
+    the source narrative contains no immigration language."""
+    svc = IntakeSessionService(db_session)
+    await svc.store_message(
+        session_id=intake_scaffold["session"].id,
+        sender_type="consumer",
+        modality="text",
+        content=(
+            "My landlord posted a 14 day notice on March 3, 2026 about rent and "
+            "my lease started July 1, 2025 in Minnesota. There is mold."
+        ),
+        party_id=intake_scaffold["party"].id,
+    )
+
+    fabricated = {
+        "events": [
+            {
+                "event_type": "asylum_entry",
+                "raw_text": "my lease started July 1, 2025",
+                "trigger": "entry",
+                "date": "2025-07-01",
+                "jurisdiction_hint": "US",
+            },
+            {
+                "event_type": "notice_to_vacate",
+                "raw_text": "14 day notice posted March 3, 2026 about rent",
+                "trigger": "notice_posted",
+                "date": "2026-03-03",
+                "jurisdiction_hint": "MN",
+            },
+        ]
+    }
+
+    stage = DeadlineDetectStage(llm_service=_mock_llm_service(), db_session=db_session)
+    with patch.object(
+        DeadlineDetectStage, "_call_llm_extraction", new_callable=AsyncMock
+    ) as mock_call:
+        mock_call.return_value = fabricated
+        created = await stage.detect_and_persist(
+            intake_id=intake_scaffold["intake"].id,
+            run_id=intake_scaffold["run"].id,
+            jurisdiction="MN",
+            today=date(2026, 7, 5),
+        )
+
+    # The fabricated asylum event is gone; the genuine notice deadline stays.
+    rule_ids = {d.rule_id for d in created}
+    assert "asylum_one_year" not in rule_ids
+    assert not any("asylum" in (d.event_text or "") for d in created)
+    assert "mn_eviction_notice_window" in rule_ids

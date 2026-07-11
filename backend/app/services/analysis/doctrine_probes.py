@@ -23,6 +23,7 @@ to the LLM probe; false positives are limited to asking one extra question.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -79,7 +80,19 @@ _IMMIGRATION = (
     "uscis",
     "eoir",
     "notice to appear",
-    "nta",
+    "in absentia",
+)
+# Core immigration markers that cannot appear incidentally in unrelated legal
+# documents (used to scope acronym-triggered probes like the NTA defect).
+_IMMIGRATION_CORE = (
+    "immigration",
+    "asylum",
+    "deport",
+    "removal proceeding",
+    "uscis",
+    "eoir",
+    "notice to appear",
+    "green card",
     "in absentia",
 )
 _SPOUSE = ("husband", "wife", "spouse", "marry", "married")
@@ -190,7 +203,14 @@ PROBES: list[DoctrineProbe] = [
             "affect eligibility clocks) — bring the original papers to a "
             "lawyer."
         ),
-        applies=lambda t: _any(t, "notice to appear", "nta"),
+        # Word-boundary NTA only: a bare substring check false-fired on
+        # "mai-NTA-in" in landlord-tenant lease documents (round 4b). Also
+        # require immigration context so a stray acronym in an unrelated
+        # document cannot trigger an immigration probe.
+        applies=lambda t: (
+            ("notice to appear" in t or re.search(r"\bnta\b", t) is not None)
+            and _any(t, *_IMMIGRATION_CORE)
+        ),
         priority=84,
     ),
     DoctrineProbe(
