@@ -589,6 +589,15 @@ class DataAssembler:
                 for e in elems:
                     element_id_to_name[e.id] = e.element_name
 
+            # D04 (one source of truth): defensively suppress any
+            # "unsupported_element" gap whose element is actually satisfied /
+            # mapped in this same assembly, so the memo can never show an element
+            # as "Supported (85%)" while also listing it "not yet supported by
+            # any facts". gap_analyze closes these at detection time; this is the
+            # belt-and-suspenders at the rendering boundary.
+            satisfied_element_ids = {
+                e.element_id for e in element_refs if e.is_satisfied or e.fact_mappings
+            }
             gap_entries = [
                 GapEntry(
                     gap_id=g.id,
@@ -601,6 +610,10 @@ class DataAssembler:
                     element_name=element_id_to_name.get(g.element_id) if g.element_id else None,
                 )
                 for g in claim_gaps
+                if not (
+                    g.gap_type == "unsupported_element"
+                    and g.element_id in satisfied_element_ids
+                )
             ]
 
             # Issue statement
