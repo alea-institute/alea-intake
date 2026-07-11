@@ -1,0 +1,1040 @@
+{
+  "persona": "consumer-debt",
+  "email": "persona_consumer-debt_1783744338@example.com",
+  "base": "https://alea-intake-dev-production.up.railway.app",
+  "steps": {
+    "register": {
+      "http": 201,
+      "ok": true
+    },
+    "consent": {
+      "http": 201,
+      "ok": true
+    },
+    "create_intake": {
+      "http": 201,
+      "ok": true,
+      "intake_id": 203,
+      "session_id": 151,
+      "party_id": 203,
+      "practice_area_id": null
+    },
+    "narrative": {
+      "ok": true,
+      "safety_alerts": 0
+    },
+    "uploads": [
+      {
+        "file": "bank-statement-summary.pdf",
+        "http": 201,
+        "extraction_status": "completed",
+        "detail": null
+      },
+      {
+        "file": "call-log.pdf",
+        "http": 201,
+        "extraction_status": "completed",
+        "detail": null
+      },
+      {
+        "file": "collection-letter.pdf",
+        "http": 201,
+        "extraction_status": "completed",
+        "detail": null
+      }
+    ],
+    "analyze": {
+      "http": 502,
+      "run_id": null,
+      "status": null,
+      "detail": null
+    },
+    "final_status": {
+      "run_id": 45,
+      "status": "converged",
+      "iteration": 10,
+      "max_iterations": 10,
+      "convergence_score": 1.0,
+      "progress_pct": 100,
+      "latest_stage": "question_gen"
+    },
+    "results_http": 200,
+    "output_generate": [
+      {
+        "profile": "law_firm",
+        "id": 108,
+        "run_id": 45,
+        "intake_id": 203,
+        "profile_type": "law_firm",
+        "completeness_score": 1.0,
+        "created_at": "2026-07-11T04:38:44.815026Z"
+      },
+      {
+        "profile": "court_self_help",
+        "id": 109,
+        "run_id": 45,
+        "intake_id": 203,
+        "profile_type": "court_self_help",
+        "completeness_score": 1.0,
+        "created_at": "2026-07-11T04:38:45.355718Z"
+      },
+      {
+        "profile": "legal_aid",
+        "id": 110,
+        "run_id": 45,
+        "intake_id": 203,
+        "profile_type": "legal_aid",
+        "completeness_score": 1.0,
+        "created_at": "2026-07-11T04:39:01.563805Z"
+      }
+    ]
+  },
+  "safety_alerts": [],
+  "analysis": {
+    "run_id": 45,
+    "status": "converged",
+    "claims": [
+      {
+        "id": 1678,
+        "claim_name": "Fair Debt Collection Practices Act Violation",
+        "claim_type": "identified",
+        "folio_iri": null,
+        "jurisdiction": "federal",
+        "confidence": 0.4,
+        "is_potential": false,
+        "rationale": "The individual is receiving excessive calls from North Star Receivables, involving harassment through multiple calls each day, including calls made at work.",
+        "elements": [
+          {
+            "id": 864,
+            "element_name": "Harassment",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 865,
+            "element_name": "Debt Collection Communication",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 866,
+            "element_name": "Consumer Protection",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          }
+        ]
+      },
+      {
+        "id": 1679,
+        "claim_name": "Debt Validation Request",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": "federal",
+        "confidence": 0.4,
+        "is_potential": true,
+        "rationale": "The individual can challenge the debt amount and request validation based on discrepancies in the amounts owed as mentioned multiple times by different sources.",
+        "elements": [
+          {
+            "id": 867,
+            "element_name": "Request for Verification",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          },
+          {
+            "id": 868,
+            "element_name": "Discrepancy in Debt Amounts",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          }
+        ]
+      },
+      {
+        "id": 1680,
+        "claim_name": "Potential Wage Garnishment Issues",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R7OJQHant3Dx172WXuPbWgx",
+        "jurisdiction": "state",
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "The individual received threats from Mr. Drummond about potential wage garnishment, coupled with the individual's income situation and reliance on disability benefits.",
+        "elements": [
+          {
+            "id": 870,
+            "element_name": "Income Protection",
+            "is_satisfied": false,
+            "satisfaction_confidence": null
+          },
+          {
+            "id": 869,
+            "element_name": "Notification of Garnishment",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          }
+        ]
+      },
+      {
+        "id": 1681,
+        "claim_name": "Invasion of Privacy",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RpxsywUcXpBB0v63tUwyOY",
+        "jurisdiction": "state",
+        "confidence": 0.8,
+        "is_potential": true,
+        "rationale": "Calls made to the individual's place of employment and being disclosed to family members potentially violate privacy rights regarding debt collection practices.",
+        "elements": [
+          {
+            "id": 871,
+            "element_name": "Disclosure to Third Parties",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          },
+          {
+            "id": 872,
+            "element_name": "Calling Employer",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.85
+          }
+        ]
+      },
+      {
+        "id": 1682,
+        "claim_name": "Employer Withholding",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Potential Wage Garnishment Issues (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1683,
+        "claim_name": "Labor and Employment Law Regulatory Objectives",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Potential Wage Garnishment Issues (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1684,
+        "claim_name": "Tax Law Regulatory Objectives",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Potential Wage Garnishment Issues (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1685,
+        "claim_name": "Enforcement of Judgment",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Potential Wage Garnishment Issues (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1686,
+        "claim_name": "Civil Remedies / Relief Sought",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Potential Wage Garnishment Issues (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1687,
+        "claim_name": "Constitutional Claims",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Invasion of Privacy (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1688,
+        "claim_name": "Civil Claims",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Invasion of Privacy (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1689,
+        "claim_name": "Privacy Claims",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Discovered via FOLIO ontology traversal from Invasion of Privacy (depth 1)",
+        "elements": []
+      },
+      {
+        "id": 1690,
+        "claim_name": "Potential Harassment Claims",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R8UY7a51FHRoPnKMKs41jQv",
+        "jurisdiction": null,
+        "confidence": 0.75,
+        "is_potential": true,
+        "rationale": "The frequency and context of the calls could suggest that North Star Receivables is engaging in conduct intended to annoy, abuse, or harass the individual.",
+        "elements": []
+      },
+      {
+        "id": 1691,
+        "claim_name": "Communication with Third Parties",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.9,
+        "is_potential": true,
+        "rationale": "Debt collectors are generally prohibited from disclosing information about the debt to third parties without consent, potentially violating privacy and consumer protection laws.",
+        "elements": []
+      },
+      {
+        "id": 1692,
+        "claim_name": "Unfair Debt Collection Practices",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.4,
+        "is_potential": true,
+        "rationale": "Threats of legal action without actually filing a lawsuit or verifying the debt may be considered misleading and unlawful conduct.",
+        "elements": []
+      },
+      {
+        "id": 1693,
+        "claim_name": "Potential Violation of Telephone Consumer Protection Act",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/R7cNZxZB8pyyRYwDBimKNJj",
+        "jurisdiction": null,
+        "confidence": 0.75,
+        "is_potential": true,
+        "rationale": "The excessive calling could violate federal laws regulating the time and manner in which debt collectors can contact individuals, particularly at their workplace, which also intersects with labor law considerations.",
+        "elements": []
+      },
+      {
+        "id": 1694,
+        "claim_name": "Issues with Loan Amount Accuracy",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.4,
+        "is_potential": true,
+        "rationale": "Inconsistencies in the amounts owed, especially regarding the principal versus fees and interest, can indicate violations of consumer protection laws concerning transparency and accurate accounting.",
+        "elements": []
+      },
+      {
+        "id": 1695,
+        "claim_name": "Negligent Infliction of Emotional Distress",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.2,
+        "is_potential": true,
+        "rationale": "Given the individual's ongoing distress indicated by their concern about calls and financial strain, this issue should be explored as it intertwines with consumer protection and mental health considerations.",
+        "elements": []
+      },
+      {
+        "id": 1696,
+        "claim_name": "Protection of Social Security Benefits from Garnishment",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.4,
+        "is_potential": true,
+        "rationale": "Understanding the protection of disability income under federal law is crucial as it intersects with the individual\u2019s ability to support themselves and serves as a potential defense against wage garnishment.",
+        "elements": []
+      }
+    ],
+    "gaps": [
+      {
+        "id": 1917,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Request for Verification' is not yet supported by any facts",
+        "priority": 40,
+        "status": "open"
+      },
+      {
+        "id": 1918,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Discrepancy in Debt Amounts' is not yet supported by any facts",
+        "priority": 40,
+        "status": "open"
+      },
+      {
+        "id": 1919,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Income Protection' is not yet supported by any facts",
+        "priority": 80,
+        "status": "open"
+      },
+      {
+        "id": 1920,
+        "gap_type": "unsupported_element",
+        "description": "Element 'Calling Employer' is not yet supported by any facts",
+        "priority": 80,
+        "status": "open"
+      },
+      {
+        "id": 1921,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Debt Validation Request' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1922,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Employer Withholding' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1923,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Labor and Employment Law Regulatory Objectives' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1924,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Tax Law Regulatory Objectives' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1925,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Enforcement of Judgment' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1926,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Civil Remedies / Relief Sought' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1927,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Constitutional Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1928,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1929,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Privacy Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1930,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Potential Harassment Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1931,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Communication with Third Parties' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1932,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Unfair Debt Collection Practices' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1933,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Potential Violation of Telephone Consumer Protection Act' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1934,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Issues with Loan Amount Accuracy' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1935,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Negligent Infliction of Emotional Distress' has not been explored with fact mappings",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1936,
+        "gap_type": "procedural_requirement",
+        "description": "What is the timeframe for filing a complaint related to the Fair Debt Collection Practices Act for the excessive calls and harassment experienced?",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1937,
+        "gap_type": "procedural_requirement",
+        "description": "What is the deadline for requesting debt validation in response to the discrepancies mentioned?",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1938,
+        "gap_type": "procedural_requirement",
+        "description": "Are there any specific deadlines or procedures that must be followed after receiving threats about potential wage garnishment?",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1939,
+        "gap_type": "procedural_requirement",
+        "description": "What is the statute of limitations for filing a claim regarding invasion of privacy based on the calls made to your place of employment?",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 1940,
+        "gap_type": "procedural_requirement",
+        "description": "What is the filing deadline for pursuing a harassment claim based on the excessive and annoying calls from North Star Receivables?",
+        "priority": 50,
+        "status": "open"
+      }
+    ],
+    "questions": [
+      {
+        "id": 722,
+        "question_text": "Can you tell us about your current income situation and any concerns you have about losing it?",
+        "topic_group": "Income Protection and Employer Communication",
+        "priority": 1,
+        "rationale": "We need this information to explore the income protection aspect of your case and understand how to support you.",
+        "status": "pending"
+      },
+      {
+        "id": 723,
+        "question_text": "Have you had any direct communication with your employer regarding your employment status or any issues at work?",
+        "topic_group": "Income Protection and Employer Communication",
+        "priority": 2,
+        "rationale": "Gathering details on your interactions with your employer will help us assess if there are any claims related to employer communications.",
+        "status": "pending"
+      },
+      {
+        "id": 724,
+        "question_text": "Have you experienced any difficulties in validation of your debts or discrepancies in the amounts owed?",
+        "topic_group": "Debt-related Claims",
+        "priority": 1,
+        "rationale": "We need to explore the validity of your debts to see if a Debt Validation Request claim is applicable.",
+        "status": "pending"
+      },
+      {
+        "id": 725,
+        "question_text": "Have you received any communication about potentially having your wages garnished?",
+        "topic_group": "Debt-related Claims",
+        "priority": 2,
+        "rationale": "Understanding any communication about wage garnishments is crucial to explore claims related to employer withholding.",
+        "status": "pending"
+      },
+      {
+        "id": 726,
+        "question_text": "Can you describe any experiences with debt collection practices that felt unfair or harassing?",
+        "topic_group": "Debt-related Claims",
+        "priority": 3,
+        "rationale": "This information will help us assess if there are claims regarding Unfair Debt Collection Practices.",
+        "status": "pending"
+      },
+      {
+        "id": 727,
+        "question_text": "Have you felt that your rights as an employee have been violated in any way?",
+        "topic_group": "Employment and Regulatory Issues",
+        "priority": 1,
+        "rationale": "This question will help us explore potential claims related to Labor and Employment Law Regulatory Objectives.",
+        "status": "pending"
+      },
+      {
+        "id": 728,
+        "question_text": "Are there any concerns you have regarding your tax obligations or any communication from tax authorities?",
+        "topic_group": "Employment and Regulatory Issues",
+        "priority": 2,
+        "rationale": "We need to determine if there are potential claims related to Tax Law Regulatory Objectives.",
+        "status": "pending"
+      },
+      {
+        "id": 729,
+        "question_text": "Have you received any judgments against you or notice about enforcement actions?",
+        "topic_group": "Claim Enforcement and Remedies",
+        "priority": 1,
+        "rationale": "This information will help explore potential claims regarding Enforcement of Judgment.",
+        "status": "pending"
+      },
+      {
+        "id": 730,
+        "question_text": "What kind of relief or compensation are you seeking for the issues you've experienced?",
+        "topic_group": "Claim Enforcement and Remedies",
+        "priority": 2,
+        "rationale": "Understanding what you are hoping to achieve helps us explore Civil Remedies and claims that may apply.",
+        "status": "pending"
+      },
+      {
+        "id": 731,
+        "question_text": "Have you ever felt that your privacy has been violated in any way?",
+        "topic_group": "Additional Claims Exploration",
+        "priority": 1,
+        "rationale": "This helps to identify any potential Privacy Claims that may exist in your case.",
+        "status": "pending"
+      },
+      {
+        "id": 732,
+        "question_text": "Can you describe any situations you felt might be harassment or unfair treatment?",
+        "topic_group": "Additional Claims Exploration",
+        "priority": 2,
+        "rationale": "Gathering information on potential harassment can lead to claims related to harassment.",
+        "status": "pending"
+      },
+      {
+        "id": 733,
+        "question_text": "Have you had any communication involving third parties that concerns you?",
+        "topic_group": "Additional Claims Exploration",
+        "priority": 3,
+        "rationale": "This will help determine if there are any valid claims regarding communication with third parties.",
+        "status": "pending"
+      },
+      {
+        "id": 734,
+        "question_text": "Do you know what the deadline is for filing a complaint related to the Fair Debt Collection Practices Act?",
+        "topic_group": "Procedural Requirements",
+        "priority": 1,
+        "rationale": "Understanding deadlines is essential to ensure that we take timely action on your case.",
+        "status": "pending"
+      },
+      {
+        "id": 735,
+        "question_text": "Are you aware of the time limits for requesting validation of your debt after noticing discrepancies?",
+        "topic_group": "Procedural Requirements",
+        "priority": 2,
+        "rationale": "This helps us ensure that you follow necessary procedures regarding debt validation requests.",
+        "status": "pending"
+      },
+      {
+        "id": 736,
+        "question_text": "Have you received any threats about wage garnishment, and do you know what steps to take next?",
+        "topic_group": "Procedural Requirements",
+        "priority": 3,
+        "rationale": "Clarifying steps to take after such threats will assist in addressing any compliance or procedural issues.",
+        "status": "pending"
+      }
+    ],
+    "deadlines": [
+      {
+        "id": 103,
+        "event_text": "Mr. Drummond said if I paid $50 'good faith' by July 3 they'd knock 30% off.",
+        "event_type": "settlement_deadline",
+        "trigger": "deadline",
+        "trigger_date": "2026-07-03",
+        "computed_date": "2026-07-03",
+        "rule_id": "stated_court_date",
+        "citation": "The court's own summons, hearing notice, or scheduling order setting this date \u2014 a court's order or summons is the governing primary authority for a court-scheduled appearance (confirm the date against the document itself).",
+        "computed": true,
+        "urgency": "lapsed",
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. This is a date the court gave you directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer. If this date has already passed, contact the court right away \u2014 a default judgment or order may have been entered in your absence. Ask the court clerk (or a lawyer) whether you can move to vacate or reopen it; acting quickly matters.",
+        "jurisdiction": "MN"
+      },
+      {
+        "id": 104,
+        "event_text": "the letter came in the mail June 25, it's dated June 20, and it says I owe $2,483.17.",
+        "event_type": "debt_notice",
+        "trigger": "notice_posted",
+        "trigger_date": "2026-06-20",
+        "computed_date": "2026-07-04",
+        "rule_id": "generic_notice_window",
+        "citation": "The cure/vacate period stated in your written notice or lease \u2014 the notice/lease term is the operative source of this period (confirm the exact deadline printed on the notice; your state's landlord-tenant statute governs the minimum period).",
+        "computed": true,
+        "urgency": "lapsed",
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Estimated \u2014 confirm the exact date with the court or a lawyer. If this notice period has already passed, act now rather than assume it is over: depending on your state you may still be able to cure, raise defenses at any hearing, or ask the court to vacate a judgment entered against you. Contact the court or a lawyer immediately.",
+        "jurisdiction": "MN"
+      },
+      {
+        "id": 105,
+        "event_text": "the letter is dated June 20.",
+        "event_type": "debt_notice",
+        "trigger": "notice_posted",
+        "trigger_date": "2026-06-20",
+        "computed_date": "2026-07-04",
+        "rule_id": "generic_notice_window",
+        "citation": "The cure/vacate period stated in your written notice or lease \u2014 the notice/lease term is the operative source of this period (confirm the exact deadline printed on the notice; your state's landlord-tenant statute governs the minimum period).",
+        "computed": true,
+        "urgency": "lapsed",
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Estimated \u2014 confirm the exact date with the court or a lawyer. If this notice period has already passed, act now rather than assume it is over: depending on your state you may still be able to cure, raise defenses at any hearing, or ask the court to vacate a judgment entered against you. Contact the court or a lawyer immediately.",
+        "jurisdiction": "MN"
+      },
+      {
+        "id": 106,
+        "event_text": "Mr. Drummond said Terrell owes $3,100 with fees.",
+        "event_type": "debt_notice",
+        "trigger": "notice_posted",
+        "trigger_date": "2026-06-26",
+        "computed_date": "2026-07-10",
+        "rule_id": "generic_notice_window",
+        "citation": "The cure/vacate period stated in your written notice or lease \u2014 the notice/lease term is the operative source of this period (confirm the exact deadline printed on the notice; your state's landlord-tenant statute governs the minimum period).",
+        "computed": true,
+        "urgency": "lapsed",
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Estimated \u2014 confirm the exact date with the court or a lawyer. If this notice period has already passed, act now rather than assume it is over: depending on your state you may still be able to cure, raise defenses at any hearing, or ask the court to vacate a judgment entered against you. Contact the court or a lawyer immediately.",
+        "jurisdiction": "MN"
+      },
+      {
+        "id": 107,
+        "event_text": "If you notify us in writing within the 30-day period that the debt, or any portion of it, is disputed, we will obtain verification of the debt and mail it to you.",
+        "event_type": "filing_deadline",
+        "trigger": "deadline",
+        "trigger_date": "2026-07-20",
+        "computed_date": "2026-07-20",
+        "rule_id": "stated_court_date",
+        "citation": "The court's own summons, hearing notice, or scheduling order setting this date \u2014 a court's order or summons is the governing primary authority for a court-scheduled appearance (confirm the date against the document itself).",
+        "computed": true,
+        "urgency": "high",
+        "hedge": "This is a date the court gave you directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": "MN"
+      },
+      {
+        "id": 108,
+        "event_text": "Mr. Drummond said if I don't set something up, they're gonna garnish my wages and freeze my bank account 'by the end of the month.'",
+        "event_type": "garnishment_warning",
+        "trigger": "notice_posted",
+        "trigger_date": "2026-07-31",
+        "computed_date": "2026-08-14",
+        "rule_id": "generic_notice_window",
+        "citation": "The cure/vacate period stated in your written notice or lease \u2014 the notice/lease term is the operative source of this period (confirm the exact deadline printed on the notice; your state's landlord-tenant statute governs the minimum period).",
+        "computed": true,
+        "urgency": "high",
+        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+        "jurisdiction": "MN"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "doc_id": 108,
+      "profile": "law_firm",
+      "completeness": 1.0,
+      "memo_chars": 34233,
+      "exports": {
+        "pdf": {
+          "http": 200,
+          "bytes": 76101,
+          "content_type": "application/pdf",
+          "magic": "%PDF-",
+          "json_substance": null,
+          "ok": true
+        },
+        "json": {
+          "http": 200,
+          "bytes": 69132,
+          "content_type": "application/json",
+          "magic": "{\n \"i",
+          "json_substance": true,
+          "ok": true
+        }
+      }
+    },
+    {
+      "doc_id": 109,
+      "profile": "court_self_help",
+      "completeness": 1.0,
+      "memo_chars": 15506,
+      "exports": {
+        "pdf": {
+          "http": 200,
+          "bytes": 45120,
+          "content_type": "application/pdf",
+          "magic": "%PDF-",
+          "json_substance": null,
+          "ok": true
+        },
+        "json": {
+          "http": 200,
+          "bytes": 68947,
+          "content_type": "application/json",
+          "magic": "{\n \"i",
+          "json_substance": true,
+          "ok": true
+        }
+      }
+    },
+    {
+      "doc_id": 110,
+      "profile": "legal_aid",
+      "completeness": 1.0,
+      "memo_chars": 36232,
+      "exports": {
+        "pdf": {
+          "http": 200,
+          "bytes": 80100,
+          "content_type": "application/pdf",
+          "magic": "%PDF-",
+          "json_substance": null,
+          "ok": true
+        },
+        "json": {
+          "http": 200,
+          "bytes": 69799,
+          "content_type": "application/json",
+          "magic": "{\n \"i",
+          "json_substance": true,
+          "ok": true
+        }
+      }
+    }
+  ],
+  "transcript": [
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "session_state",
+        "status": "active",
+        "facts_count": 0,
+        "messages_count": 0
+      }
+    },
+    {
+      "dir": "send",
+      "msg": {
+        "type": "text_message",
+        "len": 692
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "message_ack",
+        "id": "405",
+        "client_id": "c0",
+        "timestamp": "2026-07-11 04:32:19.865556+00:00",
+        "message_id": 405,
+        "sequence_number": 1
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "system_message",
+        "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
+        "message_id": 406
+      }
+    },
+    {
+      "dir": "send",
+      "msg": {
+        "type": "text_message",
+        "len": 618
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "message_ack",
+        "id": "407",
+        "client_id": "c1",
+        "timestamp": "2026-07-11 04:32:20.155377+00:00",
+        "message_id": 407,
+        "sequence_number": 3
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "system_message",
+        "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
+        "message_id": 408
+      }
+    },
+    {
+      "dir": "send",
+      "msg": {
+        "type": "text_message",
+        "len": 809
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "message_ack",
+        "id": "409",
+        "client_id": "c2",
+        "timestamp": "2026-07-11 04:32:20.443475+00:00",
+        "message_id": 409,
+        "sequence_number": 5
+      }
+    },
+    {
+      "dir": "recv",
+      "msg": {
+        "type": "system_message",
+        "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
+        "message_id": 410
+      }
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 404,
+      "status": null,
+      "iteration": null,
+      "progress": null
+    },
+    {
+      "stage": "poll_status",
+      "http": 200,
+      "status": "converged",
+      "iteration": 10,
+      "progress": 100
+    }
+  ]
+}

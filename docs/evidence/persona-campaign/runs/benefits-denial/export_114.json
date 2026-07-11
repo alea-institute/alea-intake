@@ -1,0 +1,2070 @@
+{
+ "intake_id": 205,
+ "run_id": 47,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T04:52:01.854280Z",
+ "claims_by_jurisdiction": {
+  "state": [
+   {
+    "claim_id": 1716,
+    "claim_name": "Wrongful Termination",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": "state",
+    "folio_iri": "https://folio.openlegalstandard.org/RDJYLQ3woaBs6FkT7wMbB4U",
+    "issue_statement": "The circumstances surrounding Renata's termination, particularly her absences due to her daughter's medical emergencies, may constitute wrongful termination if she can demonstrate that her absences were due to good faith reasons and that the employer did not adequately consider these factors.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 890,
+      "element_name": "Damages",
+      "element_description": "The employee suffered damages as a result of the wrongful termination.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 888,
+      "element_name": "Employment Policies",
+      "element_description": "The employer's policies followed regarding attendance or termination were not reasonably applied or were wrongful.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1730,
+        "fact_text": "Renata was discharged for excessive absenteeism after receiving prior warnings.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata was discharged for excessive absenteeism after receiving prior warnings, indicating that the employer's policies may not have been applied reasonably."
+       },
+       {
+        "fact_id": 1674,
+        "fact_text": "Renata was fired for attendance.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata was fired for attendance issues, suggesting implications on how the employer applied their policies."
+       },
+       {
+        "fact_id": 1718,
+        "fact_text": "The termination is due to a pattern of absenteeism in violation of the Attendance Policy.",
+        "confidence": 0.85,
+        "mapping_rationale": "The attendance policy details that the employer's enforcement may have been inappropriate given Renata's context."
+       }
+      ]
+     },
+     {
+      "element_id": 889,
+      "element_name": "Fair Consideration of Circumstances",
+      "element_description": "The employer did not fairly consider the employee's absences due to family emergencies.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1675,
+        "fact_text": "Renata's daughter Zofia is 9 years old and has type 1 diabetes.",
+        "confidence": 0.81,
+        "mapping_rationale": "Context surrounding Zofia's health issues indicates potential unfair consideration regarding absences."
+       },
+       {
+        "fact_id": 1713,
+        "fact_text": "Zofia Sikorski's mother Renata Sikorski was present at bedside throughout the admission.",
+        "confidence": 0.81,
+        "mapping_rationale": "Renata being present during Zofia's hospitalization showcases the importance of her absences to family care."
+       },
+       {
+        "fact_id": 1716,
+        "fact_text": "Renata Sikorski notified her employer of each absence related to Zofia's admission and follow-up visit.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata notified her employer of each absence due to Zofia's medical condition, suggesting her circumstances were not fairly considered."
+       },
+       {
+        "fact_id": 1717,
+        "fact_text": "Renata Sikorski's employment with Cedarbrook Care Center is terminated effective May 15, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "The timing of her termination and the reason suggest a lack of fair consideration for her family issues."
+       }
+      ]
+     },
+     {
+      "element_id": 887,
+      "element_name": "Employment Relationship",
+      "element_description": "A valid employment relationship existed between the employee and employer.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1673,
+        "fact_text": "Renata was fired on May 15.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata was fired, confirming that an employment relationship existed."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1967,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Employment Relationship' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1716,
+      "element_id": 887,
+      "claim_name": "Wrongful Termination",
+      "element_name": "Employment Relationship",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1968,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Employment Policies' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1716,
+      "element_id": 888,
+      "claim_name": "Wrongful Termination",
+      "element_name": "Employment Policies",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1969,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Fair Consideration of Circumstances' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1716,
+      "element_id": 889,
+      "claim_name": "Wrongful Termination",
+      "element_name": "Fair Consideration of Circumstances",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1970,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Damages' is not yet supported by any facts",
+      "priority": 80,
+      "claim_id": 1716,
+      "element_id": 890,
+      "claim_name": "Wrongful Termination",
+      "element_name": "Damages",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1974,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Wrongful Termination' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1716,
+      "element_id": null,
+      "claim_name": "Wrongful Termination",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1987,
+      "gap_type": "procedural_requirement",
+      "description": "What jurisdiction applies to Renata's wrongful termination claim, and are there specific filing deadlines she must meet?",
+      "priority": 50,
+      "claim_id": 1716,
+      "element_id": null,
+      "claim_name": "Wrongful Termination",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 4 elements supported (64% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1720,
+      "claim_name": "Constructive Discharge",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RsHKmukY8RoJdJO1gsTCxN",
+      "issue_statement": "Discovered via FOLIO ontology traversal from Wrongful Termination (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1976,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Constructive Discharge' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1720,
+        "element_id": null,
+        "claim_name": "Constructive Discharge",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       },
+       {
+        "gap_id": 1991,
+        "gap_type": "procedural_requirement",
+        "description": "What are the necessary steps or evidence required for Renata to prove constructive discharge in her claims, and are there any specific deadlines for filing?",
+        "priority": 50,
+        "claim_id": 1720,
+        "element_id": null,
+        "claim_name": "Constructive Discharge",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Wrongful Termination",
+      "children": []
+     },
+     {
+      "claim_id": 1721,
+      "claim_name": "Employment Claims",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RCty0MaQzrLC9KnzjM7nMER",
+      "issue_statement": "Discovered via FOLIO ontology traversal from Wrongful Termination (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1977,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1721,
+        "element_id": null,
+        "claim_name": "Employment Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Wrongful Termination",
+      "children": []
+     },
+     {
+      "claim_id": 1722,
+      "claim_name": "Civil Claims",
+      "claim_type": "discovered",
+      "confidence": 0.3,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Discovered via FOLIO ontology traversal from Wrongful Termination (depth 1)",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1978,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1722,
+        "element_id": null,
+        "claim_name": "Civil Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Wrongful Termination",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1718,
+    "claim_name": "Appeal Rights Violation",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "Renata did not appeal her unemployment determination in time due to family obligations, suggesting that the employer's appeal process did not adequately account for exceptional circumstances.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 895,
+      "element_name": "Notification of Appeal Rights",
+      "element_description": "The employee was informed of their rights and responsibilities regarding appeals.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1728,
+        "fact_text": "The determination letter is dated May 29, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "The determination letter dated May 29 provides evidence that Renata was informed about her appeal rights."
+       },
+       {
+        "fact_id": 1689,
+        "fact_text": "Renata was told she could appeal through HR within 10 business days after being fired.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata was told she could appeal through HR within 10 business days after being fired, which refers to her appeal rights."
+       },
+       {
+        "fact_id": 1727,
+        "fact_text": "Renata has the right to appeal the decision within ten business days of the date of the letter.",
+        "confidence": 0.85,
+        "mapping_rationale": "Notification about appeal rights post-termination is an inherent part of this claim."
+       },
+       {
+        "fact_id": 1680,
+        "fact_text": "Renata called the charge nurse line every time before her shift.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata called in every time before her shift which indicates communication regarding her absences, culturally tied to the appeal rights."
+       }
+      ]
+     },
+     {
+      "element_id": 896,
+      "element_name": "Timely Appeal Filing",
+      "element_description": "The employee\u2019s inability to file an appeal was due to circumstances beyond their control.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1690,
+        "fact_text": "Renata did not appeal in time because Zofia had another rough week.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata missed the appeal window due to personal circumstances beyond her control."
+       },
+       {
+        "fact_id": 1691,
+        "fact_text": "Renata stopped doing the weekly request for unemployment.",
+        "confidence": 0.85,
+        "mapping_rationale": "Ceasing to request unemployment indicates a barrier to filing an appeal and supports this element."
+       },
+       {
+        "fact_id": 1692,
+        "fact_text": "Renata has not logged into the unemployment system in a month.",
+        "confidence": 0.85,
+        "mapping_rationale": "Not logging into the unemployment system shows Renata's inability to act on her appeal in time."
+       }
+      ]
+     },
+     {
+      "element_id": 897,
+      "element_name": "Legal Basis for Appeal",
+      "element_description": "The appeal is based on a valid legal reason which could potentially reinstate claims.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1731,
+        "fact_text": "Renata is ineligible for unemployment benefits beginning May 17, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact demonstrates that Renata's ineligibility for unemployment benefits forms a legal basis for an appeal."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1972,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Timely Appeal Filing' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1718,
+      "element_id": 896,
+      "claim_name": "Appeal Rights Violation",
+      "element_name": "Timely Appeal Filing",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1973,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Legal Basis for Appeal' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1718,
+      "element_id": 897,
+      "claim_name": "Appeal Rights Violation",
+      "element_name": "Legal Basis for Appeal",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1989,
+      "gap_type": "procedural_requirement",
+      "description": "Is there a specific requirement for employers to notify employees of their appeal rights in situations of exceptional circumstances, and did Renata receive adequate notice?",
+      "priority": 50,
+      "claim_id": 1718,
+      "element_id": null,
+      "claim_name": "Appeal Rights Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 3 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1717,
+    "claim_name": "Failure to Accommodate Family Medical Leave",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "Given that Renata's daughter has type 1 diabetes and had a severe medical event necessitating her mother's presence, there may be grounds for a claim under family medical leave laws, suggesting that the employer failed to provide necessary accommodations for Renata's situation.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 894,
+      "element_name": "Employer's Response",
+      "element_description": "The employer failed to respond appropriately or make the necessary accommodations.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 891,
+      "element_name": "Qualifying Family Member",
+      "element_description": "The employee has a stable relationship with a family member who is experiencing a serious medical condition.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1675,
+        "fact_text": "Renata's daughter Zofia is 9 years old and has type 1 diabetes.",
+        "confidence": 0.85,
+        "mapping_rationale": "Zofia has a serious medical condition (type 1 diabetes), qualifying her as a family member for medical leave purposes."
+       },
+       {
+        "fact_id": 1711,
+        "fact_text": "Zofia Sikorski was diagnosed with diabetic ketoacidosis (DKA), moderate.",
+        "confidence": 0.85,
+        "mapping_rationale": "Zofia's diagnosis of DKA shows a qualifying serious medical condition that necessitated Renata\u2019s absences."
+       },
+       {
+        "fact_id": 1713,
+        "fact_text": "Zofia Sikorski's mother Renata Sikorski was present at bedside throughout the admission.",
+        "confidence": 0.85,
+        "mapping_rationale": "Zofia\u2019s serious medical condition qualifies her as a family member in need of accommodation."
+       }
+      ]
+     },
+     {
+      "element_id": 892,
+      "element_name": "Notification to Employer",
+      "element_description": "The employee notified the employer of the need for leave due to the family member's health condition.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1716,
+        "fact_text": "Renata Sikorski notified her employer of each absence related to Zofia's admission and follow-up visit.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata notified her employer of each absence related to Zofia's hospital admission, fulfilling notification requirements."
+       },
+       {
+        "fact_id": 1713,
+        "fact_text": "Zofia Sikorski's mother Renata Sikorski was present at bedside throughout the admission.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata's presence at the hospital with Zofia serves as notification to her employer about the need for leave."
+       }
+      ]
+     },
+     {
+      "element_id": 893,
+      "element_name": "Reasonable Request for Accommodations",
+      "element_description": "The employee made a reasonable request for accommodations related to a family member's medical condition.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1713,
+        "fact_text": "Zofia Sikorski's mother Renata Sikorski was present at bedside throughout the admission.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata's consistent presence during Zofia's hospitalization reflects her reasonable request for accommodations."
+       },
+       {
+        "fact_id": 1716,
+        "fact_text": "Renata Sikorski notified her employer of each absence related to Zofia's admission and follow-up visit.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata notified her employer of her absences due to Zofia\u2019s hospital visits, implying a request for accommodations."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1971,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Employer's Response' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1717,
+      "element_id": 894,
+      "claim_name": "Failure to Accommodate Family Medical Leave",
+      "element_name": "Employer's Response",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1988,
+      "gap_type": "procedural_requirement",
+      "description": "What documentation or notice requirements must Renata meet to pursue a claim under family medical leave laws, and is there a specific deadline for filing such a claim?",
+      "priority": 50,
+      "claim_id": 1717,
+      "element_id": null,
+      "claim_name": "Failure to Accommodate Family Medical Leave",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 4 elements supported (64% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1715,
+    "claim_name": "Unemployment Benefits Denial",
+    "claim_type": "identified",
+    "confidence": 0.4,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "Renata received a determination letter stating she is ineligible for unemployment benefits due to being discharged for employment misconduct.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 883,
+      "element_name": "Employment Status",
+      "element_description": "The individual was employed and subsequently terminated.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1673,
+        "fact_text": "Renata was fired on May 15.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata's termination on May 15 establishes her employment status prior to applying for unemployment."
+       },
+       {
+        "fact_id": 1729,
+        "fact_text": "Renata was discharged from employment with Cedarbrook Care Center LLC on May 15, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "A fact confirming Renata was discharged from her employment strengthens the employment status element."
+       },
+       {
+        "fact_id": 1670,
+        "fact_text": "Renata worked as a CNA at Cedarbrook Care Center.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata was employed as a CNA, establishing her employment status before termination."
+       },
+       {
+        "fact_id": 1671,
+        "fact_text": "Renata worked at Cedarbrook Care Center for almost 6 years.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata worked at Cedarbrook Care Center for almost six years, supporting her employment status."
+       }
+      ]
+     },
+     {
+      "element_id": 884,
+      "element_name": "Application for Unemployment",
+      "element_description": "The individual applied for unemployment benefits after termination.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1685,
+        "fact_text": "Renata applied for unemployment on May 17.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata's application for unemployment on May 17 establishes her attempt to secure benefits after termination."
+       }
+      ]
+     },
+     {
+      "element_id": 885,
+      "element_name": "Eligibility Criteria",
+      "element_description": "The individual meets or does not meet the eligibility criteria established by the state.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1669,
+        "fact_text": "Renata was denied unemployment.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata was denied unemployment benefits, indicating she did not meet the eligibility criteria."
+       },
+       {
+        "fact_id": 1731,
+        "fact_text": "Renata is ineligible for unemployment benefits beginning May 17, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata's ineligibility for unemployment benefits starting May 17 corroborates her failure to meet eligibility criteria."
+       },
+       {
+        "fact_id": 1686,
+        "fact_text": "Renata received a determination letter stating she is ineligible for unemployment.",
+        "confidence": 0.85,
+        "mapping_rationale": "The determination letter states Renata is ineligible for unemployment, addressing the eligibility criteria."
+       }
+      ]
+     },
+     {
+      "element_id": 886,
+      "element_name": "Reason for Termination",
+      "element_description": "The determination letter cites the reason for termination as misconduct or attendance issues.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1686,
+        "fact_text": "Renata received a determination letter stating she is ineligible for unemployment.",
+        "confidence": 0.85,
+        "mapping_rationale": "The determination letter states Renata was terminated for employment misconduct, addressing the reason for termination element."
+       },
+       {
+        "fact_id": 1719,
+        "fact_text": "Renata had an unscheduled absence on March 30, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "The unscheduled absence on March 30 contributes to the discussion of attendance issues cited for termination."
+       },
+       {
+        "fact_id": 1722,
+        "fact_text": "Renata had an unscheduled absence on May 11, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "The unscheduled absence on May 11 further supports the attendance issues claimed by the employer as a reason for termination."
+       },
+       {
+        "fact_id": 1669,
+        "fact_text": "Renata was denied unemployment.",
+        "confidence": 0.85,
+        "mapping_rationale": "The determination letter states that Renata was discharged for employment misconduct, which relates to the reason for termination."
+       },
+       {
+        "fact_id": 1674,
+        "fact_text": "Renata was fired for attendance.",
+        "confidence": 0.85,
+        "mapping_rationale": "She was fired for attendance issues, which relates to the reason cited for her unemployment denial."
+       },
+       {
+        "fact_id": 1673,
+        "fact_text": "Renata was fired on May 15.",
+        "confidence": 0.85,
+        "mapping_rationale": "Renata was fired for attendance, linking to the determination letter's misconduct claim."
+       },
+       {
+        "fact_id": 1688,
+        "fact_text": "The determination letter states Renata was discharged for employment misconduct.",
+        "confidence": 0.85,
+        "mapping_rationale": "The letter cites termination reasons pertinent to this claim, tying it to misconduct."
+       },
+       {
+        "fact_id": 1718,
+        "fact_text": "The termination is due to a pattern of absenteeism in violation of the Attendance Policy.",
+        "confidence": 0.85,
+        "mapping_rationale": "The termination cited excessive absenteeism as a reason, relevant to her unemployment claim."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1986,
+      "gap_type": "procedural_requirement",
+      "description": "What was the filing deadline for appealing the unemployment benefits determination, and did Renata miss this deadline due to her family obligations?",
+      "priority": 50,
+      "claim_id": 1715,
+      "element_id": null,
+      "claim_name": "Unemployment Benefits Denial",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "4 of 4 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1726,
+    "claim_name": "Excessive Absenteeism Policy Challenge",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Given the severity of Zofia's health condition and Renata's communication with the employer, there may be grounds to challenge the policy's enforcement.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1719,
+    "claim_name": "Potential Wrongful Discharge in Violation of Public Policy",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RJ7AbKi8Al2xc1FYEO7ASF",
+    "issue_statement": "Termination under circumstances that relate to care for a critically ill child could implicate public policy considerations, especially if the employer was aware of the circumstances.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1975,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Wrongful Discharge in Violation of Public Policy' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1719,
+      "element_id": null,
+      "claim_name": "Potential Wrongful Discharge in Violation of Public Policy",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1990,
+      "gap_type": "procedural_requirement",
+      "description": "What are the procedural requirements for filing a wrongful discharge claim based on public policy, and is there a specific timeline that Renata must adhere to?",
+      "priority": 50,
+      "claim_id": 1719,
+      "element_id": null,
+      "claim_name": "Potential Wrongful Discharge in Violation of Public Policy",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1728,
+    "claim_name": "Denial of Family Leave Rights",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The information suggests that Renata was frequently absent to care for her daughter who required medical attention, which may qualify her for family leave protections under applicable laws.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1983,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Denial of Family Leave Rights' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1728,
+      "element_id": null,
+      "claim_name": "Denial of Family Leave Rights",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1724,
+    "claim_name": "Disability Discrimination",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The employer's characterization of Renata's absences as a 'pattern of absenteeism' may not consider the context of her daughter's medical needs, which raises potential discrimination concerns.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1980,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Disability Discrimination' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1724,
+      "element_id": null,
+      "claim_name": "Disability Discrimination",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1993,
+      "gap_type": "procedural_requirement",
+      "description": "What procedural steps must Renata follow to establish a disability discrimination claim, and what are the relevant filing deadlines?",
+      "priority": 50,
+      "claim_id": 1724,
+      "element_id": null,
+      "claim_name": "Disability Discrimination",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1729,
+    "claim_name": "Discrimination Based on Caregiver Status",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Discrimination based on caregiving responsibilities can be argued if Renata's absences were penalized inappropriately compared to those of other employees with similar attendance issues or medical needs.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1984,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Discrimination Based on Caregiver Status' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1729,
+      "element_id": null,
+      "claim_name": "Discrimination Based on Caregiver Status",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1727,
+    "claim_name": "Failure to Train or Inform",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "If it can be shown that employees were not adequately informed on how absences related to emergency caregiving duties would be treated, it might lead to a claim.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1982,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to Train or Inform' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1727,
+      "element_id": null,
+      "claim_name": "Failure to Train or Inform",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1723,
+    "claim_name": "Family Medical Leave Act Violation",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Renata's daughter was hospitalized for a life-threatening condition, which may qualify as a serious health condition under FMLA.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1979,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Family Medical Leave Act Violation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1723,
+      "element_id": null,
+      "claim_name": "Family Medical Leave Act Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1992,
+      "gap_type": "procedural_requirement",
+      "description": "What is the statute of limitations for filing a complaint under the FMLA and must Renata adhere to any specific procedural steps?",
+      "priority": 50,
+      "claim_id": 1723,
+      "element_id": null,
+      "claim_name": "Family Medical Leave Act Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "General": [
+   {
+    "claim_name": "Defamation of Character Related to Employment Misconduct",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Retaliation Claims",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [],
+ "deadlines": [
+  {
+   "event_text": "Renata's employment with Cedarbrook Care Center is terminated effective May 15, 2026.",
+   "event_type": "termination",
+   "trigger": "served",
+   "trigger_date": "2026-05-15",
+   "computed_date": "2026-06-14",
+   "rule_id": "mn_family_response_30d",
+   "citation": "Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "The determination letter is dated May 29.",
+   "event_type": "unemployment_denial",
+   "trigger": "served",
+   "trigger_date": "2026-05-29",
+   "computed_date": "2026-06-28",
+   "rule_id": "mn_family_response_30d",
+   "citation": "Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "An appeal must be filed within 45 calendar days after the date of sending.",
+   "event_type": "unemployment_appeal_deadline",
+   "trigger": "deadline",
+   "trigger_date": "2026-07-13",
+   "computed_date": "2026-07-13",
+   "rule_id": "stated_court_date",
+   "citation": "The court's own summons, hearing notice, or scheduling order setting this date \u2014 a court's order or summons is the governing primary authority for a court-scheduled appearance (confirm the date against the document itself).",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is a date the court gave you directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "Zofia Sikorski was admitted on May 4, 2026, at 03:40.",
+   "event_type": "hospitalization",
+   "trigger": "incident",
+   "trigger_date": "2026-05-04",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "Zofia Sikorski was discharged on May 6, 2026, at 16:15.",
+   "event_type": "hospitalization",
+   "trigger": "incident",
+   "trigger_date": "2026-05-06",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "A follow-up appointment for Zofia Sikorski was scheduled for May 11, 2026, at 10:30 AM.",
+   "event_type": "follow_up_appointment",
+   "trigger": "incident",
+   "trigger_date": "2026-05-11",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "Employment",
+    "destination_type": "practice_area",
+    "score": 0.45818181818181813,
+    "rationale": "Employment practice area (45% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.45454545454545453,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Family Law",
+    "destination_type": "practice_area",
+    "score": 0.39454545454545453,
+    "rationale": "Family Law practice area (27% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.2727272727272727,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.3627272727272727,
+    "rationale": "General Civil practice area (18% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.18181818181818182,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Public Benefits",
+    "destination_type": "practice_area",
+    "score": 0.33090909090909093,
+    "rationale": "Public Benefits practice area (9% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.09090909090909091,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "Employment",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Employment Relationship' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Wrongful Termination",
+   "element_ref": "Employment Relationship"
+  },
+  {
+   "item_number": 2,
+   "category": "documents_to_gather",
+   "description": "Element 'Employment Policies' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Wrongful Termination",
+   "element_ref": "Employment Policies"
+  },
+  {
+   "item_number": 3,
+   "category": "documents_to_gather",
+   "description": "Element 'Fair Consideration of Circumstances' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Wrongful Termination",
+   "element_ref": "Fair Consideration of Circumstances"
+  },
+  {
+   "item_number": 4,
+   "category": "documents_to_gather",
+   "description": "Element 'Damages' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Wrongful Termination",
+   "element_ref": "Damages"
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: Renata's employment with Cedarbrook Care Center is terminated effective May 15, 2026. (estimated 2026-06-14; Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "priority": "urgent",
+   "deadline": "2026-06-14",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: The determination letter is dated May 29. (estimated 2026-06-28; Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "priority": "urgent",
+   "deadline": "2026-06-28",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: An appeal must be filed within 45 calendar days after the date of sending. (estimated 2026-07-13; The court's own summons, hearing notice, or scheduling order setting this date \u2014 a court's order or summons is the governing primary authority for a court-scheduled appearance (confirm the date against the document itself).). This is a date the court gave you directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-07-13",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Wrongful Termination' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Wrongful Termination",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Wrongful Discharge in Violation of Public Policy' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Wrongful Discharge in Violation of Public Policy",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Constructive Discharge' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Constructive Discharge",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Employment Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Civil Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Family Medical Leave Act Violation' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Family Medical Leave Act Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Disability Discrimination' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Disability Discrimination",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Retaliation Claims' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Retaliation Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to Train or Inform' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Train or Inform",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Denial of Family Leave Rights' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Denial of Family Leave Rights",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Discrimination Based on Caregiver Status' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Discrimination Based on Caregiver Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Defamation of Character Related to Employment Misconduct' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Defamation of Character Related to Employment Misconduct",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "What was the filing deadline for appealing the unemployment benefits determination, and did Renata miss this deadline due to her family obligations?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unemployment Benefits Denial",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "What jurisdiction applies to Renata's wrongful termination claim, and are there specific filing deadlines she must meet?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Wrongful Termination",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "What documentation or notice requirements must Renata meet to pursue a claim under family medical leave laws, and is there a specific deadline for filing such a claim?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Accommodate Family Medical Leave",
+   "element_ref": null
+  },
+  {
+   "item_number": 23,
+   "category": "follow_up_steps",
+   "description": "Is there a specific requirement for employers to notify employees of their appeal rights in situations of exceptional circumstances, and did Renata receive adequate notice?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Appeal Rights Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 24,
+   "category": "follow_up_steps",
+   "description": "What are the procedural requirements for filing a wrongful discharge claim based on public policy, and is there a specific timeline that Renata must adhere to?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Wrongful Discharge in Violation of Public Policy",
+   "element_ref": null
+  },
+  {
+   "item_number": 25,
+   "category": "follow_up_steps",
+   "description": "What are the necessary steps or evidence required for Renata to prove constructive discharge in her claims, and are there any specific deadlines for filing?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Constructive Discharge",
+   "element_ref": null
+  },
+  {
+   "item_number": 26,
+   "category": "follow_up_steps",
+   "description": "What is the statute of limitations for filing a complaint under the FMLA and must Renata adhere to any specific procedural steps?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Family Medical Leave Act Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 27,
+   "category": "follow_up_steps",
+   "description": "What procedural steps must Renata follow to establish a disability discrimination claim, and what are the relevant filing deadlines?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Disability Discrimination",
+   "element_ref": null
+  },
+  {
+   "item_number": 28,
+   "category": "follow_up_steps",
+   "description": "What is the timeline and required procedure for filing a retaliation claim, and did Renata comply with these requirements?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Retaliation Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 29,
+   "category": "documents_to_gather",
+   "description": "Element 'Employer's Response' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Failure to Accommodate Family Medical Leave",
+   "element_ref": "Employer's Response"
+  },
+  {
+   "item_number": 30,
+   "category": "documents_to_gather",
+   "description": "Element 'Timely Appeal Filing' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Appeal Rights Violation",
+   "element_ref": "Timely Appeal Filing"
+  },
+  {
+   "item_number": 31,
+   "category": "documents_to_gather",
+   "description": "Element 'Legal Basis for Appeal' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Appeal Rights Violation",
+   "element_ref": "Legal Basis for Appeal"
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Wrongful Termination": [
+    {
+     "gap_id": 1967,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Employment Relationship' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1716,
+     "element_id": 887,
+     "claim_name": "Wrongful Termination",
+     "element_name": "Employment Relationship",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1968,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Employment Policies' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1716,
+     "element_id": 888,
+     "claim_name": "Wrongful Termination",
+     "element_name": "Employment Policies",
+     "action_item_ref": 2,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1969,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Fair Consideration of Circumstances' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1716,
+     "element_id": 889,
+     "claim_name": "Wrongful Termination",
+     "element_name": "Fair Consideration of Circumstances",
+     "action_item_ref": 3,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1970,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Damages' is not yet supported by any facts",
+     "priority": 80,
+     "claim_id": 1716,
+     "element_id": 890,
+     "claim_name": "Wrongful Termination",
+     "element_name": "Damages",
+     "action_item_ref": 4,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1974,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Wrongful Termination' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1716,
+     "element_id": null,
+     "claim_name": "Wrongful Termination",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1987,
+     "gap_type": "procedural_requirement",
+     "description": "What jurisdiction applies to Renata's wrongful termination claim, and are there specific filing deadlines she must meet?",
+     "priority": 50,
+     "claim_id": 1716,
+     "element_id": null,
+     "claim_name": "Wrongful Termination",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Failure to Accommodate Family Medical Leave": [
+    {
+     "gap_id": 1971,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Employer's Response' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1717,
+     "element_id": 894,
+     "claim_name": "Failure to Accommodate Family Medical Leave",
+     "element_name": "Employer's Response",
+     "action_item_ref": 29,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1988,
+     "gap_type": "procedural_requirement",
+     "description": "What documentation or notice requirements must Renata meet to pursue a claim under family medical leave laws, and is there a specific deadline for filing such a claim?",
+     "priority": 50,
+     "claim_id": 1717,
+     "element_id": null,
+     "claim_name": "Failure to Accommodate Family Medical Leave",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ],
+   "Appeal Rights Violation": [
+    {
+     "gap_id": 1972,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Timely Appeal Filing' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1718,
+     "element_id": 896,
+     "claim_name": "Appeal Rights Violation",
+     "element_name": "Timely Appeal Filing",
+     "action_item_ref": 30,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1973,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Legal Basis for Appeal' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1718,
+     "element_id": 897,
+     "claim_name": "Appeal Rights Violation",
+     "element_name": "Legal Basis for Appeal",
+     "action_item_ref": 31,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1989,
+     "gap_type": "procedural_requirement",
+     "description": "Is there a specific requirement for employers to notify employees of their appeal rights in situations of exceptional circumstances, and did Renata receive adequate notice?",
+     "priority": 50,
+     "claim_id": 1718,
+     "element_id": null,
+     "claim_name": "Appeal Rights Violation",
+     "element_name": null,
+     "action_item_ref": 23,
+     "open_questions": []
+    }
+   ],
+   "Potential Wrongful Discharge in Violation of Public Policy": [
+    {
+     "gap_id": 1975,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Wrongful Discharge in Violation of Public Policy' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1719,
+     "element_id": null,
+     "claim_name": "Potential Wrongful Discharge in Violation of Public Policy",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1990,
+     "gap_type": "procedural_requirement",
+     "description": "What are the procedural requirements for filing a wrongful discharge claim based on public policy, and is there a specific timeline that Renata must adhere to?",
+     "priority": 50,
+     "claim_id": 1719,
+     "element_id": null,
+     "claim_name": "Potential Wrongful Discharge in Violation of Public Policy",
+     "element_name": null,
+     "action_item_ref": 24,
+     "open_questions": []
+    }
+   ],
+   "Constructive Discharge": [
+    {
+     "gap_id": 1976,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Constructive Discharge' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1720,
+     "element_id": null,
+     "claim_name": "Constructive Discharge",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1991,
+     "gap_type": "procedural_requirement",
+     "description": "What are the necessary steps or evidence required for Renata to prove constructive discharge in her claims, and are there any specific deadlines for filing?",
+     "priority": 50,
+     "claim_id": 1720,
+     "element_id": null,
+     "claim_name": "Constructive Discharge",
+     "element_name": null,
+     "action_item_ref": 25,
+     "open_questions": []
+    }
+   ],
+   "Employment Claims": [
+    {
+     "gap_id": 1977,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1721,
+     "element_id": null,
+     "claim_name": "Employment Claims",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Civil Claims": [
+    {
+     "gap_id": 1978,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1722,
+     "element_id": null,
+     "claim_name": "Civil Claims",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Family Medical Leave Act Violation": [
+    {
+     "gap_id": 1979,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Family Medical Leave Act Violation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1723,
+     "element_id": null,
+     "claim_name": "Family Medical Leave Act Violation",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1992,
+     "gap_type": "procedural_requirement",
+     "description": "What is the statute of limitations for filing a complaint under the FMLA and must Renata adhere to any specific procedural steps?",
+     "priority": 50,
+     "claim_id": 1723,
+     "element_id": null,
+     "claim_name": "Family Medical Leave Act Violation",
+     "element_name": null,
+     "action_item_ref": 26,
+     "open_questions": []
+    }
+   ],
+   "Disability Discrimination": [
+    {
+     "gap_id": 1980,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Disability Discrimination' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1724,
+     "element_id": null,
+     "claim_name": "Disability Discrimination",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1993,
+     "gap_type": "procedural_requirement",
+     "description": "What procedural steps must Renata follow to establish a disability discrimination claim, and what are the relevant filing deadlines?",
+     "priority": 50,
+     "claim_id": 1724,
+     "element_id": null,
+     "claim_name": "Disability Discrimination",
+     "element_name": null,
+     "action_item_ref": 27,
+     "open_questions": []
+    }
+   ],
+   "Retaliation Claims": [
+    {
+     "gap_id": 1981,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Retaliation Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1725,
+     "element_id": null,
+     "claim_name": "Retaliation Claims",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1994,
+     "gap_type": "procedural_requirement",
+     "description": "What is the timeline and required procedure for filing a retaliation claim, and did Renata comply with these requirements?",
+     "priority": 50,
+     "claim_id": 1725,
+     "element_id": null,
+     "claim_name": "Retaliation Claims",
+     "element_name": null,
+     "action_item_ref": 28,
+     "open_questions": []
+    }
+   ],
+   "Failure to Train or Inform": [
+    {
+     "gap_id": 1982,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to Train or Inform' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1727,
+     "element_id": null,
+     "claim_name": "Failure to Train or Inform",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Denial of Family Leave Rights": [
+    {
+     "gap_id": 1983,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Denial of Family Leave Rights' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1728,
+     "element_id": null,
+     "claim_name": "Denial of Family Leave Rights",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Discrimination Based on Caregiver Status": [
+    {
+     "gap_id": 1984,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Discrimination Based on Caregiver Status' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1729,
+     "element_id": null,
+     "claim_name": "Discrimination Based on Caregiver Status",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Defamation of Character Related to Employment Misconduct": [
+    {
+     "gap_id": 1985,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Defamation of Character Related to Employment Misconduct' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1730,
+     "element_id": null,
+     "claim_name": "Defamation of Character Related to Employment Misconduct",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Unemployment Benefits Denial": [
+    {
+     "gap_id": 1986,
+     "gap_type": "procedural_requirement",
+     "description": "What was the filing deadline for appealing the unemployment benefits determination, and did Renata miss this deadline due to her family obligations?",
+     "priority": 50,
+     "claim_id": 1715,
+     "element_id": null,
+     "claim_name": "Unemployment Benefits Denial",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1967,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Employment Relationship' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1716,
+    "element_id": 887,
+    "claim_name": "Wrongful Termination",
+    "element_name": "Employment Relationship",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1968,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Employment Policies' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1716,
+    "element_id": 888,
+    "claim_name": "Wrongful Termination",
+    "element_name": "Employment Policies",
+    "action_item_ref": 2,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1969,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Fair Consideration of Circumstances' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1716,
+    "element_id": 889,
+    "claim_name": "Wrongful Termination",
+    "element_name": "Fair Consideration of Circumstances",
+    "action_item_ref": 3,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1970,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Damages' is not yet supported by any facts",
+    "priority": 80,
+    "claim_id": 1716,
+    "element_id": 890,
+    "claim_name": "Wrongful Termination",
+    "element_name": "Damages",
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1974,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Wrongful Termination' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1716,
+    "element_id": null,
+    "claim_name": "Wrongful Termination",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1975,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Wrongful Discharge in Violation of Public Policy' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1719,
+    "element_id": null,
+    "claim_name": "Potential Wrongful Discharge in Violation of Public Policy",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1976,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Constructive Discharge' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1720,
+    "element_id": null,
+    "claim_name": "Constructive Discharge",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1977,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1721,
+    "element_id": null,
+    "claim_name": "Employment Claims",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1978,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Civil Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1722,
+    "element_id": null,
+    "claim_name": "Civil Claims",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1979,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Family Medical Leave Act Violation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1723,
+    "element_id": null,
+    "claim_name": "Family Medical Leave Act Violation",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1980,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Disability Discrimination' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1724,
+    "element_id": null,
+    "claim_name": "Disability Discrimination",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1981,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Retaliation Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1725,
+    "element_id": null,
+    "claim_name": "Retaliation Claims",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1982,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to Train or Inform' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1727,
+    "element_id": null,
+    "claim_name": "Failure to Train or Inform",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1983,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Denial of Family Leave Rights' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1728,
+    "element_id": null,
+    "claim_name": "Denial of Family Leave Rights",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1984,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Discrimination Based on Caregiver Status' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1729,
+    "element_id": null,
+    "claim_name": "Discrimination Based on Caregiver Status",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1985,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Defamation of Character Related to Employment Misconduct' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1730,
+    "element_id": null,
+    "claim_name": "Defamation of Character Related to Employment Misconduct",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1986,
+    "gap_type": "procedural_requirement",
+    "description": "What was the filing deadline for appealing the unemployment benefits determination, and did Renata miss this deadline due to her family obligations?",
+    "priority": 50,
+    "claim_id": 1715,
+    "element_id": null,
+    "claim_name": "Unemployment Benefits Denial",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1987,
+    "gap_type": "procedural_requirement",
+    "description": "What jurisdiction applies to Renata's wrongful termination claim, and are there specific filing deadlines she must meet?",
+    "priority": 50,
+    "claim_id": 1716,
+    "element_id": null,
+    "claim_name": "Wrongful Termination",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1988,
+    "gap_type": "procedural_requirement",
+    "description": "What documentation or notice requirements must Renata meet to pursue a claim under family medical leave laws, and is there a specific deadline for filing such a claim?",
+    "priority": 50,
+    "claim_id": 1717,
+    "element_id": null,
+    "claim_name": "Failure to Accommodate Family Medical Leave",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1989,
+    "gap_type": "procedural_requirement",
+    "description": "Is there a specific requirement for employers to notify employees of their appeal rights in situations of exceptional circumstances, and did Renata receive adequate notice?",
+    "priority": 50,
+    "claim_id": 1718,
+    "element_id": null,
+    "claim_name": "Appeal Rights Violation",
+    "element_name": null,
+    "action_item_ref": 23,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1990,
+    "gap_type": "procedural_requirement",
+    "description": "What are the procedural requirements for filing a wrongful discharge claim based on public policy, and is there a specific timeline that Renata must adhere to?",
+    "priority": 50,
+    "claim_id": 1719,
+    "element_id": null,
+    "claim_name": "Potential Wrongful Discharge in Violation of Public Policy",
+    "element_name": null,
+    "action_item_ref": 24,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1991,
+    "gap_type": "procedural_requirement",
+    "description": "What are the necessary steps or evidence required for Renata to prove constructive discharge in her claims, and are there any specific deadlines for filing?",
+    "priority": 50,
+    "claim_id": 1720,
+    "element_id": null,
+    "claim_name": "Constructive Discharge",
+    "element_name": null,
+    "action_item_ref": 25,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1992,
+    "gap_type": "procedural_requirement",
+    "description": "What is the statute of limitations for filing a complaint under the FMLA and must Renata adhere to any specific procedural steps?",
+    "priority": 50,
+    "claim_id": 1723,
+    "element_id": null,
+    "claim_name": "Family Medical Leave Act Violation",
+    "element_name": null,
+    "action_item_ref": 26,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1993,
+    "gap_type": "procedural_requirement",
+    "description": "What procedural steps must Renata follow to establish a disability discrimination claim, and what are the relevant filing deadlines?",
+    "priority": 50,
+    "claim_id": 1724,
+    "element_id": null,
+    "claim_name": "Disability Discrimination",
+    "element_name": null,
+    "action_item_ref": 27,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1994,
+    "gap_type": "procedural_requirement",
+    "description": "What is the timeline and required procedure for filing a retaliation claim, and did Renata comply with these requirements?",
+    "priority": 50,
+    "claim_id": 1725,
+    "element_id": null,
+    "claim_name": "Retaliation Claims",
+    "element_name": null,
+    "action_item_ref": 28,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1971,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Employer's Response' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1717,
+    "element_id": 894,
+    "claim_name": "Failure to Accommodate Family Medical Leave",
+    "element_name": "Employer's Response",
+    "action_item_ref": 29,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1972,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Timely Appeal Filing' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1718,
+    "element_id": 896,
+    "claim_name": "Appeal Rights Violation",
+    "element_name": "Timely Appeal Filing",
+    "action_item_ref": 30,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1973,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Legal Basis for Appeal' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1718,
+    "element_id": 897,
+    "claim_name": "Appeal Rights Violation",
+    "element_name": "Legal Basis for Appeal",
+    "action_item_ref": 31,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Can you describe your work relationship with your employer, including how long you've worked there and your job responsibilities?",
+   "What policies did your employer have in place regarding discipline and termination?",
+   "What were the circumstances surrounding your termination?",
+   "Can you list any damages you've experienced due to your termination, like lost wages or emotional distress?",
+   "Have you experienced circumstances in your job that might be considered wrongful termination or discriminative actions?",
+   "Were there any incidents at work that made you feel you had to leave your job, like harassment or unsafe conditions?",
+   "Have you taken any family medical leave, and were you denied your rights regarding that leave?",
+   "What was the deadline for appealing the decision on your unemployment benefits?",
+   "Do you know what specific documents or notices you need to file for claims related to family medical leave?"
+  ],
+  "completeness_score": 0.75
+ },
+ "completeness_score": 0.75,
+ "executive_summary": "This intake surfaced 13 potential legal issues across state. The most strongly supported issues are Wrongful Termination, Excessive Absenteeism Policy Challenge, and Potential Wrongful Discharge in Violation of Public Policy. IMPORTANT: at least one deadline appears to have already passed \u2014 Renata's employment with Cedarbrook Care Center is terminated effective May 15, 2026. (computed 2026-06-14) [Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)]. Confirm this immediately, as missed deadlines can end a case. Analysis completeness is 75%; 9 follow-up questions below would strengthen the assessment.",
+ "profile": {
+  "profile_type": "law_firm",
+  "language_level": "professional",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": true,
+   "triage_routing": false,
+   "action_items": true,
+   "gap_appendix": true,
+   "authorities_table": true
+  },
+  "reading_grade_level": null,
+  "org_branding": null
+ }
+}

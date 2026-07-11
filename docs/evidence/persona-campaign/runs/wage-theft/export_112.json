@@ -1,0 +1,1823 @@
+{
+ "intake_id": 204,
+ "run_id": 46,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T04:45:35.580418Z",
+ "claims_by_jurisdiction": {
+  "state (Minnesota)": [
+   {
+    "claim_id": 1700,
+    "claim_name": "Failure to Provide Pay Stubs",
+    "claim_type": "identified",
+    "confidence": 1.0,
+    "jurisdiction": "state (Minnesota)",
+    "folio_iri": null,
+    "issue_statement": "The consumer says they do not get pay stubs. This breaks the law in Minnesota. Employers must give clear pay statements.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 879,
+      "element_name": "Lack of Pay Stubs",
+      "element_description": "The employer fails to provide itemized pay statements for each pay period.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1651,
+        "fact_text": "I have never received a pay stub since March 2024",
+        "confidence": 0.85,
+        "mapping_rationale": "Not receiving pay stubs since March 2024 directly aligns with the failure to provide pay statements."
+       },
+       {
+        "fact_id": 1650,
+        "fact_text": "My checks never showed the correct math, just a total",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that the checks do not itemize pay accurately, which directly relates to the lack of required documentation."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1961,
+      "gap_type": "procedural_requirement",
+      "description": "Are there specific procedural steps that must be taken to address the violation of providing accurate wage statements?",
+      "priority": 50,
+      "claim_id": 1700,
+      "element_id": null,
+      "claim_name": "Failure to Provide Pay Stubs",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "1 of 1 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1697,
+    "claim_name": "Wage Theft",
+    "claim_type": "identified",
+    "confidence": 1.0,
+    "jurisdiction": "state (Minnesota)",
+    "folio_iri": "https://folio.openlegalstandard.org/RCwT0yMShmi5V0Q2Y9Yn070",
+    "issue_statement": "The consumer says they have not been paid for 108 hours worked. This time was from June 8 to June 19. In Minnesota, not paying someone for hours worked is called wage theft.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 874,
+      "element_name": "Employment Relationship",
+      "element_description": "There exists an employer-employee relationship indicating the employer's obligation to pay wages.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1559,
+        "fact_text": "I have been working for Rick at Vantera Drywall since March 2024.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact establishes the working relationship between the individual and the company, indicating the existence of an employer-employee relationship."
+       },
+       {
+        "fact_id": 1562,
+        "fact_text": "Rick said I am an 'independent contractor.'",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact confirms the classification of the individual as an independent contractor, which may be contested under the wage theft allegation."
+       }
+      ]
+     },
+     {
+      "element_id": 873,
+      "element_name": "Unpaid Wages",
+      "element_description": "The employer has failed to pay the agreed-upon wages for hours worked.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1558,
+        "fact_text": "My boss stole my last two paychecks.",
+        "confidence": 0.78,
+        "mapping_rationale": "My boss stealing the last two paychecks indicates a failure to pay agreed-upon wages."
+       },
+       {
+        "fact_id": 1581,
+        "fact_text": "I texted Rick on June 22 demanding my wages.",
+        "confidence": 0.83,
+        "mapping_rationale": "Demanding wages indicates the ongoing issue of unpaid wages."
+       },
+       {
+        "fact_id": 1586,
+        "fact_text": "Rick owes me additional overtime pay from before that period.",
+        "confidence": 0.85,
+        "mapping_rationale": "The claim states there are additional unpaid wages due for prior worked hours further supporting ongoing wage claims."
+       },
+       {
+        "fact_id": 1643,
+        "fact_text": "I was never paid for the week of Jun 8 - Jun 13",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates the individual was never paid for work completed during a specific timeframe, clearly supporting unpaid wages claim."
+       },
+       {
+        "fact_id": 1645,
+        "fact_text": "I was never paid for the week of Jun 15 - Jun 19",
+        "confidence": 0.85,
+        "mapping_rationale": "Another instance of unpaid wages for documented hours worked reinforces the wage theft claim."
+       },
+       {
+        "fact_id": 1657,
+        "fact_text": "Junior worked 54+ hours all spring.",
+        "confidence": 0.83,
+        "mapping_rationale": "Working beyond 48 hours qualifies for wage theft if not compensated accordingly."
+       },
+       {
+        "fact_id": 1574,
+        "fact_text": "Sometimes Rick rounds my hours down.",
+        "confidence": 0.85,
+        "mapping_rationale": "Rounding down of hours indicates potential unpaid wages for hours worked."
+       },
+       {
+        "fact_id": 1583,
+        "fact_text": "Rick said I would get paid when the builder pays him.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement suggests that the employer delayed payment dependent on the builder's payment, indicating lack of immediate wage payment."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1941,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Employment Relationship' is not yet supported by any facts",
+      "priority": 100,
+      "claim_id": 1697,
+      "element_id": 874,
+      "claim_name": "Wage Theft",
+      "element_name": "Employment Relationship",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1958,
+      "gap_type": "procedural_requirement",
+      "description": "What is the deadline for filing a wage theft claim under Minnesota law for the unpaid hours worked from June 8 to June 19?",
+      "priority": 50,
+      "claim_id": 1697,
+      "element_id": null,
+      "claim_name": "Wage Theft",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 2 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1704,
+      "claim_name": "Employment Claims",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RCty0MaQzrLC9KnzjM7nMER",
+      "issue_statement": "Found by looking through the FOLIO system starting from Wage Theft.",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 1947,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1704,
+        "element_id": null,
+        "claim_name": "Employment Claims",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Wage Theft",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1702,
+    "claim_name": "Failure to Pay Unemployment Benefits",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "state (Minnesota)",
+    "folio_iri": null,
+    "issue_statement": "The consumer is not sure if they can get unemployment benefits. This is because of how they are classified as a contractor. This classification may change their chance to get benefits after they lose their job.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 882,
+      "element_name": "Eligibility for Benefits",
+      "element_description": "The individual's classification as a contractor may impact entitlement to unemployment benefits.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1591,
+        "fact_text": "I applied for unemployment last week.",
+        "confidence": 0.85,
+        "mapping_rationale": "Applying for unemployment indicates potential ineligibility due to misclassification."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1963,
+      "gap_type": "procedural_requirement",
+      "description": "What is the timeline for filing for unemployment benefits in relation to the classification of the consumer as an independent contractor?",
+      "priority": 50,
+      "claim_id": 1702,
+      "element_id": null,
+      "claim_name": "Failure to Pay Unemployment Benefits",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "1 of 1 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1699,
+    "claim_name": "Improper Classification as Independent Contractor",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "state (Minnesota)",
+    "folio_iri": null,
+    "issue_statement": "The way the consumer talks about their work shows they might be wrongly labeled as an independent contractor. This means they might not be considered an employee. This misclassification can change whether they can claim wages or get unemployment benefits.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 877,
+      "element_name": "Control by Employer",
+      "element_description": "The employer exercises significant control over the worker's job duties and schedule.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1562,
+        "fact_text": "Rick said I am an 'independent contractor.'",
+        "confidence": 0.85,
+        "mapping_rationale": "Rick's classification as an independent contractor suggests control over the contractor's responsibilities."
+       },
+       {
+        "fact_id": 1606,
+        "fact_text": "Contractor is not entitled to overtime, holiday pay, or any employee benefits.",
+        "confidence": 0.83,
+        "mapping_rationale": "The fact indicates that the contractor is not entitled to employee benefits which supports classification issues."
+       },
+       {
+        "fact_id": 1564,
+        "fact_text": "Rick tells me what job site to be at and what time.",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact indicates that the employer prescribes job site and timing, illustrating significant control over job duties."
+       },
+       {
+        "fact_id": 1565,
+        "fact_text": "Rick sends the schedule every Sunday night.",
+        "confidence": 0.85,
+        "mapping_rationale": "This fact shows that the employer schedules work each week, reflecting significant control in the employee's work life."
+       }
+      ]
+     },
+     {
+      "element_id": 878,
+      "element_name": "Dependency on Employer",
+      "element_description": "The worker relies solely on the employer for work with no independence.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1562,
+        "fact_text": "Rick said I am an 'independent contractor.'",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement of being classified as an independent contractor suggests a potentially dependent relationship on the employer for work."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1944,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Dependency on Employer' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1699,
+      "element_id": 878,
+      "claim_name": "Improper Classification as Independent Contractor",
+      "element_name": "Dependency on Employer",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1960,
+      "gap_type": "procedural_requirement",
+      "description": "What documentation is required to establish employment status versus independent contractor status in Minnesota?",
+      "priority": 50,
+      "claim_id": 1699,
+      "element_id": null,
+      "claim_name": "Improper Classification as Independent Contractor",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 2 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1698,
+    "claim_name": "Overtime Pay Violation",
+    "claim_type": "identified",
+    "confidence": 0.4,
+    "jurisdiction": "state (Minnesota)",
+    "folio_iri": null,
+    "issue_statement": "The consumer says they did not get paid time and a half for working over 48 hours. This goes against Minnesota's overtime pay laws.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 875,
+      "element_name": "Hours Worked",
+      "element_description": "The employee worked more than 48 hours in a workweek.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1576,
+        "fact_text": "I asked Rick about overtime on June 19.",
+        "confidence": 0.85,
+        "mapping_rationale": "The inquiry about overtime signifies that the individual likely worked more than 48 hours, supporting the claim."
+       }
+      ]
+     },
+     {
+      "element_id": 876,
+      "element_name": "Non-Payment of Overtime",
+      "element_description": "The employer did not provide the legally required overtime compensation.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1648,
+        "fact_text": "I was never paid time and a half for overtime",
+        "confidence": 0.85,
+        "mapping_rationale": "The fact clearly states that the individual was never compensated for overtime hours worked, supporting the non-payment of overtime claim."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1959,
+      "gap_type": "procedural_requirement",
+      "description": "Is there a specific statute of limitations for filing claims related to overtime pay violations in Minnesota?",
+      "priority": 50,
+      "claim_id": 1698,
+      "element_id": null,
+      "claim_name": "Overtime Pay Violation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1942,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Hours Worked' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1698,
+      "element_id": 875,
+      "claim_name": "Overtime Pay Violation",
+      "element_name": "Hours Worked",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1943,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Non-Payment of Overtime' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1698,
+      "element_id": 876,
+      "claim_name": "Overtime Pay Violation",
+      "element_name": "Non-Payment of Overtime",
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 2 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1701,
+    "claim_name": "Retaliatory Termination",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": "state (Minnesota)",
+    "folio_iri": null,
+    "issue_statement": "The timing of the worker's firing after asking about overtime pay is worrying. It raises fears that the company might punish the worker for asking about their pay rights.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 880,
+      "element_name": "Protected Activity",
+      "element_description": "The employee engaged in a protected activity (inquiring about owed wages/overtime).",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.83,
+      "fact_mappings": [
+       {
+        "fact_id": 1575,
+        "fact_text": "When I asked about it, Rick said 'that's what the sheet says.'",
+        "confidence": 0.83,
+        "mapping_rationale": "Asking about overtime constitutes a protected activity preceding the termination."
+       }
+      ]
+     },
+     {
+      "element_id": 881,
+      "element_name": "Adverse Employment Action",
+      "element_description": "The employee was terminated soon after the inquiry, indicating a potential link.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1578,
+        "fact_text": "I was fired on the night of June 19.",
+        "confidence": 0.85,
+        "mapping_rationale": "The timing of the termination (after asking about overtime) demonstrates a potential retaliatory motive."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1945,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Adverse Employment Action' is not yet supported by any facts",
+      "priority": 30,
+      "claim_id": 1701,
+      "element_id": 881,
+      "claim_name": "Retaliatory Termination",
+      "element_name": "Adverse Employment Action",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1962,
+      "gap_type": "procedural_requirement",
+      "description": "What evidence is required to substantiate claims of retaliatory termination linked to inquiries about overtime pay?",
+      "priority": 50,
+      "claim_id": 1701,
+      "element_id": null,
+      "claim_name": "Retaliatory Termination",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 2 elements supported (84% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1705,
+    "claim_name": "Failure to Pay for All Hours Worked",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "If you don't get paid for all the hours you worked, that is a problem. For example, if your paycheck shows fewer hours than you really worked, that's not right. This could mean that the employer is not paying for all your work. It may lead to more claims or complaints about pay.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1948,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to Pay for All Hours Worked' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1705,
+      "element_id": null,
+      "claim_name": "Failure to Pay for All Hours Worked",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1964,
+      "gap_type": "procedural_requirement",
+      "description": "What specific steps must be taken to assert a claim for failure to pay for all hours worked under Minnesota law?",
+      "priority": 50,
+      "claim_id": 1705,
+      "element_id": null,
+      "claim_name": "Failure to Pay for All Hours Worked",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1706,
+    "claim_name": "Violation of Minnesota Wage and Hour Laws",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R88iESKPlMDuSSfwDVX9scA",
+    "issue_statement": "Minnesota law says workers must get paid one and a half times their regular pay for any hours over 48 in a week. If employers do not pay this, they could face legal problems.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1949,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Violation of Minnesota Wage and Hour Laws' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1706,
+      "element_id": null,
+      "claim_name": "Violation of Minnesota Wage and Hour Laws",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1707,
+    "claim_name": "Unlawful Deductions from Pay",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RB5irrjea9ZzesLNnhYPQ1D",
+    "issue_statement": "Rounding down hours worked can be a problem. It may mean that pay calculations are unclear. This could show that money was taken from pay without permission. We need to check if labor laws are being followed.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1950,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Unlawful Deductions from Pay' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1707,
+      "element_id": null,
+      "claim_name": "Unlawful Deductions from Pay",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1965,
+      "gap_type": "procedural_requirement",
+      "description": "Are there specific legal channels for contesting unlawful deductions from pay or inaccuracies in wage calculations?",
+      "priority": 50,
+      "claim_id": 1707,
+      "element_id": null,
+      "claim_name": "Unlawful Deductions from Pay",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1709,
+    "claim_name": "Failure to Provide Required Documentation",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Employers must keep accurate records. This includes tracking hours worked and wages paid. If they don\u2019t, they can have legal problems.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1952,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to Provide Required Documentation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1709,
+      "element_id": null,
+      "claim_name": "Failure to Provide Required Documentation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1714,
+    "claim_name": "Loss of Unemployment Benefits Due to Misclassification",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "There's still confusion about who can get unemployment benefits. This shows that some people might be wrongly classified. This misclassification could mean they are not getting the benefits they deserve. It may require looking into the law to understand the rules better.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1957,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Loss of Unemployment Benefits Due to Misclassification' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1714,
+      "element_id": null,
+      "claim_name": "Loss of Unemployment Benefits Due to Misclassification",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1711,
+    "claim_name": "Potential Misclassification Issue",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The way the employer assigns jobs and sets schedules goes against what we expect from an independent contractor. This creates serious doubts about whether this classification is legal. It could also connect to other claims about wages.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1954,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Misclassification Issue' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1711,
+      "element_id": null,
+      "claim_name": "Potential Misclassification Issue",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1708,
+    "claim_name": "Potential Misclassification of Employment Status",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Junior may have been wrongly classified by the employer. This means he might not get benefits or protections he should have.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 1951,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Potential Misclassification of Employment Status' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1708,
+      "element_id": null,
+      "claim_name": "Potential Misclassification of Employment Status",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "state (Minnesota)": [
+   {
+    "claim_name": "Wage and Hour Claims",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R9UYGSnWQz2MvNsWUofGb6J",
+    "parent_claim_name": "Wage Theft"
+   }
+  ],
+  "General": [
+   {
+    "claim_name": "Retaliation Claims under Minnesota Whistleblower Act",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Unfair Wage Practices",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Unjust Enrichment",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [
+  {
+   "protocol_name": "Stalking / Harassment",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "threatened"
+   ],
+   "hotlines": [
+    {
+     "name": "Stalking Prevention, Awareness, and Resource Center (SPARC)",
+     "url": "https://www.stalkingawareness.org"
+    },
+    {
+     "name": "National Domestic Violence Hotline",
+     "phone": "1-800-799-7233",
+     "text": "START to 88788",
+     "url": "https://www.thehotline.org"
+    },
+    {
+     "name": "National Dating Abuse Helpline",
+     "phone": "1-866-331-9474",
+     "text": "LOVEIS to 22522"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "last chance to make this right before i go to the state on July 6, 2026.",
+   "event_type": "eviction_hearing",
+   "trigger": "hearing",
+   "trigger_date": "2026-07-06",
+   "computed_date": "2026-07-06",
+   "rule_id": "mn_eviction_stated_hearing",
+   "citation": "Minn. Stat. \u00a7 504B.321 (Minnesota eviction summons/hearing procedure); the hearing date printed on your summons or hearing notice.",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. This is the eviction hearing date printed on your court papers \u2014 you must appear; in Minnesota your defenses are raised at this hearing (there is no separate written answer deadline). Estimated \u2014 confirm the exact date with the court or a lawyer. If this hearing date has already passed, contact the housing court immediately. If a judgment was entered against you, ask about a motion to vacate the judgment and about expungement of the eviction record (Minn. Stat. \u00a7 484.014) \u2014 missing the hearing does not always end your options.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "On June 22, 2026, I texted him formal, like my cousin told me to word it, that I demand my wages, all of it.",
+   "event_type": "notice_to_vacate",
+   "trigger": "served",
+   "trigger_date": "2026-06-22",
+   "computed_date": "2026-07-22",
+   "rule_id": "mn_family_response_30d",
+   "citation": "Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "June 8 to June 19, I got my hours in my notebook, 108 hours.",
+   "event_type": "injury",
+   "trigger": "incident",
+   "trigger_date": "2026-06-19",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "I applied for unemployment last week.",
+   "event_type": "filing_deadline",
+   "trigger": "filed",
+   "trigger_date": "2026-07-04",
+   "computed_date": null,
+   "rule_id": null,
+   "citation": null,
+   "computed": false,
+   "urgency": "unknown",
+   "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "Employment",
+    "destination_type": "practice_area",
+    "score": 0.46307692307692305,
+    "rationale": "Employment practice area (54% of claims); mixed jurisdictions (54% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.5384615384615384,
+    "jurisdiction_match": 0.5384615384615384,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.38230769230769235,
+    "rationale": "General Civil practice area (31% of claims); mixed jurisdictions (54% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.3076923076923077,
+    "jurisdiction_match": 0.5384615384615384,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Public Benefits",
+    "destination_type": "practice_area",
+    "score": 0.32846153846153847,
+    "rationale": "Public Benefits practice area (15% of claims); mixed jurisdictions (54% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.15384615384615385,
+    "jurisdiction_match": 0.5384615384615384,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "Employment",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Employment Relationship' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Wage Theft",
+   "element_ref": "Employment Relationship"
+  },
+  {
+   "item_number": 2,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: last chance to make this right before i go to the state on July 6, 2026. (estimated 2026-07-06; Minn. Stat. \u00a7 504B.321 (Minnesota eviction summons/hearing procedure); the hearing date printed on your summons or hearing notice.). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. This is the eviction hearing date printed on your court papers \u2014 you must appear; in Minnesota your defenses are raised at this hearing (there is no separate written answer deadline). Estimated \u2014 confirm the exact date with the court or a lawyer. If this hearing date has already passed, contact the housing court immediately. If a judgment was entered against you, ask about a motion to vacate the judgment and about expungement of the eviction record (Minn. Stat. \u00a7 484.014) \u2014 missing the hearing does not always end your options.",
+   "priority": "urgent",
+   "deadline": "2026-07-06",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 3,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: On June 22, 2026, I texted him formal, like my cousin told me to word it, that I demand my wages, all of it. (estimated 2026-07-22; Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)). In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-07-22",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "What you described \u2014 being physically hurt or threatened by a family or household member \u2014 may qualify you for an Order for Protection (a court order that can be issued the same day you ask, before any hearing). In Minnesota this is Minn. Stat. \u00a7 518B.01; other states have an equivalent. Would you like information about asking the court for one now, separate from any other case? [Authority: Minn. Stat. \u00a7 518B.01 (Order for Protection; ex parte relief available)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "Is there a specific statute of limitations for filing claims related to overtime pay violations in Minnesota?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Overtime Pay Violation",
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Wage and Hour Claims' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Wage and Hour Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Employment Claims",
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to Pay for All Hours Worked' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Pay for All Hours Worked",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Violation of Minnesota Wage and Hour Laws' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Violation of Minnesota Wage and Hour Laws",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Unlawful Deductions from Pay' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unlawful Deductions from Pay",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Misclassification of Employment Status' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Misclassification of Employment Status",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to Provide Required Documentation' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide Required Documentation",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Unfair Wage Practices' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unfair Wage Practices",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Misclassification Issue' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Misclassification Issue",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Retaliation Claims under Minnesota Whistleblower Act' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Retaliation Claims under Minnesota Whistleblower Act",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Unjust Enrichment' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unjust Enrichment",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Loss of Unemployment Benefits Due to Misclassification' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Loss of Unemployment Benefits Due to Misclassification",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "What is the deadline for filing a wage theft claim under Minnesota law for the unpaid hours worked from June 8 to June 19?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Wage Theft",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "What documentation is required to establish employment status versus independent contractor status in Minnesota?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Improper Classification as Independent Contractor",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "Are there specific procedural steps that must be taken to address the violation of providing accurate wage statements?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide Pay Stubs",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "What evidence is required to substantiate claims of retaliatory termination linked to inquiries about overtime pay?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Retaliatory Termination",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "What is the timeline for filing for unemployment benefits in relation to the classification of the consumer as an independent contractor?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Pay Unemployment Benefits",
+   "element_ref": null
+  },
+  {
+   "item_number": 23,
+   "category": "follow_up_steps",
+   "description": "What specific steps must be taken to assert a claim for failure to pay for all hours worked under Minnesota law?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Pay for All Hours Worked",
+   "element_ref": null
+  },
+  {
+   "item_number": 24,
+   "category": "follow_up_steps",
+   "description": "Are there specific legal channels for contesting unlawful deductions from pay or inaccuracies in wage calculations?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unlawful Deductions from Pay",
+   "element_ref": null
+  },
+  {
+   "item_number": 25,
+   "category": "documents_to_gather",
+   "description": "Element 'Hours Worked' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Overtime Pay Violation",
+   "element_ref": "Hours Worked"
+  },
+  {
+   "item_number": 26,
+   "category": "documents_to_gather",
+   "description": "Element 'Non-Payment of Overtime' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Overtime Pay Violation",
+   "element_ref": "Non-Payment of Overtime"
+  },
+  {
+   "item_number": 27,
+   "category": "documents_to_gather",
+   "description": "Element 'Dependency on Employer' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Improper Classification as Independent Contractor",
+   "element_ref": "Dependency on Employer"
+  },
+  {
+   "item_number": 28,
+   "category": "documents_to_gather",
+   "description": "Element 'Adverse Employment Action' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Retaliatory Termination",
+   "element_ref": "Adverse Employment Action"
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Overtime Pay Violation": [
+    {
+     "gap_id": 1959,
+     "gap_type": "procedural_requirement",
+     "description": "Is there a specific statute of limitations for filing claims related to overtime pay violations in Minnesota?",
+     "priority": 50,
+     "claim_id": 1698,
+     "element_id": null,
+     "claim_name": "Overtime Pay Violation",
+     "element_name": null,
+     "action_item_ref": 5,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1942,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Hours Worked' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1698,
+     "element_id": 875,
+     "claim_name": "Overtime Pay Violation",
+     "element_name": "Hours Worked",
+     "action_item_ref": 25,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1943,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Non-Payment of Overtime' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1698,
+     "element_id": 876,
+     "claim_name": "Overtime Pay Violation",
+     "element_name": "Non-Payment of Overtime",
+     "action_item_ref": 26,
+     "open_questions": []
+    }
+   ],
+   "Wage Theft": [
+    {
+     "gap_id": 1941,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Employment Relationship' is not yet supported by any facts",
+     "priority": 100,
+     "claim_id": 1697,
+     "element_id": 874,
+     "claim_name": "Wage Theft",
+     "element_name": "Employment Relationship",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1958,
+     "gap_type": "procedural_requirement",
+     "description": "What is the deadline for filing a wage theft claim under Minnesota law for the unpaid hours worked from June 8 to June 19?",
+     "priority": 50,
+     "claim_id": 1697,
+     "element_id": null,
+     "claim_name": "Wage Theft",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Improper Classification as Independent Contractor": [
+    {
+     "gap_id": 1944,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Dependency on Employer' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1699,
+     "element_id": 878,
+     "claim_name": "Improper Classification as Independent Contractor",
+     "element_name": "Dependency on Employer",
+     "action_item_ref": 27,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1960,
+     "gap_type": "procedural_requirement",
+     "description": "What documentation is required to establish employment status versus independent contractor status in Minnesota?",
+     "priority": 50,
+     "claim_id": 1699,
+     "element_id": null,
+     "claim_name": "Improper Classification as Independent Contractor",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Retaliatory Termination": [
+    {
+     "gap_id": 1945,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Adverse Employment Action' is not yet supported by any facts",
+     "priority": 30,
+     "claim_id": 1701,
+     "element_id": 881,
+     "claim_name": "Retaliatory Termination",
+     "element_name": "Adverse Employment Action",
+     "action_item_ref": 28,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1962,
+     "gap_type": "procedural_requirement",
+     "description": "What evidence is required to substantiate claims of retaliatory termination linked to inquiries about overtime pay?",
+     "priority": 50,
+     "claim_id": 1701,
+     "element_id": null,
+     "claim_name": "Retaliatory Termination",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Wage and Hour Claims": [
+    {
+     "gap_id": 1946,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Wage and Hour Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1703,
+     "element_id": null,
+     "claim_name": "Wage and Hour Claims",
+     "element_name": null,
+     "action_item_ref": 6,
+     "open_questions": []
+    }
+   ],
+   "Employment Claims": [
+    {
+     "gap_id": 1947,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1704,
+     "element_id": null,
+     "claim_name": "Employment Claims",
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    }
+   ],
+   "Failure to Pay for All Hours Worked": [
+    {
+     "gap_id": 1948,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to Pay for All Hours Worked' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1705,
+     "element_id": null,
+     "claim_name": "Failure to Pay for All Hours Worked",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1964,
+     "gap_type": "procedural_requirement",
+     "description": "What specific steps must be taken to assert a claim for failure to pay for all hours worked under Minnesota law?",
+     "priority": 50,
+     "claim_id": 1705,
+     "element_id": null,
+     "claim_name": "Failure to Pay for All Hours Worked",
+     "element_name": null,
+     "action_item_ref": 23,
+     "open_questions": []
+    }
+   ],
+   "Violation of Minnesota Wage and Hour Laws": [
+    {
+     "gap_id": 1949,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Violation of Minnesota Wage and Hour Laws' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1706,
+     "element_id": null,
+     "claim_name": "Violation of Minnesota Wage and Hour Laws",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Unlawful Deductions from Pay": [
+    {
+     "gap_id": 1950,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Unlawful Deductions from Pay' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1707,
+     "element_id": null,
+     "claim_name": "Unlawful Deductions from Pay",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1965,
+     "gap_type": "procedural_requirement",
+     "description": "Are there specific legal channels for contesting unlawful deductions from pay or inaccuracies in wage calculations?",
+     "priority": 50,
+     "claim_id": 1707,
+     "element_id": null,
+     "claim_name": "Unlawful Deductions from Pay",
+     "element_name": null,
+     "action_item_ref": 24,
+     "open_questions": []
+    }
+   ],
+   "Potential Misclassification of Employment Status": [
+    {
+     "gap_id": 1951,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Misclassification of Employment Status' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1708,
+     "element_id": null,
+     "claim_name": "Potential Misclassification of Employment Status",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Failure to Provide Required Documentation": [
+    {
+     "gap_id": 1952,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to Provide Required Documentation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1709,
+     "element_id": null,
+     "claim_name": "Failure to Provide Required Documentation",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Unfair Wage Practices": [
+    {
+     "gap_id": 1953,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Unfair Wage Practices' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1710,
+     "element_id": null,
+     "claim_name": "Unfair Wage Practices",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    }
+   ],
+   "Potential Misclassification Issue": [
+    {
+     "gap_id": 1954,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Misclassification Issue' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1711,
+     "element_id": null,
+     "claim_name": "Potential Misclassification Issue",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Retaliation Claims under Minnesota Whistleblower Act": [
+    {
+     "gap_id": 1955,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Retaliation Claims under Minnesota Whistleblower Act' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1712,
+     "element_id": null,
+     "claim_name": "Retaliation Claims under Minnesota Whistleblower Act",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    }
+   ],
+   "Unjust Enrichment": [
+    {
+     "gap_id": 1956,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Unjust Enrichment' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1713,
+     "element_id": null,
+     "claim_name": "Unjust Enrichment",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Loss of Unemployment Benefits Due to Misclassification": [
+    {
+     "gap_id": 1957,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Loss of Unemployment Benefits Due to Misclassification' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1714,
+     "element_id": null,
+     "claim_name": "Loss of Unemployment Benefits Due to Misclassification",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Failure to Provide Pay Stubs": [
+    {
+     "gap_id": 1961,
+     "gap_type": "procedural_requirement",
+     "description": "Are there specific procedural steps that must be taken to address the violation of providing accurate wage statements?",
+     "priority": 50,
+     "claim_id": 1700,
+     "element_id": null,
+     "claim_name": "Failure to Provide Pay Stubs",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Failure to Pay Unemployment Benefits": [
+    {
+     "gap_id": 1963,
+     "gap_type": "procedural_requirement",
+     "description": "What is the timeline for filing for unemployment benefits in relation to the classification of the consumer as an independent contractor?",
+     "priority": 50,
+     "claim_id": 1702,
+     "element_id": null,
+     "claim_name": "Failure to Pay Unemployment Benefits",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ],
+   "Uncategorized": [
+    {
+     "gap_id": 1966,
+     "gap_type": "procedural_requirement",
+     "description": "What you described \u2014 being physically hurt or threatened by a family or household member \u2014 may qualify you for an Order for Protection (a court order that can be issued the same day you ask, before any hearing). In Minnesota this is Minn. Stat. \u00a7 518B.01; other states have an equivalent. Would you like information about asking the court for one now, separate from any other case? [Authority: Minn. Stat. \u00a7 518B.01 (Order for Protection; ex parte relief available)]",
+     "priority": 90,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 4,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1941,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Employment Relationship' is not yet supported by any facts",
+    "priority": 100,
+    "claim_id": 1697,
+    "element_id": 874,
+    "claim_name": "Wage Theft",
+    "element_name": "Employment Relationship",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1966,
+    "gap_type": "procedural_requirement",
+    "description": "What you described \u2014 being physically hurt or threatened by a family or household member \u2014 may qualify you for an Order for Protection (a court order that can be issued the same day you ask, before any hearing). In Minnesota this is Minn. Stat. \u00a7 518B.01; other states have an equivalent. Would you like information about asking the court for one now, separate from any other case? [Authority: Minn. Stat. \u00a7 518B.01 (Order for Protection; ex parte relief available)]",
+    "priority": 90,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1959,
+    "gap_type": "procedural_requirement",
+    "description": "Is there a specific statute of limitations for filing claims related to overtime pay violations in Minnesota?",
+    "priority": 50,
+    "claim_id": 1698,
+    "element_id": null,
+    "claim_name": "Overtime Pay Violation",
+    "element_name": null,
+    "action_item_ref": 5,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1946,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Wage and Hour Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1703,
+    "element_id": null,
+    "claim_name": "Wage and Hour Claims",
+    "element_name": null,
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1947,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Employment Claims' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1704,
+    "element_id": null,
+    "claim_name": "Employment Claims",
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1948,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to Pay for All Hours Worked' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1705,
+    "element_id": null,
+    "claim_name": "Failure to Pay for All Hours Worked",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1949,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Violation of Minnesota Wage and Hour Laws' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1706,
+    "element_id": null,
+    "claim_name": "Violation of Minnesota Wage and Hour Laws",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1950,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Unlawful Deductions from Pay' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1707,
+    "element_id": null,
+    "claim_name": "Unlawful Deductions from Pay",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1951,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Misclassification of Employment Status' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1708,
+    "element_id": null,
+    "claim_name": "Potential Misclassification of Employment Status",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1952,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to Provide Required Documentation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1709,
+    "element_id": null,
+    "claim_name": "Failure to Provide Required Documentation",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1953,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Unfair Wage Practices' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1710,
+    "element_id": null,
+    "claim_name": "Unfair Wage Practices",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1954,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Misclassification Issue' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1711,
+    "element_id": null,
+    "claim_name": "Potential Misclassification Issue",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1955,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Retaliation Claims under Minnesota Whistleblower Act' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1712,
+    "element_id": null,
+    "claim_name": "Retaliation Claims under Minnesota Whistleblower Act",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1956,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Unjust Enrichment' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1713,
+    "element_id": null,
+    "claim_name": "Unjust Enrichment",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1957,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Loss of Unemployment Benefits Due to Misclassification' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1714,
+    "element_id": null,
+    "claim_name": "Loss of Unemployment Benefits Due to Misclassification",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1958,
+    "gap_type": "procedural_requirement",
+    "description": "What is the deadline for filing a wage theft claim under Minnesota law for the unpaid hours worked from June 8 to June 19?",
+    "priority": 50,
+    "claim_id": 1697,
+    "element_id": null,
+    "claim_name": "Wage Theft",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1960,
+    "gap_type": "procedural_requirement",
+    "description": "What documentation is required to establish employment status versus independent contractor status in Minnesota?",
+    "priority": 50,
+    "claim_id": 1699,
+    "element_id": null,
+    "claim_name": "Improper Classification as Independent Contractor",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1961,
+    "gap_type": "procedural_requirement",
+    "description": "Are there specific procedural steps that must be taken to address the violation of providing accurate wage statements?",
+    "priority": 50,
+    "claim_id": 1700,
+    "element_id": null,
+    "claim_name": "Failure to Provide Pay Stubs",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1962,
+    "gap_type": "procedural_requirement",
+    "description": "What evidence is required to substantiate claims of retaliatory termination linked to inquiries about overtime pay?",
+    "priority": 50,
+    "claim_id": 1701,
+    "element_id": null,
+    "claim_name": "Retaliatory Termination",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1963,
+    "gap_type": "procedural_requirement",
+    "description": "What is the timeline for filing for unemployment benefits in relation to the classification of the consumer as an independent contractor?",
+    "priority": 50,
+    "claim_id": 1702,
+    "element_id": null,
+    "claim_name": "Failure to Pay Unemployment Benefits",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1964,
+    "gap_type": "procedural_requirement",
+    "description": "What specific steps must be taken to assert a claim for failure to pay for all hours worked under Minnesota law?",
+    "priority": 50,
+    "claim_id": 1705,
+    "element_id": null,
+    "claim_name": "Failure to Pay for All Hours Worked",
+    "element_name": null,
+    "action_item_ref": 23,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1965,
+    "gap_type": "procedural_requirement",
+    "description": "Are there specific legal channels for contesting unlawful deductions from pay or inaccuracies in wage calculations?",
+    "priority": 50,
+    "claim_id": 1707,
+    "element_id": null,
+    "claim_name": "Unlawful Deductions from Pay",
+    "element_name": null,
+    "action_item_ref": 24,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1942,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Hours Worked' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1698,
+    "element_id": 875,
+    "claim_name": "Overtime Pay Violation",
+    "element_name": "Hours Worked",
+    "action_item_ref": 25,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1943,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Non-Payment of Overtime' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1698,
+    "element_id": 876,
+    "claim_name": "Overtime Pay Violation",
+    "element_name": "Non-Payment of Overtime",
+    "action_item_ref": 26,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1944,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Dependency on Employer' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1699,
+    "element_id": 878,
+    "claim_name": "Improper Classification as Independent Contractor",
+    "element_name": "Dependency on Employer",
+    "action_item_ref": 27,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1945,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Adverse Employment Action' is not yet supported by any facts",
+    "priority": 30,
+    "claim_id": 1701,
+    "element_id": 881,
+    "claim_name": "Retaliatory Termination",
+    "element_name": "Adverse Employment Action",
+    "action_item_ref": 28,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Can you tell us about your job, including how long you worked there and your role?",
+   "Have you experienced any physical harm or threats from a family member?",
+   "Would you like information on filing a court order for protection now, separate from your other case?",
+   "Can you provide details about any overtime hours you worked that were not compensated?",
+   "When did you last expect payment for the hours you worked?",
+   "Have you ever noticed errors on your pay statements or deductions that you did not understand?",
+   "Have you experienced any issues or disagreements with your employer regarding your classification as an employee versus an independent contractor?",
+   "Do you know what documentation you have related to your job status?",
+   "What steps have you taken or are planning to take to address any concerns about your pay statements?"
+  ],
+  "completeness_score": 0.75
+ },
+ "completeness_score": 0.75,
+ "executive_summary": "This report found 17 possible legal problems in Minnesota. The strongest issues are: \n\n- Not giving pay stubs. \n- Wage theft (when an employer does not pay what they owe). \n- Not paying for all hours worked.\n\nIMPORTANT: One deadline may have already passed. You need to fix this before July 6, 2026. This is when I go to the state. \n\nYou should check this right away. Missing deadlines can hurt your case. \n\nSome safety concerns came up in this report. You can find safety resources below. \n\nThe analysis is 75% complete. There are 9 follow-up questions that could help.",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}

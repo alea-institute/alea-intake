@@ -1,0 +1,1616 @@
+{
+ "intake_id": 206,
+ "run_id": 48,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T04:58:09.911284Z",
+ "claims_by_jurisdiction": {
+  "Federal": [
+   {
+    "claim_id": 1732,
+    "claim_name": "Failure to Provide FMLA Leave",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": "Federal",
+    "folio_iri": null,
+    "issue_statement": "Gideon did not share any information about FMLA (the Family Medical Leave Act). He was put on unpaid leave. There were no signs that the employer told him about his FMLA rights. This brings up questions about what the employer should have done according to the law.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 902,
+      "element_name": "Eligible Employee",
+      "element_description": "The employee must be eligible for FMLA leave (worked for the employer for 12 months and 1,250 hours).",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 903,
+      "element_name": "Serious Health Condition",
+      "element_description": "The employee must have a qualifying serious health condition that requires leave.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 905,
+      "element_name": "Employer's Obligation",
+      "element_description": "The employer must provide the necessary paperwork and inform the employee about FMLA rights.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 904,
+      "element_name": "Notification",
+      "element_description": "The employer must be notified of the need for FMLA leave.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1749,
+        "fact_text": "On April 6, I received an email saying no lifting up to 50 pounds is an essential function.",
+        "confidence": 0.85,
+        "mapping_rationale": "Gideon's inability to lift more than 50 pounds falls under a serious health condition, relevant for FMLA leave considerations."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1996,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Eligible Employee' is not yet supported by any facts",
+      "priority": 75,
+      "claim_id": 1732,
+      "element_id": 902,
+      "claim_name": "Failure to Provide FMLA Leave",
+      "element_name": "Eligible Employee",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1997,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Serious Health Condition' is not yet supported by any facts",
+      "priority": 75,
+      "claim_id": 1732,
+      "element_id": 903,
+      "claim_name": "Failure to Provide FMLA Leave",
+      "element_name": "Serious Health Condition",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1998,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Notification' is not yet supported by any facts",
+      "priority": 75,
+      "claim_id": 1732,
+      "element_id": 904,
+      "claim_name": "Failure to Provide FMLA Leave",
+      "element_name": "Notification",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 1999,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Employer's Obligation' is not yet supported by any facts",
+      "priority": 75,
+      "claim_id": 1732,
+      "element_id": 905,
+      "claim_name": "Failure to Provide FMLA Leave",
+      "element_name": "Employer's Obligation",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2000,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to Provide FMLA Leave' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1732,
+      "element_id": null,
+      "claim_name": "Failure to Provide FMLA Leave",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2009,
+      "gap_type": "procedural_requirement",
+      "description": "Was there a specific timeline or requirement for Gideon to request FMLA leave, and what are the potential deadlines for filing an FMLA claim if proper notice was not provided?",
+      "priority": 50,
+      "claim_id": 1732,
+      "element_id": null,
+      "claim_name": "Failure to Provide FMLA Leave",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "1 of 4 elements supported (21% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "Minnesota": [
+   {
+    "claim_id": 1731,
+    "claim_name": "Disability Discrimination",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": "Minnesota",
+    "folio_iri": "https://folio.openlegalstandard.org/R8f088bmlfkWDbXdJj9nQD9",
+    "issue_statement": "Gideon lost his job because of his back problem. There are signs that his requests for help were not managed well. Not looking at temporary jobs to help him could be seen as discrimination. This could be a violation of the Minnesota Human Rights Act (a law that protects people's rights).",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 898,
+      "element_name": "Disability Status",
+      "element_description": "The employee must have a disability as defined by the Minnesota Human Rights Act.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1739,
+        "fact_text": "Gideon has a herniated disc L4-L5.",
+        "confidence": 0.85,
+        "mapping_rationale": "Gideon's herniated disc qualifies as a disability under the Minnesota Human Rights Act."
+       }
+      ]
+     },
+     {
+      "element_id": 899,
+      "element_name": "Adverse Employment Action",
+      "element_description": "The employer must have taken an adverse action against the employee, such as termination.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1734,
+        "fact_text": "Gideon was fired because of his back.",
+        "confidence": 0.85,
+        "mapping_rationale": "Gideon's firing due to his back condition is a clear adverse employment action."
+       }
+      ]
+     },
+     {
+      "element_id": 901,
+      "element_name": "Nexus Between Disability and Action",
+      "element_description": "There must be a causal connection between the disability and the adverse employment action.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1755,
+        "fact_text": "On May 22, the termination letter came.",
+        "confidence": 0.85,
+        "mapping_rationale": "The timing of the termination letter after his disability condition indicates a causal connection."
+       },
+       {
+        "fact_id": 1734,
+        "fact_text": "Gideon was fired because of his back.",
+        "confidence": 0.83,
+        "mapping_rationale": "Gideon's firing was directly due to his back condition, establishing a link between his disability and the adverse employment action."
+       }
+      ]
+     },
+     {
+      "element_id": 900,
+      "element_name": "Failure to Accommodate",
+      "element_description": "The employer failed to provide reasonable accommodations for the employee's disability or did not engage in an interactive process.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1741,
+        "fact_text": "In February, Gideon's doctor put him on a restriction of no lifting over 35 pounds.",
+        "confidence": 0.85,
+        "mapping_rationale": "The doctor\u2019s restrictions demonstrate the need for accommodations due to Gideon's disability."
+       },
+       {
+        "fact_id": 1747,
+        "fact_text": "I asked HR if I could get moved to the scan station or use the lift assist for the heavy stuff.",
+        "confidence": 0.85,
+        "mapping_rationale": "HR ignored Gideon\u2019s request for accommodation, showing failure to engage in the interactive process."
+       },
+       {
+        "fact_id": 1748,
+        "fact_text": "HR sat on my request for almost a month.",
+        "confidence": 0.85,
+        "mapping_rationale": "The delay in response to Gideon\u2019s accommodation request demonstrates failure to engage in the process timely."
+       },
+       {
+        "fact_id": 1772,
+        "fact_text": "Tri-State Fulfillment Group is unable to grant the requested accommodation.",
+        "confidence": 0.85,
+        "mapping_rationale": "The statement confirms that the requested accommodation was not granted."
+       },
+       {
+        "fact_id": 1774,
+        "fact_text": "Reassignment to a scanning station is not available in Gideon's case.",
+        "confidence": 0.85,
+        "mapping_rationale": "The denial of reassignment to a scanning station due to his condition exemplifies failure to provide accommodations."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 1995,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Failure to Accommodate' is not yet supported by any facts",
+      "priority": 85,
+      "claim_id": 1731,
+      "element_id": 900,
+      "claim_name": "Disability Discrimination",
+      "element_name": "Failure to Accommodate",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2008,
+      "gap_type": "procedural_requirement",
+      "description": "What are the filing deadlines under the Minnesota Human Rights Act for a disability discrimination claim based on failure to accommodate and termination due to Gideon's disability?",
+      "priority": 50,
+      "claim_id": 1731,
+      "element_id": null,
+      "claim_name": "Disability Discrimination",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "4 of 4 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": [
+     {
+      "claim_id": 1735,
+      "claim_name": "Area of Law",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": null,
+      "issue_statement": "Found through exploring FOLIO's connections related to Disability Discrimination (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2002,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1735,
+        "element_id": null,
+        "claim_name": "Area of Law",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Disability Discrimination",
+      "children": []
+     },
+     {
+      "claim_id": 1734,
+      "claim_name": "Labor and Employment Law",
+      "claim_type": "discovered",
+      "confidence": 0.4,
+      "jurisdiction": null,
+      "folio_iri": "https://folio.openlegalstandard.org/RCzvtNXIrDJF8xkmOoc6JKH",
+      "issue_statement": "Found through exploring FOLIO's connections related to Disability Discrimination (level 1).",
+      "authorities": [],
+      "elements": [],
+      "gaps": [
+       {
+        "gap_id": 2001,
+        "gap_type": "unexplored_claim",
+        "description": "Potential claim 'Labor and Employment Law' has not been explored with fact mappings",
+        "priority": 50,
+        "claim_id": 1734,
+        "element_id": null,
+        "claim_name": "Labor and Employment Law",
+        "element_name": null,
+        "action_item_ref": null,
+        "open_questions": []
+       }
+      ],
+      "conclusion": "No elements defined",
+      "parent_claim_name": "Disability Discrimination",
+      "children": []
+     }
+    ]
+   },
+   {
+    "claim_id": 1733,
+    "claim_name": "Unpaid Leave / Wrongful Termination",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "Minnesota",
+    "folio_iri": null,
+    "issue_statement": "Gideon was put on unpaid leave. He was then fired. They did not think about his request for help. They also did not have the right paperwork for his leave. This brings up issues about his wrongful termination. This means he might have been fired unfairly because of his disability.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 906,
+      "element_name": "Legal Entitlement to Leave",
+      "element_description": "The employee was entitled to leave based on medical needs or applicable protection laws.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1753,
+        "fact_text": "They put me on unpaid leave on April 6.",
+        "confidence": 0.85,
+        "mapping_rationale": "Being placed on unpaid leave indicates an attempt by the employer to address his legal entitlement."
+       },
+       {
+        "fact_id": 1739,
+        "fact_text": "Gideon has a herniated disc L4-L5.",
+        "confidence": 0.85,
+        "mapping_rationale": "Gideon's back condition indicates he may have been entitled to medical leave under applicable laws."
+       },
+       {
+        "fact_id": 1789,
+        "fact_text": "Gideon's leave was contingent on a return to full duty with no restrictions by May 22, 2026.",
+        "confidence": 0.85,
+        "mapping_rationale": "Gideon's leave was contingent on a return to duty, signifying he was dependent on legal protections due to his health condition."
+       },
+       {
+        "fact_id": 1738,
+        "fact_text": "Gideon worked at Tri-State Fulfillment for about five years.",
+        "confidence": 0.79,
+        "mapping_rationale": "The duration of Gideon's employment supports claims regarding his entitlement to medical leave."
+       }
+      ]
+     },
+     {
+      "element_id": 907,
+      "element_name": "Unlawful Basis for Termination",
+      "element_description": "The employee's termination must have been based on an unlawful reason, such as a medical condition.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1734,
+        "fact_text": "Gideon was fired because of his back.",
+        "confidence": 0.85,
+        "mapping_rationale": "Being fired because of his back condition indicates an unlawful reason for termination."
+       },
+       {
+        "fact_id": 1755,
+        "fact_text": "On May 22, the termination letter came.",
+        "confidence": 0.85,
+        "mapping_rationale": "The arrival of the termination letter signifies the culmination of the unlawful termination process."
+       }
+      ]
+     },
+     {
+      "element_id": 908,
+      "element_name": "Lack of Proper Procedures",
+      "element_description": "The employer failed to follow proper procedures or provide adequate documentation when placing the employee on leave.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 1755,
+        "fact_text": "On May 22, the termination letter came.",
+        "confidence": 0.85,
+        "mapping_rationale": "The circumstances surrounding the issuance of the termination letter suggest procedural failures."
+       },
+       {
+        "fact_id": 1741,
+        "fact_text": "In February, Gideon's doctor put him on a restriction of no lifting over 35 pounds.",
+        "confidence": 0.85,
+        "mapping_rationale": "The employer did not adequately address Gideon\u2019s medical restriction, contributing to lack of proper procedures."
+       },
+       {
+        "fact_id": 1760,
+        "fact_text": "Nobody gave me any paperwork when they put me on unpaid leave.",
+        "confidence": 0.85,
+        "mapping_rationale": "The absence of paperwork when placing Gideon on unpaid leave indicates procedural failure."
+       },
+       {
+        "fact_id": 1748,
+        "fact_text": "HR sat on my request for almost a month.",
+        "confidence": 0.81,
+        "mapping_rationale": "HR's failure to act on the request for an accommodation suggests a lack of proper procedures."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2010,
+      "gap_type": "procedural_requirement",
+      "description": "What are the relevant statutes of limitations for wrongful termination claims related to disability discrimination in Minnesota, and when did Gideon's termination occur?",
+      "priority": 50,
+      "claim_id": 1733,
+      "element_id": null,
+      "claim_name": "Unpaid Leave / Wrongful Termination",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "3 of 3 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1736,
+    "claim_name": "Retaliation",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7irtksGAUxreU1oxQJBon8",
+    "issue_statement": "Derek's words show he may have bias against Gideon's disability. Gideon asked for help with his work. Soon after, he was put on unpaid leave and then fired.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2003,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Retaliation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1736,
+      "element_id": null,
+      "claim_name": "Retaliation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2011,
+      "gap_type": "procedural_requirement",
+      "description": "What are the procedural requirements and deadlines for filing a retaliation claim connected to Gideon's request for disability accommodation?",
+      "priority": 50,
+      "claim_id": 1736,
+      "element_id": null,
+      "claim_name": "Retaliation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1737,
+    "claim_name": "Failure to Accommodate",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7coJULMWSPoIPITP5qUS96",
+    "issue_statement": "Not letting Gideon use the lift-assist machine could break the law. It shows a failure to provide help when needed. This help is called \"accommodation.\" Accommodations are changes made to assist someone with a disability. Reassigning him to a scanning station may have been a possible solution.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2012,
+      "gap_type": "procedural_requirement",
+      "description": "What procedural steps must be followed for an accommodation request under Minnesota law, and how do they relate to Gideon's situation with the lift-assist machine?",
+      "priority": 50,
+      "claim_id": 1737,
+      "element_id": null,
+      "claim_name": "Failure to Accommodate",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1742,
+    "claim_name": "Failure to Engage in Interactive Process",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RC8DXJ0GNORoB93dQNoiSpb",
+    "issue_statement": "HR took a long time to respond to Gideon's request for help. This may break the law that says they must talk meaningfully about accommodations for people with disabilities.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1745,
+    "claim_name": "Possible Constructive Discharge",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RsHKmukY8RoJdJO1gsTCxN",
+    "issue_statement": "Unfair treatment after he asked for help and then being fired could show a very bad workplace. This could be so bad that a reasonable person would feel they had to quit.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2007,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Possible Constructive Discharge' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1745,
+      "element_id": null,
+      "claim_name": "Possible Constructive Discharge",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1741,
+    "claim_name": "Retaliation for Disability Accommodation Request",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The supervisor's negative comments came soon after Gideon asked for help. This makes it more likely that Gideon may have a retaliation claim. A retaliation claim means someone was punished for asking for help or making a complaint.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1738,
+    "claim_name": "Severance Agreement Validity",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "If Gideon did not get the right information about FMLA rights, the agreement might not be valid.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2013,
+      "gap_type": "procedural_requirement",
+      "description": "What are the necessary disclosures and documentation that must be provided to Gideon regarding his FMLA rights before a waiver of those claims in a severance agreement can be considered valid?",
+      "priority": 50,
+      "claim_id": 1738,
+      "element_id": null,
+      "claim_name": "Severance Agreement Validity",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1740,
+    "claim_name": "Breaches of Employment Rights",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Not giving important documents or not following the rules might show that the company did not follow its own set guidelines.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2005,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Breaches of Employment Rights' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1740,
+      "element_id": null,
+      "claim_name": "Breaches of Employment Rights",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2015,
+      "gap_type": "procedural_requirement",
+      "description": "What are the internal procedures that must have been followed for employment rights breaches, and what documentation is required to support such claims?",
+      "priority": 50,
+      "claim_id": 1740,
+      "element_id": null,
+      "claim_name": "Breaches of Employment Rights",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "General": [
+   {
+    "claim_name": "COBRA Violations",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Disability Harassment",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Potential Breach of Employment Contract",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [
+  {
+   "protocol_name": "Firearms Access",
+   "severity_tier": "advisory",
+   "matched_terms": [
+    "gun"
+   ],
+   "hotlines": [],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "On April 6, I received an email saying no lifting up to 50 pounds is an essential function.",
+   "event_type": "accommodation_denial",
+   "trigger": "service",
+   "trigger_date": "2026-04-06",
+   "computed_date": "2026-05-06",
+   "rule_id": "mn_family_response_30d",
+   "citation": "Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "They put me on unpaid leave on April 6.",
+   "event_type": "unpaid_leave",
+   "trigger": "service",
+   "trigger_date": "2026-04-06",
+   "computed_date": "2026-05-06",
+   "rule_id": "mn_family_response_30d",
+   "citation": "Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "On May 22, the termination letter came.",
+   "event_type": "termination_letter",
+   "trigger": "service",
+   "trigger_date": "2026-05-22",
+   "computed_date": "2026-06-21",
+   "rule_id": "mn_family_response_30d",
+   "citation": "Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "HR emailed me a 'severance agreement' on June 30.",
+   "event_type": "severance_agreement",
+   "trigger": "service",
+   "trigger_date": "2026-06-30",
+   "computed_date": "2026-07-30",
+   "rule_id": "mn_family_response_30d",
+   "citation": "Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "I have to sign the severance agreement by July 21.",
+   "event_type": "severance_signing_deadline",
+   "trigger": "deadline",
+   "trigger_date": "2026-07-21",
+   "computed_date": "2026-07-21",
+   "rule_id": "stated_court_date",
+   "citation": "The court's own summons, hearing notice, or scheduling order setting this date \u2014 a court's order or summons is the governing primary authority for a court-scheduled appearance (confirm the date against the document itself).",
+   "computed": true,
+   "urgency": "high",
+   "hedge": "This is a date the court gave you directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "Employment",
+    "destination_type": "practice_area",
+    "score": 0.49,
+    "rationale": "Employment practice area (50% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.5,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.45499999999999996,
+    "rationale": "General Civil practice area (40% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.4,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Public Benefits",
+    "destination_type": "practice_area",
+    "score": 0.35,
+    "rationale": "Public Benefits practice area (10% of claims); mixed jurisdictions (70% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.1,
+    "jurisdiction_match": 0.7,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "Employment",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "documents_to_gather",
+   "description": "Element 'Failure to Accommodate' is not yet supported by any facts",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": "Disability Discrimination",
+   "element_ref": "Failure to Accommodate"
+  },
+  {
+   "item_number": 2,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: On April 6, I received an email saying no lifting up to 50 pounds is an essential function. (estimated 2026-05-06; Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "priority": "urgent",
+   "deadline": "2026-05-06",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 3,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: They put me on unpaid leave on April 6. (estimated 2026-05-06; Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "priority": "urgent",
+   "deadline": "2026-05-06",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: On May 22, the termination letter came. (estimated 2026-06-21; Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer. If more than 30 days have passed since you were served and you have not answered, contact the court right away \u2014 a default could be entered against you. Ask about filing a late answer or moving to set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a late response for good reason.",
+   "priority": "urgent",
+   "deadline": "2026-06-21",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: HR emailed me a 'severance agreement' on June 30. (estimated 2026-07-30; Minn. Stat. \u00a7 518.12 (respondent's answer due 30 days after service of the petition)). In a Minnesota dissolution/family matter the answer is generally due 30 days after you were served with the petition. Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-07-30",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "Confirm the deadline for: I have to sign the severance agreement by July 21. (estimated 2026-07-21; The court's own summons, hearing notice, or scheduling order setting this date \u2014 a court's order or summons is the governing primary authority for a court-scheduled appearance (confirm the date against the document itself).). This is a date the court gave you directly (a hearing, court date, or stated deadline). Estimated \u2014 confirm the exact date with the court or a lawyer.",
+   "priority": "urgent",
+   "deadline": "2026-07-21",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "You mentioned holding back rent because the landlord is ignoring repairs. Withholding on your own can be used against you in an eviction \u2014 but there is a legal way to do it: in Minnesota you can deposit the rent with the court (rent escrow, Minn. Stat. \u00a7 504B.385) and ask the court to order repairs; other states have an equivalent. Have you asked the court about depositing your rent instead of just holding it back? [Authority: Minn. Stat. \u00a7 504B.385 (rent escrow); \u00a7 504B.425 (remedies); \u00a7 504B.161 (covenants of habitability)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "documents_to_gather",
+   "description": "Element 'Eligible Employee' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide FMLA Leave",
+   "element_ref": "Eligible Employee"
+  },
+  {
+   "item_number": 9,
+   "category": "documents_to_gather",
+   "description": "Element 'Serious Health Condition' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide FMLA Leave",
+   "element_ref": "Serious Health Condition"
+  },
+  {
+   "item_number": 10,
+   "category": "documents_to_gather",
+   "description": "Element 'Notification' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide FMLA Leave",
+   "element_ref": "Notification"
+  },
+  {
+   "item_number": 11,
+   "category": "documents_to_gather",
+   "description": "Element 'Employer's Obligation' is not yet supported by any facts",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide FMLA Leave",
+   "element_ref": "Employer's Obligation"
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to Provide FMLA Leave' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide FMLA Leave",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Labor and Employment Law' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Labor and Employment Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 14,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Area of Law",
+   "element_ref": null
+  },
+  {
+   "item_number": 15,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Retaliation' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Retaliation",
+   "element_ref": null
+  },
+  {
+   "item_number": 16,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Disability Harassment' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Disability Harassment",
+   "element_ref": null
+  },
+  {
+   "item_number": 17,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Breaches of Employment Rights' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Breaches of Employment Rights",
+   "element_ref": null
+  },
+  {
+   "item_number": 18,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Breach of Employment Contract' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Breach of Employment Contract",
+   "element_ref": null
+  },
+  {
+   "item_number": 19,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Possible Constructive Discharge' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Possible Constructive Discharge",
+   "element_ref": null
+  },
+  {
+   "item_number": 20,
+   "category": "follow_up_steps",
+   "description": "What are the filing deadlines under the Minnesota Human Rights Act for a disability discrimination claim based on failure to accommodate and termination due to Gideon's disability?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Disability Discrimination",
+   "element_ref": null
+  },
+  {
+   "item_number": 21,
+   "category": "follow_up_steps",
+   "description": "Was there a specific timeline or requirement for Gideon to request FMLA leave, and what are the potential deadlines for filing an FMLA claim if proper notice was not provided?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide FMLA Leave",
+   "element_ref": null
+  },
+  {
+   "item_number": 22,
+   "category": "follow_up_steps",
+   "description": "What are the relevant statutes of limitations for wrongful termination claims related to disability discrimination in Minnesota, and when did Gideon's termination occur?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Unpaid Leave / Wrongful Termination",
+   "element_ref": null
+  },
+  {
+   "item_number": 23,
+   "category": "follow_up_steps",
+   "description": "What are the procedural requirements and deadlines for filing a retaliation claim connected to Gideon's request for disability accommodation?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Retaliation",
+   "element_ref": null
+  },
+  {
+   "item_number": 24,
+   "category": "follow_up_steps",
+   "description": "What procedural steps must be followed for an accommodation request under Minnesota law, and how do they relate to Gideon's situation with the lift-assist machine?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Accommodate",
+   "element_ref": null
+  },
+  {
+   "item_number": 25,
+   "category": "follow_up_steps",
+   "description": "What are the necessary disclosures and documentation that must be provided to Gideon regarding his FMLA rights before a waiver of those claims in a severance agreement can be considered valid?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Severance Agreement Validity",
+   "element_ref": null
+  },
+  {
+   "item_number": 26,
+   "category": "follow_up_steps",
+   "description": "What is the procedure for filing claims regarding harassment that contributes to a hostile work environment under Minnesota law, and are there specific requirements that must be met?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Disability Harassment",
+   "element_ref": null
+  },
+  {
+   "item_number": 27,
+   "category": "follow_up_steps",
+   "description": "What are the internal procedures that must have been followed for employment rights breaches, and what documentation is required to support such claims?",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Breaches of Employment Rights",
+   "element_ref": null
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Disability Discrimination": [
+    {
+     "gap_id": 1995,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Failure to Accommodate' is not yet supported by any facts",
+     "priority": 85,
+     "claim_id": 1731,
+     "element_id": 900,
+     "claim_name": "Disability Discrimination",
+     "element_name": "Failure to Accommodate",
+     "action_item_ref": 1,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2008,
+     "gap_type": "procedural_requirement",
+     "description": "What are the filing deadlines under the Minnesota Human Rights Act for a disability discrimination claim based on failure to accommodate and termination due to Gideon's disability?",
+     "priority": 50,
+     "claim_id": 1731,
+     "element_id": null,
+     "claim_name": "Disability Discrimination",
+     "element_name": null,
+     "action_item_ref": 20,
+     "open_questions": []
+    }
+   ],
+   "Failure to Provide FMLA Leave": [
+    {
+     "gap_id": 1996,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Eligible Employee' is not yet supported by any facts",
+     "priority": 75,
+     "claim_id": 1732,
+     "element_id": 902,
+     "claim_name": "Failure to Provide FMLA Leave",
+     "element_name": "Eligible Employee",
+     "action_item_ref": 8,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1997,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Serious Health Condition' is not yet supported by any facts",
+     "priority": 75,
+     "claim_id": 1732,
+     "element_id": 903,
+     "claim_name": "Failure to Provide FMLA Leave",
+     "element_name": "Serious Health Condition",
+     "action_item_ref": 9,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1998,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Notification' is not yet supported by any facts",
+     "priority": 75,
+     "claim_id": 1732,
+     "element_id": 904,
+     "claim_name": "Failure to Provide FMLA Leave",
+     "element_name": "Notification",
+     "action_item_ref": 10,
+     "open_questions": []
+    },
+    {
+     "gap_id": 1999,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Employer's Obligation' is not yet supported by any facts",
+     "priority": 75,
+     "claim_id": 1732,
+     "element_id": 905,
+     "claim_name": "Failure to Provide FMLA Leave",
+     "element_name": "Employer's Obligation",
+     "action_item_ref": 11,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2000,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to Provide FMLA Leave' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1732,
+     "element_id": null,
+     "claim_name": "Failure to Provide FMLA Leave",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2009,
+     "gap_type": "procedural_requirement",
+     "description": "Was there a specific timeline or requirement for Gideon to request FMLA leave, and what are the potential deadlines for filing an FMLA claim if proper notice was not provided?",
+     "priority": 50,
+     "claim_id": 1732,
+     "element_id": null,
+     "claim_name": "Failure to Provide FMLA Leave",
+     "element_name": null,
+     "action_item_ref": 21,
+     "open_questions": []
+    }
+   ],
+   "Labor and Employment Law": [
+    {
+     "gap_id": 2001,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Labor and Employment Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1734,
+     "element_id": null,
+     "claim_name": "Labor and Employment Law",
+     "element_name": null,
+     "action_item_ref": 13,
+     "open_questions": []
+    }
+   ],
+   "Area of Law": [
+    {
+     "gap_id": 2002,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1735,
+     "element_id": null,
+     "claim_name": "Area of Law",
+     "element_name": null,
+     "action_item_ref": 14,
+     "open_questions": []
+    }
+   ],
+   "Retaliation": [
+    {
+     "gap_id": 2003,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Retaliation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1736,
+     "element_id": null,
+     "claim_name": "Retaliation",
+     "element_name": null,
+     "action_item_ref": 15,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2011,
+     "gap_type": "procedural_requirement",
+     "description": "What are the procedural requirements and deadlines for filing a retaliation claim connected to Gideon's request for disability accommodation?",
+     "priority": 50,
+     "claim_id": 1736,
+     "element_id": null,
+     "claim_name": "Retaliation",
+     "element_name": null,
+     "action_item_ref": 23,
+     "open_questions": []
+    }
+   ],
+   "Disability Harassment": [
+    {
+     "gap_id": 2004,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Disability Harassment' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1739,
+     "element_id": null,
+     "claim_name": "Disability Harassment",
+     "element_name": null,
+     "action_item_ref": 16,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2014,
+     "gap_type": "procedural_requirement",
+     "description": "What is the procedure for filing claims regarding harassment that contributes to a hostile work environment under Minnesota law, and are there specific requirements that must be met?",
+     "priority": 50,
+     "claim_id": 1739,
+     "element_id": null,
+     "claim_name": "Disability Harassment",
+     "element_name": null,
+     "action_item_ref": 26,
+     "open_questions": []
+    }
+   ],
+   "Breaches of Employment Rights": [
+    {
+     "gap_id": 2005,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Breaches of Employment Rights' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1740,
+     "element_id": null,
+     "claim_name": "Breaches of Employment Rights",
+     "element_name": null,
+     "action_item_ref": 17,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2015,
+     "gap_type": "procedural_requirement",
+     "description": "What are the internal procedures that must have been followed for employment rights breaches, and what documentation is required to support such claims?",
+     "priority": 50,
+     "claim_id": 1740,
+     "element_id": null,
+     "claim_name": "Breaches of Employment Rights",
+     "element_name": null,
+     "action_item_ref": 27,
+     "open_questions": []
+    }
+   ],
+   "Potential Breach of Employment Contract": [
+    {
+     "gap_id": 2006,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Breach of Employment Contract' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1743,
+     "element_id": null,
+     "claim_name": "Potential Breach of Employment Contract",
+     "element_name": null,
+     "action_item_ref": 18,
+     "open_questions": []
+    }
+   ],
+   "Possible Constructive Discharge": [
+    {
+     "gap_id": 2007,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Possible Constructive Discharge' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1745,
+     "element_id": null,
+     "claim_name": "Possible Constructive Discharge",
+     "element_name": null,
+     "action_item_ref": 19,
+     "open_questions": []
+    }
+   ],
+   "Unpaid Leave / Wrongful Termination": [
+    {
+     "gap_id": 2010,
+     "gap_type": "procedural_requirement",
+     "description": "What are the relevant statutes of limitations for wrongful termination claims related to disability discrimination in Minnesota, and when did Gideon's termination occur?",
+     "priority": 50,
+     "claim_id": 1733,
+     "element_id": null,
+     "claim_name": "Unpaid Leave / Wrongful Termination",
+     "element_name": null,
+     "action_item_ref": 22,
+     "open_questions": []
+    }
+   ],
+   "Failure to Accommodate": [
+    {
+     "gap_id": 2012,
+     "gap_type": "procedural_requirement",
+     "description": "What procedural steps must be followed for an accommodation request under Minnesota law, and how do they relate to Gideon's situation with the lift-assist machine?",
+     "priority": 50,
+     "claim_id": 1737,
+     "element_id": null,
+     "claim_name": "Failure to Accommodate",
+     "element_name": null,
+     "action_item_ref": 24,
+     "open_questions": []
+    }
+   ],
+   "Severance Agreement Validity": [
+    {
+     "gap_id": 2013,
+     "gap_type": "procedural_requirement",
+     "description": "What are the necessary disclosures and documentation that must be provided to Gideon regarding his FMLA rights before a waiver of those claims in a severance agreement can be considered valid?",
+     "priority": 50,
+     "claim_id": 1738,
+     "element_id": null,
+     "claim_name": "Severance Agreement Validity",
+     "element_name": null,
+     "action_item_ref": 25,
+     "open_questions": []
+    }
+   ],
+   "Uncategorized": [
+    {
+     "gap_id": 2016,
+     "gap_type": "procedural_requirement",
+     "description": "You mentioned holding back rent because the landlord is ignoring repairs. Withholding on your own can be used against you in an eviction \u2014 but there is a legal way to do it: in Minnesota you can deposit the rent with the court (rent escrow, Minn. Stat. \u00a7 504B.385) and ask the court to order repairs; other states have an equivalent. Have you asked the court about depositing your rent instead of just holding it back? [Authority: Minn. Stat. \u00a7 504B.385 (rent escrow); \u00a7 504B.425 (remedies); \u00a7 504B.161 (covenants of habitability)]",
+     "priority": 84,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 1995,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Failure to Accommodate' is not yet supported by any facts",
+    "priority": 85,
+    "claim_id": 1731,
+    "element_id": 900,
+    "claim_name": "Disability Discrimination",
+    "element_name": "Failure to Accommodate",
+    "action_item_ref": 1,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2016,
+    "gap_type": "procedural_requirement",
+    "description": "You mentioned holding back rent because the landlord is ignoring repairs. Withholding on your own can be used against you in an eviction \u2014 but there is a legal way to do it: in Minnesota you can deposit the rent with the court (rent escrow, Minn. Stat. \u00a7 504B.385) and ask the court to order repairs; other states have an equivalent. Have you asked the court about depositing your rent instead of just holding it back? [Authority: Minn. Stat. \u00a7 504B.385 (rent escrow); \u00a7 504B.425 (remedies); \u00a7 504B.161 (covenants of habitability)]",
+    "priority": 84,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1996,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Eligible Employee' is not yet supported by any facts",
+    "priority": 75,
+    "claim_id": 1732,
+    "element_id": 902,
+    "claim_name": "Failure to Provide FMLA Leave",
+    "element_name": "Eligible Employee",
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1997,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Serious Health Condition' is not yet supported by any facts",
+    "priority": 75,
+    "claim_id": 1732,
+    "element_id": 903,
+    "claim_name": "Failure to Provide FMLA Leave",
+    "element_name": "Serious Health Condition",
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1998,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Notification' is not yet supported by any facts",
+    "priority": 75,
+    "claim_id": 1732,
+    "element_id": 904,
+    "claim_name": "Failure to Provide FMLA Leave",
+    "element_name": "Notification",
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 1999,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Employer's Obligation' is not yet supported by any facts",
+    "priority": 75,
+    "claim_id": 1732,
+    "element_id": 905,
+    "claim_name": "Failure to Provide FMLA Leave",
+    "element_name": "Employer's Obligation",
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2000,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to Provide FMLA Leave' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1732,
+    "element_id": null,
+    "claim_name": "Failure to Provide FMLA Leave",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2001,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Labor and Employment Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1734,
+    "element_id": null,
+    "claim_name": "Labor and Employment Law",
+    "element_name": null,
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2002,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Area of Law' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1735,
+    "element_id": null,
+    "claim_name": "Area of Law",
+    "element_name": null,
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2003,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Retaliation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1736,
+    "element_id": null,
+    "claim_name": "Retaliation",
+    "element_name": null,
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2004,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Disability Harassment' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1739,
+    "element_id": null,
+    "claim_name": "Disability Harassment",
+    "element_name": null,
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2005,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Breaches of Employment Rights' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1740,
+    "element_id": null,
+    "claim_name": "Breaches of Employment Rights",
+    "element_name": null,
+    "action_item_ref": 17,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2006,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Breach of Employment Contract' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1743,
+    "element_id": null,
+    "claim_name": "Potential Breach of Employment Contract",
+    "element_name": null,
+    "action_item_ref": 18,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2007,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Possible Constructive Discharge' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1745,
+    "element_id": null,
+    "claim_name": "Possible Constructive Discharge",
+    "element_name": null,
+    "action_item_ref": 19,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2008,
+    "gap_type": "procedural_requirement",
+    "description": "What are the filing deadlines under the Minnesota Human Rights Act for a disability discrimination claim based on failure to accommodate and termination due to Gideon's disability?",
+    "priority": 50,
+    "claim_id": 1731,
+    "element_id": null,
+    "claim_name": "Disability Discrimination",
+    "element_name": null,
+    "action_item_ref": 20,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2009,
+    "gap_type": "procedural_requirement",
+    "description": "Was there a specific timeline or requirement for Gideon to request FMLA leave, and what are the potential deadlines for filing an FMLA claim if proper notice was not provided?",
+    "priority": 50,
+    "claim_id": 1732,
+    "element_id": null,
+    "claim_name": "Failure to Provide FMLA Leave",
+    "element_name": null,
+    "action_item_ref": 21,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2010,
+    "gap_type": "procedural_requirement",
+    "description": "What are the relevant statutes of limitations for wrongful termination claims related to disability discrimination in Minnesota, and when did Gideon's termination occur?",
+    "priority": 50,
+    "claim_id": 1733,
+    "element_id": null,
+    "claim_name": "Unpaid Leave / Wrongful Termination",
+    "element_name": null,
+    "action_item_ref": 22,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2011,
+    "gap_type": "procedural_requirement",
+    "description": "What are the procedural requirements and deadlines for filing a retaliation claim connected to Gideon's request for disability accommodation?",
+    "priority": 50,
+    "claim_id": 1736,
+    "element_id": null,
+    "claim_name": "Retaliation",
+    "element_name": null,
+    "action_item_ref": 23,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2012,
+    "gap_type": "procedural_requirement",
+    "description": "What procedural steps must be followed for an accommodation request under Minnesota law, and how do they relate to Gideon's situation with the lift-assist machine?",
+    "priority": 50,
+    "claim_id": 1737,
+    "element_id": null,
+    "claim_name": "Failure to Accommodate",
+    "element_name": null,
+    "action_item_ref": 24,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2013,
+    "gap_type": "procedural_requirement",
+    "description": "What are the necessary disclosures and documentation that must be provided to Gideon regarding his FMLA rights before a waiver of those claims in a severance agreement can be considered valid?",
+    "priority": 50,
+    "claim_id": 1738,
+    "element_id": null,
+    "claim_name": "Severance Agreement Validity",
+    "element_name": null,
+    "action_item_ref": 25,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2014,
+    "gap_type": "procedural_requirement",
+    "description": "What is the procedure for filing claims regarding harassment that contributes to a hostile work environment under Minnesota law, and are there specific requirements that must be met?",
+    "priority": 50,
+    "claim_id": 1739,
+    "element_id": null,
+    "claim_name": "Disability Harassment",
+    "element_name": null,
+    "action_item_ref": 26,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2015,
+    "gap_type": "procedural_requirement",
+    "description": "What are the internal procedures that must have been followed for employment rights breaches, and what documentation is required to support such claims?",
+    "priority": 50,
+    "claim_id": 1740,
+    "element_id": null,
+    "claim_name": "Breaches of Employment Rights",
+    "element_name": null,
+    "action_item_ref": 27,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Can you share more about any specific requests you made to your employer for accommodations regarding your health situation?",
+   "Did you inform your employer about your health condition and how it affects your work?",
+   "What specific needs do you have that were not addressed by your employer?",
+   "Have you looked into filing your withheld rent with the court? If so, what steps have you taken?",
+   "Do you know the specific timeline for requesting FMLA leave as per your employer's policies?",
+   "When was your termination, and do you know if there are any deadlines for filing a wrongful termination claim in your situation?",
+   "Have you experienced any negative actions or comments from your employer after requesting accommodations or leave?",
+   "Can you explain how your health condition has affected your ability to perform your job duties?",
+   "Can you share details of any incidents at work that made you feel your disability was not respected?"
+  ],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "This intake found 13 possible legal problems in Federal, Minnesota. The main issues are Disability Discrimination, Retaliation, and Failure to Accommodate. IMPORTANT: At least one deadline may have already passed. On April 6, I got an email saying lifting up to 50 pounds is not an essential job duty. (computed 2026-05-06) [Minn. Stat. \u00a7 518.12 (the answer must be given 30 days after serving the petition)]. Please check this right away, as missing deadlines can end a case. Safety concerns were noted in this information; see the safety resources below. The analysis is complete; 9 follow-up questions below could help improve the understanding.",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}
