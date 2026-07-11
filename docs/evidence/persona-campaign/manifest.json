@@ -4,90 +4,139 @@
   "repo": "INTAKE",
   "campaign": "PERSONAS",
   "rubric_version": "intake-quality-v1.3 (LOCKED, Damien rulings 2026-07-10)",
-  "spend": "app-side ~$4-5 est. campaign total (gpt-4o-mini): rounds 1-2 ~$2-3; round 3 ~ $1.5-2 (5 full persona pipeline runs incl. immigration re-runs during BUG-16 diagnosis). Judging is orchestration-side. 8-persona expansion NOT run. Round 4: app-side ~$1-1.5 (3 persona pipeline runs, gpt-4o-mini); judging orchestration-side (3 judge subagents).",
-  "environment": "Railway alea-intake-dev (gpt-4o-mini), commit 170c1ad (== master at final re-run; deploy verified via /health before each persona run)",
-  "generated_at": "2026-07-10",
+  "spend": "App-side (gpt-4o-mini) 2026-07-10/11 session: ~3x 3-persona runs + 1 LT re-run + 5-persona expansion ~= $4.5-6; campaign total across all rounds ~= $9-11. Judging is orchestration-side (11 opus judge subagents this session). $10 session cap respected.",
+  "environment": "Railway alea-intake-dev (gpt-4o-mini). Core-persona verdicts on deploys 689eeb3 (IMM/FC round-5b) and 00236fd (LT round-5c); expansion round-6 on 5b25a70. Deploy verified via /health before every run.",
+  "generated_at": "2026-07-11",
   "counts": {
-    "pass": 4,
+    "pass": 10,
     "borderline": 3,
-    "fail": 4,
+    "fail": 5,
     "info": 4
   },
-  "total_findings": 15,
+  "total_findings": 22,
   "sections": [
     {
       "id": "EP-INTAKE-PERSONAS-001",
-      "anchor": "ep-intake-personas-001-campaign-result-round-4-gates-summary-first-judging-vs-lo",
+      "anchor": "ep-intake-personas-001-campaign-result-rounds-5b-5c-all-3-core-personas-pass-6-6",
+      "title": "Campaign result — rounds 5b/5c: ALL 3 CORE PERSONAS PASS 6/6 (LOCKED v1.3)",
+      "status": "pass",
+      "context": "First full-campaign pass. landlord-tenant 6/6 PASS mean 2.23 (round-5c, deploy 00236fd, docs 105-107); immigration 6/6 PASS mean 2.29 (round-5b, deploy 689eeb3, docs 99-101); family-custody 6/6 PASS mean 2.35 (round-5b, deploy 689eeb3, docs 102-104). Judged by 3 independent opus subagents vs LOCKED v1.3 + ANSWER-KEYS + folio_check + memo_checks. Movement: round-4 2/6, 2/6, 5/6 -> round-5a 5/6, 6/6, 5/6 -> rounds 5b/5c 6/6, 6/6, 6/6. The four strict rulings are all satisfied live: r1 doctrine depth via the deterministic probe table (VAWA, U-status/I-918B, 245(c)(2)+VAWA-exemption linkage, Pere…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-002",
+      "anchor": "ep-intake-personas-002-rounds-5b-5c-fixes-verified-live-commits-on-master",
+      "title": "Rounds 5b/5c fixes verified live (commits on master)",
+      "status": "pass",
+      "context": "03fd119 RUB-09: MN identity/notice rules pin-cited (504B.321 + subd. 1a; court-order-as-primary-authority wording); 45ffaac RUB-08: past-event extraction (asylum entry) + no cure-windows from hearing letters; b2b385b + 192983b RUB-01: deterministic doctrine-probe table (9 probes -> 12 after LT additions); cf5e464 BUG-29: lapsed what-now routing on EVERY rule (208(a)(2)(D), 240(b)(5)(C) reopen, 484.014 vacate/expungement, 60.02 set-aside, 504B.291 redemption); 2acd2ff+b9531e8 BUG-28: no-new-facts rewriter constraint + deterministic rationale grounding guard (sibling session); 689eeb3 RUB-04: u…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-003",
+      "anchor": "ep-intake-personas-003-landlord-tenant-scorecard-round-5c-v1-3-pass-6-6",
+      "title": "landlord-tenant scorecard (round 5c, v1.3) — PASS 6/6",
+      "status": "pass",
+      "context": "6/6 gates, weighted mean 2.23 (docs 105-107, deploy 00236fd). 01 PASS: habitability + retaliation claims + probes for deposit (504B.178/.172), rent escrow (504B.385/.425/.161), defective 'material lease violation' notice, retaliation (504B.285 subd.2) in all 3 memos. 04 PASS: zero fabrication (round-4 doctor-documentation fabrication gone; only the client's verbatim 'i dont have like a doctor saying that in writing yet'). 05 PASS: traversal mismatches capped at 20%, provenance-labeled. 08 PASS: Mar 17 cure + Apr 1 hearing match answer key, lapsed-routed. 09 PASS: 504B.321 subd. 1a + 504B.135 …"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-004",
+      "anchor": "ep-intake-personas-004-immigration-scorecard-round-5b-v1-3-pass-6-6",
+      "title": "immigration scorecard (round 5b, v1.3) — PASS 6/6",
+      "status": "pass",
+      "context": "6/6 gates, weighted mean 2.29 (docs 99-101, deploy 689eeb3). All 7 doctrine sub-issues surfaced with authority (VAWA 204(a)(1), U-status/I-918B, 245(c)(2) bar + VAWA exemption linkage, Pereira/Niz-Chavez, one-year-bar exceptions 208(a)(2)(D), notario fraud, OFP). Asylum one-year bar COMPUTED 2019-08-14 -> 2020-08-14, lapsed, routed to 208(a)(2)(D). Round-4 phantom 'notice posted' event GONE. Hearing Aug 20 2026 with 8 C.F.R. 1003.18/INA 239. Zero fabrication; all cites real. Non-gating: legal_aid rewriter refusal leak x14 (fixed in 00236fd), FOLIO-traversal claim noise, blanket-URGENT (fixed …"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-005",
+      "anchor": "ep-intake-personas-005-family-custody-scorecard-round-5b-v1-3-pass-6-6",
+      "title": "family-custody scorecard (round 5b, v1.3) — PASS 6/6",
+      "status": "pass",
+      "context": "6/6 gates, weighted mean 2.35 (docs 102-104, deploy 689eeb3) - best run of the campaign. 01 PASS 3/3: OFP 518B.01, DV custody factor 518.17 subd.1(a)(4), child endangerment, flight-risk/abduction (518.17 + 609.26), default risk, evidence preservation, relocation. 08/09 PASS: response Jul 15 (518.12) + ICMC Jul 22 (court's own scheduling order = primary authority per LOCKED RUB-09(b)). DV hotline 1-800-799-7233 leads safety section in all 3 memos. Non-gating: legal_aid refusal leak x8 (fixed in 00236fd); BUG-27 residue - text-thread-corey.pdf extraction completed but no thread-specific span be…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-006",
+      "anchor": "ep-intake-personas-006-round-6-expansion-5-new-personas-deploy-5b25a70-decision",
+      "title": "Round-6 expansion (5 new personas, deploy 5b25a70) — decision-gate authorized, verdicts MIXED",
+      "status": "fail",
+      "context": "Expansion ran because all 3 core personas passed all 6 gates. Verdicts (first-ever runs, no baselines): elder-exploitation 4/6 BORDERLINE mean 1.61 (docs 120-122; fails 04+09); wage-theft 3/6 FAIL mean ~1.2 (111-113; fails 04, 08, 09); benefits-denial 2/6 FAIL mean 0.90 (114-116; fails 01, 04, 08, 09); employment-discrimination 2/6 FAIL mean 1.35 (117-119; fails 01, 04, 08, 09); consumer-debt 1/6 FAIL mean 0.84 (108-110; fails 01, 04, 05, 08, 09). RUB-15 passed on ALL 8 personas (exec summaries + substance everywhere); folio_check 42/42; exports_ok 8/8. Three coherent root causes, all pre-reg…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-007",
+      "anchor": "ep-intake-personas-007-deterministic-sidecars-rounds-5b-5c-6",
+      "title": "Deterministic sidecars (rounds 5b/5c/6)",
+      "status": "pass",
+      "context": "folio_check 42/42 IRIs resolve + rooted + live across all 8 personas. memo_checks exports_ok=True on all 8 (24 memos, 48 exports). json_substance asserted on every JSON export (claims_by_jurisdiction + deadlines + non-empty executive_summary). FK grades remain the campaign-wide RUB-10 weakness: court_self_help 10.2-13.1 vs ~6th-grade target (non-gate, weight 2). Judge-noted pipeline flakiness on expansion runs: analyze HTTP 502 (cold start) + poll_status 404 bursts before convergence; wage-theft converged at iteration 2 / completeness 0.75 (early-convergence question)."
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-008",
+      "anchor": "ep-intake-personas-008-campaign-result-round-4-gates-summary-first-judging-vs-lo",
       "title": "Campaign result — round-4 gates summary (FIRST judging vs LOCKED v1.3)",
       "status": "fail",
       "context": "Gates vs LOCKED v1.3 (round-3/v1.2 -> round-4/v1.3, NOT directly comparable — v1.3 is strictly harder): landlord-tenant 5/6 -> 2/6 (01 FAIL new doctrine-depth gate: rent-escrow §504B.385 / defective-notice / post-lapse what-now all absent; 04 FAIL NEW: memo asserts 'the doctor's documentation of asthma' while narrative says 'i dont have like a doctor saying that in writing yet' — fabricated corroboration; 08 FAIL: Apr-1 hearing + Mar-17 notice correctly computed AND flagged lapsed, but v1.3 requires routing to the what-now pathway (motion to vacate / expungement §484.014) — absent; 09 FAIL: 1…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-002",
-      "anchor": "ep-intake-personas-002-round-4-fixes-verified-live-commits-on-master",
+      "id": "EP-INTAKE-PERSONAS-009",
+      "anchor": "ep-intake-personas-009-round-4-fixes-verified-live-commits-on-master",
       "title": "Round-4 fixes VERIFIED live (commits on master)",
       "status": "pass",
       "context": "BUG-23 [RUB-15 GATE] (5f8eb8b): assembler synthesizes a real executive_summary (deterministic, no-LLM, citation-preserving); judges verified substantive summaries in all 9 memos + non-empty executive_summary in all 9 export JSONs (e.g. FC export_85: 516 chars incl. 'by 2026-07-15... based on Minn. Stat. § 518.12'). RUB-15 now PASSES ALL THREE personas. BUG-22 [RUB-05] (c22117e): exploration lane routed through SemanticFitValidator (label+branch resolved in-memory); folio_check 22/22 IRIs resolve+rooted+live, zero geographic junk (round-3 'Resen' class gone); RUB-05 PASSES all three. BUG-24 (b…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-003",
-      "anchor": "ep-intake-personas-003-bugs-open-after-round-4-v1-3-failure-classes",
+      "id": "EP-INTAKE-PERSONAS-010",
+      "anchor": "ep-intake-personas-010-bugs-open-after-round-4-v1-3-failure-classes",
       "title": "Bugs OPEN after round 4 (v1.3 failure classes)",
       "status": "fail",
       "context": "BUG-28 [RUB-04, LT+IMM] NEW CLASS — fabrication in prose synthesis: LT memo asserts doctor documentation the client explicitly lacks; IMM invents a 'notice posted 2026-07-11' trigger event producing a phantom computed deadline. The no-fabrication gate now fails on LLM-synthesized prose, not extracted facts. BUG-29 [RUB-08, LT+IMM] — lapsed-deadline what-now routing: engine flags lapsed correctly but memos never route to the exception pathway (LT: motion to vacate/expungement §484.014; IMM: §208(a)(2)(D)); sibling's exception-routing code did not manifest in this run's memos. BUG-30 [RUB-09, L…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-004",
-      "anchor": "ep-intake-personas-004-landlord-tenant-scorecard-round-4-v1-3",
+      "id": "EP-INTAKE-PERSONAS-011",
+      "anchor": "ep-intake-personas-011-landlord-tenant-scorecard-round-4-v1-3",
       "title": "landlord-tenant scorecard (round 4, v1.3)",
       "status": "fail",
       "context": "GATES: 01=FAIL 04=FAIL 05=PASS 08=FAIL 09=FAIL 15=PASS (2/6). Weighted ~1.16/3. Load-bearing: memo_78:121 'the doctor's documentation of asthma' vs narrative 'i dont have like a doctor saying that in writing yet' (04); deadline 67 citation 'Cure/vacate period stated in your notice or lease' on a §504B.321-governed computed deadline (09); Apr-1 hearing flagged 'ALREADY PASSED' but no motion-to-vacate/expungement routing (08); rent-escrow/defective-notice/post-lapse doctrine absent, 'Material Lease Violation' framed AGAINST the client (01). Positives: BUG-23 exec summaries verified in memos+JSO…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-005",
-      "anchor": "ep-intake-personas-005-immigration-scorecard-round-4-v1-3",
+      "id": "EP-INTAKE-PERSONAS-012",
+      "anchor": "ep-intake-personas-012-immigration-scorecard-round-4-v1-3",
       "title": "immigration scorecard (round 4, v1.3)",
       "status": "fail",
       "context": "GATES: 01=FAIL 04=FAIL 05=PASS 08=FAIL 09=FAIL 15=PASS (2/6). Weighted ~0.87/3. Load-bearing: zero hits for one-year/208(a)/August 14/lapsed across all memos+exports despite narrative 'I came to this country August 14, 2019' (08); deadline 70 cites lease cure/vacate rule for an EOIR address-change duty whose real source is 8 C.F.R. §1003.15(d)/EOIR-33, built on an invented 'notice posted 2026-07-11' trigger (04+09); U-status hook planted in police report ('CERTIFYING OFFICIAL: Not yet requested') never surfaced; no VAWA self-petition mechanism, §245(c)(2), or Pereira (01). Positives: Aug-20 h…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-006",
-      "anchor": "ep-intake-personas-006-family-custody-scorecard-round-4-v1-3",
+      "id": "EP-INTAKE-PERSONAS-013",
+      "anchor": "ep-intake-personas-013-family-custody-scorecard-round-4-v1-3",
       "title": "family-custody scorecard (round 4, v1.3)",
       "status": "borderline",
       "context": "GATES: 01=FAIL 04=PASS 05=PASS 08=PASS 09=PASS 15=PASS (5/6 — best run of the campaign). Weighted ~1.68/3, capped borderline by 01. Load-bearing: answer deadline served Jun-15 -> computed Jul-15 with CORRECTED Minn. Stat. §518.12 citation (BUG-24 verified; wrong 303.03 cite gone from all outputs) (09); zero fabrication — every fact traces (04); exec summaries substantive in all 3 profiles (15). The one gate: §518.17 subd. 1(a)(4) domestic-abuse best-interest factor never linked to the custody analysis, and parental-abduction/flight-risk interim terms absent — the threats ('I'll take them and …"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-007",
-      "anchor": "ep-intake-personas-007-deterministic-sidecars-round-4",
+      "id": "EP-INTAKE-PERSONAS-014",
+      "anchor": "ep-intake-personas-014-deterministic-sidecars-round-4",
       "title": "Deterministic sidecars (round 4)",
       "status": "pass",
       "context": "folio_check.py --all: 22/22 mapped IRIs resolve + rooted + live (FC 8, IMM 4, LT 10); labels semantically plausible, zero Location-branch/geographic nodes (BUG-22 validator holding in the exploration lane). memo_checks.py: exports_ok=True all 9 docs (PDF magic + JSON substance); FC deadlines incl. served->+30d computed; FK grades court_self_help 12.7/12.8/14.5 (target ~6, RUB-10 open). Full backend suite at deploy commit e6bbf74: 1170 passed, 3 skipped."
     },
     {
-      "id": "EP-INTAKE-PERSONAS-008",
-      "anchor": "ep-intake-personas-008-campaign-result-round-3-gates-summary",
+      "id": "EP-INTAKE-PERSONAS-015",
+      "anchor": "ep-intake-personas-015-campaign-result-round-3-gates-summary",
       "title": "Campaign result — round-3 gates summary",
       "status": "borderline",
       "context": "Gates vs LOCKED v1.2 (round 2 -> round 3): landlord-tenant 4/6 -> 5/6 (RUB-08/09/15 now pass; only RUB-05 fails); immigration 2/6 -> 2/6 (RUB-04/09 pass; RUB-01+08 remain PENDING-DAMIEN doctrine/lapsed-deadline items; RUB-05+15 engineering); family-custody 3/6 -> 3/6 (RUB-01/04/09 pass; RUB-05/08/15 fail). All four round-2 engineering blockers verified FIXED live: BUG-18 (JSON exports carry full claims/deadlines/questions + sidecar now asserts substance), BUG-19 (zero rewriter-error leaks in all 9 memos vs 26+ in round 2), BUG-20 (all FC memos lead with National DV Hotline 1-800-799-7233; imm…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-009",
-      "anchor": "ep-intake-personas-009-bugs-fixed-this-round-verified-live-commits-on-master",
+      "id": "EP-INTAKE-PERSONAS-016",
+      "anchor": "ep-intake-personas-016-bugs-fixed-this-round-verified-live-commits-on-master",
       "title": "Bugs FIXED this round (verified live, commits on master)",
       "status": "pass",
       "context": "BUG-18 [RUB-15] — JSON exports were empty shells: generation persisted only markdown; export rebuilt an EMPTY OutputContext. Fix: serialize the final post-adaptation context into rendered_json at generation (c8f49cd). Sidecars persona_run.py/memo_checks.py now assert json_substance so an empty shell hard-fails RUB-15 (996c896). Verified: all 9 round-3 JSON exports carry claims_by_jurisdiction / deadlines / questions. BUG-19 — rewriter refusals ('It seems there was an issue with the text provided...', 'I'm sorry, but I cannot assist') returned as SUCCESSFUL completions and leaked into memos/PD…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-010",
-      "anchor": "ep-intake-personas-010-bugs-open-next-iteration",
+      "id": "EP-INTAKE-PERSONAS-017",
+      "anchor": "ep-intake-personas-017-bugs-open-next-iteration",
       "title": "Bugs OPEN (next iteration)",
       "status": "info",
       "context": "BUG-22 [RUB-05 GATE, all 3] (engineering) — semantic-fit bypass on the exploration/'discovered' lane: adjacency/wide-net claims carry IRIs that never pass the validator. Round-3 mismatches at 60-90% confidence: LT 'Breach of WoH Due to Mold'->Product Liability Law @0.85 (the rubric amendment's verbatim example), 'Tenant's Rights to Repairs'->Tenant (actor) @0.90; IMM 'Fake SSN'->'sequence' (ontology utility) @0.80, 'Asylum Deadline'->generic Status @0.85; FC 'Legal Representation'@0.90 -> IRI RC15aa638D53bC3Edca48b3e = 'Resen', a North Macedonia municipality (the round-2 geographic bug surviv…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-011",
-      "anchor": "ep-intake-personas-011-landlord-tenant-scorecard-round-3-v1-2",
+      "id": "EP-INTAKE-PERSONAS-018",
+      "anchor": "ep-intake-personas-018-landlord-tenant-scorecard-round-3-v1-2",
       "title": "landlord-tenant scorecard (round 3, v1.2)",
       "status": "borderline",
       "context": "5/6 gates (round 2: 4/6). Run 31: 17 claims (14 with IRI), 28 gaps, 14 questions, 3 deadlines, memos 66-68. Both answer-key deadlines computed (cure Mar 17; hearing Apr 1), distractor excluded, no invented answer deadline. Weighted mean ~1.2/3; capped borderline by RUB-05.",
@@ -131,8 +180,8 @@
       ]
     },
     {
-      "id": "EP-INTAKE-PERSONAS-012",
-      "anchor": "ep-intake-personas-012-immigration-scorecard-round-3-v1-2",
+      "id": "EP-INTAKE-PERSONAS-019",
+      "anchor": "ep-intake-personas-019-immigration-scorecard-round-3-v1-2",
       "title": "immigration scorecard (round 3, v1.2)",
       "status": "info",
       "context": "2/6 gates (round 2: 2/6 — flat count, healthier mix: BUG-19 fixed, questions restored to 9 via orchestrator fix, hearing deadline computed WITH correct federal citation 8 C.F.R. §1003.18 / INA §239). Run 34: 16 claims (14 with IRI), 21 gaps, 9 questions, 3 deadlines, memos 75-77. Weighted mean ~1.42/3; capped borderline.",
@@ -176,8 +225,8 @@
       ]
     },
     {
-      "id": "EP-INTAKE-PERSONAS-013",
-      "anchor": "ep-intake-personas-013-family-custody-scorecard-round-3-v1-2",
+      "id": "EP-INTAKE-PERSONAS-020",
+      "anchor": "ep-intake-personas-020-family-custody-scorecard-round-3-v1-2",
       "title": "family-custody scorecard (round 3, v1.2)",
       "status": "info",
       "context": "3/6 gates (round 2: 3/6). BUG-20 verified fixed: all three memos lead with National DV Hotline 1-800-799-7233, domain-appropriate list, no immigration orgs. Run 30: 14 claims (13 with IRI), 18 gaps, 9 questions, 3 deadlines, memos 63-65.",
@@ -221,15 +270,15 @@
       ]
     },
     {
-      "id": "EP-INTAKE-PERSONAS-014",
-      "anchor": "ep-intake-personas-014-deterministic-sidecars-memo-checks-py-folio-check-py",
+      "id": "EP-INTAKE-PERSONAS-021",
+      "anchor": "ep-intake-personas-021-deterministic-sidecars-memo-checks-py-folio-check-py",
       "title": "Deterministic sidecars (memo_checks.py + folio_check.py)",
       "status": "pass",
       "context": "folio_check.py --all: 41/41 mapped IRIs resolve + non-deprecated + well-rooted (deterministic, read-only). memo_checks.py: exports_ok=True for all 3 personas — NOW includes the json_substance assertion added this round (claims/deadlines/executive_summary non-empty check on the export payload), which would have caught BUG-18 in round 1. Deadlines vs ANSWER-KEYS: LT Mar 17 + Apr 1 correct; IMM Aug 20 correct w/ citation; FC Jul 22 correct, Jul 15 response present-but-uncomputed (BUG-24). Reading level (crude FK): court_self_help memos 13.8-15.1 vs ~6 target — RUB-10 scores 1 everywhere (not a g…"
     },
     {
-      "id": "EP-INTAKE-PERSONAS-015",
-      "anchor": "ep-intake-personas-015-what-v1-0-uat-close-still-needs-after-round-3",
+      "id": "EP-INTAKE-PERSONAS-022",
+      "anchor": "ep-intake-personas-022-what-v1-0-uat-close-still-needs-after-round-3",
       "title": "What v1.0 UAT close still needs (after round 3)",
       "status": "info",
       "context": "BUG-22 : route ALL claim-mapping lanes (exploration/adjacency/wide-net) through SemanticFitValidator; add label-vs-claim fitness column to folio_check.py. BUG-23 : generate a real executive_summary in the assembler (content feature). BUG-24 : add MN custody-response 30-day rule (and a served+N-days rules family) to the deadline engine. BUG-25/26/27 : triage enum leak; fact-linkage dedup; upload-facts actually incorporated. Damien decisions : RUB-01 doctrine depth bar; RUB-08 lapsed-deadline requirement; RUB-09 primary-source strictness (strict reading would gate everything); RUB-15 executive_…"
