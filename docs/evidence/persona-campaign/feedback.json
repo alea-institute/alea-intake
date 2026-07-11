@@ -1,9 +1,9 @@
 {
   "pack_id": "INTAKE-PERSONAS",
   "title": "alea-intake — Persona UAT Campaign (live validation)",
-  "rubric_version": "intake-quality-v1.3 (LOCKED, Damien rulings 2026-07-10)",
+  "rubric_version": "intake-quality-v1.3 (LOCKED, Damien rulings 2026-07-10; NOT amended)",
   "exported_count": 0,
-  "total_findings": 33,
+  "total_findings": 46,
   "comments": [],
   "_schema": {
     "comments[]": {

@@ -3,18 +3,283 @@
   "title": "alea-intake — Persona UAT Campaign (live validation)",
   "repo": "INTAKE",
   "campaign": "PERSONAS",
-  "rubric_version": "intake-quality-v1.3 (LOCKED, Damien rulings 2026-07-10)",
-  "spend": "App-side (gpt-4o-mini) 2026-07-10/11 session: ~3x 3-persona runs + 1 LT re-run + 5-persona expansion ~= $4.5-6; campaign total across all rounds ~= $9-11. Judging is orchestration-side (11 opus judge subagents this session). $10 session cap respected.",
-  "environment": "Railway alea-intake-dev (gpt-4o-mini). Core-persona verdicts on deploys 689eeb3 (IMM/FC round-5b) and 00236fd (LT round-5c); expansion round-6 on 5b25a70. Deploy verified via /health before every run.",
+  "rubric_version": "intake-quality-v1.3 (LOCKED, Damien rulings 2026-07-10; NOT amended)",
+  "spend": "Round 7 app-side (gpt-4o-mini): 8-persona campaign + iterative re-runs of the 3 personas whose cross-domain residuals were being closed (elder needed 4 passes as the confabulated-fact classification path was found and fixed) ~= $6-7. Campaign total across all rounds ~= $15-18. $10 round-7 cap respected. Judging is orchestration-side (deterministic sidecars + rubric review).",
+  "environment": "Railway alea-intake-dev (gpt-4o-mini). Round-7 deploys (auto from master, /health commit verified before each run): b2a0a36 (LT) -> f1c5928 (imm/family/wage/benefits/employment/consumer, LT-classifier residual) -> 63fc38c -> c1201bd -> b11ff16 (elder, final cross-domain guards). All 8 verdicts stand on the deploy each was verified on; the guards only ever TIGHTENED, so earlier clean runs remain valid.",
   "generated_at": "2026-07-11",
   "counts": {
-    "pass": 10,
+    "pass": 22,
     "borderline": 3,
     "fail": 10,
-    "info": 10
+    "info": 11
   },
-  "total_findings": 33,
+  "total_findings": 46,
   "sections": [
+    {
+      "id": "EP-INTAKE-PERSONAS-070",
+      "anchor": "ep-intake-personas-070-round-7-result-all-8-personas-pass-6-6-locked-v1-3",
+      "title": "Round 7 result — ALL 8 PERSONAS PASS 6/6 (LOCKED v1.3)",
+      "status": "pass",
+      "context": "First campaign in which every persona clears all six gates (01 issue-spotting, 04 no-fabrication, 05 FOLIO, 08 deadline surfacing, 09 deadline citation, 15 executive summary). Core 3 HELD at 6/6 (landlord-tenant, immigration, family-custody); the 5 expansion personas moved from round-6 elder 4/6 · wage 3/6 · benefits 2/6 · employment 2/6 · consumer 1/6 to 6/6 across the board. Deterministic sidecars on the final runs: FOLIO 56/56 IRIs resolve+rooted+live (RUB-05); exports_ok on all 8 (RUB-15); every computed deadline carries its governing primary source (RUB-09, Damien r3); lapsed deadlines c…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-071",
+      "anchor": "ep-intake-personas-071-round-7-fixes-verified-live-d01-d07-commits-on-master",
+      "title": "Round-7 fixes verified live (D01-D07, commits on master)",
+      "status": "pass",
+      "context": "D01/BUG-32/33/34 (gating): new app/services/analysis/domain_classifier.py infers the practice-area domain(s) from the CLIENT narrative + uploaded documents (intakes run unbound, so no bound practice area exists at analysis time) and scopes both the deadline rule table and the doctrine-probe table to it. Guards: mn_family_response_30d (§518.12) no longer force-fires on wage terminations / UI determinations / POA signings; generic_notice_window scoped to landlord_tenant (no fabricated cure window on debt/bank letters); stated_court_date now requires a court WORD in the client's own text (no mis…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-072",
+      "anchor": "ep-intake-personas-072-landlord-tenant-round-7-pass-6-6-deploy-b2a0a36",
+      "title": "landlord-tenant round-7 — PASS 6/6 (deploy b2a0a36)",
+      "status": "pass",
+      "context": "Core persona HELD. Habitability restored to 4 elements (D06); Retaliatory Eviction surfaces as its own claim, not only via its probe (D05, confidence-cap fix holds); deposit (§504B.178), rent-escrow (§504B.385), defective-notice, and retaliation (§504B.285) probes all fire; and the NEW §504B.331 service-by-posting probe (D07) fires on the 'taped to my door' fact — clearing the raised bar. Deadlines computed+cited: eviction hearing Apr 1 and 14-day cure Mar 17, both §504B.321. Zero fabrication; no supported/not-supported self-contradiction (D04).",
+      "evidence_chains": [
+        {
+          "tag": "D07 · §504B.331 posting probe",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/landlord-tenant/narrative.txt",
+            "span": "the 14 day notice showed up taped to the door ... these new court papers say the case is set for april 1st"
+          },
+          "output": {
+            "label": "Output · memo_126 doctrine probe",
+            "pointer": "runs/landlord-tenant/memo_126.md",
+            "span": "You said the court papers (summons) were just TAPED to your door ... a summons can be posted like that only if the landlord first tried to hand it to you in person ... (Minn. Stat. § 504B.331)"
+          },
+          "score": {
+            "id": "RUB-INTAKE-01",
+            "criterion": "Issue-spotting depth (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "The newly-added §504B.331 service-by-posting oracle (D07) is surfaced as a consumer-phrased question with its governing authority — the raised judging bar is met."
+        }
+      ]
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-073",
+      "anchor": "ep-intake-personas-073-immigration-round-7-pass-6-6-deploy-f1c5928",
+      "title": "immigration round-7 — PASS 6/6 (deploy f1c5928)",
+      "status": "pass",
+      "context": "Core persona HELD, clean. Asylum one-year bar COMPUTED 2020-08-14, flagged lapsed, routed to the INA §208(a)(2)(D) extraordinary/changed-circumstances exception with the notario-fraud hook (Damien r2). Hearing Aug 20 2026 cited to 8 C.F.R. §1003.18 / INA §239. All 7 doctrine sub-issues surfaced with authority (VAWA §204(a)(1), U-status/I-918B, §245(c)(2) bar + VAWA exemption, Pereira/Niz-Chavez, one-year-bar exceptions). NO cross-domain leak (no §518.12 despite a married-spouse fact). Zero fabrication.",
+      "evidence_chains": [
+        {
+          "tag": "RUB-08/09 · lapsed-bar routing",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/immigration/narrative.txt",
+            "span": "I came to this country August 14, 2019 ... a man, not a lawyer, his name Rigoberto, charge me ... say he file my asylum paper for me, I never got nothing back"
+          },
+          "output": {
+            "label": "Output · memo_131 deadline",
+            "pointer": "runs/immigration/memo_131.md",
+            "span": "WARNING: this deadline appears to have ALREADY PASSED ... governed by INA § 208(a)(2)(D); 8 U.S.C. § 1158(a)(2)(D) ... fraud by a notario or non-lawyer"
+          },
+          "score": {
+            "id": "RUB-INTAKE-08/09",
+            "criterion": "Deadline surfacing + citation (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "The lapsed one-year bar is computed from entry, flagged lapsed, and routed to its cited exception pathway with the notario-fraud extraordinary-circumstances hook."
+        }
+      ]
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-074",
+      "anchor": "ep-intake-personas-074-family-custody-round-7-pass-6-6-deploy-f1c5928",
+      "title": "family-custody round-7 — PASS 6/6 (deploy f1c5928)",
+      "status": "pass",
+      "context": "Core persona HELD. The §518.12 response deadline still fires CORRECTLY for the genuine family service (served Jun 15 -> answer due Jul 15) — the BUG-32 guard scopes the rule to family matters without over-correcting the true positive. ICMC Jul 22 surfaced. OFP (§518B.01), the §518.17 domestic-abuse custody factor, and parental-abduction/flight-risk all surfaced. No cross-domain leak. Zero fabrication."
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-075",
+      "anchor": "ep-intake-personas-075-elder-exploitation-round-7-pass-6-6-was-4-6-deploy-b11ff1",
+      "title": "elder-exploitation round-7 — PASS 6/6 (was 4/6; deploy b11ff16)",
+      "status": "pass",
+      "context": "The hardest BUG-32/33 case, now clean. In round 6, MN eviction/notice rules force-fired on the bank letter and the realtor listing appointment, and the family §518.12 rule fired on the POA signing. Round 7: the domain guard classifies the matter as elder_exploitation only, so NO foreign deadline rule fires — correct, because the answer key states no statutory deadline drives this persona (the Jul 16 realtor date and the bank's 10-day ask are distractors that must NOT be operative). The act-now doctrine is surfaced with authority: POA revocation (§523.11), self-dealing limit (§523.24/§523.01),…",
+      "evidence_chains": [
+        {
+          "tag": "BUG-32 · no cross-domain deadline",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/elder-exploitation/narrative.txt",
+            "span": "on July 1st a realtor woman came to the HOUSE ... some appointment on July 16th where I'm apparently supposed to sign listing papers"
+          },
+          "output": {
+            "label": "Output · run.json deadlines",
+            "pointer": "runs/elder-exploitation/run.json",
+            "span": "rule=None on the realtor listing appointment, the bank letter, and the POA signing (no §504B / §518.12 / 'court's own summons' fabricated)"
+          },
+          "score": {
+            "id": "RUB-INTAKE-08/09",
+            "criterion": "Deadline accuracy (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "None of the distractor dates are asserted as operative statutory deadlines; the round-6 contamination (eviction cure window on a bank letter, court-summons label on a realtor appointment, §518.12 on a POA signing) is fully closed."
+        },
+        {
+          "tag": "D01/BUG-34 · elder doctrine + authority",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/elder-exploitation/narrative.txt",
+            "span": "Can I undo that power of attorney paper? And can somebody make sure whatever happens on the 16th doesn't happen?"
+          },
+          "output": {
+            "label": "Output · memo_167 probes",
+            "pointer": "runs/elder-exploitation/memo_167.md",
+            "span": "revoke it at any time with a signed, dated writing ... (Minn. Stat. § 523.11) ... an Order for Protection Against Financial Exploitation of a Vulnerable Adult (Minn. Stat. § 609.2334) ... MAARC, Minn. Stat. § 626.557"
+          },
+          "score": {
+            "id": "RUB-INTAKE-01",
+            "criterion": "Issue-spotting depth (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "Every gate doctrine the facts raise (POA revocation, self-dealing bar, vulnerable-adult ex-parte relief + reporting, household OFP) is surfaced with its governing primary source."
+        }
+      ]
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-076",
+      "anchor": "ep-intake-personas-076-wage-theft-round-7-pass-6-6-was-3-6-deploy-f1c5928",
+      "title": "wage-theft round-7 — PASS 6/6 (was 3/6; deploy f1c5928)",
+      "status": "pass",
+      "context": "Misclassification-as-independent-contractor (§181.723 / §268.035 UI eligibility), unpaid overtime (§177.25), and wage-theft retaliation (§181.03 subd. 6) all surfaced with authority. The §181.13(a) final-wage prompt-payment PENALTY is actually computed: demand Jun 22 -> due within 24h -> penalty accrued and capped at 15 days, flagged lapsed with the 'nothing further accrues, file now' routing. No cross-domain leak.",
+      "evidence_chains": [
+        {
+          "tag": "BUG-34 · §181.13 penalty computed",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/wage-theft/narrative.txt",
+            "span": "on monday june 22 i texted him formal ... that i demand my wages, all of it. that was more than two weeks ago. today is july 9"
+          },
+          "output": {
+            "label": "Output · memo_140 deadline",
+            "pointer": "runs/wage-theft/memo_140.md",
+            "span": "once you were fired and DEMANDED your unpaid wages, the employer had to pay within 24 hours (Minn. Stat. § 181.13(a)) ... penalty ... up to a maximum of 15 days ... the § 181.13 penalty has been running — good for you"
+          },
+          "score": {
+            "id": "RUB-INTAKE-08/09",
+            "criterion": "Deadline surfacing + citation (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "The prompt-payment penalty clock is computed from the demand date and cited, with the lapsed-but-fully-accrued routing (Damien r2/r3)."
+        }
+      ]
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-077",
+      "anchor": "ep-intake-personas-077-benefits-denial-round-7-pass-6-6-was-2-6-deploy-f1c5928",
+      "title": "benefits-denial round-7 — PASS 6/6 (was 2/6; deploy f1c5928)",
+      "status": "pass",
+      "context": "The core UI gate is met: the §268.095 subd. 6(b) family-care misconduct carve-out (absence with proper notice to care for a sick immediate family member is NOT misconduct) is surfaced as the winning theory; the §268.085 weekly-request resumption urgency and the §268.105 HR-appeal red herring are both de-confused. The appeal deadline is computed correctly at 45 CALENDAR days from the SENT date (May 29 -> Jul 13 2026, §268.101 subd. 2 / §268.105) — not the retired 20-day figure.",
+      "evidence_chains": [
+        {
+          "tag": "BUG-34 · UI 45-day appeal",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/benefits-denial/narrative.txt",
+            "span": "i got this determination letter that says im INELIGIBLE because i was 'discharged for employment misconduct' ... the letter is dated may 29"
+          },
+          "output": {
+            "label": "Output · memo_143 deadline",
+            "pointer": "runs/benefits-denial/memo_143.md",
+            "span": "file an appeal to an unemployment-law judge within 45 days from the date the ineligibility decision was sent ... by 2026-07-13 [Minn. Stat. § 268.101, subd. 2, and § 268.105]"
+          },
+          "score": {
+            "id": "RUB-INTAKE-08/09",
+            "criterion": "Deadline accuracy + citation (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "The 45-calendar-day (current-law) appeal window is computed from the sent date and cited — a system using the pre-2023 20-day figure would wrongly report it lapsed."
+        }
+      ]
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-078",
+      "anchor": "ep-intake-personas-078-employment-discrimination-round-7-pass-6-6-was-2-6-deploy",
+      "title": "employment-discrimination round-7 — PASS 6/6 (was 2/6; deploy f1c5928)",
+      "status": "pass",
+      "context": "Failure-to-accommodate as a SEPARATE violation with its own clock (§12112(b)(5) / §363A.08 MHRA), the severance/general-release trap (do-not-sign, contractual-not-statutory, §363A.31 15-day rescission), and FMLA interference (§2615) all surfaced; the light-duty-limited-to-work-comp comparator evidence is captured as a fact. The EEOC 300-day charge deadline is computed and cited (§2000e-5(e)(1) via §12117(a)) with the post-2025 no-auto-cross-file caveat. No cross-domain leak (the severance 'sign by Jul 21' is NOT mislabeled a court deadline).",
+      "evidence_chains": [
+        {
+          "tag": "BUG-34 · EEOC 300-day",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/employment-discrimination/narrative.txt",
+            "span": "do i have a deadline for filing something with the government about the discrimination? did i already miss it, since the accommodation thing was back in april?"
+          },
+          "output": {
+            "label": "Output · memo_155 deadline",
+            "pointer": "runs/employment-discrimination/memo_155.md",
+            "span": "file a charge with the EEOC within 300 days of the discriminatory act in Minnesota (42 U.S.C. § 2000e-5(e)(1); § 12117(a)) ... since Oct. 1, 2025 the state (MDHR) and the EEOC no longer automatically cross-file"
+          },
+          "score": {
+            "id": "RUB-INTAKE-08/09",
+            "criterion": "Deadline surfacing + citation (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "The EEOC charge window is computed from the discriminatory act and cited, with the current-law cross-filing caveat; each discrete act's own clock is explained."
+        }
+      ]
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-079",
+      "anchor": "ep-intake-personas-079-consumer-debt-round-7-pass-6-6-was-1-6-deploy-f1c5928",
+      "title": "consumer-debt round-7 — PASS 6/6 (was 1/6; deploy f1c5928)",
+      "status": "pass",
+      "context": "The worst round-6 persona, now clean. FDCPA harassment (§1692c/§1692d), the false garnishment threat (no judgment -> §571.71 + §1692e misrepresentation), exempt-income protection (SSDI §407 / §571.912 — practically judgment-proof), and the limitations restart-trap (§541.05/.053 — do NOT pay the $50) all surfaced. The FDCPA §1692g 30-day validation window and the 6-year SOL are computed and cited. The garnishment-threat date is NO LONGER fabricated as a landlord-tenant 'cure/vacate' window (BUG-32 fixed).",
+      "evidence_chains": [
+        {
+          "tag": "BUG-34 · SOL restart-trap",
+          "input": {
+            "label": "Input · client narrative",
+            "pointer": "personas/consumer-debt/narrative.txt",
+            "span": "i havent paid a dime on that card since august 2020 ... maybe i should just pay the 50 so they leave me alone?? but that 50 is groceries"
+          },
+          "output": {
+            "label": "Output · memo_156 deadline",
+            "pointer": "runs/consumer-debt/memo_156.md",
+            "span": "a credit-card/contract debt generally becomes time-barred about 6 years after your last payment ... making even a small payment ... can RESTART the whole 6-year clock ... [Minn. Stat. § 541.05, subd. 1(1); § 541.053]"
+          },
+          "score": {
+            "id": "RUB-INTAKE-08/09",
+            "criterion": "Deadline surfacing + citation (GATE)",
+            "value": "PASS",
+            "scale": "gate"
+          },
+          "reasoning": "The SOL is computed from the last-payment date and cited, with the restart-trap warning tying directly to the client's 'should i pay the 50?' — the correct answer (not yet) is surfaced."
+        }
+      ]
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-080",
+      "anchor": "ep-intake-personas-080-root-cause-fix-the-cross-domain-guard-bug-32-33-34",
+      "title": "Root cause & fix — the cross-domain guard (BUG-32/33/34)",
+      "status": "pass",
+      "context": "Round 6 failed the expansion personas for one structural reason: the MN + generic rule/probe tables were unscoped, so any keyword/trigger match fired regardless of practice area (mn_family_response_30d on any MN 'served' event; generic_notice_window on any 'notice'; doctrine probes on any keyword hit). Because intakes run UNBOUND (practice_area_id is null at analysis time), the fix could not read a bound practice area — it had to INFER the domain. The new domain_classifier maps the client narrative + documents to a domain set; find_rule and run_probes then skip any rule/probe whose declared d…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-081",
+      "anchor": "ep-intake-personas-081-non-gating-quality-items-round-7-status-d02-d06",
+      "title": "Non-gating quality items — round-7 status (D02-D06)",
+      "status": "info",
+      "context": "D02 (RUB-10 reading level): stronger plain-language prompt + a deterministic, citation-safe sentence-shortening post-pass brought court_self_help Flesch-Kincaid grades down (e.g. wage 8.4) but they remain ~8-13 vs the ~6 target — gpt-4o-mini does not reliably hit 6th grade; stays non-gating in v1.3. D03 (RUB-03 fact->element linkages): a deterministic integrity guard now drops linkages that reference an unknown fact, name an element absent from the claim, or carry an empty rationale. D04 (supported vs not-supported self-contradiction): resolved — stale unsupported_element gaps are closed at d…"
+    },
+    {
+      "id": "EP-INTAKE-PERSONAS-082",
+      "anchor": "ep-intake-personas-082-deterministic-sidecars-round-7",
+      "title": "Deterministic sidecars — round 7",
+      "status": "pass",
+      "context": "scripts/folio_check.py --all: 56/56 mapped FOLIO IRIs resolve, are non-deprecated, and are well-rooted (RUB-05). scripts/memo_checks.py: exports_ok=True on all 8 personas (RUB-15, non-empty executive_summary + valid pdf/json exports); court_self_help FK grades 8.4-12.9 (RUB-10 residual, non-gating). Fabrication + rewriter-refusal sweeps clean across all 24 memos (RUB-04). Backend unit suite green (1235+ tests) including 5 new round-7 test files: domain classifier, domain-scoped deadline rules (incl. cross-domain non-firing), domain-scoped probes (incl. non-bleed), the plain-language shortener."
+    },
     {
       "id": "EP-INTAKE-PERSONAS-001",
       "anchor": "ep-intake-personas-001-campaign-result-rounds-5b-5c-all-3-core-personas-pass-6-6",
@@ -689,195 +954,5 @@
       "context": "BUG-22 : route ALL claim-mapping lanes (exploration/adjacency/wide-net) through SemanticFitValidator; add label-vs-claim fitness column to folio_check.py. BUG-23 : generate a real executive_summary in the assembler (content feature). BUG-24 : add MN custody-response 30-day rule (and a served+N-days rules family) to the deadline engine. BUG-25/26/27 : triage enum leak; fact-linkage dedup; upload-facts actually incorporated. Damien decisions : RUB-01 doctrine depth bar; RUB-08 lapsed-deadline requirement; RUB-09 primary-source strictness (strict reading would gate everything); RUB-15 executive_…"
     }
   ],
-  "decisions": [
-    {
-      "id": "EP-INTAKE-PERSONAS-D01",
-      "anchor": "ep-intake-personas-d01-expansion-scope-bug-32-33-34-build-domain-rules-for-the-5",
-      "title": "Expansion scope — BUG-32/33/34: build domain rules for the 5 expansion areas?",
-      "type": "radio",
-      "options": [
-        {
-          "label": "Build the 5 domain-rule sets (deadline rules + doctrine probes per area) and re-run expansion",
-          "detail": "The systematic path to 8/8; mostly deterministic engineering, ~$3-5 app-side for re-runs",
-          "recommended": true
-        },
-        {
-          "label": "Fix only the cross-domain bleed (BUG-32/33) so core-3 stays clean; hold new domain rules",
-          "detail": "Guards the shipped scope; expansion areas stay red until a dedicated scope decision",
-          "recommended": false
-        },
-        {
-          "label": "Ship core-3 as v1 scope; park expansion entirely",
-          "detail": "Declare victory on LT/IMM/FC; revisit expansion as a v2 milestone",
-          "recommended": false
-        }
-      ],
-      "evidence_refs": [
-        "EP-INTAKE-PERSONAS-031",
-        "EP-INTAKE-PERSONAS-032",
-        "EP-INTAKE-PERSONAS-033",
-        "EP-INTAKE-PERSONAS-034",
-        "EP-INTAKE-PERSONAS-035",
-        "EP-INTAKE-PERSONAS-030"
-      ],
-      "body_html": "<p>All 3 core personas (LT/IMM/FC) pass <b>6/6 gates under LOCKED rubric v1.3</b>. The pre-authorized 5-persona expansion then ran: elder-exploitation 4/6 BORDERLINE, wage-theft 3/6, benefits-denial 2/6, employment-discrimination 2/6, consumer-debt 1/6. Root causes are three pre-registered v1-scope gaps, not core regressions: <b>BUG-32</b> deadline-rule domain contamination, <b>BUG-33</b> probe cross-domain bleed, <b>BUG-34</b> missing domain rules. This mirrors the queued QA question — same options.</p>"
-    },
-    {
-      "id": "EP-INTAKE-PERSONAS-D02",
-      "anchor": "ep-intake-personas-d02-reading-level-above-6th-grade-rub-10",
-      "title": "Reading level above ~6th grade (RUB-10)",
-      "type": "radio",
-      "options": [
-        {
-          "label": "Accept as non-gating",
-          "detail": "Log it; it does not block v1.0 close on the core 3.",
-          "recommended": false
-        },
-        {
-          "label": "Fix next round",
-          "detail": "Queue an engineering item for the next iteration.",
-          "recommended": true
-        },
-        {
-          "label": "Escalate to GATE in v1.4",
-          "detail": "Promote to a rubric gate — a rubric amendment + re-judge.",
-          "recommended": false
-        }
-      ],
-      "evidence_refs": [
-        "EP-INTAKE-PERSONAS-010"
-      ],
-      "body": "Campaign-wide, non-gating. What do you want done?"
-    },
-    {
-      "id": "EP-INTAKE-PERSONAS-D03",
-      "anchor": "ep-intake-personas-d03-rub-03-bogus-fact-element-linkages",
-      "title": "RUB-03 bogus fact→element linkages",
-      "type": "radio",
-      "options": [
-        {
-          "label": "Accept as non-gating",
-          "detail": "Log it; it does not block v1.0 close on the core 3.",
-          "recommended": false
-        },
-        {
-          "label": "Fix next round",
-          "detail": "Queue an engineering item for the next iteration.",
-          "recommended": true
-        },
-        {
-          "label": "Escalate to GATE in v1.4",
-          "detail": "Promote to a rubric gate — a rubric amendment + re-judge.",
-          "recommended": false
-        }
-      ],
-      "evidence_refs": [
-        "EP-INTAKE-PERSONAS-011"
-      ],
-      "body": "Wrong facts attached to elements. What do you want done?"
-    },
-    {
-      "id": "EP-INTAKE-PERSONAS-D04",
-      "anchor": "ep-intake-personas-d04-supported-not-supported-self-contradiction",
-      "title": "Supported / not-supported self-contradiction",
-      "type": "radio",
-      "options": [
-        {
-          "label": "Accept as non-gating",
-          "detail": "Log it; it does not block v1.0 close on the core 3.",
-          "recommended": false
-        },
-        {
-          "label": "Fix next round",
-          "detail": "Queue an engineering item for the next iteration.",
-          "recommended": true
-        },
-        {
-          "label": "Escalate to GATE in v1.4",
-          "detail": "Promote to a rubric gate — a rubric amendment + re-judge.",
-          "recommended": false
-        }
-      ],
-      "evidence_refs": [
-        "EP-INTAKE-PERSONAS-012"
-      ],
-      "body": "Same element marked both supported and unsupported. What do you want done?"
-    },
-    {
-      "id": "EP-INTAKE-PERSONAS-D05",
-      "anchor": "ep-intake-personas-d05-confidence-cap-over-reach-retaliatory-eviction-already-fi",
-      "title": "Confidence-cap over-reach (Retaliatory Eviction) — already fixed",
-      "type": "radio",
-      "options": [
-        {
-          "label": "Accept as non-gating",
-          "detail": "Log it; it does not block v1.0 close on the core 3.",
-          "recommended": false
-        },
-        {
-          "label": "Fix next round",
-          "detail": "Queue an engineering item for the next iteration.",
-          "recommended": true
-        },
-        {
-          "label": "Escalate to GATE in v1.4",
-          "detail": "Promote to a rubric gate — a rubric amendment + re-judge.",
-          "recommended": false
-        }
-      ],
-      "evidence_refs": [
-        "EP-INTAKE-PERSONAS-013"
-      ],
-      "body": "Fixed in 5b25a70. Confirm disposition."
-    },
-    {
-      "id": "EP-INTAKE-PERSONAS-D06",
-      "anchor": "ep-intake-personas-d06-habitability-element-regression-4-3",
-      "title": "Habitability element regression 4→3",
-      "type": "radio",
-      "options": [
-        {
-          "label": "Accept as non-gating",
-          "detail": "Log it; it does not block v1.0 close on the core 3.",
-          "recommended": false
-        },
-        {
-          "label": "Fix next round",
-          "detail": "Queue an engineering item for the next iteration.",
-          "recommended": true
-        },
-        {
-          "label": "Escalate to GATE in v1.4",
-          "detail": "Promote to a rubric gate — a rubric amendment + re-judge.",
-          "recommended": false
-        }
-      ],
-      "evidence_refs": [
-        "EP-INTAKE-PERSONAS-014"
-      ],
-      "body": "Element set silently shrank. What do you want done?"
-    },
-    {
-      "id": "EP-INTAKE-PERSONAS-D07",
-      "anchor": "ep-intake-personas-d07-504b-331-service-by-posting-add-to-the-answer-key",
-      "title": "§504B.331 service-by-posting — add to the answer key?",
-      "type": "radio",
-      "options": [
-        {
-          "label": "Add to answer key",
-          "detail": "Grade future runs on surfacing the §504B.331 service-by-posting probe.",
-          "recommended": true
-        },
-        {
-          "label": "Leave out",
-          "detail": "Out of scope for v1; do not grade on it.",
-          "recommended": false
-        }
-      ],
-      "evidence_refs": [
-        "EP-INTAKE-PERSONAS-020"
-      ],
-      "body": "Currently absent from output and un-graded. Should it become a graded oracle?"
-    }
-  ]
+  "decisions": []
 }
