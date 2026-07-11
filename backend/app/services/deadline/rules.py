@@ -12,7 +12,11 @@ reader to confirm the exact date, which is where such adjustments land.
 
 Citations (verify before relying):
   - MN eviction summons -> hearing window: Minn. Stat. § 504B.321 (hearing set
-    7-14 days after issuance of the summons).
+    7-14 days after issuance of the summons). A SELF-DATED MN eviction hearing
+    (date printed on the summons) carries the same § 504B.321 citation.
+  - MN nonpayment pre-eviction notice: Minn. Stat. § 504B.321, subd. 1a
+    (14-day written notice before filing a nonpayment eviction, eff. 2024);
+    other MN notice-to-quit periods: Minn. Stat. § 504B.135.
   - MN dissolution/family response: Minn. Stat. § 518.12 (respondent's answer
     served within 30 days of service of the petition). NOTE: the earlier
     attribution to Minn. Gen. R. Prac. 303.03 was WRONG — Rule 303 governs
@@ -177,22 +181,50 @@ RULES: list[DeadlineRule] = [
         ),
     ),
     DeadlineRule(
-        id="stated_court_date",
-        jurisdiction=None,
+        id="mn_eviction_stated_hearing",
+        jurisdiction="MN",
         citation=(
-            "The date printed on your court notice, summons, hearing notice, or "
-            "order (confirm against the document itself)."
+            "Minn. Stat. § 504B.321 (Minnesota eviction summons/hearing "
+            "procedure); the hearing date printed on your summons or hearing "
+            "notice."
         ),
         urgency="high",
         hedge_text=(
-            "This is a date you were given directly (a hearing, court date, or "
-            "stated deadline). " + _VERIFY
+            "This is the eviction hearing date printed on your court papers — "
+            "you must appear; in Minnesota your defenses are raised at this "
+            "hearing (there is no separate written answer deadline). " + _VERIFY
+        ),
+        applies=lambda ev, jur: (
+            _is_self_dated(ev) and _is_mn(ev, jur) and "evict" in _text(ev)
+        ),
+        compute=lambda d, ev: d,
+        description=(
+            "MN eviction hearing: the stated date IS the operative deadline "
+            "(identity compute), cited to Minn. Stat. § 504B.321 — the statute "
+            "governing the eviction summons/hearing window (RUB-09 strict "
+            "primary-source gate, Damien r3 2026-07-10)."
+        ),
+    ),
+    DeadlineRule(
+        id="stated_court_date",
+        jurisdiction=None,
+        citation=(
+            "The court's own summons, hearing notice, or scheduling order "
+            "setting this date — a court's order or summons is the governing "
+            "primary authority for a court-scheduled appearance (confirm the "
+            "date against the document itself)."
+        ),
+        urgency="high",
+        hedge_text=(
+            "This is a date the court gave you directly (a hearing, court date, "
+            "or stated deadline). " + _VERIFY
         ),
         applies=lambda ev, jur: _is_self_dated(ev),
         compute=lambda d, ev: d,
         description=(
             "A stated hearing/court/response date is itself the operative "
-            "deadline (identity compute)."
+            "deadline (identity compute); the governing primary authority is "
+            "the court order/summons that set it."
         ),
     ),
     DeadlineRule(
@@ -256,15 +288,51 @@ RULES: list[DeadlineRule] = [
         ),
     ),
     DeadlineRule(
+        id="mn_eviction_notice_window",
+        jurisdiction="MN",
+        citation=(
+            "Minn. Stat. § 504B.321, subd. 1a (14-day written notice required "
+            "before an eviction action for nonpayment of rent); for other "
+            "Minnesota notice-to-quit periods see Minn. Stat. § 504B.135. The "
+            "period printed on your notice controls if longer."
+        ),
+        urgency="high",
+        hedge_text=(
+            "Minnesota requires a written notice period before a nonpayment "
+            "eviction can be filed; the cure/vacate date is computed from the "
+            "day the notice was given. " + _VERIFY
+        ),
+        applies=lambda ev, jur: (
+            _is_mn(ev, jur)
+            and not _is_immigration(ev)
+            and ev.trigger in {"notice_posted", "notice", "notice_served"}
+            and ("evict" in _text(ev) or "rent" in _text(ev) or "vacate" in _text(ev) or "quit" in _text(ev))
+        ),
+        compute=lambda d, ev: d + timedelta(days=(ev.window_days or 14)),
+        description=(
+            "MN eviction/nonpayment notice: notice date + stated window (default "
+            "14d per Minn. Stat. § 504B.321 subd. 1a), cited to the governing "
+            "statute (RUB-09 strict primary-source gate, Damien r3 2026-07-10)."
+        ),
+    ),
+    DeadlineRule(
         id="generic_notice_window",
         jurisdiction=None,
         citation=(
-            "Cure/vacate period stated in your notice or lease "
-            "(confirm the exact deadline printed on the notice)."
+            "The cure/vacate period stated in your written notice or lease — the "
+            "notice/lease term is the operative source of this period (confirm "
+            "the exact deadline printed on the notice; your state's "
+            "landlord-tenant statute governs the minimum period)."
         ),
         urgency="high",
         hedge_text=_VERIFY,
-        applies=lambda ev, jur: ev.trigger in {"notice_posted", "notice", "notice_served"},
+        # An immigration hearing letter / NTA is NOT a cure-window notice — a
+        # fabricated "cure/vacate" deadline on an immigration matter is a wrong
+        # deadline (RUB-09 0/GATE). Immigration events never take this rule.
+        applies=lambda ev, jur: (
+            ev.trigger in {"notice_posted", "notice", "notice_served"}
+            and not _is_immigration(ev)
+        ),
         compute=lambda d, ev: d + timedelta(days=(ev.window_days or 14)),
         description=(
             "Generic notice date + N-day cure/vacate window "

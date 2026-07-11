@@ -306,3 +306,78 @@ def test_q5_uncited_event_is_hedged_not_bare():
     assert d.computed is False
     assert d.citation is None          # no invented authority
     assert d.hedge == GENERIC_HEDGE    # hedged, not a bare date
+
+
+# ---------------------------------------------------------------------------
+# r3 (RUB-09 STRICT, Damien 2026-07-10): every computed deadline must carry
+# its governing primary source — LT round-4 gap: identity/notice rules echoed
+# the document instead of citing the statute the LT addendum pins
+# (RUB-LT-16/17: Minn. Stat. § 504B.321 / § 504B.321 subd. 1a / § 504B.135).
+# ---------------------------------------------------------------------------
+
+
+def test_r3_mn_eviction_stated_hearing_carries_504B321():
+    """A self-dated MN eviction hearing must carry Minn. Stat. § 504B.321,
+    not a bare document echo."""
+    ev = DeadlineEvent(
+        event_type="eviction_hearing",
+        raw_text="The summons says my eviction hearing is April 1, 2026 at 9am.",
+        trigger="hearing",
+        date=date(2026, 4, 1),
+        jurisdiction_hint="MN",
+    )
+    d = _one([ev])
+    assert d.computed is True
+    assert d.computed_date == date(2026, 4, 1)
+    assert d.rule_id == "mn_eviction_stated_hearing"
+    assert d.citation and "504B.321" in d.citation
+    # MN has no separate written answer deadline — say so (RUB-LT-17).
+    assert "no separate written answer" in d.hedge
+
+
+def test_r3_mn_eviction_notice_window_carries_504B321_subd_1a():
+    """The MN 14-day nonpayment notice cure window must cite
+    Minn. Stat. § 504B.321, subd. 1a — not just echo the notice."""
+    ev = DeadlineEvent(
+        event_type="notice_to_vacate",
+        raw_text="Landlord posted a 14-day notice about the rent on March 3.",
+        trigger="notice_posted",
+        date=date(2026, 3, 3),
+        jurisdiction_hint="MN",
+    )
+    d = _one([ev])
+    assert d.computed is True
+    assert d.computed_date == date(2026, 3, 17)
+    assert d.rule_id == "mn_eviction_notice_window"
+    assert d.citation and "504B.321, subd. 1a" in d.citation
+
+
+def test_immigration_hearing_letter_never_computes_cure_window():
+    """IMM round-4 gap: the NTA/hearing letter got a fabricated 14-day
+    'cure/vacate' deadline via generic_notice_window (wrong deadline —
+    RUB-09 0/GATE). Immigration events must never take a notice-window rule."""
+    ev = DeadlineEvent(
+        event_type="notice_to_vacate",  # mis-typed by the extractor
+        raw_text="the immigration hearing letter came end of June",
+        trigger="notice_posted",
+        date=date(2026, 7, 2),
+        jurisdiction_hint="US",
+    )
+    d = _one([ev])
+    # No rule may compute a cure window from an immigration letter.
+    assert d.rule_id not in {"generic_notice_window", "mn_eviction_notice_window"}
+    assert d.computed is False  # detected + hedged only
+
+
+def test_r3_non_mn_notice_still_uses_generic_window():
+    """A non-MN notice keeps the generic notice rule (no wrong-state cite)."""
+    ev = DeadlineEvent(
+        event_type="notice_to_vacate",
+        raw_text="I got a notice to vacate.",
+        trigger="notice_posted",
+        date=date(2026, 6, 1),
+        jurisdiction_hint="TX",
+    )
+    d = _one([ev])
+    assert d.rule_id == "generic_notice_window"
+    assert "504B" not in (d.citation or "")
