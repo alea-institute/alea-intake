@@ -1,0 +1,1254 @@
+{
+ "intake_id": 229,
+ "run_id": 62,
+ "org_id": 1,
+ "matter_title": "Untitled Intake",
+ "generated_at": "2026-07-11T21:20:56.212814Z",
+ "claims_by_jurisdiction": {
+  "state": [
+   {
+    "claim_id": 1954,
+    "claim_name": "Failure to Provide Pay Stubs",
+    "claim_type": "discovered",
+    "confidence": 0.8,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "The speaker says they never got pay stubs. This may break state labor laws. These laws say you must keep records of wages.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1053,
+      "element_name": "Legal Requirement for Pay Stubs",
+      "element_description": "State law requires employers to provide employees with pay stubs detailing hours worked and wages paid.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 2801,
+        "fact_text": "The speaker receives no pay stubs.",
+        "confidence": 0.85,
+        "mapping_rationale": "The speaker's lack of pay stubs fulfills this claim's requirements."
+       },
+       {
+        "fact_id": 2798,
+        "fact_text": "The speaker is always paid straight time.",
+        "confidence": 0.81,
+        "mapping_rationale": "The speaker receives no pay stubs, which violates the state requirement for employers to provide them."
+       }
+      ]
+     },
+     {
+      "element_id": 1054,
+      "element_name": "Employer's Non-Compliance",
+      "element_description": "The employer failed to comply with the legal requirement to provide pay stubs.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 2874,
+        "fact_text": "The speaker has never received a pay stub since March 2024.",
+        "confidence": 0.85,
+        "mapping_rationale": "No pay stubs since March demonstrates the employer's non-compliance."
+       },
+       {
+        "fact_id": 2837,
+        "fact_text": "The Company will issue IRS Form 1099 for amounts paid.",
+        "confidence": 0.81,
+        "mapping_rationale": "Issuing IRS Form 1099 instead of pay stubs indicates non-compliance with pay stub laws."
+       },
+       {
+        "fact_id": 2801,
+        "fact_text": "The speaker receives no pay stubs.",
+        "confidence": 0.85,
+        "mapping_rationale": "The speaker received no pay stubs, indicating non-compliance with legal requirements."
+       }
+      ]
+     },
+     {
+      "element_id": 1055,
+      "element_name": "Impact on Employee",
+      "element_description": "The lack of pay stubs affects the employee's ability to track their earnings and possibly support claims for unpaid wages.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 2801,
+        "fact_text": "The speaker receives no pay stubs.",
+        "confidence": 0.85,
+        "mapping_rationale": "The speaker not receiving pay stubs negatively impacts their ability to track earnings, supporting the claims for failure to provide pay stubs."
+       },
+       {
+        "fact_id": 2813,
+        "fact_text": "As of July 9, the speaker has not received any payment.",
+        "confidence": 0.85,
+        "mapping_rationale": "The speaker's lack of payment affects their ability to organize claims due to not receiving pay stubs."
+       }
+      ]
+     }
+    ],
+    "gaps": [],
+    "conclusion": "3 of 3 elements supported (85% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1955,
+    "claim_name": "Misclassification as Independent Contractor",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "The speaker\u2019s work situation shows they might be called the wrong name. They may be called an independent contractor but should be called an employee under labor laws.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1057,
+      "element_name": "Nature of Work",
+      "element_description": "The work performed is integral to the business's operations.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1056,
+      "element_name": "Control by Employer",
+      "element_description": "The employer exercises significant control over the worker's schedule and job site.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 2835,
+        "fact_text": "The Contractor is not entitled to overtime, holiday pay, or any employee benefits.",
+        "confidence": 0.81,
+        "mapping_rationale": "The contractor not being entitled to employee benefits suggests a misclassification."
+       },
+       {
+        "fact_id": 2790,
+        "fact_text": "Rick had the speaker sign some document when starting.",
+        "confidence": 0.85,
+        "mapping_rationale": "Rick had the speaker sign a document on starting, showing control over the terms of engagement."
+       },
+       {
+        "fact_id": 2791,
+        "fact_text": "Rick tells the speaker what job site to be at and what time.",
+        "confidence": 0.85,
+        "mapping_rationale": "Rick directs where and when the speaker works, which indicates significant control."
+       }
+      ]
+     },
+     {
+      "element_id": 1058,
+      "element_name": "Dependency on Employer",
+      "element_description": "The worker depends on the employer for work and has no other customers.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 2836,
+        "fact_text": "The Contractor is responsible for all taxes.",
+        "confidence": 0.81,
+        "mapping_rationale": "The contractor's responsibility for all taxes indicates a level of independence expected of contractors, which is questioned under misclassification."
+       },
+       {
+        "fact_id": 2796,
+        "fact_text": "The speaker cannot say no to a job or will be taken off the schedule for two weeks.",
+        "confidence": 0.85,
+        "mapping_rationale": "The speaker cannot refuse jobs, indicating reliance on the employer."
+       },
+       {
+        "fact_id": 2795,
+        "fact_text": "The speaker has no other customers.",
+        "confidence": 0.85,
+        "mapping_rationale": "The speaker has no other customers, showing dependency on the employer for work."
+       }
+      ]
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2365,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Nature of Work' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1955,
+      "element_id": 1057,
+      "claim_name": "Misclassification as Independent Contractor",
+      "element_name": "Nature of Work",
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "2 of 3 elements supported (57% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1953,
+    "claim_name": "Retaliation for Inquiring about Overtime",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "The speaker was fired soon after asking about overtime. This looks like punishment.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1051,
+      "element_name": "Adverse Employment Action",
+      "element_description": "The claimant experienced an adverse employment action, such as wrongful termination.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 2828,
+        "fact_text": "The speaker was fired right after asking about overtime.",
+        "confidence": 0.85,
+        "mapping_rationale": "The firing of the speaker occurred shortly after asking about overtime."
+       },
+       {
+        "fact_id": 2881,
+        "fact_text": "Rick told Junior not to come in on Monday and stated he would mail Junior's check.",
+        "confidence": 0.83,
+        "mapping_rationale": "Rick telling Junior not to come in can be seen as an adverse employment action following the inquiry."
+       },
+       {
+        "fact_id": 2808,
+        "fact_text": "The speaker was not paid for the last two weeks of work.",
+        "confidence": 0.83,
+        "mapping_rationale": "The speaker was not paid for the last two weeks of work, which is a clear adverse action following inquiries about overtime."
+       },
+       {
+        "fact_id": 2820,
+        "fact_text": "The speaker is currently not working.",
+        "confidence": 0.77,
+        "mapping_rationale": "The speaker is currently not working following inquiries about wage issues, relevant to retaliation."
+       },
+       {
+        "fact_id": 2806,
+        "fact_text": "Rick became upset when the speaker asked about overtime.",
+        "confidence": 0.85,
+        "mapping_rationale": "Rick's upset reaction to the inquiry indicates a negative response to a protected activity."
+       },
+       {
+        "fact_id": 2807,
+        "fact_text": "Rick fired the speaker on June 19.",
+        "confidence": 0.85,
+        "mapping_rationale": "The firing of the speaker following their inquiry about overtime constitutes an adverse employment action."
+       }
+      ]
+     },
+     {
+      "element_id": 1050,
+      "element_name": "Protected Activity",
+      "element_description": "The claimant engaged in a protected activity, such as asking about overtime pay.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.85,
+      "fact_mappings": [
+       {
+        "fact_id": 2880,
+        "fact_text": "Junior asked Rick about overtime pay after working 54+ hours in a week.",
+        "confidence": 0.85,
+        "mapping_rationale": "The act of asking about overtime shows engagement in protected activity, foundational for claiming retaliation."
+       }
+      ]
+     },
+     {
+      "element_id": 1052,
+      "element_name": "Causal Connection",
+      "element_description": "There must be a causal link between the protected activity and the adverse employment action.",
+      "is_satisfied": true,
+      "satisfaction_confidence": 0.81,
+      "fact_mappings": [
+       {
+        "fact_id": 2829,
+        "fact_text": "The speaker believes the timing of their firing was not a coincidence.",
+        "confidence": 0.81,
+        "mapping_rationale": "The speaker believes the timing of the firing after asking about overtime is linked to the inquiry, establishing a causal connection."
+       }
+      ]
+     }
+    ],
+    "gaps": [],
+    "conclusion": "3 of 3 elements supported (84% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1952,
+    "claim_name": "Wage and Hour Violations",
+    "claim_type": "identified",
+    "confidence": 0.4,
+    "jurisdiction": "state",
+    "folio_iri": null,
+    "issue_statement": "The speaker says they did not get paid for the last two weeks of work. They say Rick cuts down their hours. This may break wage and hour laws.",
+    "authorities": [],
+    "elements": [
+     {
+      "element_id": 1046,
+      "element_name": "Employee Relationship",
+      "element_description": "The claimant must demonstrate they are classified as an employee rather than a contractor.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1047,
+      "element_name": "Unpaid Wages",
+      "element_description": "The claimant must show a failure to receive payment for hours worked.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1048,
+      "element_name": "Regular Work Hours",
+      "element_description": "The claimant must establish their regular work hours and that these hours exceeded what they were compensated for.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     },
+     {
+      "element_id": 1049,
+      "element_name": "Employer's Responsibility",
+      "element_description": "The employer must be found liable for the unpaid wages as they were aware or should have been aware of the work performed.",
+      "is_satisfied": false,
+      "satisfaction_confidence": null,
+      "fact_mappings": []
+     }
+    ],
+    "gaps": [
+     {
+      "gap_id": 2357,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Employee Relationship' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1952,
+      "element_id": 1046,
+      "claim_name": "Wage and Hour Violations",
+      "element_name": "Employee Relationship",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2358,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Unpaid Wages' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1952,
+      "element_id": 1047,
+      "claim_name": "Wage and Hour Violations",
+      "element_name": "Unpaid Wages",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2359,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Regular Work Hours' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1952,
+      "element_id": 1048,
+      "claim_name": "Wage and Hour Violations",
+      "element_name": "Regular Work Hours",
+      "action_item_ref": null,
+      "open_questions": []
+     },
+     {
+      "gap_id": 2360,
+      "gap_type": "unsupported_element",
+      "description": "Element 'Employer's Responsibility' is not yet supported by any facts",
+      "priority": 40,
+      "claim_id": 1952,
+      "element_id": 1049,
+      "claim_name": "Wage and Hour Violations",
+      "element_name": "Employer's Responsibility",
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "0 of 4 elements supported (0% confidence)",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ],
+  "General": [
+   {
+    "claim_id": 1956,
+    "claim_name": "Unpaid Wages",
+    "claim_type": "discovered",
+    "confidence": 0.9,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RBwZjjQmoJgjgi1yx1YBOm7",
+    "issue_statement": "The speaker said they have not been paid. They worked many hours. This breaks wage laws.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1965,
+    "claim_name": "Retaliation and Wrongful Termination",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/RDJYLQ3woaBs6FkT7wMbB4U",
+    "issue_statement": "The timing of the firing seems connected to the speaker\u2019s question about pay. This might mean the firing was unfair.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1957,
+    "claim_name": "Retaliatory Firing",
+    "claim_type": "discovered",
+    "confidence": 0.85,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The firing happened soon after the worker asked about pay. This looks like punishment for asking about how pay is done.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1959,
+    "claim_name": "Failure to Provide Relevant Documentation",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "Employers must give pay stubs to workers. If they don't, it is a problem.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2369,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Failure to Provide Relevant Documentation' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1959,
+      "element_id": null,
+      "claim_name": "Failure to Provide Relevant Documentation",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1966,
+    "claim_name": "Violation of State Labor Laws Regarding Pay Stubs",
+    "claim_type": "discovered",
+    "confidence": 0.75,
+    "jurisdiction": null,
+    "folio_iri": "https://folio.openlegalstandard.org/R7TgV9FkR8Q4DMivxT5656",
+    "issue_statement": "State laws say you must get papers that show the hours you worked. You should also get papers that show the payments made to you. If you do not get these papers, there may be penalties.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2375,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Violation of State Labor Laws Regarding Pay Stubs' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1966,
+      "element_id": null,
+      "claim_name": "Violation of State Labor Laws Regarding Pay Stubs",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1961,
+    "claim_name": "Threats and Coercion",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "These threats might try to force the speaker to give up their pay claims. This can break the law.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [
+     {
+      "gap_id": 2370,
+      "gap_type": "unexplored_claim",
+      "description": "Potential claim 'Threats and Coercion' has not been explored with fact mappings",
+      "priority": 50,
+      "claim_id": 1961,
+      "element_id": null,
+      "claim_name": "Threats and Coercion",
+      "element_name": null,
+      "action_item_ref": null,
+      "open_questions": []
+     }
+    ],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   },
+   {
+    "claim_id": 1967,
+    "claim_name": "Unlawful Retention of Final Pay",
+    "claim_type": "discovered",
+    "confidence": 0.7,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "issue_statement": "The speaker has not received pay on time. The speaker has asked for their pay. This may break the laws about getting paid on time.",
+    "authorities": [],
+    "elements": [],
+    "gaps": [],
+    "conclusion": "No elements defined",
+    "parent_claim_name": null,
+    "children": []
+   }
+  ]
+ },
+ "additional_claims_by_jurisdiction": {
+  "General": [
+   {
+    "claim_name": "Failure to Respond to Wage Demand",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "False Statements Regarding Employment Status",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Potential Health and Safety Violations",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Tax Misclassification Concerns",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Unpaid Overtime",
+    "claim_type": "discovered",
+    "confidence": 0.4,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Potential Claim for Emotional Distress Damages",
+    "claim_type": "discovered",
+    "confidence": 0.3,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   },
+   {
+    "claim_name": "Emotional Distress",
+    "claim_type": "discovered",
+    "confidence": 0.25,
+    "jurisdiction": null,
+    "folio_iri": null,
+    "parent_claim_name": null
+   }
+  ]
+ },
+ "safety_alerts": [
+  {
+   "protocol_name": "Stalking / Harassment",
+   "severity_tier": "elevated",
+   "matched_terms": [
+    "threatened"
+   ],
+   "hotlines": [
+    {
+     "name": "Stalking Prevention, Awareness, and Resource Center (SPARC)",
+     "url": "https://www.stalkingawareness.org"
+    },
+    {
+     "name": "National Domestic Violence Hotline",
+     "phone": "1-800-799-7233",
+     "text": "START to 88788",
+     "url": "https://www.thehotline.org"
+    },
+    {
+     "name": "National Dating Abuse Helpline",
+     "phone": "1-866-331-9474",
+     "text": "LOVEIS to 22522"
+    }
+   ],
+   "emergency": null,
+   "safety_planning": null
+  }
+ ],
+ "deadlines": [
+  {
+   "event_text": "on monday june 22 i texted him formal, like my cousin told me to word it, that i demand my wages, all of it.",
+   "event_type": "demand_for_wages",
+   "trigger": "served",
+   "trigger_date": "2026-06-22",
+   "computed_date": "2026-06-23",
+   "rule_id": "mn_final_wage_penalty_181_13",
+   "citation": "Minn. Stat. \u00a7 181.13(a) (upon a discharged employee's demand, unpaid wages are due within 24 hours; a penalty of the employee's average daily wage accrues for each day the employer is in default, capped at 15 days).",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In Minnesota, once you were fired and DEMANDED your unpaid wages, the employer had to pay within 24 hours (Minn. Stat. \u00a7 181.13(a)). After that, a penalty equal to your average daily pay adds up for each day they don't pay \u2014 up to a maximum of 15 days. That penalty maxes out about 15 days after your demand, so waiting longer does not add more; make your written demand and file now. Estimated \u2014 confirm the exact date with the court or a lawyer. The 24-hour deadline for the employer to pay has passed, which means the \u00a7 181.13 penalty has been running \u2014 good for you, not bad: the penalty (up to 15 days of average pay) is likely fully accrued. Bring your hours record and the demand text to a lawyer or file a wage claim with the Minnesota DLI; nothing is lost by the deadline passing, but do not keep waiting.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "the speaker's boss stole the last two paychecks.",
+   "event_type": "injury",
+   "trigger": "incident",
+   "trigger_date": "2026-07-09",
+   "computed_date": "2026-07-10",
+   "rule_id": "mn_final_wage_penalty_181_13",
+   "citation": "Minn. Stat. \u00a7 181.13(a) (upon a discharged employee's demand, unpaid wages are due within 24 hours; a penalty of the employee's average daily wage accrues for each day the employer is in default, capped at 15 days).",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In Minnesota, once you were fired and DEMANDED your unpaid wages, the employer had to pay within 24 hours (Minn. Stat. \u00a7 181.13(a)). After that, a penalty equal to your average daily pay adds up for each day they don't pay \u2014 up to a maximum of 15 days. That penalty maxes out about 15 days after your demand, so waiting longer does not add more; make your written demand and file now. Estimated \u2014 confirm the exact date with the court or a lawyer. The 24-hour deadline for the employer to pay has passed, which means the \u00a7 181.13 penalty has been running \u2014 good for you, not bad: the penalty (up to 15 days of average pay) is likely fully accrued. Bring your hours record and the demand text to a lawyer or file a wage claim with the Minnesota DLI; nothing is lost by the deadline passing, but do not keep waiting.",
+   "jurisdiction": "MN"
+  },
+  {
+   "event_text": "the speaker worked from June 8 to June 19.",
+   "event_type": "unpaid_wages",
+   "trigger": "incident",
+   "trigger_date": "2026-06-19",
+   "computed_date": "2026-06-20",
+   "rule_id": "mn_final_wage_penalty_181_13",
+   "citation": "Minn. Stat. \u00a7 181.13(a) (upon a discharged employee's demand, unpaid wages are due within 24 hours; a penalty of the employee's average daily wage accrues for each day the employer is in default, capped at 15 days).",
+   "computed": true,
+   "urgency": "lapsed",
+   "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In Minnesota, once you were fired and DEMANDED your unpaid wages, the employer had to pay within 24 hours (Minn. Stat. \u00a7 181.13(a)). After that, a penalty equal to your average daily pay adds up for each day they don't pay \u2014 up to a maximum of 15 days. That penalty maxes out about 15 days after your demand, so waiting longer does not add more; make your written demand and file now. Estimated \u2014 confirm the exact date with the court or a lawyer. The 24-hour deadline for the employer to pay has passed, which means the \u00a7 181.13 penalty has been running \u2014 good for you, not bad: the penalty (up to 15 days of average pay) is likely fully accrued. Bring your hours record and the demand text to a lawyer or file a wage claim with the Minnesota DLI; nothing is lost by the deadline passing, but do not keep waiting.",
+   "jurisdiction": "MN"
+  }
+ ],
+ "triage": {
+  "recommendations": [
+   {
+    "destination": "General Civil",
+    "destination_type": "practice_area",
+    "score": 0.49,
+    "rationale": "General Civil practice area (55% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.5454545454545454,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Employment",
+    "destination_type": "practice_area",
+    "score": 0.4263636363636364,
+    "rationale": "Employment practice area (36% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.36363636363636365,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   },
+   {
+    "destination": "Public Benefits",
+    "destination_type": "practice_area",
+    "score": 0.33090909090909093,
+    "rationale": "Public Benefits practice area (9% of claims); mixed jurisdictions (64% concentration); high complexity; emergency urgency",
+    "practice_area_match": 0.09090909090909091,
+    "jurisdiction_match": 0.6363636363636364,
+    "complexity_score": 0.2
+   }
+  ],
+  "primary_practice_area": "General Civil",
+  "primary_jurisdiction": "General",
+  "complexity_level": "high",
+  "urgency_level": "emergency"
+ },
+ "action_items": [
+  {
+   "item_number": 1,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: on monday june 22 i texted him formal, like my cousin told me to word it, that i demand my wages, all of it. (estimated 2026-06-23; Minn. Stat. \u00a7 181.13(a) (upon a discharged employee's demand, unpaid wages are due within 24 hours; a penalty of the employee's average daily wage accrues for each day the employer is in default, capped at 15 days).). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In Minnesota, once you were fired and DEMANDED your unpaid wages, the employer had to pay within 24 hours (Minn. Stat. \u00a7 181.13(a)). After that, a penalty equal to your average daily pay adds up for each day they don't pay \u2014 up to a maximum of 15 days. That penalty maxes out about 15 days after your demand, so waiting longer does not add more; make your written demand and file now. Estimated \u2014 confirm the exact date with the court or a lawyer. The 24-hour deadline for the employer to pay has passed, which means the \u00a7 181.13 penalty has been running \u2014 good for you, not bad: the penalty (up to 15 days of average pay) is likely fully accrued. Bring your hours record and the demand text to a lawyer or file a wage claim with the Minnesota DLI; nothing is lost by the deadline passing, but do not keep waiting.",
+   "priority": "urgent",
+   "deadline": "2026-06-23",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 2,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: the speaker's boss stole the last two paychecks. (estimated 2026-07-10; Minn. Stat. \u00a7 181.13(a) (upon a discharged employee's demand, unpaid wages are due within 24 hours; a penalty of the employee's average daily wage accrues for each day the employer is in default, capped at 15 days).). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In Minnesota, once you were fired and DEMANDED your unpaid wages, the employer had to pay within 24 hours (Minn. Stat. \u00a7 181.13(a)). After that, a penalty equal to your average daily pay adds up for each day they don't pay \u2014 up to a maximum of 15 days. That penalty maxes out about 15 days after your demand, so waiting longer does not add more; make your written demand and file now. Estimated \u2014 confirm the exact date with the court or a lawyer. The 24-hour deadline for the employer to pay has passed, which means the \u00a7 181.13 penalty has been running \u2014 good for you, not bad: the penalty (up to 15 days of average pay) is likely fully accrued. Bring your hours record and the demand text to a lawyer or file a wage claim with the Minnesota DLI; nothing is lost by the deadline passing, but do not keep waiting.",
+   "priority": "urgent",
+   "deadline": "2026-07-10",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 3,
+   "category": "follow_up_steps",
+   "description": "PAST-DUE? Confirm the deadline for: the speaker worked from June 8 to June 19. (estimated 2026-06-20; Minn. Stat. \u00a7 181.13(a) (upon a discharged employee's demand, unpaid wages are due within 24 hours; a penalty of the employee's average daily wage accrues for each day the employer is in default, capped at 15 days).). WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. In Minnesota, once you were fired and DEMANDED your unpaid wages, the employer had to pay within 24 hours (Minn. Stat. \u00a7 181.13(a)). After that, a penalty equal to your average daily pay adds up for each day they don't pay \u2014 up to a maximum of 15 days. That penalty maxes out about 15 days after your demand, so waiting longer does not add more; make your written demand and file now. Estimated \u2014 confirm the exact date with the court or a lawyer. The 24-hour deadline for the employer to pay has passed, which means the \u00a7 181.13 penalty has been running \u2014 good for you, not bad: the penalty (up to 15 days of average pay) is likely fully accrued. Bring your hours record and the demand text to a lawyer or file a wage claim with the Minnesota DLI; nothing is lost by the deadline passing, but do not keep waiting.",
+   "priority": "urgent",
+   "deadline": "2026-06-20",
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 4,
+   "category": "follow_up_steps",
+   "description": "Your boss calls you an 'independent contractor,' but you said he sets your schedule and sites, supplies the van and tools, and won't let you work for anyone else \u2014 those are signs you are really an EMPLOYEE in the eyes of the law, no matter what the paper says (Minn. Stat. \u00a7 181.723 for construction work). That would unlock unpaid-wage penalties, overtime, and YES, likely unemployment benefits (Minn. Stat. \u00a7 268.035). Did you ever work for other customers, or only for him? [Authority: Minn. Stat. \u00a7 181.723 (construction-industry independent-contractor test); Minn. Stat. \u00a7 268.035 (UI 'employment' definition \u2014 a misclassified worker can still qualify for unemployment)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 5,
+   "category": "follow_up_steps",
+   "description": "You were denied unemployment for 'misconduct' over attendance \u2014 but you missed work to care for your child during a medical emergency and you called in every time. Minnesota law says an absence WITH PROPER NOTICE to care for a sick immediate family member is NOT misconduct (Minn. Stat. \u00a7 268.095, subd. 6(b)). This is likely your winning argument on appeal. Do you have proof you called in before each shift, and the hospital records? [Authority: Minn. Stat. \u00a7 268.095, subd. 6(b) (absence with proper notice to care for the illness/injury of an immediate family member is NOT employment misconduct)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 6,
+   "category": "follow_up_steps",
+   "description": "You asked your boss about overtime and were fired the same day. Firing or punishing a worker for asking about unpaid wages or overtime is illegal retaliation in Minnesota (Minn. Stat. \u00a7 181.03, subd. 6; \u00a7 177.32). The timing matters a lot here. Do you have the texts or messages showing you asked about overtime right before you were fired? [Authority: Minn. Stat. \u00a7 181.03, subd. 6 (retaliation for asserting wage rights); Minn. Stat. \u00a7 177.32 (MFLSA anti-retaliation)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 7,
+   "category": "follow_up_steps",
+   "description": "You said you worked 50+ hour weeks but were paid straight time. In Minnesota you are generally owed time-and-a-half for hours over 48 in a week (Minn. Stat. \u00a7 177.25), and federal law may require it over 40 (29 U.S.C. \u00a7 207). Unpaid overtime can be a big part of what you are owed. Do you have a record of your weekly hours? [Authority: Minn. Stat. \u00a7 177.25 (MFLSA overtime: time-and-a-half over 48 hrs/week); 29 U.S.C. \u00a7 207 (FLSA over 40 hrs/week if covered)]",
+   "priority": "urgent",
+   "deadline": null,
+   "claim_ref": null,
+   "element_ref": null
+  },
+  {
+   "item_number": 8,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Failure to Provide Relevant Documentation' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Failure to Provide Relevant Documentation",
+   "element_ref": null
+  },
+  {
+   "item_number": 9,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Threats and Coercion' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Threats and Coercion",
+   "element_ref": null
+  },
+  {
+   "item_number": 10,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Health and Safety Violations' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Health and Safety Violations",
+   "element_ref": null
+  },
+  {
+   "item_number": 11,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Violation of State Labor Laws Regarding Pay Stubs' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Violation of State Labor Laws Regarding Pay Stubs",
+   "element_ref": null
+  },
+  {
+   "item_number": 12,
+   "category": "follow_up_steps",
+   "description": "Potential claim 'Potential Claim for Emotional Distress Damages' has not been explored with fact mappings",
+   "priority": "important",
+   "deadline": null,
+   "claim_ref": "Potential Claim for Emotional Distress Damages",
+   "element_ref": null
+  },
+  {
+   "item_number": 13,
+   "category": "documents_to_gather",
+   "description": "Element 'Employee Relationship' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Wage and Hour Violations",
+   "element_ref": "Employee Relationship"
+  },
+  {
+   "item_number": 14,
+   "category": "documents_to_gather",
+   "description": "Element 'Unpaid Wages' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Wage and Hour Violations",
+   "element_ref": "Unpaid Wages"
+  },
+  {
+   "item_number": 15,
+   "category": "documents_to_gather",
+   "description": "Element 'Regular Work Hours' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Wage and Hour Violations",
+   "element_ref": "Regular Work Hours"
+  },
+  {
+   "item_number": 16,
+   "category": "documents_to_gather",
+   "description": "Element 'Employer's Responsibility' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Wage and Hour Violations",
+   "element_ref": "Employer's Responsibility"
+  },
+  {
+   "item_number": 17,
+   "category": "documents_to_gather",
+   "description": "Element 'Nature of Work' is not yet supported by any facts",
+   "priority": "helpful",
+   "deadline": null,
+   "claim_ref": "Misclassification as Independent Contractor",
+   "element_ref": "Nature of Work"
+  }
+ ],
+ "gap_report": {
+  "per_claim": {
+   "Wage and Hour Violations": [
+    {
+     "gap_id": 2357,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Employee Relationship' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1952,
+     "element_id": 1046,
+     "claim_name": "Wage and Hour Violations",
+     "element_name": "Employee Relationship",
+     "action_item_ref": 13,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2358,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Unpaid Wages' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1952,
+     "element_id": 1047,
+     "claim_name": "Wage and Hour Violations",
+     "element_name": "Unpaid Wages",
+     "action_item_ref": 14,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2359,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Regular Work Hours' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1952,
+     "element_id": 1048,
+     "claim_name": "Wage and Hour Violations",
+     "element_name": "Regular Work Hours",
+     "action_item_ref": 15,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2360,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Employer's Responsibility' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1952,
+     "element_id": 1049,
+     "claim_name": "Wage and Hour Violations",
+     "element_name": "Employer's Responsibility",
+     "action_item_ref": 16,
+     "open_questions": []
+    }
+   ],
+   "Misclassification as Independent Contractor": [
+    {
+     "gap_id": 2365,
+     "gap_type": "unsupported_element",
+     "description": "Element 'Nature of Work' is not yet supported by any facts",
+     "priority": 40,
+     "claim_id": 1955,
+     "element_id": 1057,
+     "claim_name": "Misclassification as Independent Contractor",
+     "element_name": "Nature of Work",
+     "action_item_ref": 17,
+     "open_questions": []
+    }
+   ],
+   "Failure to Provide Relevant Documentation": [
+    {
+     "gap_id": 2369,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Failure to Provide Relevant Documentation' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1959,
+     "element_id": null,
+     "claim_name": "Failure to Provide Relevant Documentation",
+     "element_name": null,
+     "action_item_ref": 8,
+     "open_questions": []
+    }
+   ],
+   "Threats and Coercion": [
+    {
+     "gap_id": 2370,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Threats and Coercion' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1961,
+     "element_id": null,
+     "claim_name": "Threats and Coercion",
+     "element_name": null,
+     "action_item_ref": 9,
+     "open_questions": []
+    }
+   ],
+   "Potential Health and Safety Violations": [
+    {
+     "gap_id": 2372,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Health and Safety Violations' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1963,
+     "element_id": null,
+     "claim_name": "Potential Health and Safety Violations",
+     "element_name": null,
+     "action_item_ref": 10,
+     "open_questions": []
+    }
+   ],
+   "Violation of State Labor Laws Regarding Pay Stubs": [
+    {
+     "gap_id": 2375,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Violation of State Labor Laws Regarding Pay Stubs' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1966,
+     "element_id": null,
+     "claim_name": "Violation of State Labor Laws Regarding Pay Stubs",
+     "element_name": null,
+     "action_item_ref": 11,
+     "open_questions": []
+    }
+   ],
+   "Potential Claim for Emotional Distress Damages": [
+    {
+     "gap_id": 2377,
+     "gap_type": "unexplored_claim",
+     "description": "Potential claim 'Potential Claim for Emotional Distress Damages' has not been explored with fact mappings",
+     "priority": 50,
+     "claim_id": 1968,
+     "element_id": null,
+     "claim_name": "Potential Claim for Emotional Distress Damages",
+     "element_name": null,
+     "action_item_ref": 12,
+     "open_questions": []
+    }
+   ],
+   "Uncategorized": [
+    {
+     "gap_id": 2378,
+     "gap_type": "procedural_requirement",
+     "description": "Your boss calls you an 'independent contractor,' but you said he sets your schedule and sites, supplies the van and tools, and won't let you work for anyone else \u2014 those are signs you are really an EMPLOYEE in the eyes of the law, no matter what the paper says (Minn. Stat. \u00a7 181.723 for construction work). That would unlock unpaid-wage penalties, overtime, and YES, likely unemployment benefits (Minn. Stat. \u00a7 268.035). Did you ever work for other customers, or only for him? [Authority: Minn. Stat. \u00a7 181.723 (construction-industry independent-contractor test); Minn. Stat. \u00a7 268.035 (UI 'employment' definition \u2014 a misclassified worker can still qualify for unemployment)]",
+     "priority": 90,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 4,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2379,
+     "gap_type": "procedural_requirement",
+     "description": "You said you worked 50+ hour weeks but were paid straight time. In Minnesota you are generally owed time-and-a-half for hours over 48 in a week (Minn. Stat. \u00a7 177.25), and federal law may require it over 40 (29 U.S.C. \u00a7 207). Unpaid overtime can be a big part of what you are owed. Do you have a record of your weekly hours? [Authority: Minn. Stat. \u00a7 177.25 (MFLSA overtime: time-and-a-half over 48 hrs/week); 29 U.S.C. \u00a7 207 (FLSA over 40 hrs/week if covered)]",
+     "priority": 86,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 7,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2380,
+     "gap_type": "procedural_requirement",
+     "description": "You asked your boss about overtime and were fired the same day. Firing or punishing a worker for asking about unpaid wages or overtime is illegal retaliation in Minnesota (Minn. Stat. \u00a7 181.03, subd. 6; \u00a7 177.32). The timing matters a lot here. Do you have the texts or messages showing you asked about overtime right before you were fired? [Authority: Minn. Stat. \u00a7 181.03, subd. 6 (retaliation for asserting wage rights); Minn. Stat. \u00a7 177.32 (MFLSA anti-retaliation)]",
+     "priority": 88,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 6,
+     "open_questions": []
+    },
+    {
+     "gap_id": 2381,
+     "gap_type": "procedural_requirement",
+     "description": "You were denied unemployment for 'misconduct' over attendance \u2014 but you missed work to care for your child during a medical emergency and you called in every time. Minnesota law says an absence WITH PROPER NOTICE to care for a sick immediate family member is NOT misconduct (Minn. Stat. \u00a7 268.095, subd. 6(b)). This is likely your winning argument on appeal. Do you have proof you called in before each shift, and the hospital records? [Authority: Minn. Stat. \u00a7 268.095, subd. 6(b) (absence with proper notice to care for the illness/injury of an immediate family member is NOT employment misconduct)]",
+     "priority": 90,
+     "claim_id": null,
+     "element_id": null,
+     "claim_name": null,
+     "element_name": null,
+     "action_item_ref": 5,
+     "open_questions": []
+    }
+   ]
+  },
+  "consolidated_gaps": [
+   {
+    "gap_id": 2378,
+    "gap_type": "procedural_requirement",
+    "description": "Your boss calls you an 'independent contractor,' but you said he sets your schedule and sites, supplies the van and tools, and won't let you work for anyone else \u2014 those are signs you are really an EMPLOYEE in the eyes of the law, no matter what the paper says (Minn. Stat. \u00a7 181.723 for construction work). That would unlock unpaid-wage penalties, overtime, and YES, likely unemployment benefits (Minn. Stat. \u00a7 268.035). Did you ever work for other customers, or only for him? [Authority: Minn. Stat. \u00a7 181.723 (construction-industry independent-contractor test); Minn. Stat. \u00a7 268.035 (UI 'employment' definition \u2014 a misclassified worker can still qualify for unemployment)]",
+    "priority": 90,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 4,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2381,
+    "gap_type": "procedural_requirement",
+    "description": "You were denied unemployment for 'misconduct' over attendance \u2014 but you missed work to care for your child during a medical emergency and you called in every time. Minnesota law says an absence WITH PROPER NOTICE to care for a sick immediate family member is NOT misconduct (Minn. Stat. \u00a7 268.095, subd. 6(b)). This is likely your winning argument on appeal. Do you have proof you called in before each shift, and the hospital records? [Authority: Minn. Stat. \u00a7 268.095, subd. 6(b) (absence with proper notice to care for the illness/injury of an immediate family member is NOT employment misconduct)]",
+    "priority": 90,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 5,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2380,
+    "gap_type": "procedural_requirement",
+    "description": "You asked your boss about overtime and were fired the same day. Firing or punishing a worker for asking about unpaid wages or overtime is illegal retaliation in Minnesota (Minn. Stat. \u00a7 181.03, subd. 6; \u00a7 177.32). The timing matters a lot here. Do you have the texts or messages showing you asked about overtime right before you were fired? [Authority: Minn. Stat. \u00a7 181.03, subd. 6 (retaliation for asserting wage rights); Minn. Stat. \u00a7 177.32 (MFLSA anti-retaliation)]",
+    "priority": 88,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 6,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2379,
+    "gap_type": "procedural_requirement",
+    "description": "You said you worked 50+ hour weeks but were paid straight time. In Minnesota you are generally owed time-and-a-half for hours over 48 in a week (Minn. Stat. \u00a7 177.25), and federal law may require it over 40 (29 U.S.C. \u00a7 207). Unpaid overtime can be a big part of what you are owed. Do you have a record of your weekly hours? [Authority: Minn. Stat. \u00a7 177.25 (MFLSA overtime: time-and-a-half over 48 hrs/week); 29 U.S.C. \u00a7 207 (FLSA over 40 hrs/week if covered)]",
+    "priority": 86,
+    "claim_id": null,
+    "element_id": null,
+    "claim_name": null,
+    "element_name": null,
+    "action_item_ref": 7,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2369,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Failure to Provide Relevant Documentation' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1959,
+    "element_id": null,
+    "claim_name": "Failure to Provide Relevant Documentation",
+    "element_name": null,
+    "action_item_ref": 8,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2370,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Threats and Coercion' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1961,
+    "element_id": null,
+    "claim_name": "Threats and Coercion",
+    "element_name": null,
+    "action_item_ref": 9,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2372,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Health and Safety Violations' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1963,
+    "element_id": null,
+    "claim_name": "Potential Health and Safety Violations",
+    "element_name": null,
+    "action_item_ref": 10,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2375,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Violation of State Labor Laws Regarding Pay Stubs' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1966,
+    "element_id": null,
+    "claim_name": "Violation of State Labor Laws Regarding Pay Stubs",
+    "element_name": null,
+    "action_item_ref": 11,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2377,
+    "gap_type": "unexplored_claim",
+    "description": "Potential claim 'Potential Claim for Emotional Distress Damages' has not been explored with fact mappings",
+    "priority": 50,
+    "claim_id": 1968,
+    "element_id": null,
+    "claim_name": "Potential Claim for Emotional Distress Damages",
+    "element_name": null,
+    "action_item_ref": 12,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2357,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Employee Relationship' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1952,
+    "element_id": 1046,
+    "claim_name": "Wage and Hour Violations",
+    "element_name": "Employee Relationship",
+    "action_item_ref": 13,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2358,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Unpaid Wages' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1952,
+    "element_id": 1047,
+    "claim_name": "Wage and Hour Violations",
+    "element_name": "Unpaid Wages",
+    "action_item_ref": 14,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2359,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Regular Work Hours' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1952,
+    "element_id": 1048,
+    "claim_name": "Wage and Hour Violations",
+    "element_name": "Regular Work Hours",
+    "action_item_ref": 15,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2360,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Employer's Responsibility' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1952,
+    "element_id": 1049,
+    "claim_name": "Wage and Hour Violations",
+    "element_name": "Employer's Responsibility",
+    "action_item_ref": 16,
+    "open_questions": []
+   },
+   {
+    "gap_id": 2365,
+    "gap_type": "unsupported_element",
+    "description": "Element 'Nature of Work' is not yet supported by any facts",
+    "priority": 40,
+    "claim_id": 1955,
+    "element_id": 1057,
+    "claim_name": "Misclassification as Independent Contractor",
+    "element_name": "Nature of Work",
+    "action_item_ref": 17,
+    "open_questions": []
+   }
+  ],
+  "open_questions": [
+   "Did you ever work for other customers, or only for him?",
+   "Do you have proof you called in before each shift about missing work for your child's medical emergency?",
+   "Do you have hospital records or any other documentation supporting your child's medical emergency?",
+   "Do you have any texts, messages or other evidence showing you asked about overtime before you were fired?",
+   "Do you keep a record of your weekly work hours, especially on weeks you worked over 50 hours?",
+   "Can you describe any other incidents of mistreatment or threats from your boss related to your work?",
+   "Did your employer provide you with documentation regarding your pay and hours, and were they accurate?",
+   "Did you ever work for other customers, or only for your boss?",
+   "Do you have any documents or messages showing the job responsibilities and controls your boss had over your work?",
+   "Do you have proof that you called in every time you missed work for your child's medical emergency?",
+   "Do you have any hospital records or documents related to your child's medical emergency?",
+   "Do you have a record of the hours you worked each week?",
+   "Can you provide any communication you had with your boss regarding your concerns about overtime pay?",
+   "Do you have messages or documentation that show when you asked about overtime pay?",
+   "Did your boss ever make threats or attempt to intimidate you regarding your job?",
+   "Do you feel that your health and safety were compromised while working?",
+   "Have you ever received pay stubs or documentation regarding your wages and hours worked?",
+   "Did you ever work for anyone else, or was it just for your boss?",
+   "Do you keep a record of how many hours you worked each week?",
+   "Can you describe a typical week of work for you, including how many hours you worked?",
+   "What tools or equipment did your boss provide for your work?",
+   "Did your boss ever specify what your job duties were?",
+   "Do you have any messages or texts that show you asked your boss about overtime before you were fired?",
+   "Were you ever given pay stubs or documentation regarding your pay?",
+   "Did you ever feel that your work environment was unsafe? If so, what specific issues did you notice?",
+   "Did you experience any emotional distress related to your work situation? Can you describe it?",
+   "Have you ever worked for other clients, or did you only work for this boss?",
+   "Can you tell me about the hours you worked each week and whether you ever received overtime pay?",
+   "Do you have any documentation or records of your hours worked and any payments you received?",
+   "What tasks did you perform at work, and what tools or supplies did your boss provide?",
+   "Did you ever ask your boss for documents regarding your pay or working conditions? How did he respond?",
+   "Has your boss ever made threats or pressured you about your job or pay?",
+   "Were there any safety issues at your workplace that made you feel unsafe?",
+   "Did you receive pay stubs, and do they accurately reflect your hours and pay?",
+   "Have you experienced any emotional distress due to your working conditions?",
+   "What happened after you asked about overtime? Can you describe the firing incident?",
+   "Do you have proof that you called in to report your absences due to caring for your sick child?"
+  ],
+  "completeness_score": 1.0
+ },
+ "completeness_score": 1.0,
+ "executive_summary": "This report found 18 possible legal problems. The biggest issues are unpaid wages, retaliation, wrongful termination, and retaliatory firing. One deadline has already passed. On Monday, June 22, I texted him. I told him I want all my unpaid wages. According to the law, Minnesota Stat. \u00a7 181.13(a), you must get paid within 24 hours when you ask for it after being fired. If your employer does not pay you, they owe you a penalty. This penalty is your average daily wage for each day they are late, up to 15 days. Please confirm this right away. Missing deadlines can end your case. There are safety concerns mentioned in the story. Check the safety resources below. The analysis is fully complete. There are 37 follow-up questions below that could help.",
+ "profile": {
+  "profile_type": "court_self_help",
+  "language_level": "plain",
+  "sections": {
+   "executive_summary": true,
+   "cirac_memo": false,
+   "triage_routing": true,
+   "action_items": true,
+   "gap_appendix": false,
+   "authorities_table": false
+  },
+  "reading_grade_level": 8,
+  "org_branding": null
+ }
+}

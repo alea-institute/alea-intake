@@ -1,6 +1,6 @@
 {
   "persona": "landlord-tenant",
-  "email": "persona_landlord-tenant_1783743178@example.com",
+  "email": "persona_landlord-tenant_1783802691@example.com",
   "base": "https://alea-intake-dev-production.up.railway.app",
   "steps": {
     "register": {
@@ -14,9 +14,9 @@
     "create_intake": {
       "http": 201,
       "ok": true,
-      "intake_id": 199,
-      "session_id": 148,
-      "party_id": 199,
+      "intake_id": 218,
+      "session_id": 163,
+      "party_id": 218,
       "practice_area_id": null
     },
     "narrative": {
@@ -39,12 +39,12 @@
     ],
     "analyze": {
       "http": 202,
-      "run_id": 44,
+      "run_id": 51,
       "status": "converged",
       "detail": null
     },
     "final_status": {
-      "run_id": 44,
+      "run_id": 51,
       "status": "converged",
       "iteration": 2,
       "max_iterations": 10,
@@ -56,204 +56,150 @@
     "output_generate": [
       {
         "profile": "law_firm",
-        "id": 105,
-        "run_id": 44,
-        "intake_id": 199,
+        "id": 126,
+        "run_id": 51,
+        "intake_id": 218,
         "profile_type": "law_firm",
         "completeness_score": 0.75,
-        "created_at": "2026-07-11T04:17:48.785383Z"
+        "created_at": "2026-07-11T20:46:58.505954Z"
       },
       {
         "profile": "court_self_help",
-        "id": 106,
-        "run_id": 44,
-        "intake_id": 199,
+        "id": 127,
+        "run_id": 51,
+        "intake_id": 218,
         "profile_type": "court_self_help",
         "completeness_score": 0.75,
-        "created_at": "2026-07-11T04:17:49.374242Z"
+        "created_at": "2026-07-11T20:46:58.980347Z"
       },
       {
         "profile": "legal_aid",
-        "id": 107,
-        "run_id": 44,
-        "intake_id": 199,
+        "id": 128,
+        "run_id": 51,
+        "intake_id": 218,
         "profile_type": "legal_aid",
         "completeness_score": 0.75,
-        "created_at": "2026-07-11T04:18:06.064110Z"
+        "created_at": "2026-07-11T20:47:14.237525Z"
       }
     ]
   },
   "safety_alerts": [],
   "analysis": {
-    "run_id": 44,
+    "run_id": 51,
     "status": "converged",
     "claims": [
       {
-        "id": 1659,
+        "id": 1777,
         "claim_name": "Breach of Implied Warranty of Habitability",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RBRosNDPt8cNUuRnoPqYufN",
-        "jurisdiction": "state",
-        "confidence": 0.9,
+        "jurisdiction": "Minnesota",
+        "confidence": 0.85,
         "is_potential": true,
-        "rationale": "The facts highlight ongoing mold issues in the apartment which have not been addressed by the landlord, along with a lack of heat in extremely cold temperatures. These conditions affect the habitability of the rental unit.",
+        "rationale": "The tenant reported mold in the bathroom and a heat outage during which her son was sick. These conditions likely materially affect health and safety, which supports a breach of the implied warranty of habitability.",
         "elements": [
           {
-            "id": 852,
-            "element_name": "Residential Lease Agreement",
+            "id": 930,
+            "element_name": "Residential Tenancy",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "satisfaction_confidence": 0.81
           },
           {
-            "id": 853,
-            "element_name": "Uninhabitable Conditions",
+            "id": 931,
+            "element_name": "Defective Condition",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "satisfaction_confidence": 0.81
           },
           {
-            "id": 854,
-            "element_name": "Notification to Landlord",
+            "id": 932,
+            "element_name": "Landlord's Notice",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "satisfaction_confidence": 0.81
+          },
+          {
+            "id": 933,
+            "element_name": "Failure to Repair",
+            "is_satisfied": true,
+            "satisfaction_confidence": 0.75
           }
         ]
       },
       {
-        "id": 1660,
-        "claim_name": "Withholding Rent Due to Repair Issues",
+        "id": 1778,
+        "claim_name": "Retaliatory Eviction",
         "claim_type": "discovered",
         "folio_iri": null,
-        "jurisdiction": "state",
-        "confidence": 0.4,
+        "jurisdiction": "Minnesota",
+        "confidence": 0.3,
         "is_potential": true,
-        "rationale": "Danika has withheld rent in light of the mold issue and heat outage, suggesting a strategy to enforce repairs through nonpayment of rent. This claim arises from the tenant's rights to withhold rent for unaddressed issues that affect living conditions.",
+        "rationale": "The tenant's nonpayment of rent and withholding of payment due to unaddressed mold and heat issues could support a claim of retaliatory eviction if eviction proceedings are initiated because she reported these issues to the city.",
         "elements": [
           {
-            "id": 855,
-            "element_name": "Notice of Repairs",
+            "id": 934,
+            "element_name": "Tenant's Activity",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "satisfaction_confidence": 0.77
           },
           {
-            "id": 856,
-            "element_name": "Landlord's Failure to Act",
+            "id": 935,
+            "element_name": "Adverse Action",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.85
+            "satisfaction_confidence": 0.81
           },
           {
-            "id": 857,
-            "element_name": "Withholding Rent",
+            "id": 936,
+            "element_name": "Causal Connection",
             "is_satisfied": true,
-            "satisfaction_confidence": 0.82
+            "satisfaction_confidence": 0.77
           }
         ]
       },
       {
-        "id": 1661,
-        "claim_name": "Potential Defense for Eviction",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": "state",
-        "confidence": 0.4,
-        "is_potential": true,
-        "rationale": "Given the issues stated, Danika may have defenses against eviction based on the conditions of the rental unit and her attempts to notify the landlord. This includes the landlord's potential breach of the implied warranty of habitability and failure to address reported issues.",
-        "elements": [
-          {
-            "id": 858,
-            "element_name": "Landlord's Duty to Maintain",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 859,
-            "element_name": "Notice and Opportunity to Resolve",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 860,
-            "element_name": "Ongoing Issues",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          }
-        ]
-      },
-      {
-        "id": 1662,
-        "claim_name": "Failure to Provide a Receipted Payment for Pet Fee",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": "state",
-        "confidence": 0.75,
-        "is_potential": true,
-        "rationale": "Danika indicated she did not receive a receipt for the $500 paid for having a cat, which could point to issues of proper accounting and potential disputes over payment legitimacy or other financial responsibilities under the lease.",
-        "elements": [
-          {
-            "id": 861,
-            "element_name": "Payment Made",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 862,
-            "element_name": "Lack of Receipt",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          },
-          {
-            "id": 863,
-            "element_name": "Documentation Requirement",
-            "is_satisfied": true,
-            "satisfaction_confidence": 0.85
-          }
-        ]
-      },
-      {
-        "id": 1663,
+        "id": 1779,
         "claim_name": "Breach of Implied Warranty of Habitability by Home Seller",
         "claim_type": "discovered",
-        "folio_iri": null,
+        "folio_iri": "https://folio.openlegalstandard.org/R78sQua6LVfK3i7KL9lqmZN",
         "jurisdiction": null,
-        "confidence": 0.2,
+        "confidence": 0.4,
         "is_potential": true,
         "rationale": "Discovered via FOLIO ontology traversal from Breach of Implied Warranty of Habitability (depth 1)",
         "elements": []
       },
       {
-        "id": 1664,
+        "id": 1780,
         "claim_name": "Breach of Warranty",
         "claim_type": "discovered",
-        "folio_iri": null,
+        "folio_iri": "https://folio.openlegalstandard.org/R7NPSSODp2sRYDRSQ2hvF3b",
         "jurisdiction": null,
-        "confidence": 0.2,
+        "confidence": 0.4,
         "is_potential": true,
         "rationale": "Discovered via FOLIO ontology traversal from Breach of Implied Warranty of Habitability (depth 1)",
         "elements": []
       },
       {
-        "id": 1665,
+        "id": 1781,
         "claim_name": "Product Liability Claims",
         "claim_type": "discovered",
         "folio_iri": null,
         "jurisdiction": null,
-        "confidence": 0.2,
+        "confidence": 0.3,
         "is_potential": true,
         "rationale": "Discovered via FOLIO ontology traversal from Breach of Implied Warranty of Habitability (depth 1)",
         "elements": []
       },
       {
-        "id": 1666,
+        "id": 1782,
         "claim_name": "Contract & Quasi-Contract Claims",
         "claim_type": "discovered",
-        "folio_iri": null,
+        "folio_iri": "https://folio.openlegalstandard.org/RZ1dOPJ6HH6lMJGSLNxfwV",
         "jurisdiction": null,
-        "confidence": 0.2,
+        "confidence": 0.4,
         "is_potential": true,
         "rationale": "Discovered via FOLIO ontology traversal from Breach of Implied Warranty of Habitability (depth 1)",
         "elements": []
       },
       {
-        "id": 1667,
+        "id": 1783,
         "claim_name": "Property & Premises Liability Claims",
         "claim_type": "discovered",
         "folio_iri": "https://folio.openlegalstandard.org/RDSBerlLWg1ntpLqDQn1eVn",
@@ -264,333 +210,328 @@
         "elements": []
       },
       {
-        "id": 1668,
-        "claim_name": "Retaliatory Eviction",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": null,
-        "confidence": 0.2,
-        "is_potential": true,
-        "rationale": "Retaliatory eviction laws protect tenants from being evicted for asserting their rights regarding unsafe living conditions.",
-        "elements": []
-      },
-      {
-        "id": 1669,
-        "claim_name": "Negligence by Landlord",
-        "claim_type": "discovered",
-        "folio_iri": "https://folio.openlegalstandard.org/RC8bnzMEhgjx01vV9ngLiR3",
-        "jurisdiction": null,
-        "confidence": 0.4,
-        "is_potential": true,
-        "rationale": "Landlords have a duty to maintain rental properties in a habitable condition and could be liable for damages if they fail to address hazardous conditions.",
-        "elements": []
-      },
-      {
-        "id": 1670,
-        "claim_name": "Failure to Mitigate Damages",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": null,
-        "confidence": 0.2,
-        "is_potential": true,
-        "rationale": "Landlords may be required to mitigate damages and address maintenance issues in a timely manner to avoid liability.",
-        "elements": []
-      },
-      {
-        "id": 1671,
-        "claim_name": "Failure to Return Security Deposit",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": null,
-        "confidence": 0.2,
-        "is_potential": true,
-        "rationale": "Many states require security deposits to be returned unless specific damages are documented.",
-        "elements": []
-      },
-      {
-        "id": 1672,
-        "claim_name": "Potential Fair Housing Violations",
-        "claim_type": "discovered",
-        "folio_iri": null,
-        "jurisdiction": null,
-        "confidence": 0.2,
-        "is_potential": true,
-        "rationale": "Landlords must adhere to fair housing laws and provide reasonable accommodations for disabled tenants.",
-        "elements": []
-      },
-      {
-        "id": 1673,
-        "claim_name": "Landlord's Duty to Repair",
+        "id": 1784,
+        "claim_name": "Failure to Provide a Safe Living Environment",
         "claim_type": "discovered",
         "folio_iri": null,
         "jurisdiction": null,
         "confidence": 0.4,
         "is_potential": true,
-        "rationale": "Landlords have a duty to maintain habitable conditions. The ongoing mold issue has been reported multiple times, and the delayed heat repairs during extreme cold could strengthen Danika's position.",
+        "rationale": "The tenant has reported mold and heating issues that have not been adequately addressed, which may constitute a violation of the landlord's duty to maintain the property.",
         "elements": []
       },
       {
-        "id": 1674,
-        "claim_name": "Tenant's Right to Habitability with Children",
+        "id": 1785,
+        "claim_name": "Failure to Provide Notice for Rent Increase",
         "claim_type": "discovered",
         "folio_iri": null,
         "jurisdiction": null,
         "confidence": 0.4,
         "is_potential": true,
-        "rationale": "Children with asthma are particularly vulnerable to mold. The legal standards for habitability may be interpreted more stringently considering the implications for a minor's health.",
+        "rationale": "The absence of receipts for the $500 charge for the cat could indicate a lack of proper procedure regarding additional fees or charges.",
         "elements": []
       },
       {
-        "id": 1675,
-        "claim_name": "Failure to Provide Receipts",
+        "id": 1786,
+        "claim_name": "Lack of Response to Emergency Maintenance",
         "claim_type": "discovered",
         "folio_iri": null,
         "jurisdiction": null,
         "confidence": 0.4,
         "is_potential": true,
-        "rationale": "Failure to provide receipts may breach local landlord-tenant laws, and lack of documentation on a fee can impact the landlord's claim of material breach.",
+        "rationale": "The tenant made multiple calls to the emergency maintenance line without a response, which could further support claims related to the landlord's failure to maintain the property.",
         "elements": []
       },
       {
-        "id": 1676,
-        "claim_name": "Unlawful Notice and Timeframe",
+        "id": 1787,
+        "claim_name": "Discrimination Against Vulnerable Occupants",
         "claim_type": "discovered",
         "folio_iri": null,
         "jurisdiction": null,
         "confidence": 0.4,
         "is_potential": true,
-        "rationale": "If the notice does not account for ongoing repair issues, this could infringe upon the procedures that need to be adhered to in eviction cases.",
+        "rationale": "Given the tenant's concerns regarding eviction and issues raised about the living conditions, any actions taken against them could be subject to fair housing discrimination analysis.",
         "elements": []
       },
       {
-        "id": 1677,
-        "claim_name": "Causal Link Between Mold and Health Issues",
+        "id": 1788,
+        "claim_name": "Retaliatory Eviction Linked to Tenant's Health Complaints",
         "claim_type": "discovered",
         "folio_iri": null,
         "jurisdiction": null,
         "confidence": 0.4,
         "is_potential": true,
-        "rationale": "While not yet medically confirmed, the correlation between health issues and habitable conditions could establish further liability for the landlord.",
+        "rationale": "This issue connects with the existing claim of retaliatory eviction but emphasizes the timing and correlation between the eviction actions and the tenant's complaints, thus requiring detailed legal scrutiny.",
+        "elements": []
+      },
+      {
+        "id": 1789,
+        "claim_name": "Failure to Provide a Habitably Safe Environment",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.85,
+        "is_potential": true,
+        "rationale": "Given the history of tenant complaints about mold contributing to health issues, this claim may intersect with the existing claim of Breach of Implied Warranty of Habitability, but it highlights the specific impact on children, which may necessitate additional legal considerations.",
+        "elements": []
+      },
+      {
+        "id": 1790,
+        "claim_name": "Harassment or Unreasonable Treatment by Landlord",
+        "claim_type": "discovered",
+        "folio_iri": null,
+        "jurisdiction": null,
+        "confidence": 0.3,
+        "is_potential": true,
+        "rationale": "While not explicitly listed under existing claims, the documented lack of response to maintenance requests could point to an environment of hostility and neglect, adding a layer of potential legal action for harassment.",
+        "elements": []
+      },
+      {
+        "id": 1791,
+        "claim_name": "Potential Breach of Contract Regarding Extra Fees",
+        "claim_type": "discovered",
+        "folio_iri": "https://folio.openlegalstandard.org/RC2fjcpsEbrVvVymvt4oASx",
+        "jurisdiction": null,
+        "confidence": 0.7,
+        "is_potential": true,
+        "rationale": "Without proper documentation or clear changes to the rental agreement, this could complicate the landlord's position and represents an area of legal vulnerability.",
         "elements": []
       }
     ],
     "gaps": [
       {
-        "id": 1894,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Notification to Landlord' is not yet supported by any facts",
-        "priority": 90,
-        "status": "open"
-      },
-      {
-        "id": 1895,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Notice and Opportunity to Resolve' is not yet supported by any facts",
-        "priority": 40,
-        "status": "open"
-      },
-      {
-        "id": 1896,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Ongoing Issues' is not yet supported by any facts",
-        "priority": 40,
-        "status": "open"
-      },
-      {
-        "id": 1897,
-        "gap_type": "unsupported_element",
-        "description": "Element 'Documentation Requirement' is not yet supported by any facts",
-        "priority": 75,
-        "status": "open"
-      },
-      {
-        "id": 1898,
+        "id": 2065,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Breach of Implied Warranty of Habitability by Home Seller' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1899,
+        "id": 2066,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Breach of Warranty' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1900,
+        "id": 2067,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Product Liability Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1901,
+        "id": 2068,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Contract & Quasi-Contract Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1902,
+        "id": 2069,
         "gap_type": "unexplored_claim",
         "description": "Potential claim 'Property & Premises Liability Claims' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1903,
+        "id": 2070,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Negligence by Landlord' has not been explored with fact mappings",
+        "description": "Potential claim 'Failure to Provide Notice for Rent Increase' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1904,
+        "id": 2071,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Failure to Mitigate Damages' has not been explored with fact mappings",
+        "description": "Potential claim 'Discrimination Against Vulnerable Occupants' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1905,
+        "id": 2072,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Failure to Return Security Deposit' has not been explored with fact mappings",
+        "description": "Potential claim 'Retaliatory Eviction Linked to Tenant's Health Complaints' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1906,
+        "id": 2073,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Potential Fair Housing Violations' has not been explored with fact mappings",
+        "description": "Potential claim 'Failure to Provide a Habitably Safe Environment' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1907,
+        "id": 2074,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Landlord's Duty to Repair' has not been explored with fact mappings",
+        "description": "Potential claim 'Harassment or Unreasonable Treatment by Landlord' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1908,
+        "id": 2075,
         "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Tenant's Right to Habitability with Children' has not been explored with fact mappings",
+        "description": "Potential claim 'Potential Breach of Contract Regarding Extra Fees' has not been explored with fact mappings",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1909,
-        "gap_type": "unexplored_claim",
-        "description": "Potential claim 'Failure to Provide Receipts' has not been explored with fact mappings",
-        "priority": 50,
-        "status": "open"
-      },
-      {
-        "id": 1910,
+        "id": 2076,
         "gap_type": "procedural_requirement",
-        "description": "What is the deadline for notifying the landlord about the repair issues before withholding rent could be deemed ineffective?",
+        "description": "Have you documented the specific timeline of the reported mold and heating issues and any communications with the landlord regarding these conditions?",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1911,
+        "id": 2077,
         "gap_type": "procedural_requirement",
-        "description": "What is the time frame for disputing the lack of a receipt for the pet fee under the lease agreement?",
+        "description": "When did you report the mold and heating issues to the city, and have you kept records of communication with the city and your landlord to support your claim?",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1912,
+        "id": 2078,
         "gap_type": "procedural_requirement",
-        "description": "What are the specific procedural steps that need to be followed to assert defenses against eviction in this situation?",
+        "description": "Have you obtained any evaluations or reports from health officials or inspectors regarding the mold and heating conditions in your unit?",
         "priority": 50,
         "status": "open"
       },
       {
-        "id": 1913,
+        "id": 2079,
+        "gap_type": "procedural_requirement",
+        "description": "Do you have any written agreements or documentation indicating the proper notice period required for rent increases under your lease?",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 2080,
+        "gap_type": "procedural_requirement",
+        "description": "Have you kept records of the dates and times of your calls to emergency maintenance and any responses or lack thereof from the landlord?",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 2081,
+        "gap_type": "procedural_requirement",
+        "description": "Have you documented any instances or communications indicating that discrimination may have played a role in the landlord's treatment of you and your concerns?",
+        "priority": 50,
+        "status": "open"
+      },
+      {
+        "id": 2082,
         "gap_type": "procedural_requirement",
         "description": "You reported problems to the city (or an inspector cited your landlord) shortly before the eviction steps started. If a landlord moves to evict soon after a tenant reports code violations, the law may presume retaliation \u2014 in Minnesota, Minn. Stat. \u00a7 504B.285/\u00a7 504B.441; other states have an equivalent. How soon after your report did the eviction notice arrive? [Authority: Minn. Stat. \u00a7 504B.285, subd. 2; \u00a7 504B.441 (retaliation defense/penalties)]",
         "priority": 84,
         "status": "open"
       },
       {
-        "id": 1914,
+        "id": 2083,
         "gap_type": "procedural_requirement",
         "description": "You mentioned paying extra money (like a cash pet deposit) with no receipt. Deposits are regulated \u2014 in Minnesota the landlord must account for them, pay interest, and return them with an itemized statement (Minn. Stat. \u00a7 504B.178); other states have an equivalent. A cash payment with no receipt can still count. How much did you pay, when, and do you have any proof (texts, witnesses, bank withdrawal)? [Authority: Minn. Stat. \u00a7 504B.178 (security deposits: receipt, interest, return); \u00a7 504B.172]",
         "priority": 82,
         "status": "open"
       },
       {
-        "id": 1915,
+        "id": 2084,
         "gap_type": "procedural_requirement",
         "description": "You mentioned holding back rent because the landlord is ignoring repairs. Withholding on your own can be used against you in an eviction \u2014 but there is a legal way to do it: in Minnesota you can deposit the rent with the court (rent escrow, Minn. Stat. \u00a7 504B.385) and ask the court to order repairs; other states have an equivalent. Have you asked the court about depositing your rent instead of just holding it back? [Authority: Minn. Stat. \u00a7 504B.385 (rent escrow); \u00a7 504B.425 (remedies); \u00a7 504B.161 (covenants of habitability)]",
         "priority": 84,
         "status": "open"
       },
       {
-        "id": 1916,
+        "id": 2085,
         "gap_type": "procedural_requirement",
         "description": "Your notice appears to give a vague reason (like a 'material lease violation' box with no specifics). A notice usually must state the specific grounds so you can respond \u2014 a vague or defective notice can be challenged. What exactly does the notice say, and does it list any specific violation, amount, or cure period? [Authority: State eviction-notice content requirements (e.g., Minn. Stat. \u00a7 504B.321; the notice must state the specific grounds)]",
         "priority": 82,
+        "status": "open"
+      },
+      {
+        "id": 2086,
+        "gap_type": "procedural_requirement",
+        "description": "You said the court papers (summons) were just TAPED to your door. In Minnesota a summons can be posted like that only if the landlord first tried to hand it to you in person and could not find you, and then also mailed you a copy (Minn. Stat. \u00a7 504B.331). If those steps were skipped, the service may be defective and can be challenged. Were you ever handed the papers in person, or did anyone mail you a copy? [Authority: Minn. Stat. \u00a7 504B.331 (eviction summons service; posting/'nail-and-mail' allowed only after diligent attempts at personal service and if the tenant cannot be found, plus mailing)]",
+        "priority": 84,
         "status": "open"
       }
     ],
     "questions": [
       {
-        "id": 716,
-        "question_text": "When did you report the repair problems to the city or inspector, and when did your landlord give you the eviction notice?",
+        "id": 791,
+        "question_text": "How soon after you reported problems to the city did you receive the eviction notice?",
         "topic_group": "Eviction Process",
         "priority": 1,
-        "rationale": "This question helps establish whether the eviction followed closely after reporting issues, which could indicate retaliation by the landlord.",
+        "rationale": "Understanding the timeline can help us see if the eviction might be retaliatory, which can strengthen your defense.",
         "status": "pending"
       },
       {
-        "id": 717,
-        "question_text": "What exactly does the eviction notice say? Does it list any specific violations or reasons?",
+        "id": 792,
+        "question_text": "Were you ever handed the eviction papers in person, or did anyone mail you a copy?",
         "topic_group": "Eviction Process",
         "priority": 2,
-        "rationale": "Understanding the specifics of the eviction notice can help determine if it meets legal requirements and if there are grounds to challenge it.",
+        "rationale": "This will help us determine if the proper procedure for serving eviction papers was followed, which might invalidate the eviction.",
         "status": "pending"
       },
       {
-        "id": 718,
-        "question_text": "Have you considered asking the court about depositing your rent instead of just holding it back due to repair issues?",
-        "topic_group": "Rent Withholding",
+        "id": 793,
+        "question_text": "What does the eviction notice say specifically? Does it mention any violations or provide a timeframe for correcting them?",
+        "topic_group": "Eviction Process",
+        "priority": 3,
+        "rationale": "Evaluating whether the notice provides enough information is crucial for understanding if it can be challenged.",
+        "status": "pending"
+      },
+      {
+        "id": 794,
+        "question_text": "Have you discussed with the court the possibility of depositing your rent instead of just withholding it?",
+        "topic_group": "Handling Rent and Repairs",
         "priority": 1,
-        "rationale": "This question ensures that the client understands the correct legal process for withholding rent, which can protect them from eviction.",
+        "rationale": "This question will help ensure you\u2019re following legal procedures, which can protect you from eviction.",
         "status": "pending"
       },
       {
-        "id": 719,
-        "question_text": "What is the typical process and deadline for notifying your landlord about repair issues before withholding rent?",
-        "topic_group": "Rent Withholding",
+        "id": 795,
+        "question_text": "How much did you pay for any extra deposits, when did you pay them, and do you have any proof of these payments?",
+        "topic_group": "Handling Rent and Repairs",
         "priority": 2,
-        "rationale": "This question clarifies any time-sensitive requirements for notifying the landlord, which is crucial to maintain legal protections.",
+        "rationale": "Collecting proof of payments can support any claims you may have about the handling of deposits.",
         "status": "pending"
       },
       {
-        "id": 720,
-        "question_text": "How much did you pay for the pet deposit and when did you pay it? Do you have any proof like texts or bank statements?",
-        "topic_group": "Deposits and Fees",
+        "id": 796,
+        "question_text": "When did you report the mold and heating issues to the city, and do you have records of your communications with them and your landlord?",
+        "topic_group": "Documenting Conditions and Communications",
         "priority": 1,
-        "rationale": "This question is essential to determine if the landlord adhered to legal obligations regarding the handling of deposits, which could impact recovery of funds.",
+        "rationale": "Keeping a timeline and records can significantly support your case by showing you acted on known issues.",
         "status": "pending"
       },
       {
-        "id": 721,
-        "question_text": "What are the terms in your lease regarding receipts for deposits? Have you disputed the lack of receipt?",
-        "topic_group": "Deposits and Fees",
+        "id": 797,
+        "question_text": "Have you documented the specific timeline of the reported mold and heating issues, including any communications with your landlord?",
+        "topic_group": "Documenting Conditions and Communications",
         "priority": 2,
-        "rationale": "This helps assess if the client is aware of their rights and the necessary actions to take if their landlord is non-compliant.",
+        "rationale": "This documentation can help show a pattern of neglect or unresponsiveness from the landlord.",
+        "status": "pending"
+      },
+      {
+        "id": 798,
+        "question_text": "Have you received any evaluations or reports from health officials or inspectors about the mold and heating conditions in your home?",
+        "topic_group": "Documenting Conditions and Communications",
+        "priority": 3,
+        "rationale": "These evaluations can strengthen your claims regarding habitability by providing expert insight.",
+        "status": "pending"
+      },
+      {
+        "id": 799,
+        "question_text": "Do you have any written agreements or documentation indicating the proper notice period required for rent increases under your lease?",
+        "topic_group": "Lease and Compliance",
+        "priority": 1,
+        "rationale": "This will help determine if the landlord followed the rules regarding notice for rent increases, which could support your case if they did not.",
         "status": "pending"
       }
     ],
     "deadlines": [
       {
-        "id": 98,
-        "event_text": "these new court papers say the case is set for april 1st at 9am at halden county court, housing division",
+        "id": 132,
+        "event_text": "the case is set for April 1st at 9am at halden county court, housing division",
         "event_type": "eviction_hearing",
         "trigger": "hearing",
         "trigger_date": "2026-04-01",
@@ -603,8 +544,8 @@
         "jurisdiction": "MN"
       },
       {
-        "id": 99,
-        "event_text": "the notice stated the individual owes $350.00. The $350 includes $300 back rent and a $50 late fee. The individual has 14 days to pay the $350 or move out.",
+        "id": 133,
+        "event_text": "the 14-day notice was taped to the door on March 3, 2026",
         "event_type": "notice_to_vacate",
         "trigger": "notice_posted",
         "trigger_date": "2026-03-03",
@@ -617,8 +558,22 @@
         "jurisdiction": "MN"
       },
       {
-        "id": 100,
-        "event_text": "marcus has asthma and hes been coughing so much worse since like december",
+        "id": 134,
+        "event_text": "the summons was issued on March 18, 2026",
+        "event_type": "eviction_summons",
+        "trigger": "served",
+        "trigger_date": "2026-03-18",
+        "computed_date": "2026-03-25",
+        "rule_id": "mn_eviction_hearing_window",
+        "citation": "Minn. Stat. \u00a7 504B.321",
+        "computed": true,
+        "urgency": "lapsed",
+        "hedge": "WARNING: this deadline appears to have ALREADY PASSED as of 2026-07-11. Minnesota eviction hearings are typically held 7\u201314 days after the summons issues, so your hearing could be as early as this date. Estimated \u2014 confirm the exact date with the court or a lawyer. If this hearing window has already passed, contact the housing court immediately. If a judgment was entered against you, ask about a motion to vacate the judgment and about expungement of the eviction record (Minn. Stat. \u00a7 484.014).",
+        "jurisdiction": "MN"
+      },
+      {
+        "id": 135,
+        "event_text": "marcus has been coughing so much worse since like december",
         "event_type": "injury",
         "trigger": "incident",
         "trigger_date": "2025-12-01",
@@ -631,45 +586,31 @@
         "jurisdiction": null
       },
       {
-        "id": 101,
-        "event_text": "the individual called the city on february 20 to report the mold and no-heat thing and someone from the city actually came out february 25",
+        "id": 136,
+        "event_text": "the tenant reported mold in the bathroom ceiling since October",
         "event_type": "injury",
         "trigger": "incident",
-        "trigger_date": "2026-02-25",
+        "trigger_date": "2025-10-01",
         "computed_date": null,
         "rule_id": null,
         "citation": null,
         "computed": false,
         "urgency": "unknown",
         "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
-        "jurisdiction": "MN"
-      },
-      {
-        "id": 102,
-        "event_text": "back in january our HEAT went out for like 5 days, jan 18 to 23",
-        "event_type": "incident",
-        "trigger": "incident",
-        "trigger_date": "2026-01-18",
-        "computed_date": null,
-        "rule_id": null,
-        "citation": null,
-        "computed": false,
-        "urgency": "unknown",
-        "hedge": "Estimated \u2014 confirm the exact date with the court or a lawyer.",
-        "jurisdiction": "MN"
+        "jurisdiction": null
       }
     ]
   },
   "outputs": [
     {
-      "doc_id": 105,
+      "doc_id": 126,
       "profile": "law_firm",
       "completeness": 0.75,
-      "memo_chars": 31580,
+      "memo_chars": 32871,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 73727,
+          "bytes": 74404,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "json_substance": null,
@@ -677,7 +618,7 @@
         },
         "json": {
           "http": 200,
-          "bytes": 64594,
+          "bytes": 63895,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "json_substance": true,
@@ -686,14 +627,14 @@
       }
     },
     {
-      "doc_id": 106,
+      "doc_id": 127,
       "profile": "court_self_help",
       "completeness": 0.75,
-      "memo_chars": 13186,
+      "memo_chars": 14652,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 43346,
+          "bytes": 44510,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "json_substance": null,
@@ -701,7 +642,7 @@
         },
         "json": {
           "http": 200,
-          "bytes": 64645,
+          "bytes": 64090,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "json_substance": true,
@@ -710,14 +651,14 @@
       }
     },
     {
-      "doc_id": 107,
+      "doc_id": 128,
       "profile": "legal_aid",
       "completeness": 0.75,
-      "memo_chars": 33014,
+      "memo_chars": 35182,
       "exports": {
         "pdf": {
           "http": 200,
-          "bytes": 76572,
+          "bytes": 78224,
           "content_type": "application/pdf",
           "magic": "%PDF-",
           "json_substance": null,
@@ -725,7 +666,7 @@
         },
         "json": {
           "http": 200,
-          "bytes": 65236,
+          "bytes": 65137,
           "content_type": "application/json",
           "magic": "{\n \"i",
           "json_substance": true,
@@ -755,10 +696,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "395",
+        "id": "475",
         "client_id": "c0",
-        "timestamp": "2026-07-11 04:13:00.857269+00:00",
-        "message_id": 395,
+        "timestamp": "2026-07-11 20:44:55.414470+00:00",
+        "message_id": 475,
         "sequence_number": 1
       }
     },
@@ -767,7 +708,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 396
+        "message_id": 476
       }
     },
     {
@@ -781,10 +722,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "397",
+        "id": "477",
         "client_id": "c1",
-        "timestamp": "2026-07-11 04:13:01.196935+00:00",
-        "message_id": 397,
+        "timestamp": "2026-07-11 20:44:55.672022+00:00",
+        "message_id": 477,
         "sequence_number": 3
       }
     },
@@ -793,7 +734,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 398
+        "message_id": 478
       }
     },
     {
@@ -807,10 +748,10 @@
       "dir": "recv",
       "msg": {
         "type": "message_ack",
-        "id": "399",
+        "id": "479",
         "client_id": "c2",
-        "timestamp": "2026-07-11 04:13:01.560651+00:00",
-        "message_id": 399,
+        "timestamp": "2026-07-11 20:44:55.928375+00:00",
+        "message_id": 479,
         "sequence_number": 5
       }
     },
@@ -819,7 +760,7 @@
       "msg": {
         "type": "system_message",
         "content": "Thank you for sharing that. Could you tell me more about when this happened and who was involved?",
-        "message_id": 400
+        "message_id": 480
       }
     },
     {

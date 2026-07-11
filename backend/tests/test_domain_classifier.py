@@ -98,6 +98,21 @@ def test_no_cross_contamination_of_family_into_employment_areas():
     assert "family" not in classify_domains(ELDER)
 
 
+def test_no_landlord_tenant_false_positive_from_substrings():
+    """Round 7 regression: bare 'rent' (in diffe-RENT/cur-RENT/pa-RENT) and bare
+    'notice' (any letter is a notice) must NOT classify an elder / employment /
+    consumer matter as landlord_tenant — that leak let the eviction cure-window
+    rule fire cross-domain (BUG-32)."""
+    assert "landlord_tenant" not in classify_domains(ELDER)
+    assert "landlord_tenant" not in classify_domains(EMPLOYMENT)
+    assert "landlord_tenant" not in classify_domains(CONSUMER)
+    assert "landlord_tenant" not in classify_domains(BENEFITS)
+
+
+def test_genuine_landlord_tenant_still_classifies_via_strong_markers():
+    assert "landlord_tenant" in classify_domains(LT)
+
+
 def test_empty_narrative_yields_no_domains():
     assert classify_domains("") == frozenset()
     assert classify_domains("   ") == frozenset()
