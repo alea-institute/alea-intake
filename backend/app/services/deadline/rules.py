@@ -179,6 +179,14 @@ RULES: list[DeadlineRule] = [
             "Immigration-court hearing/appearance: the stated date IS the "
             "operative deadline (identity compute)."
         ),
+        lapsed_exception=(
+            "If this hearing date has already passed and you did not appear, you "
+            "may have been ordered removed 'in absentia' (in your absence). That "
+            "order can sometimes be REOPENED — for example if you never properly "
+            "received the notice or exceptional circumstances prevented you from "
+            "appearing (motion to reopen, INA § 240(b)(5)(C); 8 U.S.C. "
+            "§ 1229a(b)(5)(C)). Contact an immigration lawyer immediately."
+        ),
     ),
     DeadlineRule(
         id="mn_eviction_stated_hearing",
@@ -204,6 +212,13 @@ RULES: list[DeadlineRule] = [
             "governing the eviction summons/hearing window (RUB-09 strict "
             "primary-source gate, Damien r3 2026-07-10)."
         ),
+        lapsed_exception=(
+            "If this hearing date has already passed, contact the housing court "
+            "immediately. If a judgment was entered against you, ask about a "
+            "motion to vacate the judgment and about expungement of the eviction "
+            "record (Minn. Stat. § 484.014) — missing the hearing does not always "
+            "end your options."
+        ),
     ),
     DeadlineRule(
         id="stated_court_date",
@@ -226,6 +241,12 @@ RULES: list[DeadlineRule] = [
             "deadline (identity compute); the governing primary authority is "
             "the court order/summons that set it."
         ),
+        lapsed_exception=(
+            "If this date has already passed, contact the court right away — a "
+            "default judgment or order may have been entered in your absence. "
+            "Ask the court clerk (or a lawyer) whether you can move to vacate or "
+            "reopen it; acting quickly matters."
+        ),
     ),
     DeadlineRule(
         id="mn_eviction_hearing_window",
@@ -247,6 +268,12 @@ RULES: list[DeadlineRule] = [
             "MN eviction summons -> hearing: 7–14 day window; earliest edge "
             "(trigger + 7d) computed, full range flagged in hedge."
         ),
+        lapsed_exception=(
+            "If this hearing window has already passed, contact the housing "
+            "court immediately. If a judgment was entered against you, ask about "
+            "a motion to vacate the judgment and about expungement of the "
+            "eviction record (Minn. Stat. § 484.014)."
+        ),
     ),
     DeadlineRule(
         id="mn_family_response_30d",
@@ -262,6 +289,13 @@ RULES: list[DeadlineRule] = [
         ),
         compute=lambda d, ev: d + timedelta(days=30),
         description="MN dissolution/family response due 30 days after service of the petition (Minn. Stat. § 518.12).",
+        lapsed_exception=(
+            "If more than 30 days have passed since you were served and you have "
+            "not answered, contact the court right away — a default could be "
+            "entered against you. Ask about filing a late answer or moving to "
+            "set aside a default (Minn. R. Civ. P. 60.02); courts can excuse a "
+            "late response for good reason."
+        ),
     ),
     DeadlineRule(
         id="asylum_one_year",
@@ -314,6 +348,14 @@ RULES: list[DeadlineRule] = [
             "14d per Minn. Stat. § 504B.321 subd. 1a), cited to the governing "
             "statute (RUB-09 strict primary-source gate, Damien r3 2026-07-10)."
         ),
+        lapsed_exception=(
+            "If this notice period has already passed, an eviction case may have "
+            "been filed — but that is not the end: in Minnesota you can still "
+            "raise your defenses at the eviction hearing (including paying what "
+            "is owed to redeem in a nonpayment case, Minn. Stat. § 504B.291). If "
+            "a judgment was already entered, ask about vacating it and about "
+            "expungement (Minn. Stat. § 484.014)."
+        ),
     ),
     DeadlineRule(
         id="generic_notice_window",
@@ -337,6 +379,13 @@ RULES: list[DeadlineRule] = [
         description=(
             "Generic notice date + N-day cure/vacate window "
             "(uses stated window_days, else defaults to 14)."
+        ),
+        lapsed_exception=(
+            "If this notice period has already passed, act now rather than "
+            "assume it is over: depending on your state you may still be able to "
+            "cure, raise defenses at any hearing, or ask the court to vacate a "
+            "judgment entered against you. Contact the court or a lawyer "
+            "immediately."
         ),
     ),
 ]

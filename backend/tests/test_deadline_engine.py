@@ -352,6 +352,47 @@ def test_r3_mn_eviction_notice_window_carries_504B321_subd_1a():
     assert d.citation and "504B.321, subd. 1a" in d.citation
 
 
+def test_r2_every_rule_carries_lapsed_exception_routing():
+    """BUG-29 (RUB-08 r2): EVERY rule in the table must route a lapsed deadline
+    to a what-now/exception pathway — not just flag it as passed."""
+    from app.services.deadline.rules import RULES
+
+    for rule in RULES:
+        assert rule.lapsed_exception, f"rule {rule.id} has no lapsed routing"
+
+
+def test_r2_lapsed_mn_eviction_hearing_routes_to_vacate_and_expungement():
+    """A lapsed MN eviction hearing must route to motion-to-vacate +
+    expungement (Minn. Stat. § 484.014) in the hedge the memo renders."""
+    ev = DeadlineEvent(
+        event_type="eviction_hearing",
+        raw_text="my eviction hearing was April 1, 2026",
+        trigger="hearing",
+        date=date(2026, 4, 1),
+        jurisdiction_hint="MN",
+    )
+    d = _one([ev])  # TODAY = 2026-07-05 -> lapsed
+    assert d.urgency == "lapsed"
+    assert "484.014" in d.hedge
+    assert "vacate" in d.hedge.lower()
+
+
+def test_r2_lapsed_immigration_hearing_routes_to_motion_to_reopen():
+    """A lapsed immigration hearing must route to the in-absentia motion to
+    reopen (INA § 240(b)(5)(C))."""
+    ev = DeadlineEvent(
+        event_type="removal_hearing",
+        raw_text="my immigration court hearing was January 10, 2026",
+        trigger="hearing",
+        date=date(2026, 1, 10),
+        jurisdiction_hint="US",
+    )
+    d = _one([ev])
+    assert d.urgency == "lapsed"
+    assert "240(b)(5)(C)" in d.hedge
+    assert "reopen" in d.hedge.lower()
+
+
 def test_immigration_hearing_letter_never_computes_cure_window():
     """IMM round-4 gap: the NTA/hearing letter got a fabricated 14-day
     'cure/vacate' deadline via generic_notice_window (wrong deadline —
