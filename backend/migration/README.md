@@ -83,6 +83,47 @@ drowning in reordering noise.
 `compare.py` writes `DELTA-REPORT.md` and `captures/delta.json`, and exits non-zero on any canary
 failure or regression.
 
+## Result (2026-07-24)
+
+**15 intended fixes, 0 regressions, 36 neutral. All five canaries green.** The signed-off run is
+in [`DELTA-REPORT.md`](DELTA-REPORT.md) with the raw rows in `captures/delta.json`.
+
+Headline fixes: exact label matches now top the scale instead of a flat `0.9` constant; word-order
+invariance ("rules of arbitration" 0.67 → 0.88 against *Arbitration Rules*); prefix/morphology
+credit ("arbitrating" 0.0 → 0.37); the specificity penalty demoting over-broad targets ("custody"
+against *Child Custody Determination* 0.9 → 0.675); and — the biggest correctness win — a legal
+claim mapping to a **governmental body** is now rejected by the semantic-fit gate
+("Retaliation" → *Department of Labor*, "Habitability" → *Housing Authority*), which the
+hand-curated gate accepted because it only knew the exact branch string `"Location"`.
+
+### Findings worth carrying forward
+
+- **Short claim name → long FOLIO label sits just under the single-stage bar.** alea-intake's
+  dominant matching shape is a 1-2 word claim name against a 3-5 word FOLIO label
+  ("Habitability" → *Breach of Warranty of Habitability*). The library's specificity penalty
+  scores that pair 0.675, and a label-only candidate needs `0.5 / SINGLE_STAGE_PENALTY = 0.714`
+  to clear the confidence bar. With the embedding stage healthy this never bites (any cosine
+  above ~0.33 carries it); it only shows in **degraded mode**, and the watch list in the delta
+  report names the two rows where it does. The migration deliberately did **not** retune
+  `SINGLE_STAGE_PENALTY` or `confidence_threshold` — a scorer swap plus a threshold retune is
+  two changes wearing one coat, and the harness marks the `combine` seam "must not move" for
+  exactly that reason. A calibration pass over that trio is a good follow-up operation.
+- **A weak embedding hit is worse than no embedding hit.** `_combine_score` takes a weighted
+  *average*, so a candidate retrieved at cosine 0.1 scores `(0.1 + label) / 2` while the same
+  candidate not retrieved at all scores `label × 0.7`. For any label score above ~0.33 the
+  weakly-retrieved candidate ranks *lower*. Pre-existing, unrelated to the swap, and left alone
+  here — but it is why the Jaccard stand-in produced such violent false regressions, and it
+  belongs in the same calibration pass.
+- **`compute_relevance_score` is not type-defensive.** It feeds `preferred_label` straight into
+  `re.findall`, so a `None` (which folio-python does return) or a test double's `MagicMock`
+  raises `TypeError` rather than being ignored. alea-intake coerces at its own boundary
+  (`_as_text`); worth hardening upstream, in the same spirit as the v0.2.1 `parse_judge_json`
+  fix that the folio-mapper migration prompted.
+- **`PlaceNameGate`'s place-token set is private and closed.** `_PLACE_NAME_TOKENS` cannot be
+  extended by a consumer, so alea-intake still carries a local backstop for the continent names
+  and "City of X" / "Republic of X" phrasings the library does not know. An `extra_tokens`
+  constructor argument would let that backstop go away.
+
 ## Corpus
 
 `corpus.json` is entirely **synthetic** — invented consumer narratives and a 41-node hand-written

@@ -1,0 +1,1166 @@
+{
+  "baseline": "baseline",
+  "baseline_env": {
+    "folio_python_version": "0.3.3",
+    "folio_resolve_consumed": false,
+    "folio_resolve_present": true,
+    "folio_resolve_version": "0.1.0",
+    "max_embedding_candidates": 20,
+    "max_label_results": 10,
+    "top_n": 10
+  },
+  "buckets": {
+    "fit_delta": 3,
+    "rank_delta": 27,
+    "score_delta": 11,
+    "set_delta": 10
+  },
+  "canary_failures": [],
+  "candidate": "candidate",
+  "candidate_env": {
+    "folio_python_version": "0.3.3",
+    "folio_resolve_consumed": true,
+    "folio_resolve_present": true,
+    "folio_resolve_version": "0.1.0",
+    "max_embedding_candidates": 20,
+    "max_label_results": 10,
+    "top_n": 10
+  },
+  "classifications": {
+    "intended_fix": 15,
+    "neutral": 36
+  },
+  "deltas": [
+    {
+      "baseline": 0.9,
+      "bucket": "score_delta",
+      "candidate": 0.99,
+      "classification": "intended_fix",
+      "direction": "up",
+      "expect": "up",
+      "id": "sp-exact",
+      "label": "Arbitration Rules",
+      "query": "Arbitration Rules",
+      "seam": "label_score",
+      "why": "an exact label match should score at the top of the scale, not the generic substring constant"
+    },
+    {
+      "baseline": 0.666667,
+      "bucket": "score_delta",
+      "candidate": 0.88,
+      "classification": "intended_fix",
+      "direction": "up",
+      "expect": "up",
+      "id": "sp-word-order",
+      "label": "Arbitration Rules",
+      "query": "rules of arbitration",
+      "seam": "label_score",
+      "why": "word-order invariance: {rules, arbitration} == {arbitration, rules}"
+    },
+    {
+      "baseline": 0.9,
+      "bucket": "score_delta",
+      "candidate": 0.736,
+      "classification": "neutral",
+      "direction": "down",
+      "expect": "any",
+      "id": "sp-substring",
+      "label": "Retaliation Claim",
+      "query": "retaliation",
+      "seam": "label_score",
+      "why": "substring hit under both scorers"
+    },
+    {
+      "baseline": 0.375,
+      "bucket": "score_delta",
+      "candidate": 0.66,
+      "classification": "intended_fix",
+      "direction": "up",
+      "expect": "up",
+      "id": "sp-reverse-substring",
+      "label": "Wrongful Termination Claim",
+      "query": "a claim for wrongful termination against my employer",
+      "seam": "label_score",
+      "why": "reverse (target->query) overlap lets a narrow label match a long narrative"
+    },
+    {
+      "baseline": 0.9,
+      "bucket": "score_delta",
+      "candidate": 0.88,
+      "classification": "neutral",
+      "direction": "down",
+      "expect": "any",
+      "id": "sp-partial",
+      "label": "Eviction Notice",
+      "query": "eviction notice from landlord",
+      "seam": "label_score",
+      "why": "substring hit under both scorers"
+    },
+    {
+      "baseline": 0.9,
+      "bucket": "score_delta",
+      "candidate": 0.675,
+      "classification": "intended_fix",
+      "direction": "down",
+      "expect": "down",
+      "id": "sp-specificity",
+      "label": "Child Custody Determination",
+      "query": "custody",
+      "seam": "label_score",
+      "why": "specificity penalty: the label is far more specific than the one-word query"
+    },
+    {
+      "baseline": 0.0,
+      "bucket": "score_delta",
+      "candidate": 0.37,
+      "classification": "intended_fix",
+      "direction": "up",
+      "expect": "up",
+      "id": "sp-prefix-credit",
+      "label": "Arbitration Rules",
+      "query": "arbitrating",
+      "seam": "label_score",
+      "why": "prefix-match credit: the hand-rolled set-intersection scorer was blind to morphology"
+    },
+    {
+      "baseline": 0.9,
+      "bucket": "score_delta",
+      "candidate": 0.736,
+      "classification": "intended_fix",
+      "direction": "down",
+      "expect": "down",
+      "id": "sp-single-word",
+      "label": "Lease Agreement",
+      "query": "lease",
+      "seam": "label_score",
+      "why": "specificity penalty on the broader label"
+    },
+    {
+      "baseline": 0.9,
+      "bucket": "score_delta",
+      "candidate": 0.99,
+      "classification": "intended_fix",
+      "direction": "up",
+      "expect": "up",
+      "id": "sp-single-word-exact",
+      "label": "Lease",
+      "query": "lease",
+      "seam": "label_score",
+      "why": "exact match must outrank the merely-broader 'Lease Agreement'"
+    },
+    {
+      "baseline": 0.2,
+      "bucket": "score_delta",
+      "candidate": 0.0,
+      "classification": "neutral",
+      "direction": "down",
+      "expect": "any",
+      "id": "sp-stopword-heavy",
+      "label": "Employment Law",
+      "query": "the law of the case",
+      "seam": "label_score",
+      "why": "differing stopword vocabularies: alea keeps 'law' as content, the library does not"
+    },
+    {
+      "baseline": 0.111111,
+      "bucket": "score_delta",
+      "candidate": 0.33,
+      "classification": "neutral",
+      "direction": "up",
+      "expect": "any",
+      "id": "sp-long-query",
+      "label": "Landlord Tenant Law",
+      "query": "my landlord refused to fix the heat all winter",
+      "seam": "label_score",
+      "why": "long narrative against a short label"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "set_delta",
+      "candidate_total": 4,
+      "category": "exact",
+      "classification": "intended_fix",
+      "gained": [
+        [
+          "Premises Liability Claim",
+          0.5266
+        ],
+        [
+          "Wrongful Termination Claim",
+          0.5266
+        ]
+      ],
+      "id": "n-exact-label",
+      "lost": [],
+      "rescored": [
+        [
+          "Insurance Claims",
+          0.7,
+          0.71
+        ],
+        [
+          "Retaliation Claim",
+          0.95,
+          0.995
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Retaliation Claim",
+      "why": "recall gained on a legal-content narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "word_order",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-word-order",
+      "lost": [],
+      "rescored": [
+        [
+          "Arbitration Rules",
+          1.0,
+          0.94
+        ]
+      ],
+      "seam": "resolve",
+      "text": "rules of arbitration",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 3,
+      "bucket": "set_delta",
+      "candidate_total": 5,
+      "category": "word_order",
+      "classification": "intended_fix",
+      "gained": [
+        [
+          "Premises Liability Claim",
+          0.5266
+        ],
+        [
+          "Wrongful Termination Claim",
+          0.5266
+        ]
+      ],
+      "id": "n-word-order-2",
+      "lost": [],
+      "rescored": [
+        [
+          "Breach of Contract Claim",
+          0.8972,
+          0.8872
+        ],
+        [
+          "Insurance Claims",
+          0.7,
+          0.71
+        ],
+        [
+          "Retaliation Claim",
+          0.5,
+          0.602
+        ]
+      ],
+      "seam": "resolve",
+      "text": "claim for breach of contract",
+      "why": "recall gained on a legal-content narrative"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "set_delta",
+      "candidate_total": 1,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-fired",
+      "lost": [
+        [
+          "Employment Law",
+          0.5
+        ]
+      ],
+      "rescored": [
+        [
+          "Wrongful Termination Claim",
+          0.8582,
+          0.8067
+        ]
+      ],
+      "seam": "resolve",
+      "text": "I was fired from my job last month",
+      "why": "candidate dropped below the 0.5 confidence bar"
+    },
+    {
+      "baseline_total": 4,
+      "bucket": "rank_delta",
+      "candidate_total": 4,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-eviction",
+      "lost": [],
+      "rescored": [
+        [
+          "Landlord Tenant Law",
+          0.8582,
+          0.8682
+        ],
+        [
+          "Lease",
+          0.8036,
+          0.7936
+        ],
+        [
+          "Lease Agreement",
+          0.95,
+          0.995
+        ],
+        [
+          "Unlawful Detainer",
+          0.95,
+          0.995
+        ]
+      ],
+      "seam": "resolve",
+      "text": "my landlord started an eviction after I complained",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-custody",
+      "lost": [],
+      "rescored": [
+        [
+          "Child Custody Determination",
+          0.8582,
+          0.8067
+        ]
+      ],
+      "seam": "resolve",
+      "text": "we are fighting about custody of our daughter",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-debt",
+      "lost": [],
+      "rescored": [
+        [
+          "Debt Collection Practices",
+          0.8582,
+          0.8067
+        ],
+        [
+          "Fair Debt Collection Practices Act",
+          0.7662,
+          0.6657
+        ]
+      ],
+      "seam": "resolve",
+      "text": "a collector keeps calling me about a debt I already paid",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 3,
+      "bucket": "set_delta",
+      "candidate_total": 2,
+      "category": "sub_phrase",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-subphrase",
+      "lost": [
+        [
+          "Retaliation Claim",
+          0.5
+        ]
+      ],
+      "rescored": [
+        [
+          "Breach of Warranty of Habitability",
+          0.8036,
+          0.7936
+        ],
+        [
+          "Consumer Protection Law",
+          0.8582,
+          0.8682
+        ]
+      ],
+      "seam": "resolve",
+      "text": "breach of warranty of habitability in a rental unit",
+      "why": "candidate dropped below the 0.5 confidence bar"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "set_delta",
+      "candidate_total": 1,
+      "category": "compound",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-compound",
+      "lost": [
+        [
+          "Employment Law",
+          0.5
+        ]
+      ],
+      "rescored": [
+        [
+          "Employment Discrimination Claim",
+          0.8582,
+          0.8067
+        ]
+      ],
+      "seam": "resolve",
+      "text": "wrongful termination and employment discrimination",
+      "why": "candidate dropped below the 0.5 confidence bar"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "homonym",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-homonym-lease",
+      "lost": [],
+      "rescored": [
+        [
+          "Retaliation Claim",
+          0.8036,
+          0.7216
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Retaliation",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "homonym",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-homonym-habitability",
+      "lost": [],
+      "rescored": [
+        [
+          "Breach of Warranty of Habitability",
+          0.7,
+          0.5875
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Habitability",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 3,
+      "bucket": "set_delta",
+      "candidate_total": 2,
+      "category": "homonym",
+      "classification": "intended_fix",
+      "gained": [],
+      "id": "n-homonym-claim",
+      "lost": [
+        [
+          "Lease Agreement",
+          0.5
+        ]
+      ],
+      "rescored": [
+        [
+          "Housing Authority",
+          0.8036,
+          0.7216
+        ],
+        [
+          "Lease",
+          0.8036,
+          0.7936
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Rent Withholding",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "place",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-place-explicit",
+      "lost": [],
+      "rescored": [
+        [
+          "Macedonia",
+          0.95,
+          0.995
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Macedonia",
+      "why": "no directional expectation for this category"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "set_delta",
+      "candidate_total": 0,
+      "category": "place_trap",
+      "classification": "intended_fix",
+      "gained": [],
+      "id": "n-place-implicit",
+      "lost": [
+        [
+          "Employment Law",
+          0.5
+        ]
+      ],
+      "rescored": [],
+      "seam": "resolve",
+      "text": "Unauthorized Employment",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "place",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-gov-body",
+      "lost": [],
+      "rescored": [
+        [
+          "Housing Authority",
+          0.95,
+          0.995
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Housing Authority",
+      "why": "no directional expectation for this category"
+    },
+    {
+      "baseline_total": 4,
+      "bucket": "rank_delta",
+      "candidate_total": 4,
+      "category": "long_narrative",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-long",
+      "lost": [],
+      "rescored": [
+        [
+          "Landlord Tenant Law",
+          0.8582,
+          0.8682
+        ],
+        [
+          "Lease",
+          0.8036,
+          0.7936
+        ],
+        [
+          "Lease Agreement",
+          0.95,
+          0.995
+        ],
+        [
+          "Unlawful Detainer",
+          0.95,
+          0.995
+        ]
+      ],
+      "seam": "resolve",
+      "text": "My landlord refused to fix the heat all winter, then when I complained to the city he served me with an eviction notice and kept my deposit",
+      "why": "no directional expectation for this category"
+    },
+    {
+      "baseline_total": 3,
+      "bucket": "set_delta",
+      "candidate_total": 2,
+      "category": "short",
+      "classification": "intended_fix",
+      "gained": [],
+      "id": "n-short-token",
+      "lost": [
+        [
+          "Lease Agreement",
+          0.5
+        ]
+      ],
+      "rescored": [
+        [
+          "Housing Authority",
+          0.8036,
+          0.7216
+        ],
+        [
+          "Lease",
+          0.8036,
+          0.7936
+        ]
+      ],
+      "seam": "resolve",
+      "text": "rent",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "prefix",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-prefix",
+      "lost": [],
+      "rescored": [
+        [
+          "Lease",
+          0.95,
+          0.995
+        ],
+        [
+          "Lease Agreement",
+          0.8036,
+          0.7216
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Lease",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "prefix",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-prefix-2",
+      "lost": [],
+      "rescored": [
+        [
+          "Arbitration Rules",
+          0.8036,
+          0.7216
+        ]
+      ],
+      "seam": "resolve",
+      "text": "Arbitration",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "exact",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-exact-label",
+      "lost": [],
+      "rescored": [
+        [
+          "Insurance Claims",
+          0.63,
+          0.644
+        ],
+        [
+          "Retaliation Claim",
+          0.63,
+          0.693
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "Retaliation Claim",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "word_order",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-word-order",
+      "lost": [],
+      "rescored": [
+        [
+          "Arbitration Rules",
+          0.7,
+          0.616
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "rules of arbitration",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "word_order",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-word-order-2",
+      "lost": [],
+      "rescored": [
+        [
+          "Breach of Contract Claim",
+          0.63,
+          0.616
+        ],
+        [
+          "Insurance Claims",
+          0.63,
+          0.644
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "claim for breach of contract",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-fired",
+      "lost": [],
+      "rescored": [
+        [
+          "Wrongful Termination Claim",
+          0.63,
+          0.5579
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "I was fired from my job last month",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 4,
+      "bucket": "rank_delta",
+      "candidate_total": 4,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-eviction",
+      "lost": [],
+      "rescored": [
+        [
+          "Landlord Tenant Law",
+          0.63,
+          0.644
+        ],
+        [
+          "Lease",
+          0.63,
+          0.616
+        ],
+        [
+          "Lease Agreement",
+          0.63,
+          0.693
+        ],
+        [
+          "Unlawful Detainer",
+          0.63,
+          0.693
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "my landlord started an eviction after I complained",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-custody",
+      "lost": [],
+      "rescored": [
+        [
+          "Child Custody Determination",
+          0.63,
+          0.5579
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "we are fighting about custody of our daughter",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "set_delta",
+      "candidate_total": 1,
+      "category": "expansion",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-expansion-debt",
+      "lost": [
+        [
+          "Fair Debt Collection Practices Act",
+          0.63
+        ]
+      ],
+      "rescored": [
+        [
+          "Debt Collection Practices",
+          0.63,
+          0.5579
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "a collector keeps calling me about a debt I already paid",
+      "why": "candidate dropped below the 0.5 confidence bar"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "sub_phrase",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-subphrase",
+      "lost": [],
+      "rescored": [
+        [
+          "Breach of Warranty of Habitability",
+          0.63,
+          0.616
+        ],
+        [
+          "Consumer Protection Law",
+          0.63,
+          0.644
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "breach of warranty of habitability in a rental unit",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "compound",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-compound",
+      "lost": [],
+      "rescored": [
+        [
+          "Employment Discrimination Claim",
+          0.63,
+          0.5579
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "wrongful termination and employment discrimination",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "homonym",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-homonym-lease",
+      "lost": [],
+      "rescored": [
+        [
+          "Retaliation Claim",
+          0.63,
+          0.5152
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "Retaliation",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "set_delta",
+      "candidate_total": 0,
+      "category": "homonym",
+      "classification": "intended_fix",
+      "gained": [],
+      "id": "n-homonym-habitability",
+      "lost": [
+        [
+          "Breach of Warranty of Habitability",
+          0.63
+        ]
+      ],
+      "rescored": [],
+      "seam": "resolve_no_embed",
+      "text": "Habitability",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "homonym",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-homonym-claim",
+      "lost": [],
+      "rescored": [
+        [
+          "Housing Authority",
+          0.63,
+          0.5152
+        ],
+        [
+          "Lease",
+          0.63,
+          0.616
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "Rent Withholding",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "place",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-place-explicit",
+      "lost": [],
+      "rescored": [
+        [
+          "Macedonia",
+          0.63,
+          0.693
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "Macedonia",
+      "why": "no directional expectation for this category"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "place",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-gov-body",
+      "lost": [],
+      "rescored": [
+        [
+          "Housing Authority",
+          0.63,
+          0.693
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "Housing Authority",
+      "why": "no directional expectation for this category"
+    },
+    {
+      "baseline_total": 4,
+      "bucket": "rank_delta",
+      "candidate_total": 4,
+      "category": "long_narrative",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-long",
+      "lost": [],
+      "rescored": [
+        [
+          "Landlord Tenant Law",
+          0.63,
+          0.644
+        ],
+        [
+          "Lease",
+          0.63,
+          0.616
+        ],
+        [
+          "Lease Agreement",
+          0.63,
+          0.693
+        ],
+        [
+          "Unlawful Detainer",
+          0.63,
+          0.693
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "My landlord refused to fix the heat all winter, then when I complained to the city he served me with an eviction notice and kept my deposit",
+      "why": "no directional expectation for this category"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "short",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-short-token",
+      "lost": [],
+      "rescored": [
+        [
+          "Housing Authority",
+          0.63,
+          0.5152
+        ],
+        [
+          "Lease",
+          0.63,
+          0.616
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "rent",
+      "why": "precision-sensitive narrative: dropping weak candidates is the goal"
+    },
+    {
+      "baseline_total": 2,
+      "bucket": "rank_delta",
+      "candidate_total": 2,
+      "category": "prefix",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-prefix",
+      "lost": [],
+      "rescored": [
+        [
+          "Lease",
+          0.63,
+          0.693
+        ],
+        [
+          "Lease Agreement",
+          0.63,
+          0.5152
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "Lease",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline_total": 1,
+      "bucket": "rank_delta",
+      "candidate_total": 1,
+      "category": "prefix",
+      "classification": "neutral",
+      "gained": [],
+      "id": "n-prefix-2",
+      "lost": [],
+      "rescored": [
+        [
+          "Arbitration Rules",
+          0.63,
+          0.5152
+        ]
+      ],
+      "seam": "resolve_no_embed",
+      "text": "Arbitration",
+      "why": "candidate set changed on a recall-sensitive narrative"
+    },
+    {
+      "baseline": {
+        "reason": "unfit_branch",
+        "rejected": true
+      },
+      "branch": "",
+      "bucket": "fit_delta",
+      "candidate": {
+        "reason": "geographic_concept",
+        "rejected": true
+      },
+      "category": "place",
+      "claim": "Presumptions",
+      "classification": "neutral",
+      "id": "fit-place-token",
+      "label": "Slovenia",
+      "why": "rejection reason changed, verdict unchanged"
+    },
+    {
+      "baseline": {
+        "reason": null,
+        "rejected": false
+      },
+      "branch": "Governmental Body",
+      "bucket": "fit_delta",
+      "candidate": {
+        "reason": "geographic_concept",
+        "rejected": true
+      },
+      "category": "governmental",
+      "claim": "Retaliation",
+      "classification": "intended_fix",
+      "id": "fit-gov-body",
+      "label": "Department of Labor",
+      "why": "a claim mapping the corpus marks unfit is now rejected"
+    },
+    {
+      "baseline": {
+        "reason": null,
+        "rejected": false
+      },
+      "branch": "Governmental Body",
+      "bucket": "fit_delta",
+      "candidate": {
+        "reason": "geographic_concept",
+        "rejected": true
+      },
+      "category": "governmental",
+      "claim": "Habitability",
+      "classification": "intended_fix",
+      "id": "fit-gov-body-2",
+      "label": "Housing Authority",
+      "why": "a claim mapping the corpus marks unfit is now rejected"
+    }
+  ],
+  "watch_list": [
+    {
+      "classification": "neutral",
+      "confidence": 0.63,
+      "id": "n-expansion-debt",
+      "label": "Fair Debt Collection Practices Act",
+      "seam": "resolve_no_embed",
+      "text": "a collector keeps calling me about a debt I already paid"
+    },
+    {
+      "classification": "intended_fix",
+      "confidence": 0.63,
+      "id": "n-homonym-habitability",
+      "label": "Breach of Warranty of Habitability",
+      "seam": "resolve_no_embed",
+      "text": "Habitability"
+    }
+  ]
+}

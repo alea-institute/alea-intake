@@ -8,6 +8,26 @@ a three-stage pipeline:
 
 Domain-aware term expansions enrich queries before resolution.
 Combined confidence scoring ranks results from all stages.
+
+**Stage 2 scoring comes from the shared `folio-resolve` library.** It used to be a
+hand-rolled set-intersection ratio local to this module
+(``common / max(len(query_words), len(label_words))`` with a flat ``0.9`` substring
+constant and a flat ``0.7`` prefix constant), which was blind to word order
+("rules of arbitration" != "Arbitration Rules"), blind to morphology
+("arbitrating" scored 0 against "Arbitration Rules"), and had no specificity
+penalty (one-word "custody" scored 0.9 against "Child Custody Determination").
+``folio_resolve.compute_relevance_score`` is the canonical word-order-invariant
+scorer those three defects are fixed in; see ``backend/migration/`` for the
+golden-baseline harness and the classified delta that guard the swap.
+
+Two stopword vocabularies coexist on purpose, because they do different jobs:
+
+* ``term_expansions.SEARCH_STOPWORDS`` — consumer-narrative *query construction*
+  (drops first/second-person pronouns and auxiliaries so "I was fired from my job"
+  becomes a usable query, and short-circuits stopword-only input). Local seam.
+* ``folio_resolve.SEARCH_STOPWORDS`` — *scoring* (drops legal filler like "law",
+  "legal", "type" that would otherwise inflate overlap against FOLIO labels).
+  Owned by the library, applied inside ``compute_relevance_score``.
 """
 
 from __future__ import annotations
@@ -16,6 +36,8 @@ import asyncio
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from folio_resolve import compute_relevance_score, content_words
 
 from app.services.embedding.backends import SearchResult
 from app.services.folio.term_expansions import (
@@ -151,6 +173,42 @@ def _determine_branch(iri: str, folio: FOLIO, metadata: dict | None = None) -> s
         current_iris = next_iris
 
     return "Unknown"
+
+
+def _as_text(value) -> str:
+    """Return ``value`` if it is a non-empty string, else ""."""
+    return value if isinstance(value, str) else ""
+
+
+def _label_match_score(query: str, owl_cls) -> float:
+    """Score a label-search candidate 0.0-1.0 with the shared library scorer.
+
+    Delegates to ``folio_resolve.compute_relevance_score`` (0-100, word-order-invariant,
+    prefix-match credit, specificity penalty) and normalizes to this module's 0.0-1.0 stage
+    scale. Alternative labels are passed as synonyms — they are label evidence, and Stage 2
+    is the label stage.
+
+    The concept *definition* is deliberately NOT passed: definitional/semantic similarity is
+    Stage 1's job (embeddings), and letting a definition alone produce a Stage-2 hit would
+    manufacture label matches that share no label token at all.
+    """
+    # Type guards, not paranoia: folio-python may hand back ``None`` for an absent
+    # preferred label, and test doubles hand back MagicMocks for any attribute that is
+    # merely *touched*. The library scorer feeds these straight into ``re.findall`` and
+    # raises TypeError on anything that is not a str, so coerce at this boundary.
+    label = _as_text(getattr(owl_cls, "label", None))
+    preferred = _as_text(getattr(owl_cls, "preferred_label", None)) or None
+    raw_synonyms = getattr(owl_cls, "alternative_labels", None)
+    synonyms = [s for s in raw_synonyms if isinstance(s, str) and s] if isinstance(raw_synonyms, (list, tuple)) else []
+    score = compute_relevance_score(
+        content_words(query),
+        query,
+        label,
+        None,
+        synonyms,
+        preferred_label=preferred,
+    )
+    return score / 100.0
 
 
 def _is_stopword_only(text: str) -> bool:
@@ -311,19 +369,9 @@ async def _stage_label_prefix(
                     "label": owl_cls.label,
                     "metadata": None,
                 }
-            # Compute label match ratio (simple substring ratio)
-            label_lower = owl_cls.label.lower()
-            query_lower = query.lower()
-            if query_lower in label_lower or label_lower in query_lower:
-                match_ratio = 0.9
-            else:
-                # Partial overlap ratio
-                common = len(set(query_lower.split()) & set(label_lower.split()))
-                total = max(len(query_lower.split()), len(label_lower.split()), 1)
-                match_ratio = common / total
-
             candidates[iri]["label_score"] = max(
-                match_ratio, candidates[iri].get("label_score", 0.0)
+                _label_match_score(query, owl_cls),
+                candidates[iri].get("label_score", 0.0),
             )
 
     # Prefix search if text is long enough
@@ -345,8 +393,14 @@ async def _stage_label_prefix(
                     "label": owl_cls.label,
                     "metadata": None,
                 }
+            # Prefix hits are scored on their evidence like every other label candidate.
+            # They used to get a flat 0.7 constant, which was simultaneously too generous
+            # (a 40-character label that merely starts with the query) and too stingy (an
+            # exact-label prefix hit could never clear the 0.5 bar on its own, because
+            # 0.7 * SINGLE_STAGE_PENALTY = 0.49).
             candidates[iri]["label_score"] = max(
-                0.7, candidates[iri].get("label_score", 0.0)
+                _label_match_score(text.strip(), owl_cls),
+                candidates[iri].get("label_score", 0.0),
             )
 
 

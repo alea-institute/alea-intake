@@ -19,8 +19,10 @@ is explicit: a mapping must actually *fit* the concept it names, in context.
 This module provides a two-tier fitness check:
 
   1. **Deterministic rejection** (free, no LLM) -- rejects mappings whose resolved
-     concept is geographic ("Location" branch / place names), a placeholder, or an
-     unmapped/"Unknown" branch. These are never valid legal-claim concepts.
+     concept is geographic or place-like (a place name, a jurisdiction, or a
+     governmental body / agency -- detected by the shared `folio-resolve`
+     ``PlaceNameGate``), a placeholder, or an unmapped/"Unknown" branch. These are
+     never valid legal-claim concepts.
 
   2. **LLM semantic-fit** (one cheap call per analysis on gpt-4o-mini) -- for the
      mappings that survive tier 1, a single batched call judges context-vs-concept
@@ -34,6 +36,7 @@ import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
+from folio_resolve import PlaceNameGate
 from pydantic import BaseModel, Field
 
 from app.services.folio.adjacency import is_placeholder_concept
@@ -49,10 +52,25 @@ logger = logging.getLogger(__name__)
 # false-confidence mapping by construction.
 _UNFIT_CLAIM_BRANCHES: frozenset[str] = frozenset({"Location", "Unknown", ""})
 
-# Cheap geographic-label backstop for when branch metadata is unavailable
-# (embedding backends do not always populate branch). High-precision markers:
-# continents / regions and obvious "City of X" / "Republic of X" phrasings. Kept
-# deliberately small -- the authoritative signal is the FOLIO branch.
+# Primary place detector: the shared library's gate. It knows the whole class of concepts
+# whose short proper-noun labels pathologically over-score -- geographic branches
+# (location / geograph / country / jurisdiction / place) AND governmental bodies and
+# agencies -- plus a curated set of notoriously over-scoring place tokens. Adopting it
+# widens alea-intake's guard from the single exact branch string "Location" to that whole
+# class, which is what BUG-21 actually needs: a legal CLAIM is never an agency either
+# ("Retaliation" -> Department of Labor is the same false-confidence failure as
+# "Unauthorized Employment" -> Rize).
+#
+# The gate is deliberately scoped to CLAIM FITNESS and is NOT applied in
+# ``concept_resolver.resolve_concepts``, which resolves Location concepts on purpose
+# (jurisdiction, venue). The migration harness canaries both halves: PLACE-REJECTED and
+# PLACES-RESOLVABLE (see backend/migration/README.md).
+_PLACE_GATE = PlaceNameGate(min_signals=2)
+
+# Local backstop for place phrasings the library's token set does not carry: continents and
+# regions, and "City of X" / "Republic of X" style labels that arrive with no branch metadata
+# (embedding backends do not always populate branch). Kept deliberately small -- the
+# authoritative signals are the FOLIO branch and the library gate above.
 _GEOGRAPHIC_LABEL_MARKERS: tuple[str, ...] = (
     "continent",
     "republic of",
@@ -78,8 +96,28 @@ _GEOGRAPHIC_LABEL_EXACT: frozenset[str] = frozenset(
 
 
 def is_geographic_concept(label: str | None, branch: str | None) -> bool:
-    """Return True if the resolved concept is geographic (a place)."""
+    """Return True if the resolved concept is a place or a place-like body (an agency).
+
+    Tier 1 is the shared ``folio_resolve.PlaceNameGate``. It is called with no
+    corroborating signals and an empty query so that it answers the pure question "is this
+    concept in the place/agency class?": with ``signals = 0 < min_signals``, any concept the
+    gate recognizes is demoted, and the gate's "the query IS the place name" escape hatch
+    cannot fire -- correct here, because a legal claim named exactly "Macedonia" is still not
+    a legal claim.
+
+    Tier 2 is the local marker backstop for continents and "City of X" phrasings.
+    """
+    # Preserved fast path: the authoritative branch signal, checked before the gate so an
+    # empty label on a Location-branch concept still reads as geographic.
     if branch and branch.strip() == "Location":
+        return True
+    if _PLACE_GATE.evaluate(
+        query="",
+        label=label or "",
+        branch=(branch or "").strip(),
+        score=100.0,
+        corroborating_signals=0,
+    ).demoted:
         return True
     if not label:
         return False

@@ -419,6 +419,14 @@ Every legal concept identified during intake is mapped to a node in the [FOLIO (
 
 Resolution scores are weighted: embedding similarity (0.3), label matching (0.3), and LLM verification (0.4). Concepts that cannot be mapped to any FOLIO node are preserved with synthetic keys and flagged as unmapped -- they are never silently dropped.
 
+**Shared matching library (`folio-resolve`).** The label-matching half of that cascade is not written here. It comes from the pinned, MIT-licensed [`folio-resolve`](https://pypi.org/project/folio-resolve/) package -- the single source of truth for FOLIO source-text→concept matching across the portfolio, which alea-intake adopted in the 2026-07 migration (row 4 of the library's consumer schedule):
+
+- **Stage-2 label scoring** is `folio_resolve.compute_relevance_score`, a word-order-invariant scorer with prefix-match credit and a specificity penalty. It replaced a local set-intersection ratio that could not tell "rules of arbitration" from "Arbitration Rules", scored "arbitrating" at zero against *Arbitration Rules*, and gave any substring relation a flat 0.9 regardless of how much broader the concept was.
+- **Semantic-fit place rejection** is `folio_resolve.PlaceNameGate`. A legal claim is never a place *or an agency*, so the guard that previously knew only the exact branch string `"Location"` now covers the whole class of concepts whose short proper-noun labels over-score -- jurisdictions, countries, governmental bodies. The gate is deliberately scoped to **claim fitness** and is *not* applied in the general resolver, which resolves jurisdictions and venues on purpose.
+- **Consumer-specific seams stay local**: the lay-language expansion vocabulary ("fired" → "wrongful termination"), the narrative stopword list, the three-stage weighted combine, and the pgvector/FAISS embedding backends are alea-intake's own and are not in the library.
+
+A committed golden-baseline harness and a classified-delta comparator guard the swap -- see [`backend/migration/README.md`](backend/migration/README.md). The signed-off delta was **15 intended fixes, 0 regressions, 36 neutral**, with all five canaries green; `backend/tests/test_folio_resolve_pin.py` asserts object identity with the library so the fork cannot quietly return.
+
 **Adjacency discovery.** The FOLIO ontology is structured as an OWL graph with object properties linking related concepts. The system traverses these relationships to discover adjacent legal areas that may be relevant. For example, if the system identifies an eviction claim, it can traverse the ontology graph to find related housing law concepts (habitability, security deposits, retaliatory eviction) and check whether the person's facts support those claims as well.
 
 **Configuration:**

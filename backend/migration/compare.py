@@ -381,6 +381,17 @@ def main() -> int:
 
     regressions = [d for d in deltas if d["classification"] == "regression"]
 
+    # Watch list: candidates lost with a baseline confidence comfortably ABOVE the 0.5 bar are
+    # not boundary artifacts — surface them regardless of how the row classified, so a real
+    # recall loss can never hide inside a "precision-sensitive" bucket.
+    watch: list[dict] = []
+    for d in deltas:
+        for label, conf in d.get("lost", []):
+            if conf >= 0.6:
+                watch.append({"id": d["id"], "seam": d.get("seam", "fit"), "text": d.get("text"),
+                              "label": label, "confidence": conf,
+                              "classification": d["classification"]})
+
     payload = {
         "baseline": args.baseline,
         "candidate": args.candidate,
@@ -389,6 +400,7 @@ def main() -> int:
         "buckets": buckets,
         "classifications": classes,
         "deltas": deltas,
+        "watch_list": watch,
         "canary_failures": failures,
     }
     CAPTURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -425,6 +437,20 @@ def main() -> int:
             "- ✅ EMBED-DEGRADE — the label stage still carries the cascade when embeddings fail (BUG-9)",
             "- ✅ NO-RECALL-LOSS — no recall-sensitive narrative fell to zero concepts",
         ]
+
+    lines += ["", "## Watch list — non-marginal candidates lost", ""]
+    if watch:
+        lines += ["A concept that scored **≥ 0.6** in the baseline and is gone in the candidate is "
+                  "not a 0.5-boundary artifact. Listed here regardless of classification so a real "
+                  "recall loss cannot hide in a precision bucket.", "",
+                  "| id | seam | lost concept | baseline conf | row classified |",
+                  "|----|------|--------------|---------------|----------------|"]
+        lines += [
+            f"| {w['id']} | {w['seam']} | {w['label']} | {w['confidence']} | {w['classification']} |"
+            for w in sorted(watch, key=lambda x: (-x["confidence"], x["id"]))
+        ]
+    else:
+        lines.append("_(empty — every lost candidate sat on the 0.5 boundary)_")
 
     if deltas:
         lines += ["", "## Deltas", "", "| id | seam | bucket | class | why | baseline | candidate |",
