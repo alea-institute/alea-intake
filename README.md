@@ -64,6 +64,7 @@ ALEA Intake is developed by the [ALEA Institute](https://github.com/alea-institu
   - [Multi-Tenant Cloud](#multi-tenant-cloud)
   - [Small Legal Aid Office](#small-legal-aid-office)
   - [Domestic Violence Shelter](#domestic-violence-shelter)
+- [Quality Evidence](#quality-evidence)
 - [Roadmap](#roadmap)
 - [License](#license)
 - [Contributing](#contributing)
@@ -72,7 +73,7 @@ ALEA Intake is developed by the [ALEA Institute](https://github.com/alea-institu
 
 ## Architecture
 
-ALEA Intake processes legal intake through a multi-stage pipeline. A person provides input -- text typed in a chat interface, voice recorded and transcribed, or uploaded documents -- and the system normalizes that input, resolves legal concepts against the [FOLIO open legal ontology](https://github.com/FOLIO-Org), runs an iterative analysis loop to identify claims and missing elements, conducts legal research to find supporting authorities, and generates structured output for the attorney or program staff reviewing the case.
+ALEA Intake processes legal intake through a multi-stage pipeline. A person provides input -- text typed in a chat interface, voice recorded and transcribed, or uploaded documents -- and the system normalizes that input, resolves legal concepts against the [FOLIO open legal ontology](https://github.com/alea-institute/FOLIO), runs an iterative analysis loop to identify claims and missing elements, conducts legal research to find supporting authorities, and generates structured output for the attorney or program staff reviewing the case.
 
 The pipeline is designed to be transparent at every stage. Each legal concept is mapped to a specific FOLIO ontology node, so an attorney reviewing the output can trace exactly why the system identified a particular issue. Facts extracted from the person's narrative are linked to the legal elements they support, and gaps -- elements that lack factual support -- are flagged for follow-up.
 
@@ -403,7 +404,7 @@ ALEA Intake provides three persistence modes and three deletion policies that gi
 
 ### FOLIO Ontology Grounding
 
-Every legal concept identified during intake is mapped to a node in the [FOLIO (Financial Industry Legal Ontology) open legal ontology](https://github.com/FOLIO-Org). This grounding is central to how the system works and why its output is traceable.
+Every legal concept identified during intake is mapped to a node in the [FOLIO (Federated Open Legal Information Ontology) open legal ontology](https://github.com/alea-institute/FOLIO). This grounding is central to how the system works and why its output is traceable.
 
 **Why ontology grounding matters.** Legal concepts have specific meanings that vary by jurisdiction and context. By mapping every identified concept to a formal ontology, the system produces output that is:
 
@@ -1176,6 +1177,19 @@ ALEA_LOG_FORMAT=json
 
 ---
 
+## Quality evidence
+
+Output quality is gated by a locked rubric rather than by vibes. **intake-quality
+v1.3** ([`docs/rubrics/intake-quality-v1.3.md`](docs/rubrics/intake-quality-v1.3.md))
+scores every run on six dimensions; a set of synthetic personas spanning the
+practice areas above is re-run against each deploy and judged against locked
+answer keys.
+
+As of the round-7 campaign (2026-07-11), **all 8 personas pass 6/6** — with FOLIO
+resolution 56/56, exports clean 8/8, and zero fabricated or refused content across
+24 generated memos. The full pack, per-persona runs, findings, and evidence chains
+live in [`docs/evidence/persona-campaign/`](docs/evidence/persona-campaign/).
+
 ## Roadmap
 
 This project is under active development. Planned capabilities include:
@@ -1197,7 +1211,15 @@ MIT License. Copyright (c) 2026 Damien Riehl and ALEA Institute.
 
 See [LICENSE](LICENSE) for the full license text.
 
-For a complete list of third-party dependencies and their licenses, see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+**Attribution and third-party licenses:**
+
+- **[THIRD-PARTY.md](THIRD-PARTY.md)** is the authoritative attribution notice — the openly-licensed *data* this project bundles and the copyleft components that need a compliance decision.
+- **[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)** is the per-package appendix: every backend and frontend dependency with its SPDX identifier.
+
+Two obligations travel with a deployment of ALEA Intake:
+
+1. **FOLIO is CC-BY 4.0.** This repo *bundles* the ontology (`backend/data/folio_cache/folio.owl`), so any redistribution — source, container image, or hosted service — must attribute FOLIO to the **ALEA Institute** (originating from the **SALI Alliance**) under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+2. **PyMuPDF is AGPL-3.0.** It is a required backend dependency (`pymupdf`, used by the PDF extractor) and is installed into the built image. See THIRD-PARTY.md for the open compliance question.
 
 ---
 

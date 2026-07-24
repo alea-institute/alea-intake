@@ -1,8 +1,12 @@
 # Third-Party Licenses
 
 This project uses the following open-source dependencies. Each is listed with
-its SPDX license identifier. All licenses are compatible with this project's
-MIT license.
+its SPDX license identifier.
+
+> **Appendix, not the notice.** [`THIRD-PARTY.md`](THIRD-PARTY.md) is the
+> authoritative attribution file — it covers the bundled CC-BY FOLIO data and the
+> open PyMuPDF/AGPL compliance question. This file is the per-package roster.
+> Where the two disagree, THIRD-PARTY.md governs.
 
 ## Python Dependencies (backend)
 
@@ -108,13 +112,19 @@ MIT license.
 
 ## License Compatibility Notes
 
-- **AGPL-3.0 (PyMuPDF):** PyMuPDF is licensed under AGPL-3.0-only. This project
-  uses PyMuPDF as a runtime library installed separately via pip. The ALEA Intake
-  source code is MIT-licensed and does not contain, modify, or redistribute any
-  PyMuPDF source code. End users install PyMuPDF independently as a Python package
-  dependency. The AGPL obligations apply to PyMuPDF itself, not to this project's
-  MIT-licensed code that calls its API. Organizations with AGPL concerns may
-  substitute an alternative PDF library.
+- **AGPL-3.0 (PyMuPDF): ⚠ OPEN QUESTION — do not treat the paragraph below as
+  settled.** It describes PyMuPDF as something "end users install independently",
+  but `backend/pyproject.toml` lists `pymupdf` as a **required** dependency and the
+  `Dockerfile` installs it into the built image, so a distributed build or hosted
+  deployment ships it. AGPL §13 reaches users of a hosted service. See the
+  "Open compliance question" section of [`THIRD-PARTY.md`](THIRD-PARTY.md) for the
+  three options (replace / commercial license / relicense) and how the sibling
+  repos folio-enrich and book-indexer each answered it.
+
+  *Original text, retained for reference:* PyMuPDF is licensed under AGPL-3.0-only.
+  This project uses PyMuPDF as a runtime library installed via pip. The ALEA Intake
+  source code is MIT-licensed and does not contain or modify any PyMuPDF source
+  code. Organizations with AGPL concerns may substitute an alternative PDF library.
 
 - **LGPL-3.0 (psycopg):** psycopg is licensed under LGPL-3.0-or-later. This
   project uses psycopg as a dynamically-linked library installed via pip. The
