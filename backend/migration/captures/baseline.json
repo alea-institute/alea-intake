@@ -1,0 +1,1620 @@
+{
+  "combine": [
+    {
+      "combined": 0.81,
+      "embedding": 0.8,
+      "id": "cb-all-three",
+      "label": 0.7,
+      "llm": 0.9
+    },
+    {
+      "combined": 0.63,
+      "embedding": 0.9,
+      "id": "cb-embedding-only",
+      "label": null,
+      "llm": null
+    },
+    {
+      "combined": 0.63,
+      "embedding": null,
+      "id": "cb-label-only",
+      "label": 0.9,
+      "llm": null
+    },
+    {
+      "combined": 0.49,
+      "embedding": null,
+      "id": "cb-label-only-prefix",
+      "label": 0.7,
+      "llm": null
+    },
+    {
+      "combined": 0.56,
+      "embedding": null,
+      "id": "cb-llm-only",
+      "label": null,
+      "llm": 0.8
+    },
+    {
+      "combined": 0.6,
+      "embedding": 0.6,
+      "id": "cb-embedding-label",
+      "label": 0.6,
+      "llm": null
+    },
+    {
+      "combined": 0.0,
+      "embedding": null,
+      "id": "cb-none",
+      "label": null,
+      "llm": null
+    },
+    {
+      "combined": 0.0,
+      "embedding": 0.0,
+      "id": "cb-zero",
+      "label": 0.0,
+      "llm": 0.0
+    }
+  ],
+  "corpus_hash": "30ea689a7f52a413b2aab1ac631093bd47a86626ea56f4f224008b06f3710a16",
+  "corpus_version": 1,
+  "env": {
+    "folio_python_version": "0.3.3",
+    "folio_resolve_consumed": false,
+    "folio_resolve_present": false,
+    "folio_resolve_version": null,
+    "max_embedding_candidates": 20,
+    "max_label_results": 10,
+    "top_n": 10
+  },
+  "expansion": [
+    {
+      "branch_signals": [
+        "Objectives"
+      ],
+      "category": "exact",
+      "expansions": [
+        "insurance claim",
+        "legal claim",
+        "cause of action",
+        "retaliation claim"
+      ],
+      "id": "n-exact-label",
+      "text": "Retaliation Claim"
+    },
+    {
+      "branch_signals": [
+        "Service"
+      ],
+      "category": "word_order",
+      "expansions": [
+        "rules arbitration"
+      ],
+      "id": "n-word-order",
+      "text": "rules of arbitration"
+    },
+    {
+      "branch_signals": [
+        "Objectives",
+        "Document-Artifact"
+      ],
+      "category": "word_order",
+      "expansions": [
+        "insurance claim",
+        "legal claim",
+        "cause of action",
+        "breach of contract",
+        "contractual obligation",
+        "agreement",
+        "claim breach contract"
+      ],
+      "id": "n-word-order-2",
+      "text": "claim for breach of contract"
+    },
+    {
+      "branch_signals": [],
+      "category": "expansion",
+      "expansions": [
+        "wrongful termination",
+        "employment termination",
+        "discharge",
+        "fired job last month"
+      ],
+      "id": "n-expansion-fired",
+      "text": "I was fired from my job last month"
+    },
+    {
+      "branch_signals": [],
+      "category": "expansion",
+      "expansions": [
+        "landlord tenant",
+        "lease agreement",
+        "rental dispute",
+        "unlawful detainer",
+        "forcible entry",
+        "landlord started eviction complained"
+      ],
+      "id": "n-expansion-eviction",
+      "text": "my landlord started an eviction after I complained"
+    },
+    {
+      "branch_signals": [],
+      "category": "expansion",
+      "expansions": [
+        "child custody",
+        "parental rights",
+        "custodial arrangement",
+        "fighting custody daughter"
+      ],
+      "id": "n-expansion-custody",
+      "text": "we are fighting about custody of our daughter"
+    },
+    {
+      "branch_signals": [],
+      "category": "expansion",
+      "expansions": [
+        "debt collection",
+        "creditor",
+        "consumer debt",
+        "fair debt",
+        "collector keeps calling debt already paid"
+      ],
+      "id": "n-expansion-debt",
+      "text": "a collector keeps calling me about a debt I already paid"
+    },
+    {
+      "branch_signals": [],
+      "category": "expansion",
+      "expansions": [
+        "slipped ice parking lot and hurt back"
+      ],
+      "id": "n-expansion-injury",
+      "text": "I slipped on ice in the parking lot and hurt my back"
+    },
+    {
+      "branch_signals": [],
+      "category": "expansion",
+      "expansions": [
+        "layoff",
+        "reduction in force",
+        "unemployment",
+        "laid off notice"
+      ],
+      "id": "n-expansion-bigram",
+      "text": "I was laid off with no notice"
+    },
+    {
+      "branch_signals": [],
+      "category": "sub_phrase",
+      "expansions": [
+        "warranty claim",
+        "product liability",
+        "consumer protection",
+        "breach warranty habitability rental unit"
+      ],
+      "id": "n-subphrase",
+      "text": "breach of warranty of habitability in a rental unit"
+    },
+    {
+      "branch_signals": [
+        "Governmental Body"
+      ],
+      "category": "abbreviation",
+      "expansions": [
+        "fdcpa violation collection agency"
+      ],
+      "id": "n-abbrev",
+      "text": "FDCPA violation by a collection agency"
+    },
+    {
+      "branch_signals": [
+        "Industry and Market"
+      ],
+      "category": "compound",
+      "expansions": [
+        "employment discrimination",
+        "civil rights violation",
+        "protected class",
+        "wrongful termination and employment discrimination"
+      ],
+      "id": "n-compound",
+      "text": "wrongful termination and employment discrimination"
+    },
+    {
+      "branch_signals": [],
+      "category": "homonym",
+      "expansions": [
+        "retaliation"
+      ],
+      "id": "n-homonym-lease",
+      "text": "Retaliation"
+    },
+    {
+      "branch_signals": [],
+      "category": "homonym",
+      "expansions": [
+        "habitability"
+      ],
+      "id": "n-homonym-habitability",
+      "text": "Habitability"
+    },
+    {
+      "branch_signals": [],
+      "category": "homonym",
+      "expansions": [
+        "rental agreement",
+        "lease dispute",
+        "housing",
+        "rent withholding"
+      ],
+      "id": "n-homonym-claim",
+      "text": "Rent Withholding"
+    },
+    {
+      "branch_signals": [],
+      "category": "place",
+      "expansions": [
+        "macedonia"
+      ],
+      "id": "n-place-explicit",
+      "text": "Macedonia"
+    },
+    {
+      "branch_signals": [
+        "Industry and Market"
+      ],
+      "category": "place",
+      "expansions": [
+        "unauthorized employment"
+      ],
+      "id": "n-place-implicit",
+      "text": "Unauthorized Employment"
+    },
+    {
+      "branch_signals": [],
+      "category": "place",
+      "expansions": [
+        "housing authority"
+      ],
+      "id": "n-gov-body",
+      "text": "Housing Authority"
+    },
+    {
+      "branch_signals": [],
+      "category": "stopword_only",
+      "expansions": [],
+      "id": "n-stopword-only",
+      "text": "the a an of to"
+    },
+    {
+      "branch_signals": [],
+      "category": "stopword_only",
+      "expansions": [],
+      "id": "n-stopword-only-2",
+      "text": "I was in it"
+    },
+    {
+      "branch_signals": [],
+      "category": "empty",
+      "expansions": [],
+      "id": "n-empty",
+      "text": "   "
+    },
+    {
+      "branch_signals": [],
+      "category": "nonsense",
+      "expansions": [
+        "qwertyuiop zxcvbnm"
+      ],
+      "id": "n-nonsense",
+      "text": "qwertyuiop zxcvbnm"
+    },
+    {
+      "branch_signals": [
+        "Location"
+      ],
+      "category": "long_narrative",
+      "expansions": [
+        "landlord tenant",
+        "lease agreement",
+        "rental dispute",
+        "unlawful detainer",
+        "forcible entry",
+        "landlord refused fix heat all winter then when complained city served eviction notice and kept deposit"
+      ],
+      "id": "n-long",
+      "text": "My landlord refused to fix the heat all winter, then when I complained to the city he served me with an eviction notice and kept my deposit"
+    },
+    {
+      "branch_signals": [],
+      "category": "short",
+      "expansions": [
+        "rental agreement",
+        "lease dispute",
+        "housing",
+        "rent"
+      ],
+      "id": "n-short-token",
+      "text": "rent"
+    },
+    {
+      "branch_signals": [
+        "Document-Artifact"
+      ],
+      "category": "prefix",
+      "expansions": [
+        "lease"
+      ],
+      "id": "n-prefix",
+      "text": "Lease"
+    },
+    {
+      "branch_signals": [
+        "Service"
+      ],
+      "category": "prefix",
+      "expansions": [
+        "arbitration"
+      ],
+      "id": "n-prefix-2",
+      "text": "Arbitration"
+    }
+  ],
+  "fit": [
+    {
+      "adjusted_confidence": 0.4,
+      "branch": "Location",
+      "category": "place",
+      "claim_name": "Unauthorized Employment",
+      "geographic": true,
+      "id": "fit-place-branch",
+      "label": "Rize",
+      "rejected": true,
+      "unfit_reason": "geographic_concept"
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": "",
+      "category": "place",
+      "claim_name": "Removal Proceedings",
+      "geographic": true,
+      "id": "fit-place-label",
+      "label": "Macedonia",
+      "rejected": true,
+      "unfit_reason": "geographic_concept"
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": null,
+      "category": "place",
+      "claim_name": "Visa Overstay",
+      "geographic": true,
+      "id": "fit-place-continent",
+      "label": "Europe",
+      "rejected": true,
+      "unfit_reason": "geographic_concept"
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": "Unknown",
+      "category": "place",
+      "claim_name": "Zoning Dispute",
+      "geographic": true,
+      "id": "fit-place-marker",
+      "label": "City of Exampleton",
+      "rejected": true,
+      "unfit_reason": "geographic_concept"
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": null,
+      "category": "place",
+      "claim_name": "Asylum",
+      "geographic": true,
+      "id": "fit-place-republic",
+      "label": "Republic of Example",
+      "rejected": true,
+      "unfit_reason": "geographic_concept"
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": "",
+      "category": "place",
+      "claim_name": "Presumptions",
+      "geographic": false,
+      "id": "fit-place-token",
+      "label": "Slovenia",
+      "rejected": true,
+      "unfit_reason": "unfit_branch"
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Governmental Body",
+      "category": "governmental",
+      "claim_name": "Retaliation",
+      "geographic": false,
+      "id": "fit-gov-body",
+      "label": "Department of Labor",
+      "rejected": false,
+      "unfit_reason": null
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Governmental Body",
+      "category": "governmental",
+      "claim_name": "Habitability",
+      "geographic": false,
+      "id": "fit-gov-body-2",
+      "label": "Housing Authority",
+      "rejected": false,
+      "unfit_reason": null
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": "Objectives",
+      "category": "placeholder",
+      "claim_name": "Something",
+      "geographic": false,
+      "id": "fit-placeholder",
+      "label": "ZZZ - SANDBOX: UNDER CONSTRUCTION",
+      "rejected": true,
+      "unfit_reason": "placeholder_concept"
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": "Unknown",
+      "category": "unfit_branch",
+      "claim_name": "Novel Claim",
+      "geographic": false,
+      "id": "fit-unknown-branch",
+      "label": "Some Concept",
+      "rejected": true,
+      "unfit_reason": "unfit_branch"
+    },
+    {
+      "adjusted_confidence": 0.4,
+      "branch": "",
+      "category": "unfit_branch",
+      "claim_name": "Novel Claim 2",
+      "geographic": false,
+      "id": "fit-empty-branch",
+      "label": "Some Concept",
+      "rejected": true,
+      "unfit_reason": "unfit_branch"
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Objectives",
+      "category": "fit",
+      "claim_name": "Retaliation",
+      "geographic": false,
+      "id": "fit-good-objectives",
+      "label": "Retaliation Claim",
+      "rejected": false,
+      "unfit_reason": null
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Objectives",
+      "category": "fit",
+      "claim_name": "Habitability",
+      "geographic": false,
+      "id": "fit-good-aol",
+      "label": "Breach of Warranty of Habitability",
+      "rejected": false,
+      "unfit_reason": null
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Legal Authorities",
+      "category": "fit",
+      "claim_name": "Unfair Collection",
+      "geographic": false,
+      "id": "fit-good-authority",
+      "label": "Fair Debt Collection Practices Act",
+      "rejected": false,
+      "unfit_reason": null
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Document-Artifact",
+      "category": "fit",
+      "claim_name": "Improper Notice",
+      "geographic": false,
+      "id": "fit-good-document",
+      "label": "Eviction Notice",
+      "rejected": false,
+      "unfit_reason": null
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Service",
+      "category": "fit",
+      "claim_name": "Mediation Referral",
+      "geographic": false,
+      "id": "fit-good-service",
+      "label": "Mediation Service",
+      "rejected": false,
+      "unfit_reason": null
+    },
+    {
+      "adjusted_confidence": null,
+      "branch": "Asset Type",
+      "category": "fit",
+      "claim_name": "Retaliation",
+      "geographic": false,
+      "id": "fit-short-label",
+      "label": "Lease",
+      "rejected": false,
+      "unfit_reason": null
+    }
+  ],
+  "label_score": [
+    {
+      "id": "sp-exact",
+      "label": "Arbitration Rules",
+      "label_score": 0.9,
+      "query": "Arbitration Rules"
+    },
+    {
+      "id": "sp-word-order",
+      "label": "Arbitration Rules",
+      "label_score": 0.666667,
+      "query": "rules of arbitration"
+    },
+    {
+      "id": "sp-substring",
+      "label": "Retaliation Claim",
+      "label_score": 0.9,
+      "query": "retaliation"
+    },
+    {
+      "id": "sp-reverse-substring",
+      "label": "Wrongful Termination Claim",
+      "label_score": 0.375,
+      "query": "a claim for wrongful termination against my employer"
+    },
+    {
+      "id": "sp-partial",
+      "label": "Eviction Notice",
+      "label_score": 0.9,
+      "query": "eviction notice from landlord"
+    },
+    {
+      "id": "sp-specificity",
+      "label": "Child Custody Determination",
+      "label_score": 0.9,
+      "query": "custody"
+    },
+    {
+      "id": "sp-prefix-credit",
+      "label": "Arbitration Rules",
+      "label_score": 0.0,
+      "query": "arbitrating"
+    },
+    {
+      "id": "sp-no-overlap",
+      "label": "Macedonia",
+      "label_score": 0.0,
+      "query": "wrongful termination"
+    },
+    {
+      "id": "sp-single-word",
+      "label": "Lease Agreement",
+      "label_score": 0.9,
+      "query": "lease"
+    },
+    {
+      "id": "sp-single-word-exact",
+      "label": "Lease",
+      "label_score": 0.9,
+      "query": "lease"
+    },
+    {
+      "id": "sp-stopword-heavy",
+      "label": "Employment Law",
+      "label_score": 0.2,
+      "query": "the law of the case"
+    },
+    {
+      "id": "sp-empty-label",
+      "label": "",
+      "label_score": null,
+      "query": "anything"
+    },
+    {
+      "id": "sp-homonym",
+      "label": "Living",
+      "label_score": 0.0,
+      "query": "habitability"
+    },
+    {
+      "id": "sp-long-query",
+      "label": "Landlord Tenant Law",
+      "label_score": 0.111111,
+      "query": "my landlord refused to fix the heat all winter"
+    }
+  ],
+  "resolve": [
+    {
+      "category": "exact",
+      "id": "n-exact-label",
+      "text": "Retaliation Claim",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.55,
+          "iri": "r-retaliation",
+          "label": "Retaliation Claim",
+          "source": "combined"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.5125,
+          "iri": "r-insurance-claims",
+          "label": "Insurance Claims",
+          "source": "combined"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "word_order",
+      "id": "n-word-order",
+      "text": "rules of arbitration",
+      "top": [
+        {
+          "branch": "Legal Authorities",
+          "confidence": 0.7143,
+          "iri": "r-arbitration-rules",
+          "label": "Arbitration Rules",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "word_order",
+      "id": "n-word-order-2",
+      "text": "claim for breach of contract",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.6038,
+          "iri": "r-breach-of-contract",
+          "label": "Breach of Contract Claim",
+          "source": "combined"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.5125,
+          "iri": "r-insurance-claims",
+          "label": "Insurance Claims",
+          "source": "combined"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-fired",
+      "text": "I was fired from my job last month",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.5269,
+          "iri": "r-wrongful-termination",
+          "label": "Wrongful Termination Claim",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-eviction",
+      "text": "my landlord started an eviction after I complained",
+      "top": [
+        {
+          "branch": "Area of Law",
+          "confidence": 0.5409,
+          "iri": "r-landlord-tenant",
+          "label": "Landlord Tenant Law",
+          "source": "combined"
+        },
+        {
+          "branch": "Document-Artifact",
+          "confidence": 0.5409,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "combined"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.5409,
+          "iri": "r-unlawful-detainer",
+          "label": "Unlawful Detainer",
+          "source": "combined"
+        },
+        {
+          "branch": "Asset Type",
+          "confidence": 0.5214,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "combined"
+        }
+      ],
+      "total": 4
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-custody",
+      "text": "we are fighting about custody of our daughter",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.55,
+          "iri": "r-child-custody",
+          "label": "Child Custody Determination",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-debt",
+      "text": "a collector keeps calling me about a debt I already paid",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.5409,
+          "iri": "r-debt-collection",
+          "label": "Debt Collection Practices",
+          "source": "combined"
+        },
+        {
+          "branch": "Legal Authorities",
+          "confidence": 0.5333,
+          "iri": "r-fair-debt-act",
+          "label": "Fair Debt Collection Practices Act",
+          "source": "combined"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-injury",
+      "text": "I slipped on ice in the parking lot and hurt my back",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-bigram",
+      "text": "I was laid off with no notice",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "sub_phrase",
+      "id": "n-subphrase",
+      "text": "breach of warranty of habitability in a rental unit",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.6063,
+          "iri": "r-habitability",
+          "label": "Breach of Warranty of Habitability",
+          "source": "combined"
+        },
+        {
+          "branch": "Area of Law",
+          "confidence": 0.5409,
+          "iri": "r-consumer-protection",
+          "label": "Consumer Protection Law",
+          "source": "combined"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "abbreviation",
+      "id": "n-abbrev",
+      "text": "FDCPA violation by a collection agency",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "compound",
+      "id": "n-compound",
+      "text": "wrongful termination and employment discrimination",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.5409,
+          "iri": "r-employment-discrimination",
+          "label": "Employment Discrimination Claim",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-lease",
+      "text": "Retaliation",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.5,
+          "iri": "r-retaliation",
+          "label": "Retaliation Claim",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-habitability",
+      "text": "Habitability",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-claim",
+      "text": "Rent Withholding",
+      "top": [
+        {
+          "branch": "Governmental Body",
+          "confidence": 0.5214,
+          "iri": "r-housing-authority",
+          "label": "Housing Authority",
+          "source": "combined"
+        },
+        {
+          "branch": "Asset Type",
+          "confidence": 0.5214,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "combined"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "place",
+      "id": "n-place-explicit",
+      "text": "Macedonia",
+      "top": [
+        {
+          "branch": "Location",
+          "confidence": 0.5333,
+          "iri": "r-macedonia",
+          "label": "Macedonia",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "place",
+      "id": "n-place-implicit",
+      "text": "Unauthorized Employment",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "place",
+      "id": "n-gov-body",
+      "text": "Housing Authority",
+      "top": [
+        {
+          "branch": "Governmental Body",
+          "confidence": 0.5929,
+          "iri": "r-housing-authority",
+          "label": "Housing Authority",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "stopword_only",
+      "id": "n-stopword-only",
+      "text": "the a an of to",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "stopword_only",
+      "id": "n-stopword-only-2",
+      "text": "I was in it",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "empty",
+      "id": "n-empty",
+      "text": "   ",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "nonsense",
+      "id": "n-nonsense",
+      "text": "qwertyuiop zxcvbnm",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "long_narrative",
+      "id": "n-long",
+      "text": "My landlord refused to fix the heat all winter, then when I complained to the city he served me with an eviction notice and kept my deposit",
+      "top": [
+        {
+          "branch": "Area of Law",
+          "confidence": 0.5409,
+          "iri": "r-landlord-tenant",
+          "label": "Landlord Tenant Law",
+          "source": "combined"
+        },
+        {
+          "branch": "Document-Artifact",
+          "confidence": 0.5409,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "combined"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.5409,
+          "iri": "r-unlawful-detainer",
+          "label": "Unlawful Detainer",
+          "source": "combined"
+        },
+        {
+          "branch": "Asset Type",
+          "confidence": 0.5214,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "combined"
+        }
+      ],
+      "total": 4
+    },
+    {
+      "category": "short",
+      "id": "n-short-token",
+      "text": "rent",
+      "top": [
+        {
+          "branch": "Governmental Body",
+          "confidence": 0.5214,
+          "iri": "r-housing-authority",
+          "label": "Housing Authority",
+          "source": "combined"
+        },
+        {
+          "branch": "Asset Type",
+          "confidence": 0.5214,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "combined"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "prefix",
+      "id": "n-prefix",
+      "text": "Lease",
+      "top": [
+        {
+          "branch": "Asset Type",
+          "confidence": 0.5333,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "prefix",
+      "id": "n-prefix-2",
+      "text": "Arbitration",
+      "top": [
+        {
+          "branch": "Legal Authorities",
+          "confidence": 0.5214,
+          "iri": "r-arbitration-rules",
+          "label": "Arbitration Rules",
+          "source": "combined"
+        }
+      ],
+      "total": 1
+    }
+  ],
+  "resolve_no_embed": [
+    {
+      "category": "exact",
+      "id": "n-exact-label",
+      "text": "Retaliation Claim",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-insurance-claims",
+          "label": "Insurance Claims",
+          "source": "label_match"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-retaliation",
+          "label": "Retaliation Claim",
+          "source": "label_match"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "word_order",
+      "id": "n-word-order",
+      "text": "rules of arbitration",
+      "top": [
+        {
+          "branch": "Legal Authorities",
+          "confidence": 0.7,
+          "iri": "r-arbitration-rules",
+          "label": "Arbitration Rules",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "word_order",
+      "id": "n-word-order-2",
+      "text": "claim for breach of contract",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-breach-of-contract",
+          "label": "Breach of Contract Claim",
+          "source": "label_match"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-insurance-claims",
+          "label": "Insurance Claims",
+          "source": "label_match"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-fired",
+      "text": "I was fired from my job last month",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-wrongful-termination",
+          "label": "Wrongful Termination Claim",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-eviction",
+      "text": "my landlord started an eviction after I complained",
+      "top": [
+        {
+          "branch": "Area of Law",
+          "confidence": 0.63,
+          "iri": "r-landlord-tenant",
+          "label": "Landlord Tenant Law",
+          "source": "label_match"
+        },
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "label_match"
+        },
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "label_match"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-unlawful-detainer",
+          "label": "Unlawful Detainer",
+          "source": "label_match"
+        }
+      ],
+      "total": 4
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-custody",
+      "text": "we are fighting about custody of our daughter",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-child-custody",
+          "label": "Child Custody Determination",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-debt",
+      "text": "a collector keeps calling me about a debt I already paid",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-debt-collection",
+          "label": "Debt Collection Practices",
+          "source": "label_match"
+        },
+        {
+          "branch": "Legal Authorities",
+          "confidence": 0.63,
+          "iri": "r-fair-debt-act",
+          "label": "Fair Debt Collection Practices Act",
+          "source": "label_match"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-injury",
+      "text": "I slipped on ice in the parking lot and hurt my back",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-bigram",
+      "text": "I was laid off with no notice",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "sub_phrase",
+      "id": "n-subphrase",
+      "text": "breach of warranty of habitability in a rental unit",
+      "top": [
+        {
+          "branch": "Area of Law",
+          "confidence": 0.63,
+          "iri": "r-consumer-protection",
+          "label": "Consumer Protection Law",
+          "source": "label_match"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-habitability",
+          "label": "Breach of Warranty of Habitability",
+          "source": "label_match"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "abbreviation",
+      "id": "n-abbrev",
+      "text": "FDCPA violation by a collection agency",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "compound",
+      "id": "n-compound",
+      "text": "wrongful termination and employment discrimination",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-employment-discrimination",
+          "label": "Employment Discrimination Claim",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-lease",
+      "text": "Retaliation",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-retaliation",
+          "label": "Retaliation Claim",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-habitability",
+      "text": "Habitability",
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-habitability",
+          "label": "Breach of Warranty of Habitability",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-claim",
+      "text": "Rent Withholding",
+      "top": [
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-housing-authority",
+          "label": "Housing Authority",
+          "source": "label_match"
+        },
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "label_match"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "place",
+      "id": "n-place-explicit",
+      "text": "Macedonia",
+      "top": [
+        {
+          "branch": "Location",
+          "confidence": 0.63,
+          "iri": "r-macedonia",
+          "label": "Macedonia",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "place",
+      "id": "n-place-implicit",
+      "text": "Unauthorized Employment",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "place",
+      "id": "n-gov-body",
+      "text": "Housing Authority",
+      "top": [
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-housing-authority",
+          "label": "Housing Authority",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    },
+    {
+      "category": "stopword_only",
+      "id": "n-stopword-only",
+      "text": "the a an of to",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "stopword_only",
+      "id": "n-stopword-only-2",
+      "text": "I was in it",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "empty",
+      "id": "n-empty",
+      "text": "   ",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "nonsense",
+      "id": "n-nonsense",
+      "text": "qwertyuiop zxcvbnm",
+      "top": [],
+      "total": 0
+    },
+    {
+      "category": "long_narrative",
+      "id": "n-long",
+      "text": "My landlord refused to fix the heat all winter, then when I complained to the city he served me with an eviction notice and kept my deposit",
+      "top": [
+        {
+          "branch": "Area of Law",
+          "confidence": 0.63,
+          "iri": "r-landlord-tenant",
+          "label": "Landlord Tenant Law",
+          "source": "label_match"
+        },
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "label_match"
+        },
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "label_match"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.63,
+          "iri": "r-unlawful-detainer",
+          "label": "Unlawful Detainer",
+          "source": "label_match"
+        }
+      ],
+      "total": 4
+    },
+    {
+      "category": "short",
+      "id": "n-short-token",
+      "text": "rent",
+      "top": [
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-housing-authority",
+          "label": "Housing Authority",
+          "source": "label_match"
+        },
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "label_match"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "prefix",
+      "id": "n-prefix",
+      "text": "Lease",
+      "top": [
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease",
+          "label": "Lease",
+          "source": "label_match"
+        },
+        {
+          "branch": "Unknown",
+          "confidence": 0.63,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "label_match"
+        }
+      ],
+      "total": 2
+    },
+    {
+      "category": "prefix",
+      "id": "n-prefix-2",
+      "text": "Arbitration",
+      "top": [
+        {
+          "branch": "Legal Authorities",
+          "confidence": 0.63,
+          "iri": "r-arbitration-rules",
+          "label": "Arbitration Rules",
+          "source": "label_match"
+        }
+      ],
+      "total": 1
+    }
+  ],
+  "stopword": [
+    {
+      "category": "exact",
+      "id": "n-exact-label",
+      "stopword_only": false,
+      "text": "Retaliation Claim"
+    },
+    {
+      "category": "word_order",
+      "id": "n-word-order",
+      "stopword_only": false,
+      "text": "rules of arbitration"
+    },
+    {
+      "category": "word_order",
+      "id": "n-word-order-2",
+      "stopword_only": false,
+      "text": "claim for breach of contract"
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-fired",
+      "stopword_only": false,
+      "text": "I was fired from my job last month"
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-eviction",
+      "stopword_only": false,
+      "text": "my landlord started an eviction after I complained"
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-custody",
+      "stopword_only": false,
+      "text": "we are fighting about custody of our daughter"
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-debt",
+      "stopword_only": false,
+      "text": "a collector keeps calling me about a debt I already paid"
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-injury",
+      "stopword_only": false,
+      "text": "I slipped on ice in the parking lot and hurt my back"
+    },
+    {
+      "category": "expansion",
+      "id": "n-expansion-bigram",
+      "stopword_only": false,
+      "text": "I was laid off with no notice"
+    },
+    {
+      "category": "sub_phrase",
+      "id": "n-subphrase",
+      "stopword_only": false,
+      "text": "breach of warranty of habitability in a rental unit"
+    },
+    {
+      "category": "abbreviation",
+      "id": "n-abbrev",
+      "stopword_only": false,
+      "text": "FDCPA violation by a collection agency"
+    },
+    {
+      "category": "compound",
+      "id": "n-compound",
+      "stopword_only": false,
+      "text": "wrongful termination and employment discrimination"
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-lease",
+      "stopword_only": false,
+      "text": "Retaliation"
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-habitability",
+      "stopword_only": false,
+      "text": "Habitability"
+    },
+    {
+      "category": "homonym",
+      "id": "n-homonym-claim",
+      "stopword_only": false,
+      "text": "Rent Withholding"
+    },
+    {
+      "category": "place",
+      "id": "n-place-explicit",
+      "stopword_only": false,
+      "text": "Macedonia"
+    },
+    {
+      "category": "place",
+      "id": "n-place-implicit",
+      "stopword_only": false,
+      "text": "Unauthorized Employment"
+    },
+    {
+      "category": "place",
+      "id": "n-gov-body",
+      "stopword_only": false,
+      "text": "Housing Authority"
+    },
+    {
+      "category": "stopword_only",
+      "id": "n-stopword-only",
+      "stopword_only": true,
+      "text": "the a an of to"
+    },
+    {
+      "category": "stopword_only",
+      "id": "n-stopword-only-2",
+      "stopword_only": true,
+      "text": "I was in it"
+    },
+    {
+      "category": "empty",
+      "id": "n-empty",
+      "stopword_only": true,
+      "text": "   "
+    },
+    {
+      "category": "nonsense",
+      "id": "n-nonsense",
+      "stopword_only": false,
+      "text": "qwertyuiop zxcvbnm"
+    },
+    {
+      "category": "long_narrative",
+      "id": "n-long",
+      "stopword_only": false,
+      "text": "My landlord refused to fix the heat all winter, then when I complained to the city he served me with an eviction notice and kept my deposit"
+    },
+    {
+      "category": "short",
+      "id": "n-short-token",
+      "stopword_only": false,
+      "text": "rent"
+    },
+    {
+      "category": "prefix",
+      "id": "n-prefix",
+      "stopword_only": false,
+      "text": "Lease"
+    },
+    {
+      "category": "prefix",
+      "id": "n-prefix-2",
+      "stopword_only": false,
+      "text": "Arbitration"
+    }
+  ]
+}
