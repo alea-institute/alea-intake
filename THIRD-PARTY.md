@@ -33,6 +33,7 @@ required on redistribution):
 |-----------|---------|-------|
 | fastapi, uvicorn, pydantic, sqlalchemy, alembic, httpx, authlib, structlog, slowapi, prometheus-client, opentelemetry-* | MIT / BSD / Apache-2.0 | permissive |
 | folio-python, alea-llm-client, eyecite, weasyprint, python-docx, lxml | MIT / BSD | permissive |
+| **folio-resolve** | **MIT** | the shared FOLIO source-text→concept matching engine (Damien Riehl). Supplies Stage-2 label scoring and the semantic-fit `PlaceNameGate`; see `backend/migration/`. Pure-Python core, depends only on `pydantic` |
 | sentence-transformers, faiss-cpu, pgvector | Apache-2.0 / MIT | permissive |
 | **psycopg[binary]** | **LGPL-3.0** | weak copyleft; used unmodified as a dependency — compatible |
 | **pymupdf** | **AGPL-3.0-only / commercial** | ⚠ **OPEN — needs Damien's decision.** See below. |

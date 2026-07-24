@@ -1,7 +1,25 @@
 """Domain-aware legal term expansions and branch signal words.
 
-Ported from folio-mapper's folio_service.py. Consumer narratives use natural
-language that benefits from domain-specific expansion before FOLIO search.
+Consumer narratives use natural language that benefits from domain-specific
+expansion before FOLIO search: when a consumer says "fired", we also search
+"wrongful termination".
+
+**This is a consumer-narrative seam, deliberately NOT the shared library's.**
+An earlier docstring here claimed the module was "ported from folio-mapper's
+folio_service.py"; the *idea* was, but none of the data is, and the two solve
+opposite problems:
+
+* ``folio_resolve.LEGAL_TERM_EXPANSIONS`` maps a legal content word to FOLIO
+  *label suffixes* ("litigation" -> "practice", "service") to widen ontology
+  label search. It is applied inside the library scorer / term generator.
+* This module maps *lay language* to legal phrases ("fired" -> "wrongful
+  termination", "eviction" -> "unlawful detainer"), which is what an intake
+  narrative needs and no ontology-side expansion can supply.
+
+Likewise ``SEARCH_STOPWORDS`` here drops first/second-person pronouns and
+auxiliaries so a narrative becomes a usable query; the library's scoring
+stopwords drop legal filler ("law", "legal", "type"). Both vocabularies are
+live, in different jobs -- see ``concept_resolver`` for the split.
 """
 
 from __future__ import annotations

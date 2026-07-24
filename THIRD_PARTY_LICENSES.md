@@ -30,6 +30,7 @@ its SPDX license identifier.
 | aiosqlite | MIT | |
 | pgvector | MIT | |
 | folio-python | MIT | ALEA Institute project |
+| folio-resolve | MIT | Shared FOLIO source-text→concept matching engine; Stage-2 label scoring + semantic-fit place gate |
 | faiss-cpu | MIT | |
 | sentence-transformers | Apache-2.0 | |
 | lxml | BSD-3-Clause | |
