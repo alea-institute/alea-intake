@@ -63,7 +63,7 @@
     {"id": "n-homonym-habitability", "text": "Habitability", "category": "homonym"},
     {"id": "n-homonym-claim", "text": "Rent Withholding", "category": "homonym"},
     {"id": "n-place-explicit", "text": "Macedonia", "category": "place"},
-    {"id": "n-place-implicit", "text": "Unauthorized Employment", "category": "place"},
+    {"id": "n-place-implicit", "text": "Unauthorized Employment", "category": "place_trap"},
     {"id": "n-gov-body", "text": "Housing Authority", "category": "place"},
     {"id": "n-stopword-only", "text": "the a an of to", "category": "stopword_only"},
     {"id": "n-stopword-only-2", "text": "I was in it", "category": "stopword_only"},

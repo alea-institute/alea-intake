@@ -57,13 +57,13 @@
       "llm": 0.0
     }
   ],
-  "corpus_hash": "30ea689a7f52a413b2aab1ac631093bd47a86626ea56f4f224008b06f3710a16",
+  "corpus_hash": "d4f8b948a5244c8dc8fe66a5f92a36d11588c665826321edb10a474e3a936116",
   "corpus_version": 1,
   "env": {
     "folio_python_version": "0.3.3",
     "folio_resolve_consumed": false,
-    "folio_resolve_present": false,
-    "folio_resolve_version": null,
+    "folio_resolve_present": true,
+    "folio_resolve_version": "0.1.0",
     "max_embedding_candidates": 20,
     "max_label_results": 10,
     "top_n": 10
@@ -264,7 +264,7 @@
       "branch_signals": [
         "Industry and Market"
       ],
-      "category": "place",
+      "category": "place_trap",
       "expansions": [
         "unauthorized employment"
       ],
@@ -644,14 +644,14 @@
       "top": [
         {
           "branch": "Objectives",
-          "confidence": 0.55,
+          "confidence": 0.95,
           "iri": "r-retaliation",
           "label": "Retaliation Claim",
           "source": "combined"
         },
         {
           "branch": "Objectives",
-          "confidence": 0.5125,
+          "confidence": 0.7,
           "iri": "r-insurance-claims",
           "label": "Insurance Claims",
           "source": "combined"
@@ -666,7 +666,7 @@
       "top": [
         {
           "branch": "Legal Authorities",
-          "confidence": 0.7143,
+          "confidence": 1.0,
           "iri": "r-arbitration-rules",
           "label": "Arbitration Rules",
           "source": "combined"
@@ -681,20 +681,27 @@
       "top": [
         {
           "branch": "Objectives",
-          "confidence": 0.6038,
+          "confidence": 0.8972,
           "iri": "r-breach-of-contract",
           "label": "Breach of Contract Claim",
           "source": "combined"
         },
         {
           "branch": "Objectives",
-          "confidence": 0.5125,
+          "confidence": 0.7,
           "iri": "r-insurance-claims",
           "label": "Insurance Claims",
           "source": "combined"
+        },
+        {
+          "branch": "Objectives",
+          "confidence": 0.5,
+          "iri": "r-retaliation",
+          "label": "Retaliation Claim",
+          "source": "combined"
         }
       ],
-      "total": 2
+      "total": 3
     },
     {
       "category": "expansion",
@@ -703,13 +710,20 @@
       "top": [
         {
           "branch": "Objectives",
-          "confidence": 0.5269,
+          "confidence": 0.8582,
           "iri": "r-wrongful-termination",
           "label": "Wrongful Termination Claim",
           "source": "combined"
+        },
+        {
+          "branch": "Area of Law",
+          "confidence": 0.5,
+          "iri": "r-employment-law",
+          "label": "Employment Law",
+          "source": "combined"
         }
       ],
-      "total": 1
+      "total": 2
     },
     {
       "category": "expansion",
@@ -717,29 +731,29 @@
       "text": "my landlord started an eviction after I complained",
       "top": [
         {
-          "branch": "Area of Law",
-          "confidence": 0.5409,
-          "iri": "r-landlord-tenant",
-          "label": "Landlord Tenant Law",
-          "source": "combined"
-        },
-        {
           "branch": "Document-Artifact",
-          "confidence": 0.5409,
+          "confidence": 0.95,
           "iri": "r-lease-agreement",
           "label": "Lease Agreement",
           "source": "combined"
         },
         {
           "branch": "Objectives",
-          "confidence": 0.5409,
+          "confidence": 0.95,
           "iri": "r-unlawful-detainer",
           "label": "Unlawful Detainer",
           "source": "combined"
         },
         {
+          "branch": "Area of Law",
+          "confidence": 0.8582,
+          "iri": "r-landlord-tenant",
+          "label": "Landlord Tenant Law",
+          "source": "combined"
+        },
+        {
           "branch": "Asset Type",
-          "confidence": 0.5214,
+          "confidence": 0.8036,
           "iri": "r-lease",
           "label": "Lease",
           "source": "combined"
@@ -754,7 +768,7 @@
       "top": [
         {
           "branch": "Objectives",
-          "confidence": 0.55,
+          "confidence": 0.8582,
           "iri": "r-child-custody",
           "label": "Child Custody Determination",
           "source": "combined"
@@ -769,14 +783,14 @@
       "top": [
         {
           "branch": "Objectives",
-          "confidence": 0.5409,
+          "confidence": 0.8582,
           "iri": "r-debt-collection",
           "label": "Debt Collection Practices",
           "source": "combined"
         },
         {
           "branch": "Legal Authorities",
-          "confidence": 0.5333,
+          "confidence": 0.7662,
           "iri": "r-fair-debt-act",
           "label": "Fair Debt Collection Practices Act",
           "source": "combined"
@@ -804,21 +818,28 @@
       "text": "breach of warranty of habitability in a rental unit",
       "top": [
         {
+          "branch": "Area of Law",
+          "confidence": 0.8582,
+          "iri": "r-consumer-protection",
+          "label": "Consumer Protection Law",
+          "source": "combined"
+        },
+        {
           "branch": "Objectives",
-          "confidence": 0.6063,
+          "confidence": 0.8036,
           "iri": "r-habitability",
           "label": "Breach of Warranty of Habitability",
           "source": "combined"
         },
         {
-          "branch": "Area of Law",
-          "confidence": 0.5409,
-          "iri": "r-consumer-protection",
-          "label": "Consumer Protection Law",
+          "branch": "Objectives",
+          "confidence": 0.5,
+          "iri": "r-retaliation",
+          "label": "Retaliation Claim",
           "source": "combined"
         }
       ],
-      "total": 2
+      "total": 3
     },
     {
       "category": "abbreviation",
@@ -834,13 +855,20 @@
       "top": [
         {
           "branch": "Objectives",
-          "confidence": 0.5409,
+          "confidence": 0.8582,
           "iri": "r-employment-discrimination",
           "label": "Employment Discrimination Claim",
           "source": "combined"
+        },
+        {
+          "branch": "Area of Law",
+          "confidence": 0.5,
+          "iri": "r-employment-law",
+          "label": "Employment Law",
+          "source": "combined"
         }
       ],
-      "total": 1
+      "total": 2
     },
     {
       "category": "homonym",
@@ -849,7 +877,7 @@
       "top": [
         {
           "branch": "Objectives",
-          "confidence": 0.5,
+          "confidence": 0.8036,
           "iri": "r-retaliation",
           "label": "Retaliation Claim",
           "source": "combined"
@@ -861,8 +889,16 @@
       "category": "homonym",
       "id": "n-homonym-habitability",
       "text": "Habitability",
-      "top": [],
-      "total": 0
+      "top": [
+        {
+          "branch": "Objectives",
+          "confidence": 0.7,
+          "iri": "r-habitability",
+          "label": "Breach of Warranty of Habitability",
+          "source": "combined"
+        }
+      ],
+      "total": 1
     },
     {
       "category": "homonym",
@@ -871,20 +907,27 @@
       "top": [
         {
           "branch": "Governmental Body",
-          "confidence": 0.5214,
+          "confidence": 0.8036,
           "iri": "r-housing-authority",
           "label": "Housing Authority",
           "source": "combined"
         },
         {
           "branch": "Asset Type",
-          "confidence": 0.5214,
+          "confidence": 0.8036,
           "iri": "r-lease",
           "label": "Lease",
           "source": "combined"
+        },
+        {
+          "branch": "Document-Artifact",
+          "confidence": 0.5,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "combined"
         }
       ],
-      "total": 2
+      "total": 3
     },
     {
       "category": "place",
@@ -893,7 +936,7 @@
       "top": [
         {
           "branch": "Location",
-          "confidence": 0.5333,
+          "confidence": 0.95,
           "iri": "r-macedonia",
           "label": "Macedonia",
           "source": "combined"
@@ -902,11 +945,19 @@
       "total": 1
     },
     {
-      "category": "place",
+      "category": "place_trap",
       "id": "n-place-implicit",
       "text": "Unauthorized Employment",
-      "top": [],
-      "total": 0
+      "top": [
+        {
+          "branch": "Area of Law",
+          "confidence": 0.5,
+          "iri": "r-employment-law",
+          "label": "Employment Law",
+          "source": "combined"
+        }
+      ],
+      "total": 1
     },
     {
       "category": "place",
@@ -915,7 +966,7 @@
       "top": [
         {
           "branch": "Governmental Body",
-          "confidence": 0.5929,
+          "confidence": 0.95,
           "iri": "r-housing-authority",
           "label": "Housing Authority",
           "source": "combined"
@@ -957,29 +1008,29 @@
       "text": "My landlord refused to fix the heat all winter, then when I complained to the city he served me with an eviction notice and kept my deposit",
       "top": [
         {
-          "branch": "Area of Law",
-          "confidence": 0.5409,
-          "iri": "r-landlord-tenant",
-          "label": "Landlord Tenant Law",
-          "source": "combined"
-        },
-        {
           "branch": "Document-Artifact",
-          "confidence": 0.5409,
+          "confidence": 0.95,
           "iri": "r-lease-agreement",
           "label": "Lease Agreement",
           "source": "combined"
         },
         {
           "branch": "Objectives",
-          "confidence": 0.5409,
+          "confidence": 0.95,
           "iri": "r-unlawful-detainer",
           "label": "Unlawful Detainer",
           "source": "combined"
         },
         {
+          "branch": "Area of Law",
+          "confidence": 0.8582,
+          "iri": "r-landlord-tenant",
+          "label": "Landlord Tenant Law",
+          "source": "combined"
+        },
+        {
           "branch": "Asset Type",
-          "confidence": 0.5214,
+          "confidence": 0.8036,
           "iri": "r-lease",
           "label": "Lease",
           "source": "combined"
@@ -994,20 +1045,27 @@
       "top": [
         {
           "branch": "Governmental Body",
-          "confidence": 0.5214,
+          "confidence": 0.8036,
           "iri": "r-housing-authority",
           "label": "Housing Authority",
           "source": "combined"
         },
         {
           "branch": "Asset Type",
-          "confidence": 0.5214,
+          "confidence": 0.8036,
           "iri": "r-lease",
           "label": "Lease",
           "source": "combined"
+        },
+        {
+          "branch": "Document-Artifact",
+          "confidence": 0.5,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "combined"
         }
       ],
-      "total": 2
+      "total": 3
     },
     {
       "category": "prefix",
@@ -1016,13 +1074,20 @@
       "top": [
         {
           "branch": "Asset Type",
-          "confidence": 0.5333,
+          "confidence": 0.95,
           "iri": "r-lease",
           "label": "Lease",
           "source": "combined"
+        },
+        {
+          "branch": "Document-Artifact",
+          "confidence": 0.8036,
+          "iri": "r-lease-agreement",
+          "label": "Lease Agreement",
+          "source": "combined"
         }
       ],
-      "total": 1
+      "total": 2
     },
     {
       "category": "prefix",
@@ -1031,7 +1096,7 @@
       "top": [
         {
           "branch": "Legal Authorities",
-          "confidence": 0.5214,
+          "confidence": 0.8036,
           "iri": "r-arbitration-rules",
           "label": "Arbitration Rules",
           "source": "combined"
@@ -1314,7 +1379,7 @@
       "total": 1
     },
     {
-      "category": "place",
+      "category": "place_trap",
       "id": "n-place-implicit",
       "text": "Unauthorized Employment",
       "top": [],
@@ -1557,7 +1622,7 @@
       "text": "Macedonia"
     },
     {
-      "category": "place",
+      "category": "place_trap",
       "id": "n-place-implicit",
       "stopword_only": false,
       "text": "Unauthorized Employment"

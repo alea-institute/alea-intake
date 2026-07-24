@@ -158,8 +158,20 @@ class _FakeFOLIO:
 class _FakeEmbeddingService:
     """Deterministic stand-in for the pgvector/FAISS embedding backend.
 
-    Scores a query against the mini-ontology with a stdlib token-overlap so the harness never
-    downloads a sentence-transformers model. Stable across runs, hence comparable.
+    Scores a query against the mini-ontology with **cosine similarity over binary term
+    vectors** (``|q ∩ t| / sqrt(|q| · |t|)``) so the harness never downloads a
+    sentence-transformers model. Stable across runs, hence comparable.
+
+    Binary cosine, not Jaccard: Jaccard is bounded by ``|q| / |t|`` when the query is a subset
+    of the target, so a one-word query against a nine-token concept can never exceed ~0.11 no
+    matter how perfect the match. A real sentence-transformers cosine puts that pair near 0.8.
+    Modelling the stage with Jaccard therefore feeds a *systematically* near-zero embedding
+    score into ``_combine_score``'s weighted average and manufactures recall failures that
+    production would never see — an artifact of the stand-in, not of the code under test.
+    Cosine is the shape the real backend actually has.
+
+    The concept label carries more weight than its definition, mirroring how the production
+    index is built (short label text dominates the embedded string).
     """
 
     def __init__(self, rows: list[dict], *, fail: bool = False) -> None:
@@ -169,6 +181,12 @@ class _FakeEmbeddingService:
     @staticmethod
     def _tokens(text: str) -> set[str]:
         return {w for w in "".join(c if c.isalnum() else " " for c in text.lower()).split() if w}
+
+    @staticmethod
+    def _cosine(q: set[str], t: set[str]) -> float:
+        if not q or not t:
+            return 0.0
+        return len(q & t) / ((len(q) * len(t)) ** 0.5)
 
     async def search(self, text: str, top_k: int = 10):
         from app.services.embedding.backends import SearchResult
@@ -180,10 +198,9 @@ class _FakeEmbeddingService:
         for r in self._rows:
             if r.get("parent") is None:
                 continue  # branch roots are not embedded
-            t = self._tokens(r["label"] + " " + r.get("definition", ""))
-            if not q or not t:
-                continue
-            score = len(q & t) / max(len(q | t), 1)
+            label_tokens = self._tokens(r["label"])
+            full_tokens = label_tokens | self._tokens(r.get("definition", ""))
+            score = max(self._cosine(q, label_tokens), 0.8 * self._cosine(q, full_tokens))
             if score > 0.0:
                 out.append(
                     SearchResult(

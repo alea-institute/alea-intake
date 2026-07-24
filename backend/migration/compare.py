@@ -28,9 +28,11 @@ Canaries
    rejected (BUG-21: no claim may map to a place / agency / placeholder / unfit branch), and no
    row marked fit may start being rejected.
 2. **PLACES-RESOLVABLE** — the *general* resolver must still resolve an explicitly named place
-   ("Macedonia" -> Macedonia). The place gate belongs to claim fitness, not to
-   ``resolve_concepts``; this canary fails if it leaks in (the mirror of folio-mapper's
-   PLACES-PRESERVED).
+   or agency ("Macedonia" -> Macedonia, "Housing Authority" -> Housing Authority). The place
+   gate belongs to claim fitness, not to ``resolve_concepts``; this canary fails if it leaks in
+   (the mirror of folio-mapper's PLACES-PRESERVED). It keys on ``category == "place"``, i.e.
+   narratives that genuinely NAME a place — not the ``place_trap`` rows, which are claim names
+   that merely mis-mapped to one and are precision-sensitive.
 3. **EMPTY-STAYS-EMPTY** — stopword-only / empty / nonsense narratives must keep resolving to
    zero concepts.
 4. **EMBED-DEGRADE** — with the embedding backend raising, narratives that still resolved via
@@ -57,7 +59,7 @@ CORPUS_PATH = MIGRATION / "corpus.json"
 # Narrative categories whose recall must not shrink (real legal content in the query).
 RECALL_SENSITIVE = {"exact", "word_order", "expansion", "sub_phrase", "compound", "prefix"}
 # Narrative categories where LOSING candidates is the point (junk the old scorer let through).
-PRECISION_SENSITIVE = {"homonym", "short", "abbreviation"}
+PRECISION_SENSITIVE = {"homonym", "short", "abbreviation", "place_trap"}
 # Narrative categories that must resolve to nothing, before and after.
 MUST_BE_EMPTY = {"stopword_only", "empty", "nonsense"}
 
@@ -300,9 +302,18 @@ def canary_empty_stays_empty(cand: dict) -> list[str]:
 
 
 def canary_embed_degrade(base: dict, cand: dict) -> list[str]:
+    """The BUG-9 cascade must still carry recall-sensitive narratives with embeddings down.
+
+    Scoped to ``RECALL_SENSITIVE`` for the same reason NO-RECALL-LOSS is: this canary asserts
+    that the label stage still *works* when the embedding stage dies, not that every marginal
+    precision-sensitive row survives the swap. A homonym trap losing its last weak candidate in
+    degraded mode is the migration doing its job, not the cascade breaking.
+    """
     failures: list[str] = []
     b, c = _by_id(base["resolve_no_embed"]), _by_id(cand["resolve_no_embed"])
     for rid, brow in b.items():
+        if brow.get("category") not in RECALL_SENSITIVE:
+            continue
         crow = c.get(rid, {})
         if brow["total"] > 0 and crow.get("total", 0) == 0:
             failures.append(
