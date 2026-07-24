@@ -124,6 +124,18 @@ hand-curated gate accepted because it only knew the exact branch string `"Locati
   and "City of X" / "Republic of X" phrasings the library does not know. An `extra_tokens`
   constructor argument would let that backstop go away.
 
+## Follow-up: the operating-point calibration study (2026-07-24)
+
+Both findings above — the untuned `SINGLE_STAGE_PENALTY` / `confidence_threshold` pair, and the
+weak-hit-beats-no-hit combine inversion — were studied in
+[`CALIBRATION-STUDY-2026-07-24.md`](CALIBRATION-STUDY-2026-07-24.md). It is a **study, not a
+change**: nothing under `app/` moved, and the adoption decision is Damien's.
+
+- [`sweep.py`](sweep.py) sweeps the operating point over the same synthetic corpus ($0, offline, `PYTHONHASHSEED=0`), against concept-level gold labels in [`sweep_gold.json`](sweep_gold.json). It proves its own reconstruction faithful before measuring anything.
+- [`combine_lab.py`](combine_lab.py) pins the averaging oddity: the algebra, minimal cases, an end-to-end reproduction through the real resolver, and three candidate remedies scored against four invariants.
+- Headline: the two knobs are one **corroborated bar** (`threshold`) and one **solo bar** (`threshold / penalty`); the recommendation is 0.7 / 0.5 → **0.85 / 0.55**, which restores both watch-list rows above and drops a four-candidate junk cluster the migration itself introduced. The specificity knob should be left alone. The biggest lever turns out not to be the operating point at all — it is the query-expansion vocabulary.
+- Harness guards live in [`../tests/test_migration_sweep.py`](../tests/test_migration_sweep.py).
+
 ## Corpus
 
 `corpus.json` is entirely **synthetic** — invented consumer narratives and a 41-node hand-written

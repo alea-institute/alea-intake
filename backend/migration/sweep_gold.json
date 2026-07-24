@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "_owner": "backend/migration/sweep.py — the 2026-07-24 operating-point calibration study.",
+  "_note": "Concept-level judgments for the SYNTHETIC corpus in corpus.json. This file is NOT part of the migration golden baseline: corpus.json is hashed into every capture and must not move, so the study keeps its labels here. No customer data — the narratives and the 41-node mini-ontology are both invented.",
+
+  "_rubric": [
+    "CLOSED WORLD. The mini-ontology is small enough to enumerate: for each narrative, 'good' lists every concept a legal-intake reviewer should want returned, 'ambiguous' lists defensible-either-way mappings, and EVERYTHING ELSE that gets accepted counts as a false positive — including branch roots ('Location', 'Legal Authorities') and the sandbox placeholder, which are never a valid resolution for anything.",
+    "'ambiguous' entries are excluded from precision AND recall. They are the honest home for judgment calls (does an eviction narrative want the Lease Agreement document?), so a contested label can never drive the recommendation.",
+    "Labels are scored against the concept, not the stage: the same gold applies with embeddings healthy and with embeddings down.",
+    "A 'good' concept that no stage ever retrieves stays in the list — it caps recall identically at every grid point, so it cannot bias a comparison, and hiding it would overstate the system.",
+    "The corpus's own category labels (recall_sensitive / precision_sensitive) drive compare.py's directional classification. They are deliberately coarser than this file: 'a recall-sensitive narrative gained candidates' reads as an intended fix there even when the gained candidates are, concept by concept, wrong. That divergence is a finding of the study, not a defect in either file."
+  ],
+
+  "narratives": {
+    "n-exact-label": {
+      "good": ["r-retaliation"],
+      "ambiguous": [],
+      "why": "'Retaliation Claim' is an exact label. The other *Claim concepts share only the filler word 'claim'."
+    },
+    "n-word-order": {
+      "good": ["r-arbitration-rules"],
+      "ambiguous": [],
+      "why": "'rules of arbitration' is Arbitration Rules and nothing else."
+    },
+    "n-word-order-2": {
+      "good": ["r-breach-of-contract"],
+      "ambiguous": [],
+      "why": "'claim for breach of contract'. Insurance Claims / Retaliation Claim etc. match on 'claim' alone."
+    },
+    "n-expansion-fired": {
+      "good": ["r-wrongful-termination", "r-employment-law"],
+      "ambiguous": ["r-employment-discrimination"],
+      "why": "A firing narrative wants the claim and the area of law; discrimination is possible but no protected class is stated."
+    },
+    "n-expansion-eviction": {
+      "good": ["r-unlawful-detainer", "r-landlord-tenant"],
+      "ambiguous": ["r-lease-agreement", "r-lease", "r-eviction-notice", "r-retaliation"],
+      "why": "The eviction proceeding and the area of law are certain; the lease document, the leasehold asset, the notice document and a retaliation theory ('after I complained') are all defensible."
+    },
+    "n-expansion-custody": {
+      "good": ["r-child-custody", "r-family-law"],
+      "ambiguous": [],
+      "why": "Custody dispute: the determination plus the area of law."
+    },
+    "n-expansion-debt": {
+      "good": ["r-debt-collection", "r-fair-debt-act", "r-consumer-protection"],
+      "ambiguous": [],
+      "why": "A collector calling about a paid debt is squarely FDCPA / debt-collection / consumer protection."
+    },
+    "n-expansion-injury": {
+      "good": ["r-personal-injury", "r-premises-liability"],
+      "ambiguous": [],
+      "why": "A slip-and-fall in a parking lot. Neither concept is currently reachable above the bar — a standing recall gap, constant across the grid."
+    },
+    "n-expansion-bigram": {
+      "good": ["r-employment-law"],
+      "ambiguous": ["r-wrongful-termination"],
+      "why": "A layoff is not necessarily wrongful, so the claim is ambiguous; the area of law is not. Eviction Notice (a 'notice' token match) is wrong at any threshold."
+    },
+    "n-subphrase": {
+      "good": ["r-habitability", "r-landlord-tenant"],
+      "ambiguous": ["r-lease-agreement", "r-lease", "r-unlawful-detainer"],
+      "why": "The narrative names the warranty-of-habitability claim verbatim. Consumer Protection Law arrives only through the 'warranty' expansion vocabulary and is off-target for a rental habitability complaint."
+    },
+    "n-abbrev": {
+      "good": ["r-fair-debt-act", "r-debt-collection"],
+      "ambiguous": ["r-consumer-protection"],
+      "why": "FDCPA is the statute; the practice concept follows. Nothing here is reachable at the production bar — the abbreviation is unexpanded."
+    },
+    "n-compound": {
+      "good": ["r-wrongful-termination", "r-employment-discrimination", "r-employment-law"],
+      "ambiguous": [],
+      "why": "The narrative names both claims explicitly; the area of law follows."
+    },
+    "n-homonym-lease": {
+      "good": ["r-retaliation"],
+      "ambiguous": [],
+      "why": "The one-word claim name 'Retaliation'."
+    },
+    "n-homonym-habitability": {
+      "good": ["r-habitability"],
+      "ambiguous": [],
+      "why": "The short-claim-name -> long-FOLIO-label shape the migration flagged: 'Habitability' -> 'Breach of Warranty of Habitability'."
+    },
+    "n-homonym-claim": {
+      "good": [],
+      "ambiguous": ["r-lease-agreement", "r-lease"],
+      "why": "'Rent Withholding' has no correct target in this mini-ontology (Landlord Tenant Law is never retrieved for it). A pure precision row: Housing Authority and Living are wrong."
+    },
+    "n-place-explicit": {
+      "good": ["r-macedonia"],
+      "ambiguous": [],
+      "why": "The general resolver legitimately resolves named places (jurisdiction / venue). PLACES-RESOLVABLE canary."
+    },
+    "n-place-implicit": {
+      "good": [],
+      "ambiguous": [],
+      "why": "'Unauthorized Employment' is an immigration-status claim; Immigration Law is never retrieved for it. Employment Law is the trap the corpus is testing."
+    },
+    "n-gov-body": {
+      "good": ["r-housing-authority"],
+      "ambiguous": [],
+      "why": "An explicitly named agency resolves in the general resolver; it is claim FITNESS that must reject it (fit-gov-body)."
+    },
+    "n-stopword-only": {"good": [], "ambiguous": [], "why": "Must resolve to nothing."},
+    "n-stopword-only-2": {"good": [], "ambiguous": [], "why": "Must resolve to nothing."},
+    "n-empty": {"good": [], "ambiguous": [], "why": "Must resolve to nothing."},
+    "n-nonsense": {"good": [], "ambiguous": [], "why": "Must resolve to nothing."},
+    "n-long": {
+      "good": ["r-unlawful-detainer", "r-landlord-tenant", "r-eviction-notice"],
+      "ambiguous": ["r-lease-agreement", "r-lease", "r-retaliation"],
+      "why": "The narrative names the eviction notice explicitly and is a habitability/eviction dispute."
+    },
+    "n-short-token": {
+      "good": ["r-lease-agreement"],
+      "ambiguous": ["r-lease"],
+      "why": "'rent' -> the lease document is a sensible mapping; the leasehold asset is defensible. Housing Authority is not."
+    },
+    "n-prefix": {
+      "good": ["r-lease", "r-lease-agreement"],
+      "ambiguous": [],
+      "why": "'Lease' matches the asset exactly and the document by prefix."
+    },
+    "n-prefix-2": {
+      "good": ["r-arbitration-rules"],
+      "ambiguous": [],
+      "why": "'Arbitration' -> Arbitration Rules by prefix."
+    }
+  }
+}
