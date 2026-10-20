@@ -1,3 +1,7 @@
+---
+status: completed
+---
+
 # Round 7 — Expansion Domain Rules + Cross-Domain Guards (CE plan)
 
 **Date:** 2026-07-11 · **Branch:** `round7-domain-rules` · **Rubric:** intake-quality-v1.3 (LOCKED — not amended)

@@ -12,9 +12,13 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from folio import FOLIO
 from sqlalchemy.ext.asyncio import AsyncSession
+
+if TYPE_CHECKING:
+    from app.services.folio.unmapped import UnmappedConceptData
 
 logger = logging.getLogger(__name__)
 
