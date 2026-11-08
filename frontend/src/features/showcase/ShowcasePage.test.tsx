@@ -125,7 +125,7 @@ describe('showcase', () => {
     await ready()
     expect(screen.getByLabelText('Model')).toHaveValue('gpt-4.1-mini')
     for (const [id, label, model] of [
-      ['anthropic', 'Anthropic', 'claude-haiku-4-5'],
+      ['anthropic', 'Anthropic', 'claude-sonnet-5-5'],
       ['google', 'Google', 'gemini-2.5-flash'],
       ['openai', 'OpenAI', 'gpt-4.1-mini'],
     ]) {
@@ -136,6 +136,44 @@ describe('showcase', () => {
     key(); story(); fireEvent.click(screen.getByText('Analyze my story'))
     await waitFor(() => expect(analyses).toBe(1))
     expect(JSON.parse(sessionStorage.getItem('showcase-key')!)).toMatchObject({provider:'openai',model:'gpt-4.1-mini'})
+  })
+  it('offers the current Anthropic models', async () => {
+    await ready()
+    fireEvent.change(screen.getByLabelText('Provider'), {target:{value:'anthropic'}})
+    const offered = Array.from(document.querySelectorAll('#showcase-models option')).map(o => o.getAttribute('value'))
+    expect(offered.slice(0, 3)).toEqual(['claude-sonnet-5-5', 'claude-opus-5-5', 'claude-haiku-5-5'])
+    expect(offered.filter(m => /claude-(haiku|sonnet|opus)-4|claude-3/.test(m ?? ''))).toEqual([])
+  })
+  it('preselects an Anthropic reference model and hides the non-reference note', async () => {
+    server.use(http.get('/api/v1/auth/showcase-notice', () => HttpResponse.json({consent_text:'Allow AI processing',reference_model:'claude-sonnet-5-5'})))
+    await ready()
+    await waitFor(() => expect(screen.getByLabelText('Model')).toHaveValue('claude-sonnet-5-5'))
+    expect(screen.getByLabelText('Provider')).toHaveValue('anthropic')
+    expect(screen.queryByText(/Quality is verified only on/)).not.toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText('Provider'), {target:{value:'openai'}})
+    expect(screen.getByLabelText('Model')).toHaveValue('gpt-4.1-mini')
+    expect(screen.getByText('Quality is verified only on claude-sonnet-5-5, the reference model. You can still run this analysis.')).toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText('Provider'), {target:{value:'anthropic'}})
+    expect(screen.getByLabelText('Model')).toHaveValue('claude-sonnet-5-5')
+    expect(screen.queryByText(/Quality is verified only on/)).not.toBeInTheDocument()
+  })
+  it('keeps a model the visitor chose before the reference model arrives', async () => {
+    let release!: () => void
+    const held = new Promise<void>(resolve => { release = resolve })
+    let served = false
+    server.use(http.get('/api/v1/auth/showcase-notice', async () => {
+      await held; served = true
+      return HttpResponse.json({consent_text:'Allow AI processing',reference_model:'claude-sonnet-5-5'})
+    }))
+    renderWithProviders(<ShowcasePage />)
+    fireEvent.change(screen.getByLabelText('Provider'), {target:{value:'anthropic'}})
+    fireEvent.change(screen.getByLabelText('Model'), {target:{value:'claude-opus-5-5'}})
+    release()
+    await screen.findByText('Allow AI processing')
+    expect(served).toBe(true)
+    expect(screen.getByLabelText('Provider')).toHaveValue('anthropic')
+    expect(screen.getByLabelText('Model')).toHaveValue('claude-opus-5-5')
+    expect(screen.getByText('Quality is verified only on claude-sonnet-5-5, the reference model. You can still run this analysis.')).toBeInTheDocument()
   })
   it('preselects the backend reference model and uses it in the quality notice', async () => {
     server.use(http.get('/api/v1/auth/showcase-notice', () => HttpResponse.json({consent_text:'Allow AI processing',reference_model:'configured-reference'})))
