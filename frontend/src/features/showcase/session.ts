@@ -2,6 +2,7 @@ export const showcaseMode = import.meta.env.VITE_SHOWCASE_MODE === 'true'
 export const defaultModels: Record<string, string> = {openai:'gpt-4.1-mini',anthropic:'claude-haiku-4-5',google:'gemini-2.5-flash'}
 export const referenceModel = import.meta.env.VITE_REFERENCE_MODEL || defaultModels[import.meta.env.VITE_REFERENCE_PROVIDER || 'openai']
 export const referenceProvider = import.meta.env.VITE_REFERENCE_PROVIDER || 'openai'
+export const TERMINAL_ANALYSIS_STATUSES = ['completed', 'complete', 'converged', 'max_iterations'] as const
 export interface VisitorKey { key: string; provider: string; model: string }
 export function readKey(): VisitorKey {
   const raw = sessionStorage.getItem('showcase-key')
@@ -27,22 +28,45 @@ export async function request(path: string, init: RequestInit = {}) {
   if (!response.ok) throw new RequestError(response.status)
   return response
 }
-export async function json(path: string, body?: unknown) {
-  const res = await request(path, body === undefined ? {} : { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) })
+export async function json(path: string, body?: unknown, init: RequestInit = {}) {
+  const res = await request(path, { ...init, ...(body === undefined ? {} : { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }) })
   return res.json()
 }
-export function sendStory(sessionId: number, partyId: number, story: string): Promise<void> {
+export function createSessionKeepalive(intakeId: number, sessionId: number) {
+  let lastSent = -Infinity
+  return async () => {
+    if (Date.now() - lastSent < 60000) return
+    lastSent = Date.now()
+    await request(`/api/v1/intake/${intakeId}/messages?session_id=${sessionId}&limit=1`)
+  }
+}
+
+export function sendStory(sessionId: number, partyId: number, story: string, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
+    if (signal?.aborted) { reject(signal.reason); return }
     const ws = new WebSocket(intakeSocketUrl(sessionId))
-    let saved = false
+    let settled = false
+    const finish = (error?: Error) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      signal?.removeEventListener('abort', abort)
+      ws.onopen = ws.onmessage = ws.onerror = ws.onclose = null
+      ws.close()
+      if (error) reject(error)
+      else resolve()
+    }
+    const abort = () => finish(signal?.reason ?? new DOMException('Aborted', 'AbortError'))
+    const timer = setTimeout(() => finish(new TypeError('network')), 120000)
+    signal?.addEventListener('abort', abort, {once:true})
     ws.onopen = () => { ws.send(JSON.stringify(authFrame(sessionStorage.getItem('showcase-token')!))); ws.send(JSON.stringify({type:'text_message', content: story, party_id: partyId, client_id: crypto.randomUUID()})) }
     ws.onmessage = e => {
       const msg = JSON.parse(e.data)
-      if (msg.type === 'system_message') { saved = true; resolve(); ws.close() }
-      if (msg.type === 'error') { reject(new RequestError(msg.status || 500)); ws.close() }
+      if (msg.type === 'system_message') finish()
+      if (msg.type === 'error') finish(new RequestError(msg.status || 500))
     }
-    ws.onerror = () => reject(new TypeError('network'))
-    ws.onclose = e => { if (!saved) reject(e.code === 4001 || e.code === 4003 ? new RequestError(401) : new TypeError('network')) }
+    ws.onerror = () => finish(new TypeError('network'))
+    ws.onclose = e => finish(e.code === 4001 || e.code === 4003 ? new RequestError(401) : new TypeError('network'))
   })
 }
 
