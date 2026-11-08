@@ -50,6 +50,15 @@ class Settings(BaseSettings):
 
     reference_model: str = DEFAULT_REFERENCE_MODEL
     preview_passphrase: str = ""
+    # Lifetime of the alea_preview cookie set by /__preview (0 = browser session).
+    preview_cookie_days: int = 30
+    # Cloudflare Access: a valid Cf-Access-Jwt-Assertion also passes the preview
+    # gate when both the team domain (e.g. "<team>.cloudflareaccess.com") and the
+    # Access application's AUD tag are set. Optional comma-separated email
+    # allowlist; empty accepts any identity Access admitted.
+    cf_access_team_domain: str = ""
+    cf_access_aud: str = ""
+    cf_access_emails: str = ""
     showcase_mode: bool = False
     showcase_idle_ttl_seconds: int = 3600
     showcase_ws_auth_timeout: float = 5.0
