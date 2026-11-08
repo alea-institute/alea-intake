@@ -242,7 +242,11 @@ describe('showcase', () => {
     expect(screen.getByRole('button', {name: copy.busy})).toBeDisabled()
     fireEvent.click(screen.getByText('End session and erase'))
     fireEvent.click(screen.getByText('Erase this session'))
-    await waitFor(() => expect(sessionStorage.length).toBe(0))
+    await waitFor(() => expect(ended).toBe(1))
+    await waitFor(() => expect(sessionStorage.length).toBe(status === 401 || status === 404 ? 0 : 1))
+    if (status !== 401 && status !== 404) {
+      expect(JSON.parse(sessionStorage.getItem('showcase-erase-pending')!)).toEqual([{token:'guest',intakeId:1}])
+    }
     expect(screen.getByLabelText('API key')).toHaveValue('')
     expect(screen.getByLabelText('Your story')).toHaveValue('')
     expect(screen.getByLabelText('Allow AI processing')).not.toBeChecked()
@@ -251,9 +255,6 @@ describe('showcase', () => {
     expect(socketClosed).toBe(true)
     if (status === 401 || status === 404) expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     else expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
-    vi.useFakeTimers()
-    await act(async () => { vi.advanceTimersByTime(121000) })
-    expect(ended).toBe(1)
   })
   it('wipes locally and shows the start screen before a hung server erase times out', async () => {
     sessionStorage.setItem('showcase-token','captured-guest')
@@ -266,16 +267,23 @@ describe('showcase', () => {
     queryClient.setQueryData(['private-data'], {story:'private story'})
     const fetch = vi.fn((_path: string, _init?: RequestInit) => new Promise<Response>(() => {}))
     vi.stubGlobal('fetch',fetch)
+    const writes = vi.spyOn(Storage.prototype,'setItem')
+    const removals = vi.spyOn(Storage.prototype,'removeItem')
     fireEvent.click(screen.getByText('End session and erase'))
     vi.useFakeTimers()
     fireEvent.click(screen.getByText('Erase this session'))
     await act(async () => { await vi.advanceTimersByTimeAsync(1) })
-    expect(sessionStorage.length).toBe(0)
+    const pendingWrite = writes.mock.calls.findIndex(([name]) => name === 'showcase-erase-pending')
+    expect(pendingWrite).toBeGreaterThanOrEqual(0)
+    expect(writes.mock.invocationCallOrder[pendingWrite]).toBeLessThan(removals.mock.invocationCallOrder[0])
+    writes.mockRestore(); removals.mockRestore()
+    expect(JSON.parse(sessionStorage.getItem('showcase-erase-pending')!)).toEqual([{token:'captured-guest',intakeId:1}])
+    expect(sessionStorage.length).toBe(1)
     expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
     expect(screen.getByLabelText('API key')).toHaveValue('')
     expect(screen.getByLabelText('Your story')).toHaveValue('')
     expect(screen.getByRole('button',{name:'Analyze my story'})).toBeEnabled()
-    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
     expect(fetch).toHaveBeenCalledWith('/api/v1/intake/1/end-session',expect.objectContaining({
       method:'POST', headers:expect.objectContaining({Authorization:'Bearer captured-guest'}),
     }))
@@ -284,17 +292,25 @@ describe('showcase', () => {
     expect(signal.aborted).toBe(true)
     expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
     expect(screen.getByRole('button',{name:'Analyze my story'})).toBeEnabled()
+    await act(async () => { await vi.advanceTimersByTimeAsync(2000) })
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(sessionStorage.getItem('showcase-erase-pending')).not.toBeNull()
   })
   it('allows another local erase while a previous server erase is still pending', async () => {
-    sessionStorage.setItem('showcase-token','guest')
+    sessionStorage.setItem('showcase-token','older-guest')
     sessionStorage.setItem('showcase-intake',JSON.stringify({id:1,session_id:2,party_id:3}))
     await ready()
     const originalFetch = globalThis.fetch
     let finishFirst!: (response: Response) => void
+    let finishSecond!: (response: Response) => void
     let eraseRequests = 0
     vi.stubGlobal('fetch',vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
-      if (String(input).endsWith('/end-session') && ++eraseRequests === 1) {
-        return new Promise<Response>(resolve => { finishFirst = resolve })
+      if (String(input).endsWith('/end-session')) {
+        eraseRequests++
+        return new Promise<Response>(resolve => {
+          if (eraseRequests === 1) finishFirst = resolve
+          else finishSecond = resolve
+        })
       }
       return originalFetch(input, init)
     }))
@@ -306,11 +322,93 @@ describe('showcase', () => {
     await screen.findByRole('heading',{name:'Unpaid wages'})
     fireEvent.click(screen.getByText('End session and erase'))
     fireEvent.click(screen.getByText('Erase this session'))
-    expect(sessionStorage.length).toBe(0)
     expect(screen.getByLabelText('Your story')).toHaveValue('')
     expect(eraseRequests).toBe(2)
+    expect(JSON.parse(sessionStorage.getItem('showcase-erase-pending')!)).toEqual([
+      {token:'older-guest',intakeId:1}, {token:'guest',intakeId:1},
+    ])
+    await act(async () => { finishSecond(new Response(null,{status:204})) })
+    await waitFor(() => expect(JSON.parse(sessionStorage.getItem('showcase-erase-pending')!)).toEqual([{token:'older-guest',intakeId:1}]))
     await act(async () => { finishFirst(new Response(null,{status:500})) })
+    expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
+  })
+  it('backs off erase retries for 2, 5, 15, then repeated 30 second delays', async () => {
+    sessionStorage.setItem('showcase-token','captured-guest')
+    sessionStorage.setItem('showcase-intake',JSON.stringify({id:1,session_id:2,party_id:3}))
+    await ready()
+    const eraseFetch = vi.fn(() => Promise.resolve(new Response(null,{status:503})))
+    vi.stubGlobal('fetch',eraseFetch)
+    vi.useFakeTimers()
+    fireEvent.click(screen.getByText('End session and erase'))
+    await act(async () => { fireEvent.click(screen.getByText('Erase this session')) })
+    let calls = 1
+    for (const delay of [2000, 5000, 15000, 30000, 30000]) {
+      await act(async () => { await vi.advanceTimersByTimeAsync(delay - 1) })
+      expect(eraseFetch).toHaveBeenCalledTimes(calls)
+      await act(async () => { await vi.advanceTimersByTimeAsync(1) })
+      expect(eraseFetch).toHaveBeenCalledTimes(++calls)
+    }
+    expect(screen.getByText(/Local data was erased/)).toHaveAttribute('role','alert')
+    expect(sessionStorage.getItem('showcase-erase-pending')).not.toBeNull()
+  })
+  it.each([409, 503, 'network'])('retries an erase after %s and removes the recovery key on success', async status => {
+    sessionStorage.setItem('showcase-token','captured-guest')
+    sessionStorage.setItem('showcase-intake',JSON.stringify({id:1,session_id:2,party_id:3}))
+    await ready(); key(); story()
+    const eraseFetch = vi.fn()
+      .mockImplementationOnce(() => status === 'network' ? Promise.reject(new TypeError('network')) : Promise.resolve(new Response(null,{status:Number(status)})))
+      .mockResolvedValue(new Response(null,{status:204}))
+    vi.stubGlobal('fetch',eraseFetch)
+    vi.useFakeTimers()
+    fireEvent.click(screen.getByText('End session and erase'))
+    await act(async () => { fireEvent.click(screen.getByText('Erase this session')) })
+    expect(JSON.parse(sessionStorage.getItem('showcase-erase-pending')!)).toEqual([{token:'captured-guest',intakeId:1}])
+    expect(sessionStorage.length).toBe(1)
+    expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
+    await act(async () => { await vi.advanceTimersByTimeAsync(1999) })
+    expect(eraseFetch).toHaveBeenCalledTimes(1)
+    await act(async () => { await vi.advanceTimersByTimeAsync(1) })
+    expect(eraseFetch).toHaveBeenCalledTimes(2)
+    expect(eraseFetch).toHaveBeenLastCalledWith('/api/v1/intake/1/end-session',expect.objectContaining({headers:{Authorization:'Bearer captured-guest'}}))
+    expect(sessionStorage.getItem('showcase-erase-pending')).toBeNull()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+  it('keeps the pending erase notice and retries while a new session is active', async () => {
+    sessionStorage.setItem('showcase-token','older-guest')
+    sessionStorage.setItem('showcase-intake',JSON.stringify({id:1,session_id:2,party_id:3}))
+    await ready()
+    const originalFetch = globalThis.fetch
+    let failFirst!: (response: Response) => void
+    const eraseFetch = vi.fn().mockImplementationOnce(() => new Promise<Response>(resolve => {failFirst=resolve}))
+      .mockResolvedValue(new Response(null,{status:204}))
+    vi.stubGlobal('fetch',(input: RequestInfo | URL, init?: RequestInit) => String(input).endsWith('/end-session') ? eraseFetch(input,init) : originalFetch(input,init))
+    fireEvent.click(screen.getByText('End session and erase'))
+    fireEvent.click(screen.getByText('Erase this session'))
+    expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
+    key(); story(); fireEvent.click(screen.getByLabelText('Allow AI processing'))
+    fireEvent.click(screen.getByText('Analyze my story'))
+    await screen.findByRole('heading',{name:'Unpaid wages'})
+    expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
+    expect(sessionStorage.getItem('showcase-token')).toBe('guest')
+    vi.useFakeTimers()
+    await act(async () => { failFirst(new Response(null,{status:503})) })
+    await act(async () => { await vi.advanceTimersByTimeAsync(2000) })
+    expect(eraseFetch).toHaveBeenCalledTimes(2)
+    expect(eraseFetch.mock.calls[1][1].headers.Authorization).toBe('Bearer older-guest')
+    expect(sessionStorage.getItem('showcase-erase-pending')).toBeNull()
+    expect(sessionStorage.getItem('showcase-token')).toBe('guest')
+  })
+  it('recovers every pending erase on reload and retains only unconfirmed entries', async () => {
+    sessionStorage.setItem('showcase-erase-pending',JSON.stringify([
+      {token:'old-one',intakeId:10}, {token:'old-two',intakeId:20},
+    ]))
+    const originalFetch = globalThis.fetch
+    const eraseFetch = vi.fn((input: RequestInfo | URL, _init?: RequestInit) => Promise.resolve(new Response(null,{status:String(input).includes('/10/')?204:503})))
+    vi.stubGlobal('fetch',(input: RequestInfo | URL, init?: RequestInit) => String(input).endsWith('/end-session') ? eraseFetch(input,init) : originalFetch(input,init))
+    await ready()
+    await waitFor(() => expect(eraseFetch).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(JSON.parse(sessionStorage.getItem('showcase-erase-pending')!)).toEqual([{token:'old-two',intakeId:20}]))
+    expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
   })
   it('stops polling and renders results at the iteration limit', async () => {
     let polls = 0
@@ -330,7 +428,7 @@ describe('showcase', () => {
     closeCode = 4004
     await ready(); key(); story(); fireEvent.click(screen.getByText('Analyze my story'))
     await screen.findByText('Your session expired. The session data was erased.')
-    expect(sessionStorage.length).toBe(0)
+    await waitFor(() => expect(sessionStorage.length).toBe(0))
     expect(analyses).toBe(0)
     fireEvent.click(screen.getByText('Start a fresh session'))
     expect(screen.getByLabelText('Your story')).toHaveValue('')
@@ -358,7 +456,7 @@ describe('showcase', () => {
     vi.useRealTimers()
     await screen.findByText('Your session expired. The session data was erased.')
     expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
-    expect(sessionStorage.length).toBe(0)
+    expect(JSON.parse(sessionStorage.getItem('showcase-erase-pending')!)).toEqual([{token:'guest',intakeId:1}])
     vi.useFakeTimers()
     await act(async () => { vi.advanceTimersByTime(10000) })
     expect(ended).toBe(1)

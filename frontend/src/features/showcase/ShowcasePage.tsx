@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/shared/components/ThemeProvider'
 import { loadThemeFonts } from '@/shared/i18n/themes'
 import type { VisualizationData } from '@/features/visualization/types'
 import { Results, type ResultsData } from './Results'
+import { pendingEraseStorageKey, usePendingErases } from './usePendingErases'
 import { createSessionKeepalive, defaultModels, isStoryDelivered, json, readKey, referenceModel, request, RequestError, sendStory, TERMINAL_ANALYSIS_STATUSES } from './session'
 import scenarios from './scenarios.json'
 import './showcase.css'
@@ -33,7 +34,7 @@ export function ShowcasePage() {
   const [erase,setErase] = useState(false)
   const [idle,setIdle] = useState(false)
   const [expired,setExpired] = useState(false)
-  const [eraseFailed,setEraseFailed] = useState(false)
+  const {pendingErases,queueErase} = usePendingErases()
   const [iterationLimit,setIterationLimit] = useState(false)
   const [session,setSession] = useState<{id:number;session_id:number;party_id:number} | null>(()=>JSON.parse(sessionStorage.getItem('showcase-intake') || 'null'))
   const lastActive = useRef(Date.now())
@@ -64,29 +65,15 @@ export function ShowcasePage() {
     if(erasing.current) return
     const intake=session
     const token=sessionStorage.getItem('showcase-token')
-    erasing.current=true;setEraseFailed(false)
-    const run=++generation.current
+    erasing.current=true
+    if(intake) queueErase({token,intakeId:intake.id})
+    ++generation.current
     analysisController.current?.abort()
-    sessionStorage.clear()
+    for(const name of Object.keys(sessionStorage)) {
+      if(name!==pendingEraseStorageKey) sessionStorage.removeItem(name)
+    }
     setSession(null);setState('');setError('');setIterationLimit(false);setNonReference(false);setReset(n=>n+1);setStory('');setPdf(undefined);setResult(undefined);setViz(undefined);setMemo('');setKey({key:'',provider:'openai',model:defaultModels.openai});setConsent(false);setErase(false);setIdle(false);setExpired(expire);setBusy(false);qc.clear();lastActive.current=Date.now()
     erasing.current=false
-    if(!intake) return
-    const controller=new AbortController()
-    let timer: ReturnType<typeof setTimeout> | undefined
-    try {
-      const deadline=new Promise<never>((_,reject)=>{
-        timer=setTimeout(()=>{controller.abort();reject(new TypeError('network'))},10000)
-      })
-      const response=await Promise.race([
-        fetch(`/api/v1/intake/${intake.id}/end-session`,{method:'POST',headers:token?{Authorization:`Bearer ${token}`}:{},signal:controller.signal}),
-        deadline,
-      ])
-      if(!response.ok && ![401,404].includes(response.status)) throw new RequestError(response.status)
-    } catch {
-      if(run===generation.current) setEraseFailed(true)
-    } finally {
-      clearTimeout(timer)
-    }
   }
 
   const keyValid = key.provider==='google' ? /^AIza[\w-]{15,}$/.test(key.key) : key.provider==='anthropic' ? /^sk-ant-[\w-]{8,}$/.test(key.key) : /^sk-[\w-]{8,}$/.test(key.key)
@@ -96,7 +83,7 @@ export function ShowcasePage() {
     if(!consent) {setError('consentRequired');return}
     if(!story.trim()&&!pdf) {setError('storyRequired');return}
     if(erasing.current) return
-    setBusy(true);setResult(undefined);setViz(undefined);setIterationLimit(false);setEraseFailed(false)
+    setBusy(true);setResult(undefined);setViz(undefined);setIterationLimit(false)
     analysisController.current?.abort()
     const controller=new AbortController()
     analysisController.current=controller
@@ -147,7 +134,7 @@ export function ShowcasePage() {
   return <ThemeProvider defaultTheme="courthouse-classic"><div className="showcase">
     <header className="showcase-banner"><div role="note">{t('banner')}</div></header>
     <main id="main-content"><header><h1>{t('title')}</h1><p>{t('intro')}</p></header>
-    {eraseFailed&&<div role="alert">{t('eraseError',{defaultValue:'Local data was erased. The server could not confirm erasure; its session will expire automatically.'})}</div>}
+    {pendingErases.length>0&&<div role="alert">{t('eraseError',{defaultValue:'Local data was erased. The server could not confirm erasure; its session will expire automatically.'})}</div>}
     {expired ? <section><h2>{t('expired')}</h2><Button onClick={()=>{setExpired(false);lastActive.current=Date.now()}}>{t('fresh')}</Button></section> : <>
     {idle&&<aside role="alert"><p>{t('idle')}</p><button disabled={!memo} onClick={exportMemo}>{t('export')}</button><button onClick={()=>{lastActive.current=Date.now();setIdle(false);void keepalive?.().catch(()=>{})}}>{t('keep')}</button></aside>}
     <section className="showcase-inputs"><fieldset><legend>{t('key')}</legend><div className="key-fields">
