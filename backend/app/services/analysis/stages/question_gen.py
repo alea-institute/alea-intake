@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.services.llm_bounds import TERSE_JSON_RULES, bounded_call, compact_instruction
 from app.models.analysis import (
     AnalysisGap,
     AnalysisIteration,
@@ -34,6 +35,9 @@ logger = logging.getLogger(__name__)
 # the call reliable and still covers what matters most. Higher AnalysisGap
 # priority == more impactful (gap_analyze sets priority = confidence * 100).
 _MAX_GAPS_PER_CALL: int = 20
+# Output bounds: questions per call and on the compact retry.
+_MAX_QUESTIONS: int = 15
+_COMPACT_MAX_QUESTIONS: int = 8
 
 
 def _normalize(text: str) -> str:
@@ -159,16 +163,22 @@ class QuestionGenStage:
             'Return ONLY a JSON object with EXACTLY this structure:\n'
             '{"groups": [{"topic": "topic name", "questions": [{"question_text": "the question", '
             '"rationale": "why we ask", "priority": 1, "gap_description": "the gap addressed"}]}], '
-            '"total_questions": 0}'
+            '"total_questions": 0}\n'
+            f"Ask at most {_MAX_QUESTIONS} questions in total. Each question and "
+            "each rationale is one sentence under 25 words. "
+            f"{TERSE_JSON_RULES}"
         )
 
-        # Call LLM
-        try:
-            result: QuestionGenResult = await self.llm_service.json_async(
-                prompt=prompt,
-                schema=QuestionGenResult,
-            )
-        except Exception:
+        # Call LLM: at most two attempts (the second asks for fewer, shorter
+        # questions); the client's own identical-request retries are off.
+        async def call(compact: bool) -> QuestionGenResult:
+            text = prompt + ("\n" + compact_instruction(_COMPACT_MAX_QUESTIONS) if compact else "")
+            return await self.llm_service.json_async(prompt=text, schema=QuestionGenResult)
+
+        result = await bounded_call(
+            call, lambda reply: reply, stage="question_gen", default=None
+        )
+        if result is None:
             # Diagnosable degradation (BUG-16): log loudly, then fall back to
             # DETERMINISTIC template questions from the top-priority gaps so a
             # run never zeroes its questions just because the LLM path failed
@@ -181,7 +191,6 @@ class QuestionGenStage:
                 run.id,
                 iteration.iteration_number,
                 len(open_gaps),
-                exc_info=True,
             )
             return await self._fallback_questions(
                 run, iteration, open_gaps, existing_texts

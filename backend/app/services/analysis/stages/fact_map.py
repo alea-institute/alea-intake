@@ -12,8 +12,18 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from app.models.analysis import ClaimElement, FactClaimMapping
-from app.services.analysis.schemas import ConfidenceWeights, FactMapResult
+from app.services.analysis.schemas import ConfidenceWeights, FactMappingSchema
 from app.services.analysis.scoring import compute_composite_confidence
+from app.services.llm_bounds import (
+    DEFAULT_CONCURRENCY,
+    batched,
+    bounded_call,
+    compact_instruction,
+    gather_bounded,
+    limit_client_retries,
+    list_field,
+    validate_items,
+)
 
 if TYPE_CHECKING:
     from folio import FOLIO
@@ -26,6 +36,13 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# Output bounds (2026-11-08 live run): mapping 93 facts in one call sent ~8,200
+# input tokens and ran to the 8192-token output ceiling, so every reply was
+# truncated JSON. Map facts in small concurrent batches instead; a failed batch
+# retries once at half size, then contributes no mappings.
+FACT_BATCH_SIZE = 20
+MAX_MAPPINGS_PER_FACT = 3
+
 FACT_MAP_SYSTEM_PROMPT = """You are a legal fact-mapping assistant. Given a set of extracted facts and identified legal claims with their required elements, create mappings from facts to claim elements.
 
 For each mapping, provide:
@@ -33,17 +50,21 @@ For each mapping, provide:
 - claim_name: The name of the claim this fact supports
 - element_name: The specific element of the claim this fact addresses (or null if general claim support)
 - llm_confidence: 0.0-1.0 confidence that this fact supports this claim/element
-- mapping_rationale: Brief explanation of how this fact supports this element
+- mapping_rationale: One short sentence (at most 20 words) on how this fact supports this element
 
 Also identify any unmapped_facts (fact IDs that don't clearly support any claim).
 
 Rules:
-1. One fact can map to multiple claims and elements (many-to-many).
+1. One fact can map to multiple claims and elements (many-to-many), but give at
+   most 3 mappings per fact: its strongest ones.
 2. Only create mappings where there is genuine factual support.
 3. Be conservative with confidence -- only high confidence for clear, direct support.
 4. Every fact should either be mapped or listed as unmapped.
+5. Use claim and element names exactly as given. Do not restate the facts.
 
-Return a JSON object with "mappings" and "unmapped_facts" arrays."""
+Return a JSON object with "mappings" and "unmapped_facts" arrays. Reply with exactly
+one JSON object and nothing else: no prose, no markdown fences, no placeholder or
+example object, and no "Correction:" or second attempt."""
 
 
 class FactMapStage:
@@ -72,30 +93,40 @@ class FactMapStage:
         self._folio = folio
         self._embedding_service = embedding_service
 
-    async def _call_llm(
-        self, facts: list[ExtractedFact], claims: list[AnalysisClaim]
-    ) -> dict[str, Any]:
-        """Call LLM with facts and claims, return parsed JSON response.
-
-        Separated for easy mocking in tests.
-        """
-        facts_text = "\n".join(
-            f"- Fact #{f.id}: [{f.fact_type}] (confidence: {f.confidence:.2f}) {f.assertion_text}"
-            for f in facts
-        )
+    async def _claims_text(self, claims: list[AnalysisClaim]) -> str:
+        """Describe claims and their elements for the prompt (reads the DB)."""
+        from sqlalchemy import select
 
         claims_text = ""
         for c in claims:
             claims_text += f"\nClaim: {c.claim_name} (type: {c.claim_type}, jurisdiction: {c.jurisdiction})\n"
-            # Get elements for this claim
-            from sqlalchemy import select
-
             elements_result = await self._session.execute(
                 select(ClaimElement).where(ClaimElement.claim_id == c.id)
             )
             elements = elements_result.scalars().all()
             for elem in elements:
                 claims_text += f"  - Element: {elem.element_name}: {elem.element_description or 'N/A'}\n"
+        return claims_text
+
+    async def _call_llm(
+        self,
+        facts: list[ExtractedFact],
+        claims: list[AnalysisClaim],
+        compact: bool = False,
+        claims_text: str | None = None,
+    ) -> dict[str, Any]:
+        """Call LLM with facts and claims, return parsed JSON response.
+
+        Separated for easy mocking in tests. Pass ``claims_text`` when calls
+        run concurrently: building it reads the shared AsyncSession.
+        """
+        facts_text = "\n".join(
+            f"- Fact #{f.id}: [{f.fact_type}] (confidence: {f.confidence:.2f}) {f.assertion_text}"
+            for f in facts
+        )
+
+        if claims_text is None:
+            claims_text = await self._claims_text(claims)
 
         messages = [
             {"role": "system", "content": FACT_MAP_SYSTEM_PROMPT},
@@ -104,10 +135,37 @@ class FactMapStage:
                 "content": f"Extracted facts:\n{facts_text}\n\nIdentified claims:\n{claims_text}",
             },
         ]
+        if compact:
+            messages.append({"role": "system", "content": compact_instruction(len(facts) * 2)})
 
         model = self._llm.create_client()
+        limit_client_retries(model)
         response = await model.json_async(messages=messages)
         return response.data
+
+    async def _map_batch(
+        self, batch: list[ExtractedFact], claims: list[AnalysisClaim], claims_text: str
+    ) -> tuple[list[FactMappingSchema], list[int]] | None:
+        """Map one batch; on failure retry once with half the facts.
+
+        Returns None when both attempts fail (the batch contributes nothing).
+        """
+        retry_batch = batch[: max(1, len(batch) // 2)]
+
+        async def call(compact: bool) -> Any:
+            facts = retry_batch if compact else batch
+            return await self._call_llm(facts, claims, compact=compact, claims_text=claims_text)
+
+        def parse(raw: Any) -> tuple[list[FactMappingSchema], list[int]] | None:
+            items = list_field(raw, "mappings")
+            if items is None:
+                return None
+            mappings = validate_items(items, FactMappingSchema, stage="fact_map")
+            unmapped = raw.get("unmapped_facts", []) if isinstance(raw, dict) else []
+            ids = [i for i in unmapped if isinstance(i, int)] if isinstance(unmapped, list) else []
+            return mappings, ids
+
+        return await bounded_call(call, parse, stage="fact_map", default=None)
 
     async def execute(
         self,
@@ -134,19 +192,46 @@ class FactMapStage:
                 "avg_confidence": 0.0,
             }
 
-        # Call LLM for fact mapping
-        raw_result = await self._call_llm(facts, claims)
+        # Read claims once, then run the LLM batches concurrently; the batches
+        # never touch the AsyncSession.
+        claims_text = await self._claims_text(claims)
+        batches = batched(facts, FACT_BATCH_SIZE)
+        outcomes = await gather_bounded(
+            [
+                (lambda b=b: self._map_batch(b, claims, claims_text))
+                for b in batches
+            ],
+            concurrency=DEFAULT_CONCURRENCY,
+        )
 
-        # Parse through Pydantic schema
-        try:
-            result = FactMapResult.model_validate(raw_result)
-        except Exception:
-            logger.warning("Failed to parse LLM fact-map output", exc_info=True)
+        mapping_schemas: list[FactMappingSchema] = []
+        unmapped_ids: list[int] = []
+        failed = 0
+        for batch, outcome in zip(batches, outcomes):
+            if outcome is None:
+                failed += 1
+                unmapped_ids.extend(f.id for f in batch)
+                continue
+            mapping_schemas.extend(outcome[0])
+            unmapped_ids.extend(outcome[1])
+        if failed:
+            logger.warning(
+                "fact_map: %d of %d batches produced no mappings", failed, len(batches)
+            )
+        if failed == len(batches):
             return {
                 "mappings_created": 0,
                 "unmapped_facts": [f.id for f in facts],
                 "avg_confidence": 0.0,
             }
+
+        # Cap mappings per fact (the prompt asks for at most three).
+        per_fact: dict[int, int] = {}
+        capped: list[FactMappingSchema] = []
+        for m in mapping_schemas:
+            per_fact[m.fact_id] = per_fact.get(m.fact_id, 0) + 1
+            if per_fact[m.fact_id] <= MAX_MAPPINGS_PER_FACT:
+                capped.append(m)
 
         # Build lookup tables
         fact_by_id = {f.id: f for f in facts}
@@ -165,7 +250,7 @@ class FactMapStage:
         created_mappings: list[FactClaimMapping] = []
         total_confidence = 0.0
 
-        for mapping_schema in result.mappings:
+        for mapping_schema in capped:
             # Resolve claim
             claim = claim_by_name.get(mapping_schema.claim_name)
             if claim is None:
@@ -248,7 +333,7 @@ class FactMapStage:
 
         return {
             "mappings_created": len(created_mappings),
-            "unmapped_facts": result.unmapped_facts,
+            "unmapped_facts": unmapped_ids,
             "avg_confidence": round(avg_confidence, 4),
         }
 

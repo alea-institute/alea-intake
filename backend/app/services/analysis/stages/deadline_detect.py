@@ -26,6 +26,13 @@ from app.models.analysis import Deadline
 from app.models.fact import ExtractedFact
 from app.models.intake import IntakeSession, Message
 from app.services.deadline.engine import compute_deadlines
+from app.services.llm_bounds import (
+    bounded_call,
+    compact_instruction,
+    limit_client_retries,
+    list_field,
+    validate_items,
+)
 from app.services.deadline.schemas import (
     DeadlineEvent,
     DeadlineEventSchema,
@@ -38,6 +45,10 @@ if TYPE_CHECKING:
     from app.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
+
+# Output bounds: the whole narrative goes in, so cap the events coming out.
+MAX_DEADLINE_EVENTS = 15
+COMPACT_DEADLINE_EVENTS = 6
 
 
 DEADLINE_SYSTEM_PROMPT = """You are a legal deadline-detection assistant. Given narrative text from a legal
@@ -108,7 +119,12 @@ Rules:
    landlord/tenant-style notices (notice to quit/vacate/cure) and similar
    documents that actually start a cure period.
 
-Return a JSON object matching: {{"events": [ ... ]}}."""
+Be concise: return at most 15 events, the most time-critical first; each
+raw_text is a short excerpt of at most 20 words.
+
+Return a JSON object matching: {{"events": [ ... ]}}. Reply with exactly one JSON
+object and nothing else: no prose, no markdown fences, no placeholder or example
+object, and no "Correction:" or second attempt."""
 
 
 class DeadlineDetectStage:
@@ -122,7 +138,9 @@ class DeadlineDetectStage:
         self._llm = llm_service
         self._session = db_session
 
-    async def _call_llm_extraction(self, text: str, today: date | None = None) -> dict[str, Any]:
+    async def _call_llm_extraction(
+        self, text: str, today: date | None = None, compact: bool = False
+    ) -> dict[str, Any]:
         """Call the LLM to extract deadline events. Returns raw JSON dict.
 
         Separated for easy mocking in tests (mirrors FactExtractionService).
@@ -134,8 +152,13 @@ class DeadlineDetectStage:
             {"role": "system", "content": DEADLINE_SYSTEM_PROMPT.format(today=anchor)},
             {"role": "user", "content": text},
         ]
+        if compact:
+            messages.append(
+                {"role": "system", "content": compact_instruction(COMPACT_DEADLINE_EVENTS)}
+            )
 
         model = self._llm.create_client()
+        limit_client_retries(model)
         response = await model.json_async(messages=messages)
         return response.data
 
@@ -158,14 +181,27 @@ class DeadlineDetectStage:
         ref_today = today or date.today()
 
         # --- Detect (probabilistic, mockable) ---
-        try:
-            raw = await self._call_llm_extraction(text, today=ref_today)
-            parsed = DeadlineExtractionResult.model_validate(raw)
-        except Exception:
+        def parse(raw: Any) -> DeadlineExtractionResult | None:
+            items = list_field(raw, "events")
+            if items is None:
+                return None
+            return DeadlineExtractionResult(
+                events=validate_items(
+                    items, DeadlineEventSchema, stage="deadline_detect",
+                    limit=MAX_DEADLINE_EVENTS,
+                )
+            )
+
+        parsed = await bounded_call(
+            lambda compact: self._call_llm_extraction(text, today=ref_today, compact=compact),
+            parse,
+            stage="deadline_detect",
+            default=None,
+        )
+        if parsed is None:
             logger.warning(
                 "Deadline event extraction failed for intake %d; no deadlines produced",
                 intake_id,
-                exc_info=True,
             )
             return []
 

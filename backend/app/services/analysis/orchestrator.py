@@ -19,8 +19,10 @@ import time
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
+import structlog
 from sqlalchemy import desc, select
 
+from app import config as app_config
 from app.models.analysis import (
     AnalysisClaim,
     AnalysisGap,
@@ -44,6 +46,7 @@ if TYPE_CHECKING:
     from app.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
+stage_logger = structlog.get_logger(__name__)
 
 
 class AnalysisOrchestrator:
@@ -83,6 +86,15 @@ class AnalysisOrchestrator:
         ) if self._org_config.get("analysis_config") else AnalysisConfig(
             max_iterations=max_iterations,
         )
+
+        # Showcase demos cap iterations so a guest run finishes in demo time;
+        # other deployments keep their configured cap.
+        settings = app_config.get_settings()
+        if settings.showcase_mode:
+            self._analysis_config.max_iterations = max(1, min(
+                self._analysis_config.max_iterations,
+                settings.showcase_max_iterations,
+            ))
 
         # Build convergence evaluator from org config
         self._convergence_evaluator = ConvergenceEvaluator(
@@ -523,8 +535,12 @@ class AnalysisOrchestrator:
             else:
                 result = {}
         except Exception as exc:
-            logger.error('Stage %s failed: %s', stage_name, type(exc).__name__)
-            result = {"error": str(exc)}
+            # structlog kwargs survive showcase redaction (stdlib %-args do
+            # not); the message and traceback can carry visitor content.
+            stage_logger.error(
+                "analysis_stage_failed", stage=stage_name, exc_type=type(exc).__name__,
+            )
+            result = {"error": type(exc).__name__}
 
         elapsed_ms = int((time.monotonic() - start_time) * 1000)
 

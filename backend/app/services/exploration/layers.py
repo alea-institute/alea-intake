@@ -16,6 +16,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from app.services.exploration.schemas import ExplorationConfig, ExplorationResult
+from app.services.llm_bounds import TERSE_JSON_RULES
 
 if TYPE_CHECKING:
     from folio import FOLIO
@@ -23,6 +24,59 @@ if TYPE_CHECKING:
     from app.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
+
+
+# Output bounds (2026-11-08 live run): the model emitted a placeholder object,
+# then "Correction: ..." and the real JSON, so the reply never parsed and the
+# layer returned nothing. Forbid that shape, cap the list, retry once compactly.
+MAX_EXPLORATION_ISSUES = 8
+COMPACT_EXPLORATION_ISSUES = 4
+ISSUES_REPLY_RULES = (
+    f"Return at most {MAX_EXPLORATION_ISSUES} issues, the most important first. "
+    "Each description and rationale is one sentence under 25 words. "
+    + TERSE_JSON_RULES
+)
+
+
+async def _bounded_issues(model: Any, messages: list[dict], source_layer: str) -> list[ExplorationResult]:
+    """Call the model at most twice and convert its issues to results."""
+    from app.services.llm_bounds import (
+        bounded_call,
+        compact_instruction,
+        limit_client_retries,
+        list_field,
+    )
+
+    limit_client_retries(model)
+
+    async def call(compact: bool) -> Any:
+        sent = list(messages)
+        if compact:
+            sent.append({"role": "system", "content": compact_instruction(COMPACT_EXPLORATION_ISSUES)})
+        response = await model.json_async(messages=sent)
+        return response.data
+
+    issues = await bounded_call(
+        call, lambda raw: list_field(raw, "issues"), stage=source_layer, default=[]
+    )
+    results: list[ExplorationResult] = []
+    for issue in issues[:MAX_EXPLORATION_ISSUES]:
+        if not isinstance(issue, dict):
+            continue
+        try:
+            confidence = min(1.0, max(0.0, float(issue.get("confidence", 0.5))))
+        except (TypeError, ValueError):
+            confidence = 0.5
+        results.append(ExplorationResult(
+            description=str(issue.get("description") or ""),
+            folio_iri=None,
+            source_layer=source_layer,
+            confidence=confidence,
+            is_new_issue=True,
+            claim_name=str(issue.get("claim_name") or "Unknown"),
+            rationale=str(issue.get("rationale") or ""),
+        ))
+    return results
 
 
 def _create_llm_model(llm_service: LLMService, cheap: bool = False, org_config: dict | None = None) -> Any:
@@ -259,7 +313,7 @@ async def layer_cheap_llm(
     try:
         model = _create_llm_model(llm_service, cheap=True, org_config=org_config)
     except Exception:
-        logger.warning("Cheap LLM unavailable, skipping layer", exc_info=True)
+        logger.warning("Cheap LLM unavailable, skipping layer")
         return []
 
     existing_names = [c.claim_name for c in existing_claims]
@@ -272,7 +326,8 @@ async def layer_cheap_llm(
                 "You are a legal issue-spotting assistant. Given facts and already-identified claims, "
                 "identify additional legal issues the consumer might not know to mention. "
                 "Return a JSON object with an 'issues' array. Each issue has: "
-                "claim_name (str), description (str), confidence (float 0-1), rationale (str)."
+                "claim_name (str), description (str), confidence (float 0-1), rationale (str). "
+                + ISSUES_REPLY_RULES
             ),
         },
         {
@@ -282,26 +337,7 @@ async def layer_cheap_llm(
         },
     ]
 
-    try:
-        response = await model.json_async(messages=messages)
-        data = response.data
-    except Exception:
-        logger.warning("Cheap LLM call failed", exc_info=True)
-        return []
-
-    results: list[ExplorationResult] = []
-    for issue in data.get("issues", []):
-        results.append(ExplorationResult(
-            description=issue.get("description", ""),
-            folio_iri=None,
-            source_layer="cheap_llm",
-            confidence=float(issue.get("confidence", 0.5)),
-            is_new_issue=True,
-            claim_name=issue.get("claim_name", "Unknown"),
-            rationale=issue.get("rationale", ""),
-        ))
-
-    return results
+    return await _bounded_issues(model, messages, "cheap_llm")
 
 
 async def layer_expensive_llm(
@@ -333,7 +369,7 @@ async def layer_expensive_llm(
     try:
         model = _create_llm_model(llm_service, cheap=False, org_config=org_config)
     except Exception:
-        logger.warning("Expensive LLM unavailable, skipping layer", exc_info=True)
+        logger.warning("Expensive LLM unavailable, skipping layer")
         return []
 
     existing_names = [c.claim_name for c in existing_claims]
@@ -359,7 +395,8 @@ async def layer_expensive_llm(
                 "the other layers might have missed. Focus on connections between issues, "
                 "cross-practice implications, and issues that require legal expertise to spot. "
                 "Return a JSON object with an 'issues' array. Each issue has: "
-                "claim_name (str), description (str), confidence (float 0-1), rationale (str)."
+                "claim_name (str), description (str), confidence (float 0-1), rationale (str). "
+                + ISSUES_REPLY_RULES
             ),
         },
         {
@@ -374,23 +411,4 @@ async def layer_expensive_llm(
         },
     ]
 
-    try:
-        response = await model.json_async(messages=messages)
-        data = response.data
-    except Exception:
-        logger.warning("Expensive LLM call failed", exc_info=True)
-        return []
-
-    results: list[ExplorationResult] = []
-    for issue in data.get("issues", []):
-        results.append(ExplorationResult(
-            description=issue.get("description", ""),
-            folio_iri=None,
-            source_layer="expensive_llm",
-            confidence=float(issue.get("confidence", 0.5)),
-            is_new_issue=True,
-            claim_name=issue.get("claim_name", "Unknown"),
-            rationale=issue.get("rationale", ""),
-        ))
-
-    return results
+    return await _bounded_issues(model, messages, "expensive_llm")

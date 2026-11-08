@@ -23,6 +23,15 @@ This document contains names only for private configuration:
 - `ALEA_REFERENCE_MODEL`
 - `ALEA_SHOWCASE_IDLE_TTL_SECONDS`
 - `ALEA_PREVIEW_PASSPHRASE` (non-empty until launch)
+- `ALEA_SHOWCASE_MAX_ITERATIONS` (optional; default `10`) caps analysis
+  orchestrator iterations in showcase mode only. Set `2` or `3` for a live demo
+  so a guest run reaches a terminal status in minutes. The other wall-time knobs
+  are `ALEA_SHOWCASE_CONCURRENT_ANALYSES` and `ALEA_SHOWCASE_ANALYSIS_QUEUE`
+  (bounded analysis slots) and `ALEA_SHOWCASE_EXTRACTION_TIMEOUT_SECONDS`
+  (document text extraction). Each LLM call in analysis is also bounded in code:
+  inputs are batched, list lengths are capped, client retries are off, and a
+  failed call retries once with a compact request before it degrades to an
+  empty result (`backend/app/services/llm_bounds.py`).
 
 Do not configure a server-side LLM API key; visitors supply their own key.
 Use the dedicated showcase database and restricted role. Apply

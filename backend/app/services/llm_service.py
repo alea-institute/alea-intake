@@ -314,7 +314,20 @@ class LLMService:
         is validated and returned as a schema instance. Raises on provider
         errors or validation failure — callers choose their own fallback.
         """
+        data = await self.json_data_async(prompt, system_prompt=system_prompt)
+        return schema.model_validate(data)
+
+    async def json_data_async(self, prompt: str, system_prompt: str | None = None) -> Any:
+        """Send a JSON completion and return the parsed reply, unvalidated.
+
+        The client's own retry loop is off (it resent identical requests that
+        had truncated); callers retry at most once, with a compact request,
+        and validate item by item (see ``app.services.llm_bounds``).
+        """
+        from app.services.llm_bounds import limit_client_retries
+
         model = self.create_client()
+        limit_client_retries(model)
 
         full_messages: list[dict[str, str]] = []
         if system_prompt:
@@ -327,7 +340,7 @@ class LLMService:
             full_messages.insert(0, {"role": "system", "content": "Respond with a single valid JSON object."})
 
         response = await model.json_async(messages=full_messages)
-        return schema.model_validate(response.data)
+        return response.data
 
     async def check_connection(self) -> dict[str, str]:
         """Test the LLM connection without sending any case data.
