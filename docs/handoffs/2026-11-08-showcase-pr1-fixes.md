@@ -22,6 +22,8 @@ Ship PR1 of `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md` (un
 1. **Coolify write token (Damien):** waiting on him. Steps were given inline: create it in Keys & Tokens with read/write/deploy, then save it on the box with the prompting one-liner to `~/.coolify-token-write`.
 2. **Gated deploy, once the token exists:**
    - **Coolify config:** set the showcase env vars on app `alea-intake` (names in `docs/DEV-DEPLOY-RUNBOOK.md`, including `ALEA_FORWARDED_ALLOW_IPS`), widen the healthcheck, set a memory limit, and add the `intake.dev.openlegalstandard.org` domain.
+   - **Never build on the deploy box:** Damien's rule (relayed by the folio-enrich session, 2026-11-08). Build the image on the home box, ship it with `docker save | ssh <deploy-box> docker load`, and tag it `<app-uuid>:<commit>` so Coolify skips its own build. A home-box build of `e31c880` came out at 2.26 GB, against 10.2 GB for the running pre-PR1 image.
+   - **Coolify queue was cleared 2026-11-08:** the folio-enrich session cancelled a stuck deploy and every queued alea-intake deploy, including PR #3's preview deploys. The app still runs its previous image. Redeploy deliberately; nothing will deploy on its own.
    - **Deploy and verify:** deploy the PR1 branch behind the preview gate, run `scripts/verify-showcase.sh --mode gated`, measure peak RAM (the box has 7 GB total, about 1 GB available), and run the retention test against real Postgres.
    - **Ship:** mark PR3 ready and merge.
 3. **After the LLM-key decision** (Cockpit ask `alea-intake-2026-11-08-1051-showcase-llm-key-budget`, q1, re-asked inline 2026-11-08): run the live persona campaign, regression recordings, and the reference-model comparison. Then PR2 (deadline rules) per the plan.
