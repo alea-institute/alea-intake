@@ -11,6 +11,8 @@ The service MUST NOT expose methods that send arbitrary data to training-eligibl
 from __future__ import annotations
 
 import os
+from contextlib import contextmanager
+from contextvars import ContextVar
 from typing import TYPE_CHECKING, Any
 
 from fastapi import HTTPException, Request
@@ -41,6 +43,19 @@ _DEFAULT_MODELS: dict[str, str] = {
     "google": "gemini-pro",
     "vllm": "meta-llama/Meta-Llama-3.1-8B-Instruct",
 }
+
+
+_replay_factory = ContextVar("llm_replay_factory", default=None)
+
+
+@contextmanager
+def replay_client_factory(factory):
+    """Scope the offline harness's client factory to its current async context."""
+    token = _replay_factory.set(factory)
+    try:
+        yield
+    finally:
+        _replay_factory.reset(token)
 
 
 class LLMService:
@@ -168,12 +183,15 @@ class LLMService:
         if not self.api_key or not self.api_key.strip():
             raise ValueError("A visitor LLM API key is required")
         config = self.get_client_config()
-        model_cls = _PROVIDER_MODEL_MAP.get(self.provider)
-        if model_cls is None:
-            raise ValueError(f"Unknown LLM provider: {self.provider}")
         kwargs = {"api_key": self.api_key, "model": self.model}
         if "endpoint" in config:
             kwargs["endpoint"] = config["endpoint"]
+        factory = _replay_factory.get()
+        if factory is not None:
+            return factory(self.provider, self.model, kwargs)
+        model_cls = _PROVIDER_MODEL_MAP.get(self.provider)
+        if model_cls is None:
+            raise ValueError(f"Unknown LLM provider: {self.provider}")
         return model_cls(**kwargs)
 
     async def acomplete(
