@@ -41,7 +41,9 @@ from app.schemas.visualization import (
     VisualizationSourceSpan,
 )
 
+from app.services.deadline.engine import _URGENCY_ORDER as _DEADLINE_URGENCY_ORDER
 from app.services.llm_service import LLMService, get_request_llm_service
+from app.services.output.deadline_display import deadline_heading, dedupe_deadlines
 
 logger = logging.getLogger(__name__)
 
@@ -275,7 +277,15 @@ async def get_analysis_results(
     deadlines_result = await db.execute(
         select(Deadline).where(Deadline.run_id == run.id)
     )
-    deadlines = deadlines_result.scalars().all()
+    # Same order and de-duplication as the memo (most urgent copy survives),
+    # plus the memo's structured heading and its lapsed flag (urgency is
+    # "lapsed" when the engine compared the date with the intake's reference
+    # date), so the showcase page never falls back to the browser clock.
+    deadlines = sorted(
+        deadlines_result.scalars().all(),
+        key=lambda d: _DEADLINE_URGENCY_ORDER.get(d.urgency, 99),
+    )
+    deadlines = dedupe_deadlines(deadlines)
     deadlines_data = [
         {
             "id": d.id,
@@ -290,6 +300,13 @@ async def get_analysis_results(
             "urgency": d.urgency,
             "hedge": d.hedge,
             "jurisdiction": d.jurisdiction,
+            "heading": deadline_heading(
+                d.event_type,
+                d.trigger,
+                d.trigger_date.isoformat() if d.trigger_date else None,
+                d.computed_date.isoformat() if d.computed_date else None,
+            ),
+            "lapsed": d.urgency == "lapsed",
         }
         for d in deadlines
     ]
