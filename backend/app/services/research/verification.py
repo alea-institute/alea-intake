@@ -100,7 +100,7 @@ class CitationVerifier:
                 )
 
         except Exception as e:
-            logger.error("Citation verification error for '%s': %s", citation, e)
+            logger.error("Citation verification failed (%s)", type(e).__name__)
             return VerificationResult(
                 citation=citation,
                 verified=False,

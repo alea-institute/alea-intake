@@ -162,13 +162,13 @@ class ResultRanker:
         top_results = results[:top_n]
 
         try:
-            prompt = self._build_rerank_prompt(top_results, query)
+            self._build_rerank_prompt(top_results, query)
             # LLM re-ranking is optional; fall back to signal-based ranking on error
             # In production, this would use LLMService.json_async with a ranking schema
-            logger.info("LLM re-ranking %d results for query: %s", len(top_results), query.query_text[:100])
+            logger.info("LLM re-ranking %d results", len(top_results))
             return results  # Placeholder: real impl would parse LLM response
         except Exception as e:
-            logger.warning("LLM re-ranking failed, using signal-based ranking: %s", e)
+            logger.warning('LLM re-ranking failed, using signal-based ranking: %s', type(e).__name__)
             return results
 
     # -- Private signal scorers --

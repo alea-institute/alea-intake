@@ -93,7 +93,7 @@ class GoogleScholarAdapter(HTTPAdapter):
             logger.error("SerpAPI error: %s", e.response.status_code)
             return []
         except Exception as e:
-            logger.error("Google Scholar search failed: %s", e)
+            logger.error('Google Scholar search failed: %s', type(e).__name__)
             return []
 
     async def fetch_authority(self, citation: str) -> ResearchResult | None:

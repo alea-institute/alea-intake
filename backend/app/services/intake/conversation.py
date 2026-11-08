@@ -104,7 +104,7 @@ class ConversationService:
             reply = await self._llm.acomplete(messages, system_prompt=prompt)
             return reply or fallback
         except Exception as e:
-            logger.warning("LLM response generation failed: %s", e)
+            logger.warning('LLM response generation failed: %s', type(e).__name__)
             return fallback
 
     async def generate_welcome_message(

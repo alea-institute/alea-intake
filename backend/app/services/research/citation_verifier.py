@@ -134,7 +134,7 @@ class CitationVerifier:
         results: list[VerificationResult] = []
         for i, r in enumerate(raw_results):
             if isinstance(r, Exception):
-                logger.error("Verification failed for '%s': %s", citations[i], r)
+                logger.error("Citation verification failed (%s)", type(r).__name__)
                 results.append(
                     VerificationResult(
                         status="unverified",
@@ -185,7 +185,7 @@ class CitationVerifier:
                 result = await adapter.verify_citation(citation_str)
                 return result if isinstance(result, dict) else {"verified": False, "source": "unknown", "metadata": {}}
             except Exception as e:
-                logger.warning("Adapter verification failed: %s", e)
+                logger.warning('Adapter verification failed: %s', type(e).__name__)
                 return {"verified": False, "source": "unknown", "metadata": {}, "error": str(e)}
 
         tasks = [_query_adapter(a) for a in self._adapters]

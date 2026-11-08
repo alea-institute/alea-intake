@@ -14,4 +14,4 @@ case "${ALEA_SHOWCASE_MODE:-false}" in
   1|[Tt]|[Tt][Rr][Uu][Ee]|[Yy]|[Yy][Ee][Ss]|[Oo][Nn]) set -- --no-access-log ;;
   *) set -- ;;
 esac
-exec uv run uvicorn app.main:app "$@" --host 0.0.0.0 --port "${PORT:-8000}"
+exec uv run uvicorn app.main:app "$@" --proxy-headers --forwarded-allow-ips "${ALEA_FORWARDED_ALLOW_IPS:-127.0.0.1}" --host 0.0.0.0 --port "${PORT:-8000}"

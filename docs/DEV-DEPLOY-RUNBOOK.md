@@ -18,6 +18,8 @@ This document contains names only for private configuration:
 - `ALEA_DATABASE_BACKEND=postgresql`
 - `ALEA_DB_HOST`, `ALEA_DB_PORT`, `ALEA_DB_NAME`, `ALEA_DB_USER`, `ALEA_DB_PASSWORD`
 - `ALEA_SECRET_KEY`
+- `ALEA_FORWARDED_ALLOW_IPS` (the Coolify proxy network address or CIDR; never `*`;
+  defaults to `127.0.0.1` for a local proxy)
 - `ALEA_REFERENCE_MODEL`
 - `ALEA_SHOWCASE_IDLE_TTL_SECONDS`
 - `ALEA_PREVIEW_PASSPHRASE` (non-empty until launch)
@@ -44,7 +46,10 @@ Only `GET /health` is anonymous while the gate is enabled. Share preview access
 privately: opening `/__preview?key=` with the configured passphrase sets an
 HttpOnly, SameSite=Lax cookie (Secure over HTTPS) and redirects to `/`. The cookie
 contains an HMAC signed with `ALEA_SECRET_KEY`, never the passphrase itself.
-Configure Uvicorn to trust forwarded scheme headers from the Coolify proxy only,
+The entrypoint enables Uvicorn proxy headers. Set `ALEA_FORWARDED_ALLOW_IPS` to
+the Coolify proxy network address or CIDR so only that proxy supplies the forwarded
+scheme; never set it to `*`. Keep a single uvicorn worker: guest erase and socket
+writes share an in-process lock. Configure forwarded scheme trust before rollout,
 and verify that the cookie has Secure set through the public HTTPS domain.
 Configure the proxy to omit query strings, Authorization, Cookie and preview/key
 headers from access logs; never retain the preview link in logs or evidence.
