@@ -106,7 +106,7 @@ class AnalysisOrchestrator:
         4. Return AnalysisRun with final state
         """
         # Load facts for this intake
-        facts = await self._load_facts(intake_id)
+        await self._load_facts(intake_id)
 
         # Create AnalysisRun record
         run = AnalysisRun(
@@ -178,9 +178,6 @@ class AnalysisOrchestrator:
         run = result.scalars().first()
         if run is None:
             raise ValueError(f"AnalysisRun {run_id} not found")
-
-        # Find the session_id from intake
-        session_id = None
 
         # Mark as running again
         run.status = "running"
@@ -514,7 +511,7 @@ class AnalysisOrchestrator:
             else:
                 result = {}
         except Exception as exc:
-            logger.error("Stage %s failed: %s", stage_name, exc, exc_info=True)
+            logger.error('Stage %s failed: %s', stage_name, type(exc).__name__)
             result = {"error": str(exc)}
 
         elapsed_ms = int((time.monotonic() - start_time) * 1000)
@@ -607,19 +604,13 @@ class AnalysisOrchestrator:
         # Gather signals
         claims = await self._load_claims(run.id)
         elements = await self._load_elements(claims)
-        mappings = await self._load_mappings(run.id)
+        await self._load_mappings(run.id)
         gaps = await self._load_gaps(run.id)
 
         # Calculate coverage
         total_elements = len(elements)
         satisfied = sum(1 for e in elements if e.is_satisfied)
         coverage = satisfied / total_elements if total_elements > 0 else 0.5
-
-        # Calculate confidence delta (compare with previous iteration)
-        if mappings:
-            current_avg = sum(m.confidence for m in mappings) / len(mappings)
-        else:
-            current_avg = 0.0
 
         # Simple approximation for delta
         confidence_delta = 0.05 if iteration.iteration_number == 1 else 0.01

@@ -60,7 +60,7 @@ class MCPAdapter(ResearchAdapter):
             return results
 
         except Exception as e:
-            logger.error("MCP search failed: %s", e)
+            logger.error('MCP search failed: %s', type(e).__name__)
             return []
 
     async def fetch_authority(self, citation: str) -> ResearchResult | None:
@@ -72,7 +72,7 @@ class MCPAdapter(ResearchAdapter):
             concept = await self._mcp_client.get_concept(citation)
             return self._parse_concept(concept) if concept else None
         except Exception as e:
-            logger.error("MCP fetch failed for '%s': %s", citation, e)
+            logger.error("MCP fetch failed (%s)", type(e).__name__)
             return None
 
     async def verify_citation(self, citation: str) -> dict[str, Any]:
@@ -93,7 +93,7 @@ class MCPAdapter(ResearchAdapter):
                     "metadata": {"label": label, "iri": citation},
                 }
         except Exception as e:
-            logger.warning("MCP verify failed for '%s': %s", citation, e)
+            logger.warning("MCP verification failed (%s)", type(e).__name__)
 
         return {"verified": False, "source": "folio-mcp", "metadata": {}}
 

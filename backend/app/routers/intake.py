@@ -413,7 +413,7 @@ async def document_upload(
 
         await db_session.flush()
     except Exception as e:
-        logger.error("Document extraction failed for message %s: %s", msg.id, e)
+        logger.error('Document extraction failed for message %s: %s', msg.id, type(e).__name__)
         uploaded_doc.extraction_status = "failed"
         extraction_status = "failed"
         await db_session.flush()
@@ -436,7 +436,7 @@ async def document_upload(
             content=llm_response,
         )
     except Exception as e:
-        logger.error("LLM follow-up generation failed: %s", e)
+        logger.error('LLM follow-up generation failed: %s', type(e).__name__)
 
     # Send WebSocket notification
     text_preview = normalized.text[:200] if normalized else ""
@@ -646,7 +646,7 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
     except WebSocketDisconnect:
         pass
     except Exception as e:
-        logger.error("WebSocket error for session %d: %s", session_id, e)
+        logger.error('WebSocket error for session %d: %s', session_id, type(e).__name__)
     finally:
         manager.disconnect(websocket, session_id)
 

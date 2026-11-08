@@ -34,7 +34,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from folio_resolve import PlaceNameGate
 from pydantic import BaseModel, Field
@@ -214,12 +214,7 @@ class SemanticFitValidator:
                     reason=reason,
                     drop_iri=True,
                 )
-                logger.info(
-                    "semantic-fit: rejected mapping %r -> %r (%s)",
-                    item.claim_name,
-                    item.concept_label,
-                    reason,
-                )
+                logger.info("semantic-fit: rejected mapping")
         return verdicts
 
     async def validate(

@@ -110,11 +110,11 @@ class CourtListenerAdapter(ResearchAdapter):
                         results.append(result)
 
         except httpx.TimeoutException:
-            logger.warning("CourtListener search timed out for query: %s", query.query_text[:100])
+            logger.warning("CourtListener search timed out")
         except httpx.HTTPStatusError as e:
             logger.error("CourtListener API error: %s", e.response.status_code)
         except Exception as e:
-            logger.error("CourtListener search failed: %s", e)
+            logger.error('CourtListener search failed: %s', type(e).__name__)
 
         return results
 
@@ -148,11 +148,11 @@ class CourtListenerAdapter(ResearchAdapter):
                     return self._parse_search_result(results[0])
 
         except httpx.TimeoutException:
-            logger.warning("CourtListener fetch timed out for citation: %s", citation)
+            logger.warning("CourtListener fetch timed out")
         except httpx.HTTPStatusError as e:
             logger.error("CourtListener fetch error: %s", e.response.status_code)
         except Exception as e:
-            logger.error("CourtListener fetch failed: %s", e)
+            logger.error('CourtListener fetch failed: %s', type(e).__name__)
 
         return None
 

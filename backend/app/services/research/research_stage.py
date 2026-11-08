@@ -161,10 +161,7 @@ class ResearchStage:
             for i, raw in enumerate(raw_results):
                 label = task_labels[i] if i < len(task_labels) else "unknown"
                 if isinstance(raw, Exception):
-                    logger.warning(
-                        "Research task %s failed for claim '%s': %s",
-                        label, claim.claim_name, raw,
-                    )
+                    logger.warning("Research task %s failed for claim %d (%s)", label, claim.id, type(raw).__name__)
                     continue
 
                 if label.startswith("adapter:"):
@@ -224,7 +221,7 @@ class ResearchStage:
 
         # Step 10: Store top results as Authority records
         # (DB storage is skipped when db_session is a mock)
-        authorities_stored = await self._store_authorities(run, all_results)
+        await self._store_authorities(run, all_results)
 
         return {
             "authorities_found": len(all_results),
@@ -284,5 +281,5 @@ class ResearchStage:
 
             return stored
         except Exception as e:
-            logger.warning("Failed to store authorities: %s", e)
+            logger.warning('Failed to store authorities: %s', type(e).__name__)
             return 0

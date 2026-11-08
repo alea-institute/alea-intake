@@ -90,7 +90,7 @@ class CourtListenerAdapter(HTTPAdapter):
             response = await self._get("/search/", params=params)
 
             if response.status_code == 429:
-                logger.warning("CourtListener rate limit hit for query: %s", query.query_text[:100])
+                logger.warning("CourtListener rate limit hit")
                 return []
 
             response.raise_for_status()
@@ -108,7 +108,7 @@ class CourtListenerAdapter(HTTPAdapter):
             logger.error("CourtListener API error: %s", e.response.status_code)
             return []
         except Exception as e:
-            logger.error("CourtListener search failed: %s", e)
+            logger.error('CourtListener search failed: %s', type(e).__name__)
             return []
 
     async def fetch_authority(self, citation: str) -> ResearchResult | None:
@@ -125,7 +125,7 @@ class CourtListenerAdapter(HTTPAdapter):
             if results:
                 return self._parse_search_result(results[0])
         except Exception as e:
-            logger.error("CourtListener fetch failed for '%s': %s", citation, e)
+            logger.error("CourtListener fetch failed (%s)", type(e).__name__)
 
         return None
 

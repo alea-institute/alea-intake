@@ -108,7 +108,7 @@ class ResearchToolRegistry:
                 r.source_tool = tool_name
             return results
         except Exception as e:
-            logger.error("Research query failed for %s: %s", tool_name, e)
+            logger.error('Research query failed for %s: %s', tool_name, type(e).__name__)
             return []
 
     async def query_all(
@@ -178,7 +178,7 @@ class ResearchToolRegistry:
                         "source_url": authority.source_url if authority else None,
                     }
             except Exception as e:
-                logger.warning("Verification failed for %s via %s: %s", citation, name, e)
+                logger.warning("Citation verification failed via %s (%s)", name, type(e).__name__)
                 continue
 
         return {

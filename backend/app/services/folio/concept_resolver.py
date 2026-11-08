@@ -416,7 +416,7 @@ async def _stage_llm(
             include_reason=True,
         )
     except Exception as e:
-        logger.warning("LLM search failed: %s", e)
+        logger.warning('LLM search failed: %s', type(e).__name__)
         return
 
     for owl_cls in llm_results:

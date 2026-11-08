@@ -212,11 +212,10 @@ class FactExtractionService:
                         }
                         for rc in resolved
                     ]
-                except Exception:
+                except Exception as exc:
                     logger.warning(
-                        "Concept resolution failed for fact: %s",
-                        fact_schema.assertion,
-                        exc_info=True,
+                        "Concept resolution failed for intake %d message %d (%s)",
+                        intake_id, message_id, type(exc).__name__,
                     )
 
             # Build metadata

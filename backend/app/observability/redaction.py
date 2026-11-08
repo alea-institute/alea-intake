@@ -37,4 +37,14 @@ def _scrub(value, key, secrets):
 
 
 def redact_event(logger, method_name, event_dict):
+    if config.get_settings().showcase_mode:
+        # ProcessorFormatter has already interpolated stdlib args. Recover the
+        # original template and discard visitor-bearing exception/argument text.
+        record = event_dict.get("_record")
+        if record is not None and not event_dict.get("_from_structlog", False):
+            event_dict["event"] = record.msg if isinstance(record.msg, str) else "External log event"
+            if isinstance(getattr(record, "guest_id", None), int):
+                event_dict["guest_id"] = record.guest_id
+        for key in ("exception", "exc_info", "stack", "stack_info", "positional_args"):
+            event_dict.pop(key, None)
     return scrub(event_dict)

@@ -115,12 +115,8 @@ class IssueSpotStage:
             )
             if resolved:
                 return resolved[0]
-        except Exception:
-            logger.debug(
-                "ConceptResolver failed for claim '%s', proceeding without IRI",
-                claim_name,
-                exc_info=True,
-            )
+        except Exception as exc:
+            logger.debug("ConceptResolver failed; proceeding without IRI (%s)", type(exc).__name__)
         return None
 
     async def execute(
@@ -246,11 +242,7 @@ class IssueSpotStage:
                 spotted.rationale, [f.assertion_text for f in facts]
             )
             if hedges:
-                logger.info(
-                    "Rationale grounding guard hedged claim %r: %s",
-                    spotted.claim_name,
-                    "; ".join(hedges),
-                )
+                logger.info("Rationale grounding guard hedged claim in run %d (%d changes)", run.id, len(hedges))
 
             # Persist AnalysisClaim
             claim = AnalysisClaim(

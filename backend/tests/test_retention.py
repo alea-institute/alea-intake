@@ -269,6 +269,55 @@ def test_preview_access_logging_omits_query_credentials(monkeypatch):
         access.disabled = previous
 
 
+async def test_fact_resolution_failure_never_logs_narrative(monkeypatch, caplog):
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock, MagicMock
+    from app.services.extraction.fact_extraction import FactExtractionService
+    from app.services.extraction.schemas import ExtractionResultSchema
+
+    from app.config import Settings
+    monkeypatch.setattr("app.services.extraction.fact_extraction.get_settings",
+                        lambda: Settings(_env_file=None, secret_key="test-key"))
+    sentinel = "NARRATIVE_SENTINEL_employee_private_story"
+    service = FactExtractionService(MagicMock(), MagicMock(flush=AsyncMock()),
+                                    folio=MagicMock(), embedding_service=MagicMock())
+    service.extract_facts = AsyncMock(return_value=ExtractionResultSchema(facts=[{
+        "assertion": sentinel, "fact_type": "event", "entities": [], "confidence": 0.9,
+        "source_start": 0, "source_end": len(sentinel),
+    }], entities=[]))
+    monkeypatch.setattr("app.services.extraction.fact_extraction.resolve_concepts",
+                        AsyncMock(side_effect=ValueError(sentinel)))
+    with caplog.at_level(logging.WARNING):
+        await service.extract_and_persist(SimpleNamespace(text=sentinel), intake_id=1, message_id=2)
+    assert "Concept resolution failed" in caplog.text
+    assert sentinel not in caplog.text
+
+
+def test_showcase_stdlib_bridge_keeps_only_event_template(monkeypatch):
+    from app import config
+    from app.observability.logging import setup_logging
+    settings = config.Settings(_env_file=None, secret_key="test-key", showcase_mode=True)
+    monkeypatch.setattr(config, "get_settings", lambda: settings)
+    setup_logging()
+    stream = io.StringIO()
+    handler = logging.StreamHandler(stream)
+    handler.setFormatter(logging.getLogger().handlers[0].formatter)
+    logging.getLogger().addHandler(handler)
+    sentinel = "NARRATIVE_SENTINEL_private_bridge_args"
+    try:
+        try:
+            raise ValueError(sentinel)
+        except ValueError:
+            logging.getLogger("test.bridge").warning("Operation failed: %s", sentinel, exc_info=True,
+                                                      extra={"guest_id": 17})
+    finally:
+        logging.getLogger().removeHandler(handler)
+    assert "Operation failed: %s" in stream.getvalue()
+    assert sentinel not in stream.getvalue()
+    import json
+    assert json.loads(stream.getvalue())["guest_id"] == 17
+
+
 async def test_sweep_logs_failure_and_continues_other_guests(retention, monkeypatch, caplog):
     from app.db import retention as module
     from app.models import Intake, User

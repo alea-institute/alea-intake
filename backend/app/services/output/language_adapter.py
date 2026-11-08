@@ -297,11 +297,7 @@ class LanguageAdapter:
         # ("Please provide the legal text you'd like rewritten.") never leaks into
         # memos or client PDFs. Log server-side; return the original prose.
         if _looks_like_refusal(rewritten):
-            logger.warning(
-                "LanguageAdapter rewrite returned a refusal/clarification "
-                "(%r...); keeping original text",
-                rewritten.strip()[:80],
-            )
+            logger.warning("LanguageAdapter rewrite returned a refusal/clarification; keeping original text")
             return text
         # D02: deterministic sentence-shortening for the plain (~6th grade) level.
         if getattr(self, "_plain", False):
@@ -349,8 +345,5 @@ class LanguageAdapter:
             # Citation was not found in text -- this is expected for most citations
             # since they appear in the authorities list, not inline in prose.
             # Only log if this was likely an inline reference that got mangled.
-            logger.debug(
-                "Citation not found in rewritten text (may not have been inline): %s",
-                citation[:50],
-            )
+            logger.debug("Citation not found in rewritten text (may not have been inline)")
         return text

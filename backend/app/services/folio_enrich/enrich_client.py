@@ -73,10 +73,10 @@ class EnrichClient:
             data = response.json()
             return data.get("job_id")
         except (httpx.ConnectError, httpx.TimeoutException) as e:
-            logger.warning("folio-enrich unavailable: %s", e)
+            logger.warning('folio-enrich unavailable: %s', type(e).__name__)
             return None
         except Exception as e:
-            logger.error("folio-enrich submit failed: %s", e)
+            logger.error('folio-enrich submit failed: %s', type(e).__name__)
             return None
         finally:
             if owns_client:
@@ -101,10 +101,10 @@ class EnrichClient:
             response.raise_for_status()
             return response.json()
         except (httpx.ConnectError, httpx.TimeoutException) as e:
-            logger.warning("folio-enrich unavailable: %s", e)
+            logger.warning('folio-enrich unavailable: %s', type(e).__name__)
             return None
         except Exception as e:
-            logger.error("folio-enrich get_results failed: %s", e)
+            logger.error('folio-enrich get_results failed: %s', type(e).__name__)
             return None
         finally:
             if owns_client:

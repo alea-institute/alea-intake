@@ -169,10 +169,7 @@ class FactMapStage:
             # Resolve claim
             claim = claim_by_name.get(mapping_schema.claim_name)
             if claim is None:
-                logger.debug(
-                    "Claim '%s' from LLM mapping not found, skipping",
-                    mapping_schema.claim_name,
-                )
+                logger.debug("Claim from LLM mapping not found for run %d; skipping", run.id)
                 continue
 
             # Resolve element (optional)
@@ -202,12 +199,7 @@ class FactMapStage:
                 )
                 continue
             if mapping_schema.element_name and element_id is None:
-                logger.debug(
-                    "Dropping mapping naming element %r absent from claim %r "
-                    "(RUB-03 linkage guard)",
-                    mapping_schema.element_name,
-                    claim.claim_name,
-                )
+                logger.debug("Dropping mapping naming an absent element for claim %d", claim.id)
                 continue
             if not (mapping_schema.mapping_rationale or "").strip():
                 logger.debug(
