@@ -37,12 +37,10 @@
 .showcase-graph {width:800px;max-width:none;}
 .showcase-graph svg {max-width:none;}
 
-/* Text and table alternative: fit 390 px without clipping the last column. */
 .showcase-visual table {font-size:15px;}
 .showcase-visual th,.showcase-visual td {vertical-align:top;overflow-wrap:break-word;hyphens:auto;}
 @media(max-width:600px) {.showcase-visual th,.showcase-visual td {padding:8px 4px;}.showcase-visual th:first-child,.showcase-visual td:first-child{padding-left:0;}}
 
-/* Matrix: the global showcase button style must not inflate the compact collapse toggles. */
 .showcase [role=grid] button {margin:0;padding:4px;min-height:44px;border:0;border-radius:3px;text-align:left;line-height:1.25;background:transparent;color:var(--ink);}
 .showcase [role=grid] [role=columnheader] {font-size:13px;}
 .showcase button {font-size:16px;}
@@ -50,11 +48,9 @@
 .showcase [role=grid] button {font-size:13px;font-weight:600;gap:2px;padding:2px;overflow-wrap:break-word;hyphens:auto;}
 .showcase [role=grid] button {flex-direction:column;align-items:flex-start;font-size:12px;overflow-wrap:normal;}
 
-/* Narrative: the story is the bold element, so its text carries the page's largest reading size. */
 .showcase-narrative [class*=leading-relaxed] {font-size:18px;line-height:1.8;}
 .showcase-narrative [data-testid=annotation-chip] {margin:0;min-height:32px;padding:2px 10px;border-radius:999px;border-color:#a3adb4;box-shadow:none;font-size:13px;}
 
-/* Deadline cards: status label and self-help link each sit on their own line. */
 .deadline > strong,.deadline > a {display:block;margin:8px 0;}
 .deadline time {font-variant-numeric:tabular-nums;font-weight:600;}
 .showcase .state-control select {max-width:360px;}

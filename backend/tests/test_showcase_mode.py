@@ -236,3 +236,50 @@ async def test_notice_and_llm_share_reference_model(monkeypatch, reference):
     service = LLMService(api_key='test-only')
     assert service.model == reference
     assert service.is_reference_model
+
+
+async def test_showcase_websocket_chat_reply(showcase, monkeypatch):
+    from types import SimpleNamespace
+    from unittest.mock import MagicMock
+    from app.services import llm_service
+    from app.routers import intake
+
+    client, _, app = showcase
+    owner = await guest(client)
+    created = (await client.post("/api/v1/intake/", headers=owner, json={})).json()
+    factory = MagicMock(return_value=SimpleNamespace(
+        chat_async=AsyncMock(return_value=SimpleNamespace(text="When did your employer fire you?"))))
+    monkeypatch.setitem(llm_service._PROVIDER_MODEL_MAP, "openai", factory)
+
+    def surface_socket_error(message, session_id, error):
+        raise error
+
+    monkeypatch.setattr(intake.logger, "error", surface_socket_error)
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({"type": "auth", "token": owner["Authorization"][7:],
+                          "llm_api_key": "chat-visitor-key"})
+            assert ws.receive_json()["type"] == "session_state"
+            ws.send_json({"type": "text_message", "content": "My employer fired me.",
+                          "client_id": "first-message"})
+            messages = []
+            while not messages or messages[-1]["type"] != "system_message":
+                messages.append(ws.receive_json())
+            assert any(message["type"] == "message_ack" for message in messages)
+            assert messages[-1]["content"] == "When did your employer fire you?"
+    assert factory.call_args.kwargs["api_key"] == "chat-visitor-key"
+
+
+async def test_oversized_content_length_rejected_before_reading(showcase):
+    from app.showcase import ShowcaseBodyLimit
+
+    receive = AsyncMock(side_effect=AssertionError("body must not be read"))
+    send = AsyncMock()
+    downstream = AsyncMock()
+    await ShowcaseBodyLimit(downstream)(
+        {"type": "http", "method": "POST", "path": "/", "headers": [
+            (b"content-length", str(showcase[1].showcase_max_body_bytes + 1).encode())]},
+        receive, send)
+    assert send.await_args_list[0].args[0]["status"] == 413
+    receive.assert_not_called()
+    downstream.assert_not_called()

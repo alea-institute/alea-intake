@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import text
 
-from app.config import get_settings
+from app.config import get_settings as get_settings  # Existing monitoring/test patch interface.
 from app.db.engine import get_engine
 from app.services.folio.owl_cache import get_owl_status
 
@@ -31,7 +31,6 @@ async def check_health(app: FastAPI) -> dict[str, Any]:
     Returns:
         Dict with keys: status, version, database, folio_owl, folio_mcp, llm_provider.
     """
-    settings = get_settings()
     degraded = False
 
     # --- Database ---

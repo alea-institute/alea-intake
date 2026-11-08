@@ -34,16 +34,14 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from folio_resolve import compute_relevance_score, content_words
 
-from app.services.embedding.backends import SearchResult
 from app.services.folio.term_expansions import (
     SEARCH_STOPWORDS,
     expand_legal_terms,
-    get_branch_signals,
 )
 
 if TYPE_CHECKING:
@@ -263,7 +261,6 @@ async def resolve_concepts(
 
     # Expand legal terms for enriched search
     expanded_queries = expand_legal_terms(text)
-    branch_signals = get_branch_signals(text)
 
     # Candidate accumulator: iri -> {embedding_score, label_score, llm_score, label, metadata, reason}
     candidates: dict[str, dict] = {}
@@ -399,11 +396,6 @@ async def _stage_label_prefix(
                     "label": owl_cls.label,
                     "metadata": None,
                 }
-            # Prefix hits are scored on their evidence like every other label candidate.
-            # They used to get a flat 0.7 constant, which was simultaneously too generous
-            # (a 40-character label that merely starts with the query) and too stingy (an
-            # exact-label prefix hit could never clear the old 0.5 bar on its own:
-            # the old 0.7 single-stage penalty gave 0.7 * 0.7 = 0.49).
             candidates[iri]["label_score"] = max(
                 _label_match_score(text.strip(), owl_cls),
                 candidates[iri].get("label_score", 0.0),

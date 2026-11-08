@@ -60,7 +60,7 @@ def _extract_sync(file_path: Path) -> tuple[str, list[dict]]:
                 elements.append({
                     "text": text,
                     "element_type": element_type,
-                    "page": page_num,  # 1-indexed
+                    "page": page_num,
                     "bbox": [x0, y0, x1, y1],
                     "font_size": font_size,
                 })

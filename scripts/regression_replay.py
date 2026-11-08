@@ -158,7 +158,7 @@ def accept(path, snapshot, prompts, reason):
 
 async def run_persona(persona, store, service, *, today=date(2026, 11, 8), folio=None):
     """Use a fresh SQLite database per narrative; persist the real stages' outputs."""
-    import app.models  # Register the application's table metadata.
+    import app.models  # noqa: F401 -- Register the application's table metadata.
     from sqlalchemy import select
     from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
     from app.db.base import TenantBase, SharedBase

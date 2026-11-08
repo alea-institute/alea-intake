@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Use curl for transport and Python's standard library for assertions.
 exec python3 - "$@" <<'PY'
 import argparse
 import json
@@ -94,7 +93,6 @@ expect('isolation', 'GET', messages, (404,), token=b)
 expect('end session', 'POST', f'/api/v1/intake/{intake}/end-session', (200,), token=a)
 expect('purge guest access', 'GET', messages, (401, 404), token=a)
 expect('purge intake inaccessible', 'GET', messages, (404,), token=b)
-# End the second guest too, so the probe does not leave an idle account behind.
 body = expect('guest B cleanup intake', 'POST', '/api/v1/intake/', (201,), token=b, body={})
 cleanup_id = object_body('guest B cleanup intake', body).get('id')
 check('cleanup identifier', isinstance(cleanup_id, int), 'missing intake id')

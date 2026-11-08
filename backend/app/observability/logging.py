@@ -12,7 +12,7 @@ import logging
 import structlog
 from opentelemetry import trace
 
-from app.config import get_settings
+from app.config import get_settings as get_settings  # Existing monitoring/test patch interface.
 from app.observability.redaction import redact_event
 
 

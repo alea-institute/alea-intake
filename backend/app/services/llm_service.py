@@ -38,6 +38,8 @@ _PROVIDER_MODEL_MAP: dict[str, type] = {
     "vllm": VLLMModel,
 }
 
+_DEFAULT_PROVIDER_MODEL_MAP = _PROVIDER_MODEL_MAP.copy()
+
 # Default model per provider
 _DEFAULT_MODELS: dict[str, str] = {
     "anthropic": "claude-sonnet-4-6",
@@ -116,7 +118,7 @@ class LLMService:
         elif env_model:
             self.model = env_model
         else:
-            self.model = _DEFAULT_MODELS.get(self.provider, os.getenv("ALEA_REFERENCE_MODEL", app_config.DEFAULT_REFERENCE_MODEL))
+            self.model = _DEFAULT_MODELS.get(self.provider, app_config.get_settings().reference_model)
 
         # Determine data policy
         if org_config and org_config.llm_data_policy:
@@ -177,7 +179,7 @@ class LLMService:
 
     @property
     def is_reference_model(self) -> bool:
-        return self.model == os.getenv("ALEA_REFERENCE_MODEL", app_config.DEFAULT_REFERENCE_MODEL)
+        return self.model == app_config.get_settings().reference_model
 
     def create_client(self) -> Any:
         """Construct a client only with an explicit, nonempty credential."""
@@ -193,6 +195,9 @@ class LLMService:
         model_cls = _PROVIDER_MODEL_MAP.get(self.provider)
         if model_cls is None:
             raise ValueError(f"Unknown LLM provider: {self.provider}")
+        if model_cls is _DEFAULT_PROVIDER_MODEL_MAP.get(self.provider):
+            import alea_llm_client
+            model_cls = getattr(alea_llm_client, model_cls.__name__)
         return model_cls(**kwargs)
 
     async def acomplete(
@@ -303,7 +308,7 @@ def llm_service_from_headers(headers: Any) -> LLMService:
     provider = headers.get("X-LLM-Provider", "openai").strip().lower()
     if provider not in {"openai", "anthropic", "google"}:
         raise HTTPException(status_code=400, detail="Unsupported LLM provider")
-    model = headers.get("X-LLM-Model") or os.getenv("ALEA_REFERENCE_MODEL", app_config.DEFAULT_REFERENCE_MODEL)
+    model = headers.get("X-LLM-Model") or app_config.get_settings().reference_model
     return LLMService(api_key=key, provider=provider, model=model)
 
 

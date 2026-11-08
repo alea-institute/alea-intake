@@ -142,10 +142,8 @@ class Campaign:
     async def stream_narrative(self, session_id, token, party_id, narrative, transcript):
         ws_base = self.base.replace("https://", "wss://").replace("http://", "ws://")
         url = f"{ws_base}/api/ws/intake/{session_id}"
-        # Split the narrative into a couple of realistic chunks on blank lines.
         chunks = [c.strip() for c in narrative.split("\n\n") if c.strip()]
         if len(chunks) > 4:
-            # keep it to ~3 messages: head, middle blob, tail
             chunks = [chunks[0], "\n\n".join(chunks[1:-1]), chunks[-1]]
         safety_alerts = []
         async with websockets.connect(url, max_size=4 * 1024 * 1024, additional_headers=self.preview_headers,
@@ -153,7 +151,6 @@ class Campaign:
             await ws.send(json.dumps({"type": "auth", "token": token,
                                       "llm_api_key": self.key, "llm_provider": self.provider,
                                       "llm_model": self.model}))
-            # initial session_state
             try:
                 first = json.loads(await asyncio.wait_for(ws.recv(), timeout=30))
                 transcript.append({"dir": "recv", "msg": first})
@@ -164,7 +161,6 @@ class Campaign:
                          "client_id": f"c{i}", "party_id": party_id}
                 await ws.send(json.dumps(frame))
                 transcript.append({"dir": "send", "msg": {"type": "text_message", "len": len(chunk)}})
-                # Expect message_ack then system_message (+ maybe safety_alert). Read a few frames.
                 got_system = False
                 for _ in range(6):
                     try:
@@ -206,13 +202,11 @@ class Campaign:
         self.secrets.append(token)
         result["steps"]["guest"] = {"http": s, "ok": s == 201}
 
-        # 2. consent
         s, j, _ = self.request("POST", "/api/v1/consent/grant", token=token,
                        body={"consent_version": "1.0",
                              "consent_items": {"ai_processing": True, "data_storage": True}})
         result["steps"]["consent"] = {"http": s, "ok": s == 201}
 
-        # 3. create intake (unbound)
         s, j, _ = self.request("POST", "/api/v1/intake/", token=token, body={})
         intake_id = (j or {}).get("id")
         session_id = (j or {}).get("session_id")
@@ -225,16 +219,14 @@ class Campaign:
             result["fatal"] = f"create intake failed: {s} {j}"
             return result
 
-        # 4. stream narrative over WS
         narrative = (persona_dir / "narrative.txt").read_text()
         try:
             alerts = asyncio.run(self.stream_narrative(session_id, token, party_id, narrative, transcript))
             result["steps"]["narrative"] = {"ok": True, "safety_alerts": len(alerts)}
             result["safety_alerts"] = alerts
-        except Exception as e:
+        except Exception:
             result["steps"]["narrative"] = {"ok": False, "error": "Narrative delivery failed"}
 
-        # 5. upload docs
         docs_dir = persona_dir / "docs"
         uploaded = []
         if docs_dir.is_dir():
@@ -249,14 +241,12 @@ class Campaign:
                                  "detail": (j if isinstance(j, dict) else {}).get("detail")})
         result["steps"]["uploads"] = uploaded
 
-        # 6. trigger analysis (inline)
         s, j, _ = self.request("POST", f"/api/v1/analysis/{intake_id}/analyze", token=token, body={}, timeout=300)
         run_id = (j or {}).get("run_id")
         result["steps"]["analyze"] = {"http": s, "run_id": run_id,
                                       "status": (j or {}).get("status"),
                                       "detail": (j or {}).get("detail")}
 
-        # 7. poll + results
         last = self.poll_analysis(intake_id, token, transcript)
         result["steps"]["final_status"] = last
         s, j, _ = self.request("GET", f"/api/v1/analysis/{intake_id}/results", token=token)
@@ -264,9 +254,6 @@ class Campaign:
         result["analysis"] = j if isinstance(j, dict) else {"_raw": str(j)[:500]}
         run_id = run_id or (j or {}).get("run_id")
 
-        # 8. generate memos — a professional (law_firm) AND a plain-language
-        # (court_self_help) memo so the judge can score both claim correctness and
-        # RUB-INTAKE-10 reading level. legal_aid = accessible (10th grade) as a spare.
         memo_docs = []
         for profile in ("law_firm", "court_self_help", "legal_aid"):
             s, j, _ = self.request("POST", "/api/v1/output/generate", token=token,
@@ -280,7 +267,6 @@ class Campaign:
                                   "detail": (j if isinstance(j, dict) else {}).get("detail")})
         result["steps"]["output_generate"] = memo_docs
 
-        # 9. read memo markdown + exports for each generated doc
         outputs = []
         for d in memo_docs:
             doc_id = d.get("id")
@@ -294,9 +280,6 @@ class Campaign:
                      "memo_chars": len(md or ""), "exports": {}}
             for fmt in ("pdf", "json"):
                 s2, body2, hdrs2 = self.request("GET", f"/api/v1/output/{doc_id}/export/{fmt}", token=token)
-                # _req auto-parses application/json responses into dict/list —
-                # the JSON export arrives parsed, not as bytes (was misreported
-                # as bytes=0 / ok=False). Normalize both shapes to bytes.
                 if isinstance(body2, (dict, list)):
                     body_bytes = json.dumps(body2, indent=1).encode()
                     parsed_ok = bool(body2)
@@ -312,11 +295,6 @@ class Campaign:
                 ctype = None
                 if isinstance(hdrs2, dict):
                     ctype = {k.lower(): v for k, v in hdrs2.items()}.get("content-type")
-                # BUG-18: a parsed dict is truthy even when every field is an empty
-                # shell ({claims_by_jurisdiction:{}, deadlines:[], executive_summary:
-                # ""}). The old ok=bool(body2) passed those. Assert the JSON export
-                # actually carries structured substance so an empty-shell export
-                # FAILS RUB-15.
                 json_substance = None
                 if fmt == "json" and isinstance(body2, dict):
                     json_substance = bool(

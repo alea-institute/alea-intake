@@ -12,7 +12,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from sqlalchemy import delete, select, or_
+from sqlalchemy import delete, select, or_, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import config
@@ -20,7 +20,7 @@ from app.db.engine import get_engine
 from app.db.base import TenantBase
 from app.models import Intake, User
 import app.models.audio  # register models not re-exported by app.models
-import app.models.document
+import app.models.document  # noqa: F401 -- register model metadata
 
 logger = logging.getLogger(__name__)
 # Requests currently doing work must not expire during a long LLM response.
@@ -36,6 +36,25 @@ async def guest_activity(user_id):
         _active[user_id] -= 1
         if not _active[user_id]:
             del _active[user_id]
+
+
+async def touch_guest(conn_or_session, user_id):
+    result = await conn_or_session.execute(
+        update(User).where(User.id == user_id).values(updated_at=datetime.now(timezone.utc)))
+    return result.rowcount
+
+
+def _aware(dt):
+    return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt
+
+
+async def _delete_guest_identity(session, user_id, *, include_audit=False):
+    names = ('consent_records', 'refresh_tokens', 'audit_log') if include_audit else ('consent_records', 'refresh_tokens')
+    for name in names:
+        table = TenantBase.metadata.tables['tenant.' + name]
+        column = table.c.actor_id if name == 'audit_log' else table.c.user_id
+        await session.execute(delete(table).where(column == user_id))
+    await session.execute(delete(User).where(User.id == user_id))
 
 
 async def purge_intake(session: AsyncSession, intake_id: int):
@@ -98,10 +117,7 @@ async def purge_intake(session: AsyncSession, intake_id: int):
     remaining = (await session.execute(select(Intake.id).where(Intake.created_by_user_id == user_id))).first()
     user = await session.get(User, user_id) if user_id else None
     if remaining is None and user is not None and user.email is None and user.hashed_password is None:
-        for name in ('consent_records', 'refresh_tokens'):
-            table = tables[name]
-            await session.execute(delete(table).where(table.c.user_id == user_id))
-        await session.execute(delete(User).where(User.id == user_id))
+        await _delete_guest_identity(session, user_id)
 
 
 async def sweep_showcase_sessions():
@@ -122,19 +138,16 @@ async def sweep_showcase_sessions():
                     guest = (await session.execute(select(User).where(User.id == user_id).with_for_update(skip_locked=True))).scalar_one_or_none()
                     if guest is None:
                         continue
-                    last_active = guest.updated_at.replace(tzinfo=timezone.utc) if guest.updated_at.tzinfo is None else guest.updated_at
+                    last_active = _aware(guest.updated_at)
                     if last_active >= cutoff or user_id in _active:
                         continue
                     intakes = list((await session.execute(select(Intake).where(Intake.created_by_user_id == user_id))).scalars())
-                    if any((i.updated_at.replace(tzinfo=timezone.utc) if i.updated_at.tzinfo is None else i.updated_at) >= cutoff for i in intakes):
+                    if any(_aware(i.updated_at) >= cutoff for i in intakes):
                         continue
                     for intake in intakes:
                         await purge_intake(session, intake.id)
                     if not intakes:
-                        for name in ('consent_records', 'refresh_tokens', 'audit_log'):
-                            table = TenantBase.metadata.tables['tenant.' + name]
-                            await session.execute(delete(table).where(table.c.actor_id == user_id) if name == 'audit_log' else delete(table).where(table.c.user_id == user_id))
-                        await session.execute(delete(User).where(User.id == user_id))
+                        await _delete_guest_identity(session, user_id, include_audit=True)
                     await session.commit()
                 except Exception:
                     await session.rollback()

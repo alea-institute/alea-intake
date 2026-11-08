@@ -34,7 +34,6 @@ export function MatrixHeader({
     >
       {/* Row 1: Claim group headers */}
       <div className="flex" role="row">
-        {/* Fact group label */}
         <div
           className="sticky left-0 z-30 shrink-0 border-b border-r border-border bg-background"
           style={{ width: factLabelWidth, minWidth: factLabelWidth }}
@@ -69,7 +68,6 @@ export function MatrixHeader({
 
       {/* Row 2: Element column headers */}
       <div className="flex" role="row">
-        {/* Fact column label */}
         <div
           className="sticky left-0 z-30 shrink-0 border-b border-r border-border bg-background"
           style={{ width: factLabelWidth, minWidth: factLabelWidth }}

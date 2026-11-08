@@ -36,14 +36,7 @@ def _create_llm_model(llm_service: LLMService, cheap: bool = False, org_config: 
     Returns:
         An alea-llm-client model instance ready for json_async calls.
     """
-    from alea_llm_client import AnthropicModel, GoogleModel, OpenAIModel, VLLMModel
-
-    _provider_map = {
-        "openai": OpenAIModel,
-        "anthropic": AnthropicModel,
-        "google": GoogleModel,
-        "vllm": VLLMModel,
-    }
+    from app.services.llm_service import LLMService
 
     config = llm_service.get_client_config()
 
@@ -55,18 +48,8 @@ def _create_llm_model(llm_service: LLMService, cheap: bool = False, org_config: 
         if exploration_cfg.get("cheap_llm_model"):
             config["model"] = exploration_cfg["cheap_llm_model"]
 
-    model_cls = _provider_map.get(config["provider"])
-    if model_cls is None:
-        raise ValueError(f"Unknown LLM provider: {config['provider']}")
-
-    init_kwargs: dict[str, Any] = {
-        "api_key": config.get("api_key"),
-        "model": config.get("model"),
-    }
-    if "endpoint" in config:
-        init_kwargs["endpoint"] = config["endpoint"]
-
-    return model_cls(**init_kwargs)
+    return LLMService(api_key=config.get("api_key"), provider=config["provider"],
+                      model=config["model"]).create_client()
 
 
 async def layer_folio_adjacency(

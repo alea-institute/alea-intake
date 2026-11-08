@@ -4,11 +4,12 @@ from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.permissions import get_current_active_user
-from app.core.security import decode_token
+from app import config
+from app.core.security import decode_token, create_access_token
 from app.config import get_settings
 from app.db.session import get_tenant_session
 from app.models.user import User
-from app.schemas.auth import LoginRequest, RefreshRequest, RegisterRequest, TokenResponse
+from app.schemas.auth import GuestRequest, LoginRequest, RefreshRequest, RegisterRequest, TokenResponse
 from app.services.auth_service import AuthService
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
@@ -108,7 +109,6 @@ async def logout(
     return {"message": "Logged out successfully"}
 
 
-# Mounted instead of account authentication in showcase mode.
 guest_router = APIRouter(prefix="/api/v1/auth", tags=["showcase"])
 SHOWCASE_NOTICE = {
     "version": "1",
@@ -120,27 +120,17 @@ SHOWCASE_NOTICE = {
 
 @guest_router.get("/showcase-notice")
 async def showcase_notice():
-    from app import config
     settings = config.get_settings()
     return {**SHOWCASE_NOTICE, "idle_ttl_seconds": settings.showcase_idle_ttl_seconds,
             "reference_model": settings.reference_model}
 
 
-from pydantic import BaseModel
-
-
-class GuestRequest(BaseModel):
-    consent: bool = False
-
-
 @guest_router.post("/guest", status_code=201)
 async def create_guest(body: GuestRequest, request: Request,
                        session: AsyncSession = Depends(get_tenant_session)):
-    from app import config
-    from app.core.security import create_access_token
     from app.services.consent_service import ConsentService
-    from app.showcase import admit
-    admit(request.app, None, request.client.host if request.client else "unknown")
+    from app.showcase import admit, client_ip
+    admit(request.app, None, client_ip(request))
     user = User(org_id=_get_org_id(request), role="consumer", is_active=True)
     session.add(user)
     await session.flush()

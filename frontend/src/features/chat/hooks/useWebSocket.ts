@@ -1,4 +1,4 @@
-import { authFrame } from '@/features/showcase/session'
+import { authFrame, intakeSocketUrl } from '@/features/showcase/session'
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useWSStore } from '../store'
@@ -25,7 +25,7 @@ export function useWebSocket(sessionId: string | null, token: string | null): vo
       setStatus(attempt === 0 ? 'connecting' : 'reconnecting')
       setReconnectAttempt(attempt)
 
-      const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/ws/intake/${sessionId}`
+      const wsUrl = intakeSocketUrl(sessionId)
       ws = new WebSocket(wsUrl)
 
       ws.onopen = () => {

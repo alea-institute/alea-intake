@@ -6,14 +6,20 @@ from fastapi import Depends, HTTPException, Request
 from limits import parse
 from limits.storage import MemoryStorage
 from limits.strategies import FixedWindowRateLimiter
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
 from app import config
 from app.core.permissions import get_current_active_user
 from app.db.session import get_tenant_session
+from app.db.retention import touch_guest
 from app.models.intake import Intake, IntakeSession, IntakeParty
 from app.models.user import User
+
+
+def client_ip(conn):
+    return conn.client.host if conn.client else "unknown"
 
 
 async def require_owner(db, user, *, intake_id=None, session_id=None):
@@ -66,11 +72,9 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
     if not config.get_settings().showcase_mode:
         yield
         return
-    from datetime import datetime, timezone
-    from sqlalchemy import update
     # Serialize active request work with the sweeper's guest-row lock.
-    touched = await db.execute(update(User).where(User.id == user.id).values(updated_at=datetime.now(timezone.utc)))
-    if not touched.rowcount:
+    touched = await touch_guest(db, user.id)
+    if not touched:
         raise HTTPException(404, "Session unavailable")
     data = dict(request.query_params)
     if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
@@ -82,7 +86,8 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
     intake_id, session_id = data.get("intake_id"), data.get("session_id")
     if "document_id" in data:
         from app.models.output import OutputDocument
-        document = await db.get(OutputDocument, int(data["document_id"]))
+        document = (await db.execute(select(OutputDocument.intake_id).where(
+            OutputDocument.id == int(data["document_id"])))).first()
         if document is None:
             raise HTTPException(404, "Document not found")
         intake_id = document.intake_id
@@ -98,7 +103,7 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
             if party is None or party.intake_id != intake.id:
                 raise HTTPException(404, "Party not found")
     if request.method != "GET":
-        admit(request.app, user.id, request.client.host if request.client else "unknown")
+        admit(request.app, user.id, client_ip(request))
     from app.db.retention import guest_activity
     async with guest_activity(user.id):
         try:
@@ -108,7 +113,7 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
             else:
                 yield
         finally:
-            await db.execute(update(User).where(User.id == user.id).values(updated_at=datetime.now(timezone.utc)))
+            await touch_guest(db, user.id)
 
 
 class ShowcaseBodyLimit:
@@ -120,6 +125,13 @@ class ShowcaseBodyLimit:
         settings = config.get_settings()
         if scope["type"] != "http" or not settings.showcase_mode:
             return await self.app(scope, receive, send)
+        from starlette.datastructures import Headers
+        try:
+            content_length = int(Headers(scope=scope).get("content-length", "0"))
+        except ValueError:
+            content_length = 0
+        if content_length > settings.showcase_max_body_bytes:
+            return await JSONResponse({"detail": "Request body too large"}, status_code=413)(scope, receive, send)
         chunks, size = [], 0
         while True:
             message = await receive()

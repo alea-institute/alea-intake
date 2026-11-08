@@ -25,6 +25,7 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.showcase import admit, client_ip
 from app.config import get_settings
 from app.core.permissions import get_current_active_user
 from app.db.session import get_tenant_session
@@ -64,9 +65,10 @@ class IntakeConnectionManager:
         # session_id -> list of active WebSocket connections
         self._connections: dict[int, list[WebSocket]] = defaultdict(list)
 
-    async def connect(self, websocket: WebSocket, session_id: int) -> None:
+    async def connect(self, websocket: WebSocket, session_id: int, accept: bool = True) -> None:
         """Accept and register a WebSocket connection for a session."""
-        await websocket.accept()
+        if accept:
+            await websocket.accept()
         self._connections[session_id].append(websocket)
 
     def disconnect(self, websocket: WebSocket, session_id: int) -> None:
@@ -471,7 +473,6 @@ async def websocket_access(websocket: WebSocket, session_id: int):
     """Authenticate the socket and enforce showcase session ownership."""
     settings = get_settings()
 
-    # Extract and validate JWT using the mode's authentication contract.
     llm_service = None
     if settings.showcase_mode:
         import asyncio
@@ -504,10 +505,9 @@ async def websocket_access(websocket: WebSocket, session_id: int):
         await websocket.close(code=4001, reason="Invalid token payload")
         return
 
-    # Check showcase session ownership, consent, and admission.
     if settings.showcase_mode:
         from app.db.engine import get_engine
-        from app.showcase import require_owner, admit
+        from app.showcase import require_owner
         from app.models.user import User
         from app.services.consent_service import ConsentService
         async with get_engine().connect() as conn:
@@ -524,7 +524,7 @@ async def websocket_access(websocket: WebSocket, session_id: int):
                     await websocket.close(code=4003, reason="Session unavailable")
                     return
         try:
-            admit(websocket.app, user_id, websocket.client.host if websocket.client else "unknown")
+            admit(websocket.app, user_id, client_ip(websocket))
             llm_service = llm_service_from_headers({
                 "X-LLM-API-Key": auth.get("llm_api_key", ""),
                 "X-LLM-Provider": auth.get("llm_provider", "openai"),
@@ -556,10 +556,7 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
         return
     user_id, llm_service = access
     settings = get_settings()
-    if settings.showcase_mode:
-        manager._connections.setdefault(session_id, []).append(websocket)
-    else:
-        await manager.connect(websocket, session_id)
+    await manager.connect(websocket, session_id, accept=not settings.showcase_mode)
 
     # Step 3: Create a DB session for message operations
     from app.db.engine import get_engine
@@ -587,22 +584,19 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
                 "text_message", "voice_upload", "transcript_approve", "transcript_edit"
             }:
                 try:
-                    admit(websocket.app, user_id, websocket.client.host if websocket.client else "unknown")
+                    admit(websocket.app, user_id, client_ip(websocket))
                 except HTTPException:
                     await websocket.send_json({"type": "error", "status": 429,
                                                "message": "Admission limit reached; retry later"})
                     continue
 
-            from app.db.retention import guest_activity
+            from app.db.retention import guest_activity, touch_guest
             async with guest_activity(user_id):
-                if settings.showcase_mode:
-                    from sqlalchemy import update
-                    from datetime import datetime, timezone
-                    from app.models.user import User
+                if settings.showcase_mode and msg_type not in {"typing_indicator", "session_pause"}:
                     async with engine.begin() as conn:
                         conn = await conn.execution_options(schema_translate_map={"tenant": None})
-                        result = await conn.execute(update(User).where(User.id == user_id).values(updated_at=datetime.now(timezone.utc)))
-                        if not result.rowcount:
+                        touched = await touch_guest(conn, user_id)
+                        if not touched:
                             await websocket.close(code=4003, reason="Session unavailable")
                             break
                 if msg_type == "text_message":
@@ -632,17 +626,26 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
                         "is_typing": data.get("is_typing", False),
                     })
 
-                if settings.showcase_mode:
-                    async with engine.begin() as conn:
-                        conn = await conn.execution_options(schema_translate_map={"tenant": None})
-                        await conn.execute(update(User).where(User.id == user_id).values(updated_at=datetime.now(timezone.utc)))
-
     except WebSocketDisconnect:
         pass
     except Exception as e:
         logger.error("WebSocket error for session %d: %s", session_id, e)
     finally:
         manager.disconnect(websocket, session_id)
+
+
+async def _socket_llm_service(websocket, llm_service):
+    if llm_service is not None:
+        return llm_service
+    try:
+        return llm_service_from_headers(websocket.headers)
+    except HTTPException:
+        await websocket.send_json({
+            "type": "error",
+            "status": 400,
+            "message": "A visitor LLM API key is required",
+        })
+        return None
 
 
 async def _handle_text_message(
@@ -659,16 +662,9 @@ async def _handle_text_message(
     triggers send immediate safety_alert via WebSocket. Screening never blocks
     the message flow — errors are logged and swallowed.
     """
+    llm_service = await _socket_llm_service(websocket, llm_service)
     if llm_service is None:
-        try:
-            llm_service = llm_service_from_headers(websocket.headers)
-        except HTTPException:
-            await websocket.send_json({
-                "type": "error",
-                "status": 400,
-                "message": "A visitor LLM API key is required",
-            })
-            return
+        return
 
     content = data.get("content", "")
     client_id = data.get("client_id")
@@ -892,16 +888,9 @@ async def _handle_transcript_approve(
       4. Store system response message
       5. Send message_ack + system_message
     """
+    llm_service = await _socket_llm_service(websocket, llm_service)
     if llm_service is None:
-        try:
-            llm_service = llm_service_from_headers(websocket.headers)
-        except HTTPException:
-            await websocket.send_json({
-                "type": "error",
-                "status": 400,
-                "message": "A visitor LLM API key is required",
-            })
-            return
+        return
 
     recording_id = data.get("recording_id")
 
@@ -1019,16 +1008,9 @@ async def _handle_transcript_edit(
       4. Store system response message
       5. Send message_ack + system_message
     """
+    llm_service = await _socket_llm_service(websocket, llm_service)
     if llm_service is None:
-        try:
-            llm_service = llm_service_from_headers(websocket.headers)
-        except HTTPException:
-            await websocket.send_json({
-                "type": "error",
-                "status": 400,
-                "message": "A visitor LLM API key is required",
-            })
-            return
+        return
 
     recording_id = data.get("recording_id")
     edited_text = data.get("edited_text", "")
@@ -1117,8 +1099,6 @@ async def end_session(intake_id: int, current_user: User = Depends(get_current_a
     if not get_settings().showcase_mode:
         raise HTTPException(404, "Not found")
     from app.db.retention import purge_intake
-    from app.models.intake import Intake
-    # End the browser's guest session, including any sibling intakes it opened.
     ids = list((await session.execute(select(Intake.id).where(
         Intake.created_by_user_id == current_user.id))).scalars())
     for owned_id in ids:

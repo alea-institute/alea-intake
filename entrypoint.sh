@@ -7,7 +7,6 @@ if [ "$ALEA_SKIP_MIGRATIONS" != "true" ]; then
   cd /app/backend && uv run alembic upgrade head || echo "Migration skipped (may not be configured)"
 fi
 
-# Report the build revision before starting the application
 echo "Starting ALEA Intake (commit: ${GIT_COMMIT_SHA:-unknown})"
 
 # Showcase URLs may contain visitor secrets; never log their request lines.

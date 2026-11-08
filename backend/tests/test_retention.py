@@ -8,8 +8,7 @@ from pathlib import Path
 import pytest
 from sqlalchemy import select, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from tests.test_showcase_mode import showcase, guest
-from app.db.retention import sweep_showcase_sessions
+from tests.test_showcase_mode import showcase as showcase, guest  # noqa: F401,F811
 
 
 @pytest.fixture
@@ -18,7 +17,8 @@ async def retention(showcase, monkeypatch, tmp_path):
     from sqlalchemy.ext.asyncio import create_async_engine
     from sqlalchemy import MetaData
     from app.db.base import TenantBase, SharedBase
-    import app.models.audio, app.models.document
+    import app.models.audio
+    import app.models.document
     client, settings, app = showcase
     from app.middleware.audit import AuditMiddleware
     app.add_middleware(AuditMiddleware)
@@ -87,7 +87,6 @@ async def seed_graph(engine, intake_id, user_id):
 
 async def test_end_session_erases_full_graph_and_pdf(retention, monkeypatch):
     from app.models import Intake, User, ConsentRecord
-    from app.services.document.document_service import DocumentService
     client, settings, _, engine = retention
     headers = await guest(client)
     created = (await client.post('/api/v1/intake/', headers=headers, json={})).json()

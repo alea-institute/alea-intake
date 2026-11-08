@@ -33,7 +33,7 @@ export async function json(path: string, body?: unknown) {
 }
 export function sendStory(sessionId: number, partyId: number, story: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/api/ws/intake/${sessionId}`)
+    const ws = new WebSocket(intakeSocketUrl(sessionId))
     let saved = false
     ws.onopen = () => { ws.send(JSON.stringify(authFrame(sessionStorage.getItem('showcase-token')!))); ws.send(JSON.stringify({type:'text_message', content: story, party_id: partyId, client_id: crypto.randomUUID()})) }
     ws.onmessage = e => {
@@ -44,4 +44,8 @@ export function sendStory(sessionId: number, partyId: number, story: string): Pr
     ws.onerror = () => reject(new TypeError('network'))
     ws.onclose = e => { if (!saved) reject(e.code === 4001 || e.code === 4003 ? new RequestError(401) : new TypeError('network')) }
   })
+}
+
+export function intakeSocketUrl(sessionId: string | number): string {
+  return `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/ws/intake/${sessionId}`
 }

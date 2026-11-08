@@ -9,22 +9,27 @@ _REQUEST = re.compile(r'(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) /|https?://|(
 
 def scrub(value, key=''):
     """Preserve operational diagnostics while removing visitor content and secrets."""
+    settings = config.get_settings()
+    secrets = tuple(secret for secret in (
+        settings.preview_passphrase, settings.secret_key, settings.db_password,
+        settings.session_secret_key, settings.google_client_secret,
+        settings.microsoft_client_secret) if secret)
+    return _scrub(value, key, secrets)
+
+
+def _scrub(value, key, secrets):
     if _SENSITIVE.search(key):
         return '[redacted]'
     if isinstance(value, dict):
-        return {k: scrub(v, str(k)) for k, v in value.items()}
+        return {k: _scrub(v, str(k), secrets) for k, v in value.items()}
     if isinstance(value, (list, tuple)):
-        return [scrub(v) for v in value]
+        return [_scrub(v, "", secrets) for v in value]
     if isinstance(value, str):
-        settings = config.get_settings()
         # Raw request log lines can contain query credentials and visitor text.
         if _REQUEST.search(value):
             return '[redacted]'
-        for secret in (settings.preview_passphrase, settings.secret_key, settings.db_password,
-                       settings.session_secret_key, settings.google_client_secret,
-                       settings.microsoft_client_secret):
-            if secret:
-                value = value.replace(secret, '[redacted]')
+        for secret in secrets:
+            value = value.replace(secret, '[redacted]')
         return _TOKEN.sub('[redacted]', value)
     if isinstance(value, (int, float, bool)) or value is None:
         return value

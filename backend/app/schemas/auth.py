@@ -30,3 +30,7 @@ class RefreshRequest(BaseModel):
     """Refresh token exchange."""
 
     refresh_token: str
+
+
+class GuestRequest(BaseModel):
+    consent: bool = False

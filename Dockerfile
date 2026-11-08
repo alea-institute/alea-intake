@@ -10,7 +10,6 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY frontend/package.json ./frontend/
 RUN pnpm install --frozen-lockfile
 COPY frontend/ ./frontend/
-# Showcase mode is decided at build time by the frontend bundle.
 ARG VITE_SHOWCASE_MODE=false
 ENV VITE_SHOWCASE_MODE=${VITE_SHOWCASE_MODE}
 RUN pnpm --filter alea-intake-frontend run build
