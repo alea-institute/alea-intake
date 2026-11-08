@@ -42,10 +42,84 @@ _DEFAULT_PROVIDER_MODEL_MAP = _PROVIDER_MODEL_MAP.copy()
 
 # Default model per provider
 _DEFAULT_MODELS: dict[str, str] = {
-    "anthropic": "claude-sonnet-4-6",
+    "anthropic": "claude-sonnet-5-5",
     "google": "gemini-pro",
     "vllm": "meta-llama/Meta-Llama-3.1-8B-Instruct",
 }
+
+
+# Anthropic output limits. alea-llm-client's AnthropicModel defaults
+# max_tokens to 128, which truncates nearly every structured reply.
+ANTHROPIC_JSON_MAX_TOKENS = 8192
+ANTHROPIC_CHAT_MAX_TOKENS = 4096
+
+# Current Claude models reject non-default sampling parameters with HTTP 400.
+_ANTHROPIC_DROPPED_KWARGS = ("temperature", "top_p", "top_k")
+
+
+def _system_text(content: Any) -> str:
+    """Return a system message's text, flattening Anthropic-style text blocks."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        return "\n\n".join(
+            block.get("text", "") if isinstance(block, dict) else str(block) for block in content
+        )
+    return "" if content is None else str(content)
+
+
+class AnthropicAdapter:
+    """Thin wrapper that makes OpenAI-shaped calls valid Anthropic requests.
+
+    On every call it moves ``{"role": "system"}`` messages into the top-level
+    ``system`` keyword (Anthropic rejects a system role inside ``messages``),
+    sets ``max_tokens`` when the caller did not, and drops sampling parameters
+    current Claude models refuse. Every other attribute delegates to the model.
+    Calls take keyword arguments only; callers pass ``messages=`` (BUG-4).
+    """
+
+    def __init__(self, model: Any) -> None:
+        self._model = model
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._model, name)
+
+    @staticmethod
+    def _prepare(kwargs: dict[str, Any], default_max_tokens: int) -> dict[str, Any]:
+        kwargs = dict(kwargs)
+        for key in _ANTHROPIC_DROPPED_KWARGS:
+            kwargs.pop(key, None)
+        messages = kwargs.get("messages")
+        if messages:
+            system_parts: list[str] = []
+            existing = kwargs.get("system")
+            if existing:
+                system_parts.append(_system_text(existing))
+            kept = []
+            for message in messages:
+                if isinstance(message, dict) and message.get("role") == "system":
+                    text = _system_text(message.get("content"))
+                    if text:
+                        system_parts.append(text)
+                else:
+                    kept.append(message)
+            kwargs["messages"] = kept
+            if system_parts:
+                kwargs["system"] = "\n\n".join(system_parts)
+        kwargs.setdefault("max_tokens", default_max_tokens)
+        return kwargs
+
+    async def chat_async(self, **kwargs: Any) -> Any:
+        return await self._model.chat_async(**self._prepare(kwargs, ANTHROPIC_CHAT_MAX_TOKENS))
+
+    async def json_async(self, **kwargs: Any) -> Any:
+        return await self._model.json_async(**self._prepare(kwargs, ANTHROPIC_JSON_MAX_TOKENS))
+
+    def chat(self, **kwargs: Any) -> Any:
+        return self._model.chat(**self._prepare(kwargs, ANTHROPIC_CHAT_MAX_TOKENS))
+
+    def json(self, **kwargs: Any) -> Any:
+        return self._model.json(**self._prepare(kwargs, ANTHROPIC_JSON_MAX_TOKENS))
 
 
 _replay_factory = ContextVar("llm_replay_factory", default=None)
@@ -198,7 +272,10 @@ class LLMService:
         if model_cls is _DEFAULT_PROVIDER_MODEL_MAP.get(self.provider):
             import alea_llm_client
             model_cls = getattr(alea_llm_client, model_cls.__name__)
-        return model_cls(**kwargs)
+        client = model_cls(**kwargs)
+        if self.provider == "anthropic":
+            return AnthropicAdapter(client)
+        return client
 
     async def acomplete(
         self,
