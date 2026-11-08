@@ -14,5 +14,5 @@ topic: public-showcase-brainstorm
 2. PR2 (U12–U16) and PR3 (U17–U19) follow per the plan.
 
 ## Open with Damien
-- Spend: which LLM key and budget fund live persona runs and UAT. Blocks only live runs.
+- Resolved 2026-11-08: live runs reuse the existing Anthropic demo key on Claude Sonnet, $25/month ceiling (see the plan's Open Questions).
 - Landing-page copy approval (Claude Doc) gates the PR3 merge.

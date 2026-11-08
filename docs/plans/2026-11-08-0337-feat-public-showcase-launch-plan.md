@@ -670,7 +670,7 @@ Waits on: PR2, needed before this group can start: the launch campaign runs only
 
 - **Gate on the PR3 merge (U19):** Damien approves the landing-page copy in a Claude Doc before it ships.
 - **Possible spend (U4):** if the measured footprint will not fit hetzner-dev, Damien decides on a larger server.
-- **Spend: LLM key for live runs (U9, U11, U16, U17).** Showcase mode removes the server key, so persona campaigns, recordings, the reference-model bake-off, and UAT reruns need an operator key and budget. Damien chooses which key funds them and the ceiling.
+- **Resolved 2026-11-08: LLM key for live runs (U9, U11, U16, U17).** On 2026-11-08, Damien decided (Decision Sheet `alea-intake-2026-11-08-1051-showcase-llm-key-budget`): live runs reuse the operator's existing Anthropic demo key, run on Claude Sonnet, and stay under a $25/month ceiling. The harness passes the key to the guest flow as a visitor key would, so the server still holds no key (R9). Each live campaign logs its token usage and cost, and the harness stops before a run would push the month past $25. U11 measures the real cost per intake on Sonnet and records it with the bake-off.
 - **Deferred to implementation: court closure dates (U12).** Which primary source verifies Minnesota court closure days; the refuse-to-guess rule applies when a year cannot be verified.
 
 ---
