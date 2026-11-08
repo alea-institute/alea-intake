@@ -45,6 +45,7 @@ export function useWebSocket(sessionId: string | null, token: string | null): vo
         } catch {
           return
         }
+        if (!msg || typeof msg !== 'object') return
         handleEvent(msg, queryClient, sessionId)
       }
 
@@ -52,8 +53,8 @@ export function useWebSocket(sessionId: string | null, token: string | null): vo
         setStatus('disconnected')
         setWs(null)
         if (disposed) return
-        // Auth failures: don't reconnect (prevents infinite loop)
-        if (e.code === 4001 || e.code === 4003) {
+        // Auth failures and expired sessions: don't reconnect (prevents infinite loop)
+        if (e.code === 4001 || e.code === 4003 || e.code === 4004) {
           setStatus('error')
           return
         }

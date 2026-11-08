@@ -56,7 +56,8 @@ def test_commit_changes_abort_before_next_persona(tmp_path, monkeypatch):
     with pytest.raises(RuntimeError, match='commit changed'):
         campaign.run([Path('first'), Path('second')], tmp_path)
 
-def test_guest_flow_secrets_preview_and_models(tmp_path, monkeypatch, caplog):
+@pytest.mark.parametrize('missing_ack', [False, True])
+def test_guest_flow_secrets_preview_and_models(tmp_path, monkeypatch, caplog, missing_ack):
     runner = load('persona_run')
     persona = tmp_path / 'example'
     persona.mkdir()
@@ -80,11 +81,38 @@ def test_guest_flow_secrets_preview_and_models(tmp_path, monkeypatch, caplog):
             return httpx.Response(200, content=b'%PDF-1.4\noperator-secret')
         return httpx.Response(201 if request.method == 'POST' else 200, json=body)
     campaign = runner.Campaign('https://preview.test', environ={'PERSONA_LLM_API_KEY': 'operator-secret', 'PERSONA_PREVIEW_KEY': 'preview:secret', 'PERSONA_TOKEN_RATES': '{"gpt-4o-mini": [0.15, 0.6]}'}, transport=httpx.MockTransport(respond), folio={})
-    async def narrative(*args):
-        return []
-    monkeypatch.setattr(campaign, 'stream_narrative', narrative)
-    out = tmp_path / 'runs'
-    campaign.run([persona], out, models=['gpt-4o-mini', 'other-model'])
+    class Socket:
+        def __init__(self):
+            self.frames = iter([
+                {'type': 'session_state'},
+                {'type': 'system_message'} if missing_ack else {'type': 'message_ack', 'client_id': 'c0'},
+                {'type': 'system_message'},
+            ])
+        async def __aenter__(self):
+            return self
+        async def __aexit__(self, *args):
+            pass
+        async def send(self, frame):
+            pass
+        async def recv(self):
+            frame = next(self.frames, None)
+            if frame is None:
+                raise runner.asyncio.TimeoutError
+            return json.dumps(frame)
+    monkeypatch.setattr(runner.websockets, 'connect', lambda *args, **kwargs: Socket())
+    out = tmp_path / 'docs/evidence/persona-campaign/runs'
+    monkeypatch.setattr(runner, 'Campaign', lambda base: campaign)
+    monkeypatch.setattr(runner, 'REPO', tmp_path)
+    monkeypatch.setattr(runner.sys, 'argv', [
+        'persona_run.py', str(persona), '--base-url', 'https://preview.test',
+        '--models', 'gpt-4o-mini', 'other-model',
+    ])
+    # Isolate narrative delivery so a missing ack alone decides the CLI exit.
+    checker = SimpleNamespace(iter_iris=lambda result: [(None, None, 'test-iri')],
+                              check_iri=lambda *args: {'ok': True})
+    memo = SimpleNamespace(check_run=lambda path: {'exports_ok': True, 'deadline_check': {'ok': True}})
+    monkeypatch.setattr(runner, 'sidecar', lambda name: checker if name == 'folio_check' else memo)
+    assert runner.main() == (1 if missing_ack else 0)
     assert all(r.headers['X-Preview-Key'] == 'preview:secret' for r in requests)
     assert all('Proxy-Authorization' not in r.headers for r in requests)
     assert all(r.headers['X-LLM-API-Key'] == 'operator-secret' for r in requests if r.url.path != '/health')
@@ -94,6 +122,8 @@ def test_guest_flow_secrets_preview_and_models(tmp_path, monkeypatch, caplog):
     runs = list(out.rglob('run.json'))
     assert len(runs) == 2
     metadata = next(json.loads(p.read_text()) for p in runs if json.loads(p.read_text())['model'] == 'gpt-4o-mini')
+    assert metadata['steps']['narrative']['ok'] is not missing_ack
+    assert metadata['deterministic_checks']['narrative'] is not missing_ack
     assert metadata['estimated_cost_usd'] == pytest.approx(0.000027)
     assert metadata['commit'] == 'build-a'
     assert metadata['judge_model'] and metadata['judge_prompt_version']
@@ -125,6 +155,7 @@ async def test_websocket_auth_is_first_message_and_preview_is_attached(monkeypat
     caplog.set_level(logging.DEBUG)
     runner = load('persona_run')
     sent, connections = [], []
+    frames = iter([{'type': 'session_state'}, {'type': 'message_ack', 'client_id': 'c0'}, {'type': 'system_message'}])
     class Socket:
         async def __aenter__(self):
             return self
@@ -133,7 +164,7 @@ async def test_websocket_auth_is_first_message_and_preview_is_attached(monkeypat
         async def send(self, frame):
             sent.append(json.loads(frame))
         async def recv(self):
-            return json.dumps({'type': 'session_state' if not sent else 'system_message'})
+            return json.dumps(next(frames))
     def connect(url, **kwargs):
         kwargs["logger"].debug("sending operator-secret")
         connections.append((url, kwargs))
@@ -153,3 +184,46 @@ def test_folio_checks_nested_output_iris():
     run = {'analysis': {'claims': [], 'gaps': [{'folio_iri': 'Resen'}]},
            'outputs': [{'concept': {'iri': 'https://folio.openlegalstandard.org/Rreal'}}]}
     assert {iri for _, _, iri in checker.iter_iris(run)} == {'Resen', 'https://folio.openlegalstandard.org/Rreal'}
+
+
+@pytest.mark.parametrize('acknowledged', [True, False])
+async def test_narrative_requires_ack_within_one_120_second_deadline(monkeypatch, acknowledged):
+    runner = load('persona_run')
+    frames = iter([
+        {'type': 'session_state'},
+        'malformed',
+        {'type': 'safety_alert', 'message': 'Support available'},
+        {'type': 'message_ack', 'client_id': 'other-story'},
+        {'type': 'message_ack', 'client_id': 'c0'} if acknowledged else {'type': 'system_message'},
+    ])
+    waits = []
+    class Socket:
+        async def __aenter__(self):
+            return self
+        async def __aexit__(self, *args):
+            pass
+        async def send(self, frame):
+            pass
+        async def recv(self):
+            frame = next(frames, None)
+            if frame is None:
+                raise runner.asyncio.TimeoutError
+            return frame if isinstance(frame, str) else json.dumps(frame)
+    real_wait = runner.asyncio.wait_for
+    async def wait(awaitable, timeout):
+        waits.append(timeout)
+        return await real_wait(awaitable, timeout=timeout)
+    monkeypatch.setattr(runner.asyncio, 'wait_for', wait)
+    monkeypatch.setattr(runner.websockets, 'connect', lambda *args, **kwargs: Socket())
+    campaign = runner.Campaign('https://preview.test', environ={'PERSONA_LLM_API_KEY':'test-only-key'})
+    transcript = []
+    if acknowledged:
+        alerts = await campaign.stream_narrative(2, 'guest', 3, 'Story.', transcript)
+        assert len(alerts) == 1
+    else:
+        with pytest.raises(TimeoutError, match='ack'):
+            await campaign.stream_narrative(2, 'guest', 3, 'Story.', transcript)
+    assert waits[0] == 30
+    assert all(0 < timeout <= 120 for timeout in waits[1:])
+    assert waits[1] > 119
+    assert waits[1:] == sorted(waits[1:], reverse=True)

@@ -24,18 +24,28 @@ vi.mock('react-i18next', () => ({ useTranslation: (namespace: string) => {
   return value
 } }
 } }))
-let submittedStory = '', hangSocket = false, socketClosed = false
+let submittedStory = '', hangSocket = false, socketClosed = false, storySends = 0, closeCode = 0
 class Socket {
   onopen?: () => void; onmessage?: (e: {data:string}) => void; onerror?: () => void; onclose?: (e: {code:number}) => void
   constructor() { queueMicrotask(() => this.onopen?.()) }
-  send(raw: string) { if (JSON.parse(raw).type === 'text_message') submittedStory = JSON.parse(raw).content; if (!hangSocket && JSON.parse(raw).type === 'text_message') queueMicrotask(() => this.onmessage?.({data: '{"type":"system_message","content":"Saved"}'})) }
+  send(raw: string) {
+    const frame = JSON.parse(raw)
+    if (frame.type !== 'text_message') return
+    storySends++
+    if (closeCode) { queueMicrotask(() => this.onclose?.({code:closeCode})); return }
+    submittedStory = frame.content
+    if (!hangSocket) queueMicrotask(() => {
+      this.onmessage?.({data: JSON.stringify({type:'message_ack',client_id:frame.client_id})})
+      this.onmessage?.({data:'{"type":"system_message","content":"Saved"}'})
+    })
+  }
   close() { socketClosed = true }
 }
 let analyses = 0, uploads = 0, ended = 0
 beforeEach(() => {
   translations.pending = null; translations.suspended.mockClear(); translations.i18n.loadNamespaces.mockClear()
   sessionStorage.clear(); localStorage.clear(); analyses = uploads = ended = 0
-  hangSocket = socketClosed = false
+  hangSocket = socketClosed = false; storySends = closeCode = 0
   vi.stubGlobal('WebSocket', Socket)
   server.use(
     http.get('/api/v1/auth/showcase-notice', () => HttpResponse.json({ consent_text: 'Allow AI processing', idle_ttl_seconds: 120 })),
@@ -191,6 +201,7 @@ describe('showcase', () => {
     server.use(http.post('/api/v1/analysis/1/analyze',()=>HttpResponse.json({run_id:4,status:'completed'})))
     fireEvent.click(screen.getByText('Retry analysis')); await screen.findByRole('heading',{name:'Unpaid wages'})
     expect(screen.getByLabelText('Your story')).toHaveValue('My employer withheld my wages in Minnesota.')
+    expect(storySends).toBe(1)
   })
   it.each(['/','/login','/admin','/oauth/finish','/intake/1/output'])('keeps the demonstration notice on %s', route => {
     renderWithProviders(<ShowcasePage />,{route})
@@ -244,6 +255,63 @@ describe('showcase', () => {
     await act(async () => { vi.advanceTimersByTime(121000) })
     expect(ended).toBe(1)
   })
+  it('wipes locally and shows the start screen before a hung server erase times out', async () => {
+    sessionStorage.setItem('showcase-token','captured-guest')
+    sessionStorage.setItem('showcase-intake',JSON.stringify({id:1,session_id:2,party_id:3}))
+    const {queryClient} = renderWithProviders(<ShowcasePage />)
+    await screen.findByText('Allow AI processing')
+    key(); story()
+    sessionStorage.setItem('showcase-story','private story')
+    sessionStorage.setItem('showcase-story:2:hash',JSON.stringify({delivered:true}))
+    queryClient.setQueryData(['private-data'], {story:'private story'})
+    const fetch = vi.fn((_path: string, _init?: RequestInit) => new Promise<Response>(() => {}))
+    vi.stubGlobal('fetch',fetch)
+    fireEvent.click(screen.getByText('End session and erase'))
+    vi.useFakeTimers()
+    fireEvent.click(screen.getByText('Erase this session'))
+    await act(async () => { await vi.advanceTimersByTimeAsync(1) })
+    expect(sessionStorage.length).toBe(0)
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
+    expect(screen.getByLabelText('API key')).toHaveValue('')
+    expect(screen.getByLabelText('Your story')).toHaveValue('')
+    expect(screen.getByRole('button',{name:'Analyze my story'})).toBeEnabled()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    expect(fetch).toHaveBeenCalledWith('/api/v1/intake/1/end-session',expect.objectContaining({
+      method:'POST', headers:expect.objectContaining({Authorization:'Bearer captured-guest'}),
+    }))
+    const signal = fetch.mock.calls[0][1]!.signal as AbortSignal
+    await act(async () => { await vi.advanceTimersByTimeAsync(9999) })
+    expect(signal.aborted).toBe(true)
+    expect(screen.getByRole('alert')).toHaveTextContent('Local data was erased')
+    expect(screen.getByRole('button',{name:'Analyze my story'})).toBeEnabled()
+  })
+  it('allows another local erase while a previous server erase is still pending', async () => {
+    sessionStorage.setItem('showcase-token','guest')
+    sessionStorage.setItem('showcase-intake',JSON.stringify({id:1,session_id:2,party_id:3}))
+    await ready()
+    const originalFetch = globalThis.fetch
+    let finishFirst!: (response: Response) => void
+    let eraseRequests = 0
+    vi.stubGlobal('fetch',vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).endsWith('/end-session') && ++eraseRequests === 1) {
+        return new Promise<Response>(resolve => { finishFirst = resolve })
+      }
+      return originalFetch(input, init)
+    }))
+    fireEvent.click(screen.getByText('End session and erase'))
+    fireEvent.click(screen.getByText('Erase this session'))
+    key(); story()
+    fireEvent.click(screen.getByLabelText('Allow AI processing'))
+    fireEvent.click(screen.getByText('Analyze my story'))
+    await screen.findByRole('heading',{name:'Unpaid wages'})
+    fireEvent.click(screen.getByText('End session and erase'))
+    fireEvent.click(screen.getByText('Erase this session'))
+    expect(sessionStorage.length).toBe(0)
+    expect(screen.getByLabelText('Your story')).toHaveValue('')
+    expect(eraseRequests).toBe(2)
+    await act(async () => { finishFirst(new Response(null,{status:500})) })
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
   it('stops polling and renders results at the iteration limit', async () => {
     let polls = 0
     server.use(
@@ -257,6 +325,15 @@ describe('showcase', () => {
     vi.useFakeTimers()
     await act(async () => { vi.advanceTimersByTime(10000) })
     expect(polls).toBe(1)
+  })
+  it('shows the expired screen and wipes local data on socket close 4004', async () => {
+    closeCode = 4004
+    await ready(); key(); story(); fireEvent.click(screen.getByText('Analyze my story'))
+    await screen.findByText('Your session expired. The session data was erased.')
+    expect(sessionStorage.length).toBe(0)
+    expect(analyses).toBe(0)
+    fireEvent.click(screen.getByText('Start a fresh session'))
+    expect(screen.getByLabelText('Your story')).toHaveValue('')
   })
   it('offers retry after a socket timeout without losing the story', async () => {
     hangSocket = true
