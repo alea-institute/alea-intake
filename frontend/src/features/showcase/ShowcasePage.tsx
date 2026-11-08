@@ -3,11 +3,11 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
-import { AnalysisProgressPanel } from '@/features/chat/components/AnalysisProgressPanel'
 import { ThemeProvider } from '@/shared/components/ThemeProvider'
 import { loadThemeFonts } from '@/shared/i18n/themes'
 import type { VisualizationData } from '@/features/visualization/types'
 import { Results, type ResultsData } from './Results'
+import { ShowcaseProgress, type ShowcaseProgressState } from './ShowcaseProgress'
 import { pendingEraseStorageKey, usePendingErases } from './usePendingErases'
 import { createSessionKeepalive, defaultModels, isStoryDelivered, json, readKey, referenceModel, request, RequestError, sendStory, TERMINAL_ANALYSIS_STATUSES } from './session'
 import scenarios from './scenarios.json'
@@ -33,6 +33,7 @@ export function ShowcasePage() {
   const [result,setResult] = useState<ResultsData>()
   const [viz,setViz] = useState<VisualizationData>()
   const [memo,setMemo] = useState('')
+  const [progress,setProgress] = useState<ShowcaseProgressState>()
   const [reset,setReset] = useState(0)
   const [erase,setErase] = useState(false)
   const [idle,setIdle] = useState(false)
@@ -76,7 +77,7 @@ export function ShowcasePage() {
     for(const name of Object.keys(sessionStorage)) {
       if(name!==pendingEraseStorageKey) sessionStorage.removeItem(name)
     }
-    setSession(null);setState('');setError('');setIterationLimit(false);setNonReference(false);setReset(n=>n+1);setStory('');setPdf(undefined);setResult(undefined);setViz(undefined);setMemo('');setKey({key:'',provider:providerFor(recommended)??'openai',model:providerFor(recommended)?recommended:defaultModels.openai});modelChosen.current=false;setConsent(false);setErase(false);setIdle(false);setExpired(expire);setBusy(false);qc.clear();lastActive.current=Date.now()
+    setSession(null);setState('');setError('');setIterationLimit(false);setNonReference(false);setReset(n=>n+1);setStory('');setPdf(undefined);setResult(undefined);setViz(undefined);setMemo('');setKey({key:'',provider:providerFor(recommended)??'openai',model:providerFor(recommended)?recommended:defaultModels.openai});modelChosen.current=false;setConsent(false);setErase(false);setIdle(false);setExpired(expire);setBusy(false);setProgress(undefined);qc.clear();lastActive.current=Date.now()
     erasing.current=false
   }
 
@@ -87,7 +88,7 @@ export function ShowcasePage() {
     if(!consent) {setError('consentRequired');return}
     if(!story.trim()&&!pdf) {setError('storyRequired');return}
     if(erasing.current) return
-    setBusy(true);setResult(undefined);setViz(undefined);setIterationLimit(false)
+    setBusy(true);setResult(undefined);setViz(undefined);setIterationLimit(false);setProgress({phase:'story',startedAt:Date.now()})
     analysisController.current?.abort()
     const controller=new AbortController()
     analysisController.current=controller
@@ -107,7 +108,6 @@ export function ShowcasePage() {
       let current=session
       if(!current) {current=await runJson('/api/v1/intake/',{});setSession(current);sessionStorage.setItem('showcase-intake',JSON.stringify(current))}
       if(!current) return
-      qc.setQueryData(['intake',String(current.session_id),'progress'],{stage:1,totalStages:3,stageName:t('story'),completeness:0.1,iteration:1})
       if(pdf) {const form=new FormData();form.append('file',pdf);form.append('session_id',String(current.session_id));form.append('party_id',String(current.party_id));await request(`/api/v1/intake/${current.id}/document`,{method:'POST',body:form,signal:controller.signal})}
       const narrative=[story,state?`State confirmed by visitor: ${state}.`:''].filter(Boolean).join('\n\n')
       if((story.trim()||state) && !isStoryDelivered(current.session_id,narrative)) await sendStory(current.session_id,current.party_id,narrative,controller.signal)
@@ -116,10 +116,14 @@ export function ShowcasePage() {
       while(!TERMINAL_ANALYSIS_STATUSES.includes(status.status)) {
         if(['failed','error'].includes(status.status)) throw new RequestError(500)
         if(run!==generation.current) return
-        qc.setQueryData(['intake',String(current.session_id),'progress'],{stage:2,totalStages:3,stageName:status.latest_stage||t('issues'),completeness:(status.progress_pct||30)/100,iteration:status.iteration||1})
+        const {latest_stage:stage,progress_pct:pct}=status
+        setProgress(p=>p&&{...p,phase:'analysis',stage,pct})
         await new Promise(resolve=>setTimeout(resolve,1500))
         status=await runJson(`/api/v1/analysis/${current.id}/status`)
       }
+      if(run!==generation.current) return
+      // Analysis is terminal; the remaining wait is results plus memo generation.
+      setProgress(p=>p&&{...p,phase:'memo'})
       const data=await runJson(`/api/v1/analysis/${current.id}/results`)
       const visualization=await runJson(`/api/v1/analysis/${current.id}/visualization`)
       const output=await runJson('/api/v1/output/generate',{intake_id:current.id,run_id:status.run_id,profile_types:['court_self_help']})
@@ -155,7 +159,7 @@ export function ShowcasePage() {
       {notice&&<label className="consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>{notice.consent_text}</label>}
       {error&&<div role="alert">{t(error)}</div>}
       <Button disabled={busy||!notice} onClick={()=>void analyze()}>{busy?t('busy'):error?t('retry'):t('analyze')}</Button>
-      {busy&&<div role="status">{t('busy')}<Suspense fallback={null}><AnalysisProgressPanel sessionId={String(session?.session_id||'')}/></Suspense></div>}
+      {busy&&progress&&<Suspense fallback={null}><ShowcaseProgress progress={progress}/></Suspense>}
     </section>
     {iterationLimit&&<p role="note">{t('iterationLimit',{defaultValue:'Analysis stopped at its iteration limit. The available results are shown below.'})}</p>}
     {result&&viz&&<Suspense fallback={null}><Results data={result} visualization={viz} memo={memo} stateControl={stateControl} exportMemo={exportMemo}/></Suspense>}

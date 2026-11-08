@@ -196,6 +196,27 @@ describe('showcase', () => {
     await ready(); story(); fireEvent.click(screen.getByText('Analyze my story'))
     expect(await screen.findByRole('alert')).toHaveTextContent('Enter a valid API key'); expect(analyses).toBe(0)
   })
+  it('names analysis stages for visitors, then shows the memo stage until the memo arrives', async () => {
+    let statusPolls = 0, releaseMemo!: () => void
+    const memoGate = new Promise<void>(resolve => { releaseMemo = resolve })
+    server.use(
+      http.post('/api/v1/analysis/1/analyze', () => { analyses++; return HttpResponse.json({run_id:4,status:'running',latest_stage:'question_gen',progress_pct:100,is_reference_model:true}) }),
+      http.get('/api/v1/analysis/1/status', () => { statusPolls++; return HttpResponse.json({run_id:4,status:'completed',latest_stage:'question_gen',progress_pct:100}) }),
+      http.post('/api/v1/output/generate', async () => { await memoGate; return HttpResponse.json({documents:[{id:5}]}) }),
+    )
+    await ready(); key(); story(); fireEvent.click(screen.getByText('Analyze my story'))
+    expect(await screen.findByText('Stage 2 of 3: Drafting follow-up questions')).toHaveAttribute('role', 'status')
+    expect(document.body.textContent).not.toContain('question_gen')
+    expect(document.body.textContent).not.toContain('100%')
+    expect(await screen.findByText('Stage 3 of 3: Writing your memo', {}, {timeout:4000})).toHaveAttribute('role', 'status')
+    expect(statusPolls).toBe(1)
+    expect(document.body.textContent).not.toContain('question_gen')
+    expect(document.body.textContent).not.toMatch(/\d+% complete/)
+    expect(screen.getByRole('progressbar')).not.toHaveAttribute('aria-valuenow')
+    await act(async () => { releaseMemo() })
+    await screen.findByRole('heading', {name:'Unpaid wages'})
+    expect(screen.queryByText(/Stage \d of 3/)).not.toBeInTheDocument()
+  })
   it('runs a curated story through issues, concepts, deadlines and memo export', async () => {
     await ready(); key(); fireEvent.change(screen.getByLabelText('Try an example'), {target:{value:'wage-theft'}})
     fireEvent.click(screen.getByText('Analyze my story'))
