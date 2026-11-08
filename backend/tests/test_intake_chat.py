@@ -9,15 +9,12 @@ Covers:
   - ConversationService unit tests
 """
 
-import json
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.intake import Intake, IntakeParty, IntakeSession, Message
 from app.services.intake.session_service import IntakeSessionService
 from app.services.intake.conversation import ConversationService, INTAKE_SYSTEM_PROMPT
 
@@ -268,21 +265,26 @@ class TestWebSocketEndpoints:
     def test_websocket_auth_reject_no_token(self):
         """WebSocket connect without token should close with code 4001."""
         from starlette.testclient import TestClient
+        from starlette.websockets import WebSocketDisconnect
 
         app = _make_ws_test_app()
         with TestClient(app) as client:
-            with pytest.raises(Exception):
+            with pytest.raises(WebSocketDisconnect) as exc:
                 with client.websocket_connect("/api/ws/intake/999") as ws:
-                    pass
+                    ws.send_json({"type": "auth"})
+                    ws.receive_json()
+            assert exc.value.code == 4001
 
     def test_websocket_auth_reject_invalid_token(self):
         """WebSocket connect with bad token should close with code 4001."""
         from starlette.testclient import TestClient
+        from starlette.websockets import WebSocketDisconnect
 
         app = _make_ws_test_app()
         with TestClient(app) as client:
-            with pytest.raises(Exception):
+            with pytest.raises(WebSocketDisconnect) as exc:
                 with client.websocket_connect(
                     "/api/ws/intake/999?token=invalid-jwt-token"
                 ) as ws:
-                    pass
+                    ws.receive_json()
+            assert exc.value.code == 4001

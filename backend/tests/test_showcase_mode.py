@@ -348,7 +348,7 @@ async def test_non_object_body_is_422(showcase, body):
 
 
 @pytest.mark.parametrize("query_token", [False, True])
-async def test_standard_socket_stores_message_without_llm_key(showcase, monkeypatch, query_token):
+async def test_standard_socket_without_llm_key_stores_and_screens_message_then_errors(showcase, monkeypatch, query_token):
     from app.db.engine import get_engine
     from app.models.intake import Message
     from sqlalchemy import select
@@ -357,7 +357,8 @@ async def test_standard_socket_stores_message_without_llm_key(showcase, monkeypa
     headers = await guest(client)
     created = (await client.post("/api/v1/intake/", headers=headers, json={})).json()
     settings.showcase_mode = False
-    monkeypatch.setattr("app.routers.intake.screen_message_fast", AsyncMock(return_value=None))
+    screen = AsyncMock(return_value=None)
+    monkeypatch.setattr("app.routers.intake.screen_message_fast", screen)
     path = f'/api/ws/intake/{created["session_id"]}'
     if query_token:
         path += "?token=" + headers["Authorization"][7:]
@@ -368,9 +369,10 @@ async def test_standard_socket_stores_message_without_llm_key(showcase, monkeypa
             assert ws.receive_json()["type"] == "session_state"
             ws.send_json({"type": "text_message", "content": "My wages are unpaid."})
             assert ws.receive_json()["type"] == "message_ack"
-            reply = ws.receive_json()
-            assert reply["type"] == "system_message"
-            assert reply["content"]
+            error = ws.receive_json()
+            assert error["type"] == "error"
+            assert error["status"] == 400
+    assert screen.await_args.args[:2] == ("My wages are unpaid.", created["session_id"])
     async with get_engine().connect() as conn:
         conn = await conn.execution_options(schema_translate_map={"tenant": None})
         rows = (await conn.execute(select(Message.content_encrypted).where(
@@ -462,7 +464,7 @@ async def test_each_identifier_requires_ownership_without_path_intake(showcase, 
 
 
 @pytest.mark.parametrize("message_type", ["transcript_approve", "transcript_edit"])
-async def test_standard_transcript_without_key_is_screened_and_gets_reply(showcase, monkeypatch, message_type):
+async def test_standard_transcript_without_key_is_stored_and_screened_then_errors(showcase, monkeypatch, message_type):
     from app.db.engine import get_engine
     from app.models.audio import Transcript
     from sqlalchemy import select
@@ -480,7 +482,9 @@ async def test_standard_transcript_without_key_is_screened_and_gets_reply(showca
             assert ws.receive_json()["type"] == "session_state"
             ws.send_json({"type": message_type, "recording_id": recording_id, "edited_text": "corrected text"})
             assert ws.receive_json()["type"] == "message_ack"
-            assert ws.receive_json()["type"] == "system_message"
+            error = ws.receive_json()
+            assert error["type"] == "error"
+            assert error["status"] == 400
     expected_text = "corrected text" if message_type == "transcript_edit" else "private transcript"
     assert screen.await_args.args[:2] == (expected_text, created["session_id"])
     async with get_engine().connect() as conn:

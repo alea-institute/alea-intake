@@ -13,6 +13,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from app.services.exploration.schemas import ScreeningResult
+from app.services.llm_service import llm_service_from_headers
 
 
 # ---------------------------------------------------------------------------
@@ -785,6 +786,7 @@ async def test_message_processing_continues_after_screening():
         await _handle_text_message(
             mock_ws, 1, 10, {"content": "domestic violence situation", "party_id": None},
             mock_engine,
+            llm_service=llm_service_from_headers(mock_ws.headers),
         )
 
         send_calls = mock_ws.send_json.call_args_list

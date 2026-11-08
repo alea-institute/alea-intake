@@ -181,15 +181,69 @@ async def test_visitor_key_reaches_structured_stages(monkeypatch, caplog):
 @pytest.mark.parametrize(
     "handler", [intake._handle_text_message, intake._handle_transcript_approve, intake._handle_transcript_edit]
 )
-async def test_chat_without_key_does_not_construct_client(handler, monkeypatch):
-    websocket = SimpleNamespace(headers={}, send_json=AsyncMock())
+async def test_chat_without_key_does_not_construct_client(handler, async_engine, monkeypatch):
+    from sqlalchemy import select
+    from sqlalchemy.ext.asyncio import AsyncSession
+    from app.models.audio import AudioRecording, Transcript
+    from app.models.intake import Message
+    from app.services.intake.session_service import IntakeSessionService
+
+    content = "My employer fired me."
+    data = {"content": content, "edited_text": "Corrected transcript"}
+    async with async_engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db:
+            svc = IntakeSessionService(db)
+            record = await svc.create_intake(org_id=1, user_id=None)
+            session = await svc.create_session(record.id)
+            if handler != intake._handle_text_message:
+                message = await svc.store_message(
+                    session_id=session.id, sender_type="consumer", modality="voice", content=content
+                )
+                recording = AudioRecording(
+                    message_id=message.id, intake_id=record.id, original_format="wav"
+                )
+                db.add(recording)
+                await db.flush()
+                db.add(Transcript(
+                    recording_id=recording.id, text_encrypted=content.encode(), asr_provider="test"
+                ))
+                data["recording_id"] = recording.id
+            await db.commit()
+
+    websocket = SimpleNamespace(
+        app=SimpleNamespace(state=SimpleNamespace()), headers={}, send_json=AsyncMock()
+    )
     factory = MagicMock()
     monkeypatch.setitem(llm_service._PROVIDER_MODEL_MAP, "openai", factory)
     monkeypatch.setenv("ALEA_LLM_API_KEY", "server-key")
     monkeypatch.setenv("OPENAI_API_KEY", "server-key")
-    await handler(websocket, 1, 1, {}, None)
-    assert websocket.send_json.await_args.args[0]["status"] == 400
+    screen = AsyncMock(return_value=None)
+    monkeypatch.setattr(intake, "screen_message_fast", screen)
+    await handler(websocket, session.id, 1, data, async_engine)
+    frames = [call.args[0] for call in websocket.send_json.await_args_list]
+    assert frames[-1] == {
+        "type": "error", "status": 400, "message": "A visitor LLM API key is required"
+    }
+    assert not any(frame["type"] == "system_message" for frame in frames)
     factory.assert_not_called()
+    expected_text = data["edited_text"] if handler == intake._handle_transcript_edit else content
+    assert screen.await_args.args[:2] == (expected_text, session.id)
+    async with async_engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+        async with AsyncSession(bind=conn) as db:
+            rows = (await db.execute(select(Message).where(Message.session_id == session.id))).scalars().all()
+            assert len(rows) == 1
+            assert rows[0].sender_type == "consumer"
+            assert rows[0].content_encrypted == content.encode()
+            if handler != intake._handle_text_message:
+                transcript = (await db.execute(select(Transcript).where(
+                    Transcript.recording_id == data["recording_id"]
+                ))).scalar_one()
+                assert transcript.status == (
+                    "edited" if handler == intake._handle_transcript_edit else "approved"
+                )
+                assert transcript.text_encrypted == expected_text.encode()
 
 
 async def test_chat_handler_returns_model_reply(async_engine, monkeypatch, caplog):

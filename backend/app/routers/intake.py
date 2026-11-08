@@ -729,6 +729,15 @@ async def _handle_text_message(
                 "sequence_number": message.sequence_number,
             })
 
+            if llm_service is None:
+                await db_session.commit()
+                await websocket.send_json({
+                    "type": "error",
+                    "status": 400,
+                    "message": "A visitor LLM API key is required",
+                })
+                return
+
             # Generate and send LLM response (bound to session's practice area, if any)
             practice_area_id = await _lookup_session_practice_area_id(
                 db_session, session_id
@@ -960,6 +969,15 @@ async def _handle_transcript_approve(
                 "sequence_number": original_message.sequence_number,
             })
 
+            if llm_service is None:
+                await db_session.commit()
+                await websocket.send_json({
+                    "type": "error",
+                    "status": 400,
+                    "message": "A visitor LLM API key is required",
+                })
+                return
+
             # Generate LLM follow-up (practice-area bound when available)
             practice_area_id = await _lookup_session_practice_area_id(
                 db_session, session_id
@@ -1072,6 +1090,15 @@ async def _handle_transcript_edit(
                 "message_id": original_message.id,
                 "sequence_number": original_message.sequence_number,
             })
+
+            if llm_service is None:
+                await db_session.commit()
+                await websocket.send_json({
+                    "type": "error",
+                    "status": 400,
+                    "message": "A visitor LLM API key is required",
+                })
+                return
 
             # Generate LLM follow-up (practice-area bound when available)
             practice_area_id = await _lookup_session_practice_area_id(
