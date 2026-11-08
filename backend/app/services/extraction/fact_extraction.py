@@ -240,7 +240,11 @@ class FactExtractionService:
         This method is separated for easy mocking in tests. ``compact`` asks
         for a shorter reply after a truncated or invalid one.
         """
-        max_facts = COMPACT_MAX_FACTS if compact else MAX_FACTS_PER_CALL
+        from app.services.llm_bounds import showcase_caps
+
+        caps = showcase_caps()
+        full_max = min(MAX_FACTS_PER_CALL, caps.facts_per_extraction) if caps else MAX_FACTS_PER_CALL
+        max_facts = min(COMPACT_MAX_FACTS, full_max) if compact else full_max
         messages = [
             {"role": "system", "content": _system_prompt(max_facts)},
         ]

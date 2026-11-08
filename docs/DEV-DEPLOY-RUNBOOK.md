@@ -23,9 +23,32 @@ This document contains names only for private configuration:
 - `ALEA_REFERENCE_MODEL`
 - `ALEA_SHOWCASE_IDLE_TTL_SECONDS`
 - `ALEA_PREVIEW_PASSPHRASE` (non-empty until launch)
-- `ALEA_SHOWCASE_MAX_ITERATIONS` (optional; default `10`) caps analysis
-  orchestrator iterations in showcase mode only. Set `2` or `3` for a live demo
-  so a guest run reaches a terminal status in minutes. The other wall-time knobs
+- **Showcase analysis budget** (showcase mode only; authenticated deployments
+  keep 10 iterations, one fact_map + gap_analyze round per jurisdiction, and
+  their current prompts). Defaults target a guest run in about 3 minutes and
+  about $0.75 on `claude-sonnet-5-5`, about 8 analysis LLM calls for a 50-fact
+  intake (1 issue_spot, 2 exploration, 3 fact_map batches run concurrently with
+  1 procedural-gap call, 1 question_gen), plus up to 2 semantic-fit calls when
+  FOLIO resolves claim concepts:
+  - `ALEA_SHOWCASE_MAX_ITERATIONS` (default `1`) caps orchestrator iterations;
+    a capped run ends as `max_iterations`, which the showcase page accepts.
+  - `ALEA_SHOWCASE_ANALYSIS_ROUNDS` (default `1`) caps fact_map + gap_analyze
+    rounds per iteration. Each round maps every fact to every claim, so a
+    three-jurisdiction run otherwise repeats the same work three times.
+  - `ALEA_SHOWCASE_EXPLORATION_MAX_ROUNDS` (default `1`) caps exploration rounds.
+  - Output caps: `ALEA_SHOWCASE_MAX_CLAIMS` (`8`, total; issue_spot asks for
+    6 and leaves 2 for exploration), `ALEA_SHOWCASE_MAX_GAPS` (`8` LLM
+    procedural gaps), `ALEA_SHOWCASE_MAX_QUESTIONS` (`8`),
+    `ALEA_SHOWCASE_MAX_MAPPINGS_PER_FACT` (`2`),
+    `ALEA_SHOWCASE_MAX_FACTS_PER_EXTRACTION` (`20`) and
+    `ALEA_SHOWCASE_RATIONALE_WORDS` (`12`).
+- `ALEA_ANTHROPIC_JSON_EFFORT` (`low|medium|high|xhigh|max|none`; empty
+  default means `low` in showcase mode and unset elsewhere) sends
+  `output_config.effort` on Anthropic structured (JSON) calls only; chat
+  replies keep the model default. `none` sends nothing. The pinned
+  alea-llm-client accepts only `low|medium|high|max` and rejects `xhigh`
+  before sending, so do not set `xhigh` until the client allows it.
+- The other wall-time knobs
   are `ALEA_SHOWCASE_CONCURRENT_ANALYSES` and `ALEA_SHOWCASE_ANALYSIS_QUEUE`
   (bounded analysis slots) and `ALEA_SHOWCASE_EXTRACTION_TIMEOUT_SECONDS`
   (document text extraction). Each LLM call in analysis is also bounded in code:

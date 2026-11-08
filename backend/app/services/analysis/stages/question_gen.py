@@ -13,7 +13,12 @@ from typing import TYPE_CHECKING, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.services.llm_bounds import TERSE_JSON_RULES, bounded_call, compact_instruction
+from app.services.llm_bounds import (
+    TERSE_JSON_RULES,
+    bounded_call,
+    compact_instruction,
+    showcase_caps,
+)
 from app.models.analysis import (
     AnalysisGap,
     AnalysisIteration,
@@ -135,6 +140,11 @@ class QuestionGenStage:
         for g in open_gaps:
             gap_by_description[g.description] = g
 
+        caps = showcase_caps()
+        max_questions = min(_MAX_QUESTIONS, caps.questions) if caps else _MAX_QUESTIONS
+        compact_questions = min(_COMPACT_MAX_QUESTIONS, max_questions)
+        sentence_words = max(caps.rationale_words, 15) if caps else 25
+
         # Build LLM prompt
         gap_descriptions = "\n".join(
             f"- [{g.gap_type}] (priority={g.priority}): {g.description}"
@@ -164,15 +174,15 @@ class QuestionGenStage:
             '{"groups": [{"topic": "topic name", "questions": [{"question_text": "the question", '
             '"rationale": "why we ask", "priority": 1, "gap_description": "the gap addressed"}]}], '
             '"total_questions": 0}\n'
-            f"Ask at most {_MAX_QUESTIONS} questions in total. Each question and "
-            "each rationale is one sentence under 25 words. "
+            f"Ask at most {max_questions} questions in total. Each question and "
+            f"each rationale is one sentence under {sentence_words} words. "
             f"{TERSE_JSON_RULES}"
         )
 
         # Call LLM: at most two attempts (the second asks for fewer, shorter
         # questions); the client's own identical-request retries are off.
         async def call(compact: bool) -> QuestionGenResult:
-            text = prompt + ("\n" + compact_instruction(_COMPACT_MAX_QUESTIONS) if compact else "")
+            text = prompt + ("\n" + compact_instruction(compact_questions) if compact else "")
             return await self.llm_service.json_async(prompt=text, schema=QuestionGenResult)
 
         result = await bounded_call(

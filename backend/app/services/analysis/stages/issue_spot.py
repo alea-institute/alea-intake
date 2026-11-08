@@ -20,6 +20,7 @@ from app.services.llm_bounds import (
     compact_instruction,
     limit_client_retries,
     list_field,
+    showcase_caps,
     validate_items,
 )
 
@@ -38,6 +39,27 @@ logger = logging.getLogger(__name__)
 # harness keys recordings by prompt hash. The bound lives in the retry.
 MAX_CLAIMS = 15
 COMPACT_MAX_CLAIMS = 8
+# Showcase runs leave room under ALEA_SHOWCASE_MAX_CLAIMS for exploration's
+# discovered claims.
+SHOWCASE_DISCOVERED_RESERVE = 2
+
+
+def showcase_claim_limit() -> int | None:
+    """Claims issue_spot may return in showcase mode (None elsewhere)."""
+    caps = showcase_caps()
+    if caps is None:
+        return None
+    return max(1, caps.claims - SHOWCASE_DISCOVERED_RESERVE)
+
+
+def showcase_issue_spot_instruction(max_claims: int, words: int) -> str:
+    """Showcase-only addendum; the authenticated request stays byte-identical."""
+    return (
+        f"Return at most {max_claims} claims, the most important first, each with "
+        f"at most 5 elements. Each rationale and element_description is under "
+        f"{words} words; the summary is under {words * 2} words. Reply with "
+        "exactly one JSON object and nothing else."
+    )
 
 ISSUE_SPOT_SYSTEM_PROMPT = """You are a legal issue-spotting assistant. Given a set of extracted facts from a consumer intake, identify all relevant legal claims.
 
@@ -109,8 +131,16 @@ class IssueSpotStage:
             {"role": "system", "content": ISSUE_SPOT_SYSTEM_PROMPT},
             {"role": "user", "content": f"Extracted facts:\n{facts_text}"},
         ]
+        limit = showcase_claim_limit()
+        if limit is not None:
+            caps = showcase_caps()
+            messages.append({
+                "role": "system",
+                "content": showcase_issue_spot_instruction(limit, caps.rationale_words if caps else 12),
+            })
         if compact:
-            messages.append({"role": "system", "content": compact_instruction(COMPACT_MAX_CLAIMS)})
+            compact_max = COMPACT_MAX_CLAIMS if limit is None else min(COMPACT_MAX_CLAIMS, limit)
+            messages.append({"role": "system", "content": compact_instruction(compact_max)})
 
         model = self._llm.create_client()
         limit_client_retries(model)
@@ -167,7 +197,10 @@ class IssueSpotStage:
             items = list_field(raw, "claims")
             if items is None:
                 return None
-            claims = validate_items(items, SpottedClaim, stage="issue_spot", limit=MAX_CLAIMS)
+            claims = validate_items(
+                items, SpottedClaim, stage="issue_spot",
+                limit=showcase_claim_limit() or MAX_CLAIMS,
+            )
             jurisdictions = raw.get("jurisdictions") if isinstance(raw, dict) else None
             summary = raw.get("summary") if isinstance(raw, dict) else None
             return IssueSpotResult(
