@@ -78,6 +78,9 @@ Only `GET /health` is anonymous while the gate is enabled. Share preview access
 privately: opening `/__preview?key=` with the configured passphrase sets an
 HttpOnly, SameSite=Lax cookie (Secure over HTTPS) and redirects to `/`. The cookie
 contains an HMAC signed with `ALEA_SECRET_KEY`, never the passphrase itself.
+`ALEA_PREVIEW_COOKIE_DAYS` sets the cookie's lifetime (default 30; 0 makes it a
+browser-session cookie).
+
 The entrypoint enables Uvicorn proxy headers. Set `ALEA_FORWARDED_ALLOW_IPS` to
 the Coolify proxy network address or CIDR so only that proxy supplies the forwarded
 scheme; never set it to `*`. Keep a single uvicorn worker: guest erase and socket
@@ -86,6 +89,29 @@ and verify that the cookie has Secure set through the public HTTPS domain.
 Configure the proxy to omit query strings, Authorization, Cookie and preview/key
 headers from access logs; never retain the preview link in logs or evidence.
 Application access logging is disabled in showcase mode.
+
+### Cloudflare Access (owner sign-in without the passphrase)
+
+A Cloudflare Access hostname in front of the app can admit the owner by email
+one-time PIN. Access adds a signed `Cf-Access-Jwt-Assertion` header to every
+proxied request, WebSocket upgrades included, and the gate accepts a valid token
+in place of the passphrase. Set:
+
+- `ALEA_CF_ACCESS_TEAM_DOMAIN`: the Zero Trust team domain
+  (`<team>.cloudflareaccess.com`, no scheme).
+- `ALEA_CF_ACCESS_AUD`: the Access application's Application Audience (AUD) tag.
+- `ALEA_CF_ACCESS_EMAILS` (optional): comma-separated email allowlist. Empty
+  accepts any identity the Access policy admits.
+
+The token path turns on only when both the team domain and AUD are set, and only
+while `ALEA_PREVIEW_PASSPHRASE` keeps the gate enabled. The app verifies RS256
+signatures against `https://<team-domain>/cdn-cgi/access/certs` (cached for one
+hour; an unknown key id forces at most one refetch per minute) and checks `aud`,
+`iss`, `exp` and `iat`. A request that bypasses Cloudflare cannot forge a token,
+and a refused or unverifiable token falls back to the passphrase check (401, or
+WebSocket close 1008). Set the Access session duration in the Access application;
+the app sets no cookie for token requests. Omit `Cf-Access-Jwt-Assertion` from
+proxy access logs as well.
 
 The harness sends `X-Preview-Key` from `PERSONA_PREVIEW_KEY`. The live probe reads
 only `VERIFY_PREVIEW_KEY`; load it privately into the process environment, then run:
