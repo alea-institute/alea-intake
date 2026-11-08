@@ -283,3 +283,208 @@ async def test_oversized_content_length_rejected_before_reading(showcase):
     assert send.await_args_list[0].args[0]["status"] == 413
     receive.assert_not_called()
     downstream.assert_not_called()
+
+
+async def _seed_output(intake_id):
+    from app.db.engine import get_engine
+    from app.models.output import OutputDocument
+    from app.models.analysis import AnalysisRun
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db:
+            run = AnalysisRun(intake_id=intake_id, trigger_type="manual", status="completed")
+            db.add(run)
+            await db.flush()
+            document = OutputDocument(run_id=run.id, intake_id=intake_id, profile_type="law_firm",
+                                      markdown_content="private")
+            db.add(document)
+            await db.commit()
+            return document.id
+
+
+@pytest.mark.parametrize("source", ["query", "body", "duplicate_query", "body_intake"])
+async def test_identifier_sources_cannot_replace_ownership(showcase, source):
+    client, _, _ = showcase
+    owner, other = await guest(client), await guest(client)
+    victim = (await client.post("/api/v1/intake/", headers=owner, json={})).json()
+    own = (await client.post("/api/v1/intake/", headers=other, json={})).json()
+    await _seed_output(victim["id"])
+    document = await _seed_output(own["id"])
+    assert (await client.get(f'/api/v1/analysis/{victim["id"]}/results', headers=owner)).status_code == 200
+    if source == "query":
+        response = await client.get(f'/api/v1/analysis/{victim["id"]}/results',
+                                    params={"document_id": document}, headers=other)
+    elif source == "body":
+        response = await client.post(f'/api/v1/analysis/{victim["id"]}/analyze',
+                                     json={"document_id": document}, headers=other)
+    elif source == "body_intake":
+        response = await client.post(f'/api/v1/analysis/{own["id"]}/analyze',
+                                     json={"intake_id": victim["id"]}, headers=other)
+    else:
+        response = await client.get(f'/api/v1/analysis/{own["id"]}/results',
+                                    params=[("document_id", 999999), ("document_id", document)],
+                                    headers=other)
+    assert response.status_code == 404, response.text
+
+
+@pytest.mark.parametrize("identifier", ["intake_id", "session_id", "document_id", "run_id", "party_id"])
+async def test_invalid_resource_identifier_is_422(showcase, identifier):
+    client, _, _ = showcase
+    headers = await guest(client)
+    response = await client.get("/api/v1/intake/", params={identifier: "invalid"}, headers=headers)
+    assert response.status_code == 422
+
+
+@pytest.mark.parametrize("body", [[], "text", None, 42])
+async def test_non_object_body_is_422(showcase, body):
+    import json
+    client, _, _ = showcase
+    headers = await guest(client)
+    response = await client.post("/api/v1/intake/", content=json.dumps(body),
+                                 headers={**headers, "Content-Type": "application/json"})
+    assert response.status_code == 422
+
+
+@pytest.mark.parametrize("query_token", [False, True])
+async def test_standard_socket_stores_message_without_llm_key(showcase, monkeypatch, query_token):
+    from app.db.engine import get_engine
+    from app.models.intake import Message
+    from sqlalchemy import select
+
+    client, settings, app = showcase
+    headers = await guest(client)
+    created = (await client.post("/api/v1/intake/", headers=headers, json={})).json()
+    settings.showcase_mode = False
+    monkeypatch.setattr("app.routers.intake.screen_message_fast", AsyncMock(return_value=None))
+    path = f'/api/ws/intake/{created["session_id"]}'
+    if query_token:
+        path += "?token=" + headers["Authorization"][7:]
+    with TestClient(app) as sync:
+        with sync.websocket_connect(path) as ws:
+            if not query_token:
+                ws.send_json({"type": "auth", "token": headers["Authorization"][7:]})
+            assert ws.receive_json()["type"] == "session_state"
+            ws.send_json({"type": "text_message", "content": "My wages are unpaid."})
+            assert ws.receive_json()["type"] == "message_ack"
+            reply = ws.receive_json()
+            assert reply["type"] == "system_message"
+            assert reply["content"]
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None})
+        rows = (await conn.execute(select(Message.content_encrypted).where(
+            Message.session_id == created["session_id"], Message.sender_type == "consumer"))).scalars().all()
+        assert b"My wages are unpaid." in rows
+
+
+async def _seed_transcript(session_id, intake_id):
+    from app.db.engine import get_engine
+    from app.models.audio import AudioRecording, Transcript
+    from app.services.intake.session_service import IntakeSessionService
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db:
+            message = await IntakeSessionService(db).store_message(
+                session_id=session_id, sender_type="consumer", modality="voice", content="original")
+            recording = AudioRecording(message_id=message.id, intake_id=intake_id, original_format="wav")
+            db.add(recording)
+            await db.flush()
+            transcript = Transcript(recording_id=recording.id, text_encrypted=b"private transcript",
+                                    asr_provider="test")
+            db.add(transcript)
+            await db.commit()
+            return recording.id
+
+
+@pytest.mark.parametrize("message_type", ["transcript_approve", "transcript_edit"])
+async def test_socket_cannot_change_other_guests_transcript(showcase, monkeypatch, message_type):
+    from app.db.engine import get_engine
+    from app.models.audio import Transcript
+    from sqlalchemy import select
+
+    client, _, app = showcase
+    owner, other = await guest(client), await guest(client)
+    victim = (await client.post("/api/v1/intake/", headers=owner, json={})).json()
+    own = (await client.post("/api/v1/intake/", headers=other, json={})).json()
+    recording_id = await _seed_transcript(victim["session_id"], victim["id"])
+    monkeypatch.setattr("app.routers.intake.llm_service_from_headers", lambda headers: object())
+    monkeypatch.setattr("app.routers.intake.ConversationService.generate_response", AsyncMock(return_value="reply"))
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{own["session_id"]}') as ws:
+            ws.send_json({"type": "auth", "token": other["Authorization"][7:], "llm_api_key": "test"})
+            assert ws.receive_json()["type"] == "session_state"
+            ws.send_json({"type": message_type, "recording_id": recording_id, "edited_text": "tampered"})
+            assert ws.receive_json()["type"] == "error"
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None})
+        row = (await conn.execute(select(Transcript.status, Transcript.text_encrypted).where(
+            Transcript.recording_id == recording_id))).one()
+        assert row == ("pending_review", b"private transcript")
+
+
+async def test_garbage_pdf_returns_422(showcase):
+    client, _, _ = showcase
+    headers = await guest(client)
+    headers["X-LLM-API-Key"] = "test-visitor-key"
+    created = (await client.post("/api/v1/intake/", headers=headers, json={})).json()
+    response = await client.post(f'/api/v1/intake/{created["id"]}/document', headers=headers,
+        data={"session_id": created["session_id"]},
+        files={"file": ("garbage.pdf", b"garbage bytes", "application/pdf")})
+    assert response.status_code == 422, response.text
+    assert response.json()["detail"] == "PDF could not be read"
+
+
+@pytest.mark.parametrize("identifier", ["intake_id", "session_id", "document_id", "run_id", "party_id"])
+async def test_each_identifier_requires_ownership_without_path_intake(showcase, identifier):
+    from app.db.engine import get_engine
+    from app.models.analysis import AnalysisRun
+    from app.models.intake import IntakeParty
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    client, _, _ = showcase
+    owner, other = await guest(client), await guest(client)
+    victim = (await client.post("/api/v1/intake/", headers=owner, json={})).json()
+    ids = {"intake_id": victim["id"], "session_id": victim["session_id"]}
+    ids["document_id"] = await _seed_output(victim["id"])
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None})
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db:
+            run = AnalysisRun(intake_id=victim["id"], trigger_type="manual")
+            party = IntakeParty(intake_id=victim["id"])
+            db.add_all([run, party])
+            await db.commit()
+            ids.update(run_id=run.id, party_id=party.id)
+    response = await client.get("/api/v1/intake/", params={identifier: ids[identifier]}, headers=other)
+    assert response.status_code == 404
+
+
+@pytest.mark.parametrize("message_type", ["transcript_approve", "transcript_edit"])
+async def test_standard_transcript_without_key_is_screened_and_gets_reply(showcase, monkeypatch, message_type):
+    from app.db.engine import get_engine
+    from app.models.audio import Transcript
+    from sqlalchemy import select
+
+    client, settings, app = showcase
+    headers = await guest(client)
+    created = (await client.post("/api/v1/intake/", headers=headers, json={})).json()
+    recording_id = await _seed_transcript(created["session_id"], created["id"])
+    settings.showcase_mode = False
+    screen = AsyncMock(return_value=None)
+    monkeypatch.setattr("app.routers.intake.screen_message_fast", screen)
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({"type": "auth", "token": headers["Authorization"][7:]})
+            assert ws.receive_json()["type"] == "session_state"
+            ws.send_json({"type": message_type, "recording_id": recording_id, "edited_text": "corrected text"})
+            assert ws.receive_json()["type"] == "message_ack"
+            assert ws.receive_json()["type"] == "system_message"
+    expected_text = "corrected text" if message_type == "transcript_edit" else "private transcript"
+    assert screen.await_args.args[:2] == (expected_text, created["session_id"])
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None})
+        row = (await conn.execute(select(Transcript.status, Transcript.text_encrypted).where(
+            Transcript.recording_id == recording_id))).one()
+        assert row == ("edited" if message_type == "transcript_edit" else "approved", expected_text.encode())

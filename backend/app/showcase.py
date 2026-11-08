@@ -1,12 +1,13 @@
 """Public showcase ownership and bounded admission."""
 import asyncio
+import json
+from weakref import WeakValueDictionary
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, HTTPException, Request
 from limits import parse
 from limits.storage import MemoryStorage
 from limits.strategies import FixedWindowRateLimiter
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
@@ -16,6 +17,60 @@ from app.db.session import get_tenant_session
 from app.db.retention import touch_guest
 from app.models.intake import Intake, IntakeSession, IntakeParty
 from app.models.user import User
+
+
+# The deployment runs one uvicorn worker. Multiple workers would require a
+# distributed lock shared by sockets, HTTP work, and the retention sweeper.
+_guest_locks: WeakValueDictionary[int, asyncio.Lock] = WeakValueDictionary()
+
+
+def guest_lock(user_id: int) -> asyncio.Lock:
+    lock = _guest_locks.get(user_id)
+    if lock is None:
+        lock = asyncio.Lock()
+        _guest_locks[user_id] = lock
+    return lock
+
+
+async def _check_identifiers(request, db, user):
+    from app.models.analysis import AnalysisRun
+    from app.models.output import OutputDocument
+
+    models = {"intake_id": Intake, "session_id": IntakeSession,
+              "document_id": OutputDocument, "run_id": AnalysisRun, "party_id": IntakeParty}
+    # Keep sources and duplicate query/form fields separate: no identifier may
+    # overwrite another before its ownership has been checked.
+    supplied = list(request.path_params.items()) + list(request.query_params.multi_items())
+    if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        content_type = request.headers.get("content-type", "")
+        if "application/json" in content_type:
+            try:
+                body = await request.json()
+            except (ValueError, json.JSONDecodeError):
+                raise HTTPException(422, "Expected a JSON object") from None
+            if not isinstance(body, dict):
+                raise HTTPException(422, "Expected a JSON object")
+            supplied.extend(body.items())
+        elif "multipart/form-data" in content_type:
+            supplied.extend((await request.form()).multi_items())
+    intake_ids = set()
+    for name, value in supplied:
+        if name not in models or value is None:
+            continue
+        if isinstance(value, bool) or not isinstance(value, (int, str)):
+            raise HTTPException(422, "Resource identifiers must be integers")
+        try:
+            identifier = int(value)
+        except (ValueError, TypeError):
+            raise HTTPException(422, "Resource identifiers must be integers") from None
+        resource = await db.get(models[name], identifier)
+        if resource is None:
+            raise HTTPException(404, "Intake not found")
+        intake_ids.add(resource.id if name == "intake_id" else resource.intake_id)
+    if intake_ids:
+        if len(intake_ids) != 1:
+            raise HTTPException(404, "Intake not found")
+        await require_owner(db, user, intake_id=intake_ids.pop())
 
 
 def client_ip(conn):
@@ -72,48 +127,24 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
     if not config.get_settings().showcase_mode:
         yield
         return
-    # Serialize active request work with the sweeper's guest-row lock.
-    touched = await touch_guest(db, user.id)
-    if not touched:
-        raise HTTPException(404, "Session unavailable")
-    data = dict(request.query_params)
-    if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
-        if "application/json" in request.headers.get("content-type", ""):
-            data.update(await request.json())
-        elif "multipart/form-data" in request.headers.get("content-type", ""):
-            data.update(await request.form())
-    data.update(request.path_params)
-    intake_id, session_id = data.get("intake_id"), data.get("session_id")
-    if "document_id" in data:
-        from app.models.output import OutputDocument
-        document = (await db.execute(select(OutputDocument.intake_id).where(
-            OutputDocument.id == int(data["document_id"])))).first()
-        if document is None:
-            raise HTTPException(404, "Document not found")
-        intake_id = document.intake_id
-    if intake_id is not None or session_id is not None:
-        intake = await require_owner(db, user, intake_id=intake_id, session_id=session_id)
-        if data.get("run_id") is not None:
-            from app.models.analysis import AnalysisRun
-            run = await db.get(AnalysisRun, int(data["run_id"]))
-            if run is None or run.intake_id != intake.id:
-                raise HTTPException(404, "Analysis not found")
-        if data.get("party_id") is not None:
-            party = await db.get(IntakeParty, int(data["party_id"]))
-            if party is None or party.intake_id != intake.id:
-                raise HTTPException(404, "Party not found")
-    if request.method != "GET":
-        admit(request.app, user.id, client_ip(request))
-    from app.db.retention import guest_activity
-    async with guest_activity(user.id):
-        try:
+    # Includes end_session: acquire before touching rows so an erase never
+    # waits for a socket while holding a conflicting database write lock.
+    async with guest_lock(user.id):
+        if not await touch_guest(db, user.id):
+            raise HTTPException(404, "Session unavailable")
+        await _check_identifiers(request, db, user)
+        if request.method != "GET":
+            admit(request.app, user.id, client_ip(request))
+        from app.db.retention import guest_activity
+        async with guest_activity(user.id):
             if request.url.path.endswith(("/analyze", "/override")):
                 async with analysis_slot(request.app):
                     yield
             else:
                 yield
-        finally:
             await touch_guest(db, user.id)
+            # Finish writes (including erase) before releasing the guest lock.
+            await db.commit()
 
 
 class ShowcaseBodyLimit:

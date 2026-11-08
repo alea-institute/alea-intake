@@ -131,27 +131,34 @@ async def sweep_showcase_sessions():
             guests = list((await session.execute(select(User.id).where(
                 User.email.is_(None), User.hashed_password.is_(None), User.role == 'consumer',
                 User.updated_at < cutoff))).scalars())
+            from app.showcase import guest_lock
             for user_id in guests:
                 if user_id in _active:
                     continue
-                try:
-                    guest = (await session.execute(select(User).where(User.id == user_id).with_for_update(skip_locked=True))).scalar_one_or_none()
-                    if guest is None:
-                        continue
-                    last_active = _aware(guest.updated_at)
-                    if last_active >= cutoff or user_id in _active:
-                        continue
-                    intakes = list((await session.execute(select(Intake).where(Intake.created_by_user_id == user_id))).scalars())
-                    if any(_aware(i.updated_at) >= cutoff for i in intakes):
-                        continue
-                    for intake in intakes:
-                        await purge_intake(session, intake.id)
-                    if not intakes:
-                        await _delete_guest_identity(session, user_id, include_audit=True)
-                    await session.commit()
-                except Exception:
-                    await session.rollback()
-                    logger.warning('Guest purge interrupted; next sweep will retry')
+                async with guest_lock(user_id):
+                    try:
+                        guest = (await session.execute(select(User).where(User.id == user_id).with_for_update(skip_locked=True))).scalar_one_or_none()
+                        if guest is None:
+                            continue
+                        last_active = _aware(guest.updated_at)
+                        if last_active >= cutoff or user_id in _active:
+                            continue
+                        intakes = list((await session.execute(select(Intake).where(Intake.created_by_user_id == user_id))).scalars())
+                        if any(_aware(i.updated_at) >= cutoff for i in intakes):
+                            continue
+                        for intake in intakes:
+                            await purge_intake(session, intake.id)
+                        if not intakes:
+                            await _delete_guest_identity(session, user_id, include_audit=True)
+                        await session.commit()
+                    except Exception:
+                        await session.rollback()
+                        logger.exception('Guest purge interrupted for guest %d; next sweep will retry', user_id,
+                                         extra={'guest_id': user_id})
+                    finally:
+                        # A skipped fresh guest must not retain a row lock after
+                        # releasing its application lock.
+                        await session.rollback()
 
 
 async def run_showcase_sweeper():
@@ -159,5 +166,5 @@ async def run_showcase_sweeper():
         try:
             await sweep_showcase_sessions()
         except Exception:
-            logger.warning('Guest sweep unavailable; retrying next interval')
+            logger.exception('Guest sweep unavailable; retrying next interval')
         await asyncio.sleep(min(60, max(1, config.get_settings().showcase_idle_ttl_seconds / 2)))

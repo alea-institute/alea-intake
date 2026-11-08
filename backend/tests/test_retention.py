@@ -6,9 +6,30 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
+import structlog
+import app.models.audio  # noqa: F401 -- register before async_client creates tables
+import app.models.document  # noqa: F401
 from sqlalchemy import select, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from tests.test_showcase_mode import showcase as showcase, guest  # noqa: F401,F811
+
+
+@pytest.fixture(autouse=True)
+def restore_logging_state():
+    root = logging.getLogger()
+    handlers, level = root.handlers[:], root.level
+    access = logging.getLogger("uvicorn.access")
+    disabled = access.disabled
+    loggers = [root, *(value for value in logging.Logger.manager.loggerDict.values()
+                       if isinstance(value, logging.Logger))]
+    formatters = {handler: handler.formatter for logger in loggers for handler in logger.handlers}
+    yield
+    root.handlers[:] = handlers
+    root.setLevel(level)
+    access.disabled = disabled
+    for handler, formatter in formatters.items():
+        handler.setFormatter(formatter)
+    structlog.reset_defaults()
 
 
 @pytest.fixture
@@ -17,8 +38,6 @@ async def retention(showcase, monkeypatch, tmp_path):
     from sqlalchemy.ext.asyncio import create_async_engine
     from sqlalchemy import MetaData
     from app.db.base import TenantBase, SharedBase
-    import app.models.audio
-    import app.models.document
     client, settings, app = showcase
     from app.middleware.audit import AuditMiddleware
     app.add_middleware(AuditMiddleware)
@@ -248,3 +267,103 @@ def test_preview_access_logging_omits_query_credentials(monkeypatch):
         assert access.disabled
     finally:
         access.disabled = previous
+
+
+async def test_sweep_logs_failure_and_continues_other_guests(retention, monkeypatch, caplog):
+    from app.db import retention as module
+    from app.models import Intake, User
+    client, _, _, engine = retention
+    ids = []
+    for _ in range(2):
+        headers = await guest(client)
+        ids.append((await client.post('/api/v1/intake/', headers=headers, json={})).json()['id'])
+    stale = datetime.now(timezone.utc) - timedelta(hours=2)
+    async with engine.begin() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        await conn.execute(update(Intake).values(updated_at=stale))
+        await conn.execute(update(User).values(updated_at=stale))
+        guest_id = (await conn.execute(select(Intake.created_by_user_id).where(Intake.id == ids[0]))).scalar_one()
+    original = module.purge_intake
+    async def purge(session, intake_id):
+        if intake_id == ids[0]:
+            raise OSError("simulated storage failure")
+        await original(session, intake_id)
+    monkeypatch.setattr(module, "purge_intake", purge)
+    with caplog.at_level(logging.WARNING):
+        await module.sweep_showcase_sessions()
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        assert (await conn.execute(select(Intake.id))).scalars().all() == [ids[0]]
+    record = next(r for r in caplog.records if 'purge interrupted' in r.getMessage())
+    assert str(guest_id) in record.getMessage()
+    assert record.exc_info is not None
+
+
+async def test_erase_waits_for_inflight_socket_and_prevents_later_writes(retention, monkeypatch):
+    import asyncio
+    from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+    from threading import Event
+    from starlette.testclient import TestClient
+    from starlette.websockets import WebSocketDisconnect
+    from app.models.intake import Message
+
+    client, _, app, engine = retention
+    headers = await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=headers, json={})).json()
+    release = asyncio.Event()
+    reply_started = Event()
+    async def slow_reply(*args, **kwargs):
+        reply_started.set()
+        await release.wait()
+        return 'reply after waiting'
+    # Release SQLite's database-wide writer lock before the slow provider call.
+    # Otherwise SQLite itself serializes erase and hides the application race
+    # that PostgreSQL's per-row locks allow.
+    from app.services.intake.session_service import IntakeSessionService
+    store_message = IntakeSessionService.store_message
+    async def store_consumer_then_commit(self, *args, **kwargs):
+        message = await store_message(self, *args, **kwargs)
+        if kwargs.get("sender_type") == "consumer":
+            await self._session.commit()
+        return message
+    monkeypatch.setattr(IntakeSessionService, "store_message", store_consumer_then_commit)
+    monkeypatch.setattr('app.routers.intake.ConversationService.generate_response', slow_reply)
+    monkeypatch.setattr('app.routers.intake.llm_service_from_headers', lambda headers: object())
+    from unittest.mock import AsyncMock
+    monkeypatch.setattr('app.routers.intake.screen_message_fast', AsyncMock(return_value=None))
+    erase_entered = Event()
+    async def observed_app(scope, receive, send):
+        if scope["type"] == "http" and scope["path"].endswith("/end-session"):
+            erase_entered.set()
+        await app(scope, receive, send)
+    with TestClient(observed_app) as sync, ThreadPoolExecutor() as executor:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({'type': 'auth', 'token': headers['Authorization'][7:], 'llm_api_key': 'test'})
+            assert ws.receive_json()['type'] == 'session_state'
+            ws.send_json({'type': 'text_message', 'content': 'private text'})
+            assert ws.receive_json()['type'] == 'message_ack'
+            assert reply_started.wait(timeout=10)
+            # Both requests run on TestClient's event loop, as in one uvicorn worker.
+            erase = executor.submit(sync.post, f'/api/v1/intake/{created["id"]}/end-session', headers=headers)
+            assert erase_entered.wait(timeout=10)
+            try:
+                with pytest.raises(FutureTimeoutError):
+                    erase.result(timeout=1)
+            finally:
+                sync.portal.call(release.set)
+            assert erase.result(timeout=10).status_code == 200
+            assert ws.receive_json()['type'] == 'system_message'
+            ws.send_json({'type': 'text_message', 'content': 'must not survive erase'})
+            with pytest.raises(WebSocketDisconnect) as exc:
+                ws.receive_json()
+            assert exc.value.code == 4004
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        assert (await conn.execute(select(func.count()).select_from(Message).where(
+            Message.session_id == created['session_id']))).scalar_one() == 0
+
+
+def test_graph_models_registered_before_database_setup():
+    from app.db.base import TenantBase
+    assert {'tenant.audio_recordings', 'tenant.transcripts', 'tenant.uploaded_documents',
+            'tenant.document_extractions'} <= set(TenantBase.metadata.tables)

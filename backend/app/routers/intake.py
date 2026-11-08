@@ -16,24 +16,22 @@ import logging
 from collections import defaultdict
 from dataclasses import asdict
 from datetime import datetime, timezone
-from typing import Any
 
 import jwt as pyjwt
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, Request, UploadFile, WebSocket, WebSocketDisconnect, status
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.showcase import admit, client_ip
+from app.showcase import admit, client_ip, guest_lock
 from app.config import get_settings
 from app.core.permissions import get_current_active_user
 from app.db.session import get_tenant_session
 from app.models.audio import AudioRecording, Transcript
 from app.models.document import DocumentExtraction, UploadedDocument
-from app.models.intake import Intake, IntakeParty, IntakeSession, Message
+from app.models.intake import Intake, IntakeSession, Message
 from app.models.user import User
-from app.services.asr import ASRService, TranscriptionResult
+from app.services.asr import ASRService
 from app.services.document import DocumentService
 from app.services.intake.conversation import ConversationService
 from app.services.intake.message_pipeline import normalize_text, process_message
@@ -348,6 +346,8 @@ async def document_upload(
                 page_count = await run_document_worker("pages", content=file_bytes)
             except TimeoutError:
                 raise HTTPException(413, "PDF processing time limit exceeded")
+            except (ValueError, OSError, json.JSONDecodeError):
+                raise HTTPException(422, "PDF could not be read") from None
             if page_count > settings.showcase_pdf_max_pages:
                 raise HTTPException(413, "PDF exceeds showcase page limit")
 
@@ -474,10 +474,12 @@ async def websocket_access(websocket: WebSocket, session_id: int):
     settings = get_settings()
 
     llm_service = None
-    if settings.showcase_mode:
+    auth = {}
+    token = websocket.query_params.get("token")
+    if settings.showcase_mode or not token:
         import asyncio
         await websocket.accept()
-        if "token" in websocket.query_params:
+        if settings.showcase_mode and "token" in websocket.query_params:
             await websocket.close(code=4001, reason="Use the auth message")
             return
         try:
@@ -488,8 +490,6 @@ async def websocket_access(websocket: WebSocket, session_id: int):
         except (asyncio.TimeoutError, ValueError, WebSocketDisconnect):
             await websocket.close(code=4001, reason="Authentication required")
             return
-    else:
-        token = websocket.query_params.get("token")
     if not token:
         await websocket.close(code=4001, reason="Authentication required")
         return
@@ -533,6 +533,19 @@ async def websocket_access(websocket: WebSocket, session_id: int):
         except HTTPException:
             await websocket.close(code=4001, reason="Request key or admission required")
             return
+    else:
+        headers = dict(websocket.headers)
+        if auth.get("llm_api_key"):
+            headers.update({"x-llm-api-key": auth["llm_api_key"],
+                            "x-llm-provider": auth.get("llm_provider", "openai"),
+                            "x-llm-model": auth.get("llm_model", "")})
+        if headers.get("x-llm-api-key", "").strip():
+            from starlette.datastructures import Headers
+            try:
+                llm_service = llm_service_from_headers(Headers(headers))
+            except HTTPException:
+                await websocket.close(code=4001, reason="Invalid LLM credentials")
+                return
     return user_id, llm_service
 
 
@@ -543,7 +556,7 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
 
     Authentication:
       - Showcase: first auth message carries JWT and request LLM credentials
-      - Standard mode: JWT token passed as query parameter ?token={jwt}
+      - Standard mode: first auth message, with legacy ?token={jwt} fallback
       - Close 4001 if token is invalid or expired
       - Close 4003 if user lacks access to the session
 
@@ -556,7 +569,8 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
         return
     user_id, llm_service = access
     settings = get_settings()
-    await manager.connect(websocket, session_id, accept=not settings.showcase_mode)
+    from starlette.websockets import WebSocketState
+    await manager.connect(websocket, session_id, accept=websocket.application_state != WebSocketState.CONNECTED)
 
     # Step 3: Create a DB session for message operations
     from app.db.engine import get_engine
@@ -591,13 +605,16 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
                     continue
 
             from app.db.retention import guest_activity, touch_guest
-            async with guest_activity(user_id):
-                if settings.showcase_mode and msg_type not in {"typing_indicator", "session_pause"}:
+            async with guest_activity(user_id), guest_lock(user_id):
+                if settings.showcase_mode:
                     async with engine.begin() as conn:
                         conn = await conn.execution_options(schema_translate_map={"tenant": None})
                         touched = await touch_guest(conn, user_id)
-                        if not touched:
-                            await websocket.close(code=4003, reason="Session unavailable")
+                        exists = (await conn.execute(select(IntakeSession.id).join(
+                            Intake, Intake.id == IntakeSession.intake_id).where(
+                            IntakeSession.id == session_id, Intake.created_by_user_id == user_id))).first()
+                        if not touched or exists is None:
+                            await websocket.close(code=4004, reason="Session unavailable")
                             break
                 if msg_type == "text_message":
                     await _handle_text_message(
@@ -634,20 +651,6 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
         manager.disconnect(websocket, session_id)
 
 
-async def _socket_llm_service(websocket, llm_service):
-    if llm_service is not None:
-        return llm_service
-    try:
-        return llm_service_from_headers(websocket.headers)
-    except HTTPException:
-        await websocket.send_json({
-            "type": "error",
-            "status": 400,
-            "message": "A visitor LLM API key is required",
-        })
-        return None
-
-
 async def _handle_text_message(
     websocket: WebSocket,
     session_id: int,
@@ -662,10 +665,6 @@ async def _handle_text_message(
     triggers send immediate safety_alert via WebSocket. Screening never blocks
     the message flow — errors are logged and swallowed.
     """
-    llm_service = await _socket_llm_service(websocket, llm_service)
-    if llm_service is None:
-        return
-
     content = data.get("content", "")
     client_id = data.get("client_id")
     party_id = data.get("party_id")
@@ -718,7 +717,7 @@ async def _handle_text_message(
             )
 
             # Normalize the message
-            normalized = normalize_text(content, message.id, party_id)
+            normalize_text(content, message.id, party_id)
 
             # Send acknowledgment (include client_id for optimistic update reconciliation)
             await websocket.send_json({
@@ -773,7 +772,7 @@ async def _handle_session_pause(
         )
         async with AsyncSession(bind=conn, expire_on_commit=False) as db_session:
             svc = IntakeSessionService(db_session)
-            session = await svc.pause_session(session_id)
+            await svc.pause_session(session_id)
             await db_session.commit()
 
             await websocket.send_json({
@@ -888,10 +887,6 @@ async def _handle_transcript_approve(
       4. Store system response message
       5. Send message_ack + system_message
     """
-    llm_service = await _socket_llm_service(websocket, llm_service)
-    if llm_service is None:
-        return
-
     recording_id = data.get("recording_id")
 
     async with engine.connect() as conn:
@@ -903,9 +898,14 @@ async def _handle_transcript_approve(
 
             # Lookup transcript by recording_id
             result = await db_session.execute(
-                select(Transcript).where(Transcript.recording_id == recording_id)
+                select(Transcript).join(AudioRecording, AudioRecording.id == Transcript.recording_id)
+                .join(Message, Message.id == AudioRecording.message_id)
+                .where(Transcript.recording_id == recording_id, Message.session_id == session_id)
             )
-            transcript = result.scalar_one()
+            transcript = result.scalar_one_or_none()
+            if transcript is None:
+                await websocket.send_json({"type": "error", "message": "Transcript not found"})
+                return
 
             # Update status to approved
             transcript.status = "approved"
@@ -944,12 +944,12 @@ async def _handle_transcript_approve(
 
             # Normalize the approved transcript text
             try:
-                normalized = await process_message(
+                await process_message(
                     "voice", approved_text, original_message.id, original_message.party_id
                 )
             except NotImplementedError:
                 # Voice normalization falls back to text normalization
-                normalized = normalize_text(
+                normalize_text(
                     approved_text, original_message.id, original_message.party_id
                 )
 
@@ -1008,10 +1008,6 @@ async def _handle_transcript_edit(
       4. Store system response message
       5. Send message_ack + system_message
     """
-    llm_service = await _socket_llm_service(websocket, llm_service)
-    if llm_service is None:
-        return
-
     recording_id = data.get("recording_id")
     edited_text = data.get("edited_text", "")
 
@@ -1024,9 +1020,14 @@ async def _handle_transcript_edit(
 
             # Lookup transcript by recording_id
             result = await db_session.execute(
-                select(Transcript).where(Transcript.recording_id == recording_id)
+                select(Transcript).join(AudioRecording, AudioRecording.id == Transcript.recording_id)
+                .join(Message, Message.id == AudioRecording.message_id)
+                .where(Transcript.recording_id == recording_id, Message.session_id == session_id)
             )
-            transcript = result.scalar_one()
+            transcript = result.scalar_one_or_none()
+            if transcript is None:
+                await websocket.send_json({"type": "error", "message": "Transcript not found"})
+                return
 
             # Update text and status
             transcript.text_encrypted = edited_text.encode("utf-8")
@@ -1045,13 +1046,23 @@ async def _handle_transcript_edit(
             )
             original_message = msg_result.scalar_one()
 
+            try:
+                screening_result = await screen_message_fast(edited_text, session_id, db_session)
+                if screening_result and screening_result.has_critical:
+                    await websocket.send_json(build_safety_alert_message(screening_result))
+                    for tp in screening_result.triggered_protocols:
+                        if isinstance(tp, dict) and tp.get("severity_tier") == "critical":
+                            await persist_screening_event(db_session, session_id, tp, "immediate_alert")
+            except Exception:
+                logger.warning("Transcript screening failed for session %d; continuing", session_id, exc_info=True)
+
             # Normalize the edited text
             try:
-                normalized = await process_message(
+                await process_message(
                     "voice", edited_text, original_message.id, original_message.party_id
                 )
             except NotImplementedError:
-                normalized = normalize_text(
+                normalize_text(
                     edited_text, original_message.id, original_message.party_id
                 )
 
@@ -1098,6 +1109,7 @@ async def end_session(intake_id: int, current_user: User = Depends(get_current_a
                       session: AsyncSession = Depends(get_tenant_session)):
     if not get_settings().showcase_mode:
         raise HTTPException(404, "Not found")
+    # showcase_access holds guest_lock through this handler and its commit.
     from app.db.retention import purge_intake
     ids = list((await session.execute(select(Intake.id).where(
         Intake.created_by_user_id == current_user.id))).scalars())
