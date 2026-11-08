@@ -125,6 +125,7 @@ class Campaign:
             table = "| Model | Persona | Deterministic checks passed | Cost USD |\n|---|---|---|---|\n"
             for model, persona, gates, cost in rows:
                 table += f"| {model} | {persona} | {sum(gates.values())}/{len(gates)} | {cost if cost is not None else 'unavailable'} |\n"
+            out_root.mkdir(parents=True, exist_ok=True)
             self.write(out_root / "comparison.md", table)
             return rows
         finally:
@@ -343,9 +344,12 @@ def main():
     personas = [args.persona_dir] if args.persona_dir else sorted(
         p.parent for p in (REPO / "docs/evidence/persona-campaign/personas").glob("*/narrative.txt"))
     try:
-        Campaign(base).run(personas, REPO / "docs/evidence/persona-campaign/runs", args.models)
+        rows = Campaign(base).run(personas, REPO / "docs/evidence/persona-campaign/runs", args.models)
     except (ValueError, RuntimeError, httpx.HTTPError):
         print("Campaign aborted; check configuration, deployment and run artifacts.", file=sys.stderr)
+        return 1
+    if not rows or any(not all(gates.values()) for _, _, gates, _ in rows):
+        print("Campaign gates failed or no personas ran; see run artifacts.", file=sys.stderr)
         return 1
     return 0
 

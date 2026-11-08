@@ -17,6 +17,34 @@ def test_missing_operator_key_refuses_start():
     with pytest.raises(ValueError, match='PERSONA_LLM_API_KEY'):
         load('persona_run').Campaign('https://preview.test', environ={})
 
+
+@pytest.mark.parametrize('failed_gate', [None, 'folio', 'exports', 'deadlines', 'narrative', 'empty'])
+def test_main_exit_reflects_gates_after_writing_artifacts(tmp_path, monkeypatch, failed_gate):
+    runner = load('persona_run')
+    campaign = runner.Campaign('https://preview.test', environ={'PERSONA_LLM_API_KEY': 'test-only-key'}, folio={})
+    monkeypatch.setattr(campaign, 'commit', lambda: 'build-a')
+    monkeypatch.setattr(campaign, 'run_persona', lambda *args: {
+        'outputs': [{'id': 1}], 'steps': {'narrative': {'ok': failed_gate != 'narrative'}},
+    })
+    checker = SimpleNamespace(iter_iris=lambda result: [(None, None, 'test-iri')],
+                              check_iri=lambda *args: {'ok': failed_gate != 'folio'})
+    memo = SimpleNamespace(check_run=lambda path: {
+        'exports_ok': failed_gate != 'exports', 'deadline_check': {'ok': failed_gate != 'deadlines'},
+    })
+    monkeypatch.setattr(runner, 'sidecar', lambda name: checker if name == 'folio_check' else memo)
+    monkeypatch.setattr(runner, 'Campaign', lambda base: campaign)
+    monkeypatch.setattr(runner, 'REPO', tmp_path)
+    args = ['persona_run.py', '--base-url', 'https://preview.test']
+    if failed_gate != 'empty':
+        args.append(str(tmp_path / 'example'))
+    monkeypatch.setattr(runner.sys, 'argv', args)
+    assert runner.main() == (0 if failed_gate is None else 1)
+    out = tmp_path / 'docs/evidence/persona-campaign/runs'
+    assert (out / 'comparison.md').exists()
+    if failed_gate != 'empty':
+        checks = json.loads((out / 'example/run.json').read_text())['deterministic_checks']
+        assert all(checks.values()) == (failed_gate is None)
+
 def test_commit_changes_abort_before_next_persona(tmp_path, monkeypatch):
     runner = load('persona_run')
     commits = iter(['build-a', 'build-a', 'build-b'])
