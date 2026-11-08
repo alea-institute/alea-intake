@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Awaitable, Callable, Sequence
+from dataclasses import dataclass
 from typing import Any, TypeVar
 
 import structlog
@@ -39,6 +40,39 @@ TERSE_JSON_RULES = (
     "fences, no placeholder or example object, and no \"Correction:\" or second "
     "attempt. Write the final answer once."
 )
+
+
+@dataclass(frozen=True)
+class ShowcaseCaps:
+    """Tighter output caps for showcase demos (see ``ALEA_SHOWCASE_*``)."""
+
+    claims: int
+    gaps: int
+    questions: int
+    mappings_per_fact: int
+    facts_per_extraction: int
+    rationale_words: int
+
+
+def showcase_caps() -> ShowcaseCaps | None:
+    """Showcase output caps, or None outside showcase mode.
+
+    Authenticated deployments get None and keep every prompt unchanged (the
+    offline replay harness keys recordings by prompt hash).
+    """
+    from app import config as app_config
+
+    settings = app_config.get_settings()
+    if not settings.showcase_mode:
+        return None
+    return ShowcaseCaps(
+        claims=max(1, settings.showcase_max_claims),
+        gaps=max(1, settings.showcase_max_gaps),
+        questions=max(1, settings.showcase_max_questions),
+        mappings_per_fact=max(1, settings.showcase_max_mappings_per_fact),
+        facts_per_extraction=max(1, settings.showcase_max_facts_per_extraction),
+        rationale_words=max(4, settings.showcase_rationale_words),
+    )
 
 
 def compact_instruction(max_items: int) -> str:

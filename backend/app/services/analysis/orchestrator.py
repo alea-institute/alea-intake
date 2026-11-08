@@ -90,11 +90,27 @@ class AnalysisOrchestrator:
         # Showcase demos cap iterations so a guest run finishes in demo time;
         # other deployments keep their configured cap.
         settings = app_config.get_settings()
+        self._showcase = settings.showcase_mode
+        # fact_map + gap_analyze rounds per iteration (None = one per
+        # jurisdiction, today's behavior).
+        self._analysis_rounds: int | None = None
         if settings.showcase_mode:
             self._analysis_config.max_iterations = max(1, min(
                 self._analysis_config.max_iterations,
                 settings.showcase_max_iterations,
             ))
+            self._analysis_rounds = max(1, settings.showcase_analysis_rounds)
+            raw = self._org_config.get("exploration")
+            exploration = dict(raw.model_dump() if hasattr(raw, "model_dump") else raw or {})
+            cap = max(1, settings.showcase_exploration_max_rounds)
+            exploration["max_rounds"] = min(int(exploration.get("max_rounds", cap)), cap)
+            exploration["min_rounds"] = min(
+                int(exploration.get("min_rounds", 1)), exploration["max_rounds"],
+            )
+            self._org_config = {**self._org_config, "exploration": exploration}
+        # Showcase: the procedural-gap LLM call reads only claims, so it runs
+        # concurrently with fact_map's LLM batches (see _run_iteration).
+        self._procedural_prefetch: Any = None
 
         # Build convergence evaluator from org config
         self._convergence_evaluator = ConvergenceEvaluator(
@@ -380,17 +396,20 @@ class AnalysisOrchestrator:
         # stages once and the loop CONTINUES with the remaining stages.
         parallel_done = False
         for stage_name in stages:
-            if stage_name in ("fact_map", "gap_analyze") and len(self._jurisdictions) > 1:
+            rounds = self._round_jurisdictions()
+            if stage_name in ("fact_map", "gap_analyze") and len(rounds) > 1:
                 if not parallel_done:
                     # Run fact_map + gap_analyze in parallel per jurisdiction
                     # (one combined pass; the second stage name is skipped).
                     await self._run_parallel_jurisdictions(
-                        self._jurisdictions, run, iteration, ws_manager,
+                        rounds, run, iteration, ws_manager,
                     )
                     parallel_done = True
                 else:
                     continue  # already covered by the parallel pass
             else:
+                if stage_name == "fact_map" and self._showcase:
+                    await self._start_procedural_prefetch(run)
                 result = await self._execute_stage(
                     stage_name, run, iteration, ws_manager,
                 )
@@ -406,7 +425,54 @@ class AnalysisOrchestrator:
                     run, stage_name, ws_manager, session_id=session_id,
                 )
 
+        # A prefetch whose gap_analyze never ran (autonomy skip) is dropped.
+        if self._procedural_prefetch is not None:
+            self._procedural_prefetch.cancel()
+            self._procedural_prefetch = None
+
         return iteration
+
+    def _round_jurisdictions(self) -> list[str]:
+        """Jurisdictions that get their own fact_map + gap_analyze round.
+
+        Each round maps every fact against every claim; showcase mode caps the
+        rounds (ALEA_SHOWCASE_ANALYSIS_ROUNDS, default 1 = one single pass).
+        """
+        if self._analysis_rounds is None:
+            return self._jurisdictions
+        return self._jurisdictions[: self._analysis_rounds]
+
+    async def _start_procedural_prefetch(self, run: AnalysisRun) -> None:
+        """Start gap_analyze's procedural LLM call alongside fact_map.
+
+        Claims are read here, before the task starts; the task itself only
+        calls the LLM and never touches the shared AsyncSession.
+        """
+        import asyncio
+
+        from app.services.analysis.stages.gap_analyze import GapAnalyzeStage
+
+        claims = await self._load_claims(run.id)
+        if not claims:
+            self._procedural_prefetch = None
+            return
+        stage = GapAnalyzeStage(llm_service=self._llm, db_session=self._session)
+        self._procedural_prefetch = asyncio.ensure_future(
+            stage.procedural_gap_schemas(claims)
+        )
+
+    async def _take_procedural_prefetch(self) -> Any:
+        """Await and clear a started procedural prefetch (None if absent)."""
+        task, self._procedural_prefetch = self._procedural_prefetch, None
+        if task is None:
+            return None
+        try:
+            return await task
+        except Exception as exc:  # degrade to the in-stage call
+            stage_logger.warning(
+                "procedural_prefetch_failed", exc_type=type(exc).__name__,
+            )
+            return None
 
     async def _run_parallel_jurisdictions(
         self,
@@ -525,9 +591,16 @@ class AnalysisOrchestrator:
             elif stage_name == "fact_map":
                 result = await stage_instance.execute(run, iteration, facts, claims)
             elif stage_name == "gap_analyze":
-                result = await stage_instance.execute(
-                    run, iteration, claims, elements, mappings, gaps,
-                )
+                prefetched = await self._take_procedural_prefetch()
+                if prefetched is not None:
+                    result = await stage_instance.execute(
+                        run, iteration, claims, elements, mappings, gaps,
+                        procedural_schemas=prefetched,
+                    )
+                else:
+                    result = await stage_instance.execute(
+                        run, iteration, claims, elements, mappings, gaps,
+                    )
             elif stage_name == "question_gen":
                 result = await stage_instance.execute(
                     run, iteration, gaps, "", questions,

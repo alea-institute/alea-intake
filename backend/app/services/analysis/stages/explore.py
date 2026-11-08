@@ -20,6 +20,7 @@ from app.models.analysis import AnalysisClaim
 from app.services.analysis.rationale_guard import ground_rationale
 from app.services.exploration.engine import ExplorationEngine
 from app.services.exploration.schemas import ExplorationConfig
+from app.services.llm_bounds import showcase_caps
 from app.services.screening.protocol_service import ProtocolService
 
 if TYPE_CHECKING:
@@ -124,6 +125,22 @@ class ExploreStage:
                 "skipped_no_facts": True,
             }
 
+        # Showcase: total claims stay under ALEA_SHOWCASE_MAX_CLAIMS; with no
+        # room left, skip the exploration LLM calls entirely.
+        caps = showcase_caps()
+        room: int | None = None
+        if caps is not None:
+            room = max(0, caps.claims - len(claims))
+            if room == 0:
+                return {
+                    "new_claims": 0,
+                    "triggered_protocols": [],
+                    "rounds_completed": 0,
+                    "total_new_issues": 0,
+                    "question_transparency": False,
+                    "skipped_claim_cap": True,
+                }
+
         # Parse exploration config
         exploration_raw = self._org_config.get("exploration", {})
         if isinstance(exploration_raw, ExplorationConfig):
@@ -174,6 +191,10 @@ class ExploreStage:
                 continue
             seen_names_pass1.add(name_key)
             survivors.append(new_claim)
+        if room is not None:
+            survivors = sorted(
+                survivors, key=lambda c: float(c.get("confidence") or 0.0), reverse=True,
+            )[:room]
 
         fit_verdicts = await self._validate_discovered_mappings(survivors, facts)
 

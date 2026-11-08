@@ -3,6 +3,7 @@
 from enum import Enum
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -37,6 +38,7 @@ class LLMDataPolicy(str, Enum):
 
 
 DEFAULT_REFERENCE_MODEL = "gpt-4o-mini"
+ANTHROPIC_EFFORT_VALUES = ("low", "medium", "high", "xhigh", "max")
 
 
 class Settings(BaseSettings):
@@ -57,9 +59,27 @@ class Settings(BaseSettings):
     showcase_max_body_bytes: int = 12 * 1024 * 1024
     showcase_concurrent_analyses: int = 2
     showcase_analysis_queue: int = 4
-    # Caps orchestrator iterations in showcase mode only, so a live demo run
-    # reaches a terminal status in minutes; the general default stays 10.
-    showcase_max_iterations: int = 10
+    # Showcase analysis budget (2026-11-08 live run: 2 of 3 iterations in
+    # ~690 s and $2.08 on Sonnet). Every setting below applies in showcase mode
+    # only; authenticated deployments keep their configured behavior.
+    # Orchestrator iterations; a capped run ends as ``max_iterations``.
+    showcase_max_iterations: int = 1
+    # fact_map + gap_analyze rounds per iteration. A multi-jurisdiction run
+    # repeats both stages once per jurisdiction over the same facts and claims.
+    showcase_analysis_rounds: int = 1
+    # Exploration rounds (cheap + deep LLM layers per round).
+    showcase_exploration_max_rounds: int = 1
+    # Output caps passed into the existing prompt builders.
+    showcase_max_claims: int = 8
+    showcase_max_gaps: int = 8
+    showcase_max_questions: int = 8
+    showcase_max_mappings_per_fact: int = 2
+    showcase_max_facts_per_extraction: int = 20
+    showcase_rationale_words: int = 12
+    # Anthropic ``output_config.effort`` for structured (JSON) calls only; chat
+    # replies keep the model default. Empty means "low" in showcase mode and
+    # unset elsewhere; "none" sends nothing. low|medium|high|xhigh|max|none.
+    anthropic_json_effort: str = ""
     showcase_guest_limit: str = "30/minute"
     showcase_ip_limit: str = "120/minute"
 
@@ -151,6 +171,25 @@ class Settings(BaseSettings):
     cors_origins: list[str] = ["http://localhost:5173"]
 
     model_config = SettingsConfigDict(env_file=".env", env_prefix="ALEA_")
+
+    @field_validator("anthropic_json_effort")
+    @classmethod
+    def _check_json_effort(cls, value: str) -> str:
+        value = (value or "").strip().lower()
+        if value and value != "none" and value not in ANTHROPIC_EFFORT_VALUES:
+            raise ValueError(
+                "anthropic_json_effort must be one of "
+                + "|".join((*ANTHROPIC_EFFORT_VALUES, "none"))
+            )
+        return value
+
+    def effective_json_effort(self) -> str | None:
+        """Effort sent on Anthropic JSON calls, or None to send nothing."""
+        if self.anthropic_json_effort == "none":
+            return None
+        if self.anthropic_json_effort:
+            return self.anthropic_json_effort
+        return "low" if self.showcase_mode else None
 
 
 @lru_cache

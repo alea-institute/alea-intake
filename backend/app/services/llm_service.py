@@ -112,14 +112,29 @@ class AnthropicAdapter:
     async def chat_async(self, **kwargs: Any) -> Any:
         return await self._model.chat_async(**self._prepare(kwargs, ANTHROPIC_CHAT_MAX_TOKENS))
 
+    @staticmethod
+    def _with_json_effort(kwargs: dict[str, Any]) -> dict[str, Any]:
+        """Add ``output_config.effort`` to structured calls when configured.
+
+        ``ALEA_ANTHROPIC_JSON_EFFORT`` (default "low" in showcase mode, unset
+        elsewhere). alea-llm-client copies ``output_config`` into the request
+        body. Chat replies never get it and keep the model default.
+        """
+        effort = app_config.get_settings().effective_json_effort()
+        if effort and "output_config" not in kwargs:
+            kwargs["output_config"] = {"effort": effort}
+        return kwargs
+
     async def json_async(self, **kwargs: Any) -> Any:
-        return await self._model.json_async(**self._prepare(kwargs, ANTHROPIC_JSON_MAX_TOKENS))
+        prepared = self._with_json_effort(self._prepare(kwargs, ANTHROPIC_JSON_MAX_TOKENS))
+        return await self._model.json_async(**prepared)
 
     def chat(self, **kwargs: Any) -> Any:
         return self._model.chat(**self._prepare(kwargs, ANTHROPIC_CHAT_MAX_TOKENS))
 
     def json(self, **kwargs: Any) -> Any:
-        return self._model.json(**self._prepare(kwargs, ANTHROPIC_JSON_MAX_TOKENS))
+        prepared = self._with_json_effort(self._prepare(kwargs, ANTHROPIC_JSON_MAX_TOKENS))
+        return self._model.json(**prepared)
 
 
 _replay_factory = ContextVar("llm_replay_factory", default=None)

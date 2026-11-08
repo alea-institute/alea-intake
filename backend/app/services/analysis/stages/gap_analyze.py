@@ -26,6 +26,7 @@ from app.services.llm_bounds import (
     TERSE_JSON_RULES,
     bounded_call,
     compact_instruction,
+    showcase_caps,
     validate_items,
 )
 
@@ -74,8 +75,12 @@ class GapAnalyzeStage:
         elements: list[ClaimElement],
         mappings: list[FactClaimMapping],
         existing_gaps: list[AnalysisGap],
+        procedural_schemas: list[GapSchema] | None = None,
     ) -> dict[str, Any]:
         """Run gap analysis over current analysis state.
+
+        ``procedural_schemas`` carries a procedural-gap reply already fetched
+        (showcase runs fetch it concurrently with fact_map); None calls the LLM.
 
         Args:
             run: The current analysis run.
@@ -206,7 +211,7 @@ class GapAnalyzeStage:
 
         # 4. Procedural requirements + unstated legal doctrine via LLM
         procedural_gaps = await self._detect_procedural_and_doctrine_gaps(
-            claims, iteration, run, existing_signatures
+            claims, iteration, run, existing_signatures, procedural_schemas,
         )
         new_gaps.extend(procedural_gaps)
 
@@ -254,6 +259,7 @@ class GapAnalyzeStage:
         iteration: AnalysisIteration,
         run: AnalysisRun,
         existing_signatures: set[tuple],
+        procedural_schemas: list[GapSchema] | None = None,
     ) -> list[AnalysisGap]:
         """Use LLM to detect procedural-requirement AND unstated-doctrine gaps.
 
@@ -272,6 +278,56 @@ class GapAnalyzeStage:
         """
         if not claims:
             return []
+
+        if procedural_schemas is None:
+            procedural_schemas = await self.procedural_gap_schemas(claims)
+        max_gaps = self._max_gaps()
+
+        procedural_gaps: list[AnalysisGap] = []
+        for gap_schema in procedural_schemas[:max_gaps]:
+            if gap_schema.gap_type != "procedural_requirement":
+                continue
+            # Find matching claim for claim_id
+            claim_id = None
+            for c in claims:
+                if c.claim_name == gap_schema.claim_name:
+                    claim_id = c.id
+                    break
+            sig = ("procedural_requirement", claim_id, None)
+            if sig in existing_signatures:
+                continue
+            gap = AnalysisGap(
+                run_id=run.id,
+                gap_type="procedural_requirement",
+                claim_id=claim_id,
+                element_id=None,
+                description=gap_schema.description,
+                priority=gap_schema.priority,
+                status="open",
+                iteration_found=iteration.iteration_number,
+            )
+            procedural_gaps.append(gap)
+
+        return procedural_gaps
+
+    @staticmethod
+    def _max_gaps() -> int:
+        caps = showcase_caps()
+        return min(MAX_PROCEDURAL_GAPS, caps.gaps) if caps else MAX_PROCEDURAL_GAPS
+
+    async def procedural_gap_schemas(self, claims: list[AnalysisClaim]) -> list[GapSchema]:
+        """One bounded LLM call for procedural/doctrine gaps over ``claims``.
+
+        Reads only the given claim objects and never the AsyncSession, so it
+        can run concurrently with another stage's database work.
+        """
+        if not claims:
+            return []
+        caps = showcase_caps()
+        max_gaps = self._max_gaps()
+        compact_gaps = min(COMPACT_PROCEDURAL_GAPS, max_gaps)
+        question_words = 20 if caps else 30
+        summary_words = caps.rationale_words if caps else 15
 
         # Pass claim rationales too so the doctrine probe sees the fact context,
         # not just claim labels.
@@ -317,9 +373,10 @@ class GapAnalyzeStage:
             "determine whether the doctrine applies. Only surface doctrine the "
             "facts fairly raise; never invent facts.\n\n"
             f"Identified claims: {claims_desc}.\n\n"
-            f"Return at most {MAX_PROCEDURAL_GAPS} gaps, most important first, "
+            f"Return at most {max_gaps} gaps, most important first, "
             "each with gap_type 'procedural_requirement'. Each description is ONE "
-            "question under 30 words; the summary is under 15 words.\n"
+            f"question under {question_words} words; the summary is under "
+            f"{summary_words} words.\n"
             f"{TERSE_JSON_RULES}\n"
             'Return ONLY a JSON object with EXACTLY this structure:\n'
             '{"gaps": [{"gap_type": "procedural_requirement", "claim_name": "name or null", '
@@ -330,7 +387,7 @@ class GapAnalyzeStage:
         async def call(compact: bool) -> Any:
             text = prompt
             if compact:
-                text += "\n" + compact_instruction(COMPACT_PROCEDURAL_GAPS)
+                text += "\n" + compact_instruction(compact_gaps)
             return await self.llm_service.json_async(prompt=text, schema=_GapReply)
 
         def parse(reply: Any) -> list[GapSchema] | None:
@@ -342,34 +399,7 @@ class GapAnalyzeStage:
             return ready + validate_items(pending, GapSchema, stage="gap_analyze")
 
         # Procedural gaps are optional: two failed attempts degrade to none.
-        gap_schemas = await bounded_call(call, parse, stage="gap_analyze", default=[])
-
-        procedural_gaps: list[AnalysisGap] = []
-        for gap_schema in gap_schemas[:MAX_PROCEDURAL_GAPS]:
-            if gap_schema.gap_type != "procedural_requirement":
-                continue
-            # Find matching claim for claim_id
-            claim_id = None
-            for c in claims:
-                if c.claim_name == gap_schema.claim_name:
-                    claim_id = c.id
-                    break
-            sig = ("procedural_requirement", claim_id, None)
-            if sig in existing_signatures:
-                continue
-            gap = AnalysisGap(
-                run_id=run.id,
-                gap_type="procedural_requirement",
-                claim_id=claim_id,
-                element_id=None,
-                description=gap_schema.description,
-                priority=gap_schema.priority,
-                status="open",
-                iteration_found=iteration.iteration_number,
-            )
-            procedural_gaps.append(gap)
-
-        return procedural_gaps
+        return await bounded_call(call, parse, stage="gap_analyze", default=[])
 
     async def _gather_narrative(self, intake_id: int, include_facts: bool = True) -> str:
         """Concatenate consumer/professional message text + document text +

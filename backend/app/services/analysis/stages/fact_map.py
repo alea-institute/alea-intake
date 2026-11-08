@@ -22,6 +22,7 @@ from app.services.llm_bounds import (
     gather_bounded,
     limit_client_retries,
     list_field,
+    showcase_caps,
     validate_items,
 )
 
@@ -135,6 +136,17 @@ class FactMapStage:
                 "content": f"Extracted facts:\n{facts_text}\n\nIdentified claims:\n{claims_text}",
             },
         ]
+        caps = showcase_caps()
+        if caps is not None:
+            messages.append({
+                "role": "system",
+                "content": (
+                    f"Give at most {caps.mappings_per_fact} mappings per fact, only for "
+                    "facts that support one of the claims above; list every other fact "
+                    "id in unmapped_facts. Each mapping_rationale is under "
+                    f"{caps.rationale_words} words."
+                ),
+            })
         if compact:
             messages.append({"role": "system", "content": compact_instruction(len(facts) * 2)})
 
@@ -226,11 +238,15 @@ class FactMapStage:
             }
 
         # Cap mappings per fact (the prompt asks for at most three).
+        caps = showcase_caps()
+        per_fact_cap = (
+            min(MAX_MAPPINGS_PER_FACT, caps.mappings_per_fact) if caps else MAX_MAPPINGS_PER_FACT
+        )
         per_fact: dict[int, int] = {}
         capped: list[FactMappingSchema] = []
         for m in mapping_schemas:
             per_fact[m.fact_id] = per_fact.get(m.fact_id, 0) + 1
-            if per_fact[m.fact_id] <= MAX_MAPPINGS_PER_FACT:
+            if per_fact[m.fact_id] <= per_fact_cap:
                 capped.append(m)
 
         # Build lookup tables
