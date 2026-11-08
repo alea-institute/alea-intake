@@ -67,6 +67,28 @@ _TENANCY = ("landlord", "lease", "the rent", "pay rent", "evict", "apartment", "
 _DEPOSIT_TENANCY = ("landlord", "lease", "apartment", "tenant", "move out", "moved out")
 
 
+# Verb and payroll uses of "deposit" that never mean money the landlord holds
+# (a rent-escrow story, a paycheck). Stripped before the noun-phrase check so
+# `security_deposit_return` cannot claim "a deposit you have not gotten back".
+_NON_HELD_DEPOSIT = (
+    "deposit the rent",
+    "deposit rent",
+    "deposits rent",
+    "deposit it with the court",
+    "direct deposit",
+    "rent escrow",
+)
+# "deposit" as a noun: a determiner within the 3 words before it
+# ("my deposit", "the $1,200 deposit"). Word boundaries exclude "deposited".
+_HELD_DEPOSIT_RE = re.compile(r"\b(?:my|our|the|a|her|his|their)(?:\s+\S+){0,2}\s+deposit\b")
+
+
+def _mentions_held_deposit(t: str) -> bool:
+    for phrase in _NON_HELD_DEPOSIT:
+        t = t.replace(phrase, " ")
+    return _HELD_DEPOSIT_RE.search(t) is not None
+
+
 def _cash_deposit_irregularity(t: str) -> bool:
     """Cash/no-receipt deposit facts only.
 
@@ -367,7 +389,7 @@ PROBES: list[DoctrineProbe] = [
             not _cash_deposit_irregularity(t)
             and (
                 _any(t, "security deposit", "damage deposit", "pet deposit")
-                or ("deposit" in t and _any(t, *_DEPOSIT_TENANCY))
+                or (_mentions_held_deposit(t) and _any(t, *_DEPOSIT_TENANCY))
             )
         ),
         priority=82,
