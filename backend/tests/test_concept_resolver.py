@@ -11,6 +11,16 @@ import pytest
 from app.services.embedding.backends import SearchResult
 
 
+@pytest.fixture(autouse=True)
+def resolver_settings(monkeypatch):
+    from app.config import get_settings
+
+    monkeypatch.setenv("ALEA_SECRET_KEY", "calibration-test-only")
+    get_settings.cache_clear()
+    yield
+    get_settings.cache_clear()
+
+
 # ---------------------------------------------------------------------------
 # ResolvedConcept / ConceptResolutionConfig dataclass tests
 # ---------------------------------------------------------------------------
@@ -45,7 +55,7 @@ class TestResolvedConceptDataclass:
         from app.services.folio.concept_resolver import ConceptResolutionConfig
 
         config = ConceptResolutionConfig()
-        assert config.confidence_threshold == 0.5
+        assert config.confidence_threshold == 0.55
         assert config.high_confidence_threshold == 0.85
         assert config.max_embedding_candidates == 20
         assert config.max_label_results == 10
@@ -367,3 +377,32 @@ class TestResolverStageResilience:
         # The label/prefix stage matched despite the dead embedding stage.
         assert len(results) > 0
         assert any("objective001" in r.iri for r in results)
+
+
+@pytest.mark.parametrize("embedding,label,llm", [(0.1, 0.8, None), (0.8, 0.1, None), (0.1, None, 0.8)])
+def test_weak_corroboration_floors_at_best_penalized_signal(embedding, label, llm):
+    from app.services.folio.concept_resolver import _combine_score
+    assert _combine_score(embedding, label, llm) == pytest.approx(0.68)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("threshold,expected_count", [(None, 1), ("0.70", 0)])
+async def test_single_stage_acceptance_uses_environment_threshold(monkeypatch, mock_folio, threshold, expected_count):
+    from app.config import get_settings
+    from app.services.folio.concept_resolver import resolve_concepts
+    monkeypatch.setenv("ALEA_SECRET_KEY", "calibration-test-only")
+    monkeypatch.delenv("ALEA_FOLIO_CONFIDENCE_THRESHOLD", raising=False)
+    if threshold is not None:
+        monkeypatch.setenv("ALEA_FOLIO_CONFIDENCE_THRESHOLD", threshold)
+    get_settings.cache_clear()
+    mock_folio.search_by_label.return_value = []
+    embedding = _make_mock_embedding_service([
+        SearchResult(iri="test:solo", label="Solo concept", score=0.80, metadata={"branch": "Objectives"})
+    ])
+    try:
+        results = await resolve_concepts("solo concept", mock_folio, embedding)
+        assert len(results) == expected_count
+        if results:
+            assert results[0].confidence == pytest.approx(0.68)
+    finally:
+        get_settings.cache_clear()

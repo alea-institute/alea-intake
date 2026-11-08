@@ -37,7 +37,8 @@ export async function fetchIntakes(
   if (filters.q) params.set('q', filters.q)
   params.set('limit', String(limit))
   params.set('offset', String(offset))
-  const res = await apiFetch(`/api/v1/intakes?${params.toString()}`)
+  const res = await apiFetch(`/api/v1/intake/?${params.toString()}`)
   if (!res.ok) throw new Error('Failed to load intakes')
-  return res.json()
+  const rows: {id:number;status:IntakeSummary['status'];created_at:string}[] = await res.json()
+  return { items: rows.map(row => ({ id: String(row.id), matterId: String(row.id), consumerName: '', status: row.status, lastActivity: row.created_at, completeness: 0 })), total: rows.length }
 }

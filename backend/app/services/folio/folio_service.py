@@ -46,7 +46,11 @@ def get_folio(branch: str | None = None) -> FOLIO:
             branch = settings.folio_owl_branch
 
         logger.info("Loading FOLIO ontology (branch=%s)...", branch)
-        _folio_instance = FOLIO(github_repo_branch=branch)
+        # folio-python constructs an ambient OpenAI client when llm=None.
+        # A non-None sentinel suppresses construction; the shared ontology
+        # then has no LLM. Request clients live only in request services.
+        _folio_instance = FOLIO(github_repo_branch=branch, llm=object())
+        _folio_instance.llm = None
         logger.info(
             "FOLIO ontology loaded: %d classes, %d object properties",
             len(_folio_instance.classes),

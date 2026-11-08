@@ -155,7 +155,7 @@ async def _llm_suggest_branch(text: str, llm_model) -> str | None:
             if known.lower() == branch_lower:
                 return known
 
-        logger.warning("LLM suggested unknown branch: %s", branch)
+        logger.warning("LLM suggested an unknown branch")
         return None
 
     except Exception:

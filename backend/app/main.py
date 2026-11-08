@@ -248,7 +248,17 @@ async def lifespan(app: FastAPI):
         logger.warning("FolioMCPClient connection failed; folio-mcp unavailable", exc_info=True)
         folio_mcp_client = None
 
+    from app.db.retention import run_showcase_sweeper
+    purge_task = asyncio.create_task(run_showcase_sweeper()) if settings.showcase_mode else None
+
     yield
+
+    if purge_task is not None:
+        purge_task.cancel()
+        try:
+            await purge_task
+        except asyncio.CancelledError:
+            pass
 
     # Shutdown
     if cms_sync_task is not None:
@@ -341,28 +351,33 @@ async def unknown_practice_area_handler(request: Request, exc: UnknownPracticeAr
     )
 
 
-# Routers
-app.include_router(auth_router)
-app.include_router(oauth_router)
-app.include_router(organizations_router)
-app.include_router(users_router)
-app.include_router(audit_router)
-app.include_router(consent_router)
-app.include_router(admin_router)
-app.include_router(folio_admin_router)
-app.include_router(intake_router)
-app.include_router(intake_ws_router)
-app.include_router(intake_professional_router)
-app.include_router(practice_areas_router)
-app.include_router(analysis_router)
-app.include_router(output_router)
-app.include_router(research_router)
-app.include_router(research_admin_router)
-app.include_router(kb_admin_router)
-app.include_router(screening_admin_router)
-app.include_router(autonomy_router)
-app.include_router(autonomy_admin_router)
-app.include_router(cms_admin_router)
+def mount_routers(application, settings):
+    """Mount the public showcase or the full authenticated application."""
+    from fastapi import Depends
+    from app.showcase import showcase_access
+    from app.routers.auth import guest_router
+    if settings.showcase_mode:
+        application.include_router(guest_router)
+    else:
+        for router in (auth_router, oauth_router, organizations_router, users_router,
+                       audit_router, admin_router, folio_admin_router, research_admin_router,
+                       kb_admin_router, screening_admin_router, autonomy_router,
+                       autonomy_admin_router, cms_admin_router, research_router):
+            application.include_router(router)
+    dependencies = [Depends(showcase_access)] if settings.showcase_mode else []
+    for router in (consent_router, intake_router, intake_professional_router,
+                   practice_areas_router, analysis_router, output_router):
+        application.include_router(router, dependencies=dependencies)
+    application.include_router(intake_ws_router)
+
+
+mount_routers(app, settings)
+from app.showcase import ShowcaseBodyLimit
+app.add_middleware(ShowcaseBodyLimit)
+from app.showcase import ShowcasePrivacy
+app.add_middleware(ShowcasePrivacy)
+from app.preview import PreviewGate
+app.add_middleware(PreviewGate)
 
 
 # Health endpoint
@@ -390,6 +405,8 @@ if _frontend_dist.is_dir():
     # SPA fallback: serve static files if they exist, otherwise index.html
     @app.get("/{full_path:path}")
     async def spa_fallback(full_path: str):
+        if settings.showcase_mode and full_path.startswith("api/"):
+            return JSONResponse(status_code=404, content={"detail": "Not found"})
         # Check if the requested path is an actual file in dist/
         file_path = _frontend_dist / full_path
         if full_path and file_path.is_file() and _frontend_dist in file_path.resolve().parents:

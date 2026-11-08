@@ -2,17 +2,24 @@
 topic: public-showcase-brainstorm
 ---
 
-# Handoff — alea-intake public showcase (plan done, ce-work starting)
+# Handoff — alea-intake public showcase (PR1 built; review and deploy next)
 
 ## State
-- Implementation-ready plan: `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md` (19 units, 3 PRs; reviewed by 6 Claude reviewers plus a Codex cross-model pass; 24 fixes applied).
-- Tests green on master before work: backend 1281 passed / 3 skipped; frontend 192 passed.
-- No live deployment yet; Railway was drained 2026-07-26.
+- Plan: `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md`.
+- Branch `feat/2026-11-08-0337-feat-public-showcase-launch-plan-pr1` (pushed, 13 commits): PDF swap + CPU torch, tracked uv.lock, calibration, BYOK, expansion study, replay harness, guest mode + ownership + limits, retention purge + redaction, frontend showcase flow, persona harness, Dockerfile build args, preview gate + probe + runbook. Backend 1377 passed; frontend 220 passed; Playwright e2e green at 390 and 1280 px (needs a local config pointing at system Chrome: Playwright cannot download browsers on Ubuntu 26.04).
+- In flight: a simplification-fix worker (uncommitted changes in the main checkout) that fixes an undefined `admit()` in the showcase WebSocket loop plus reuse/efficiency/comment cleanups. Verify, then commit.
+- Live deploy target already exists: Coolify app `alea-intake` on hetzner-dev (`alea-intake.dev.openlegalstandard.org`, auto-deploys `master`). A showcase DB role/database exists on the shared Postgres (isolation verified). Merging PR1 to master deploys publicly, so set the Coolify env and gate first.
 
 ## Next
-1. `ce-work` on PR1 (U1–U11): cleanup, CPU image, BYOK, guest mode with ownership checks, retention purge, frontend flow, regression replay, Coolify deploy behind an access gate, persona harness.
-2. PR2 (U12–U16) and PR3 (U17–U19) follow per the plan.
+1. Verify and commit the simplification fixes; run `ce-code-review` on the PR1 diff; apply findings; open PR1.
+2. With a Coolify write token: set env (showcase mode, build flag, DB settings, preview passphrase), healthcheck, memory limit, domains; deploy PR1 branch behind the gate; `scripts/verify-showcase.sh --mode gated`; merge.
+3. Live runs after the LLM-key decision; then PR2 and PR3 per the plan.
 
 ## Open with Damien
-- Spend: which LLM key and budget fund live persona runs and UAT. Blocks only live runs.
-- Landing-page copy approval (Claude Doc) gates the PR3 merge.
+- Coolify write token (the box token is read-only).
+- LLM key and budget for live runs (Cockpit ask `alea-intake-2026-11-08-1051-showcase-llm-key-budget`).
+- Landing-page copy approval gates PR3.
+
+## Gotchas
+- Background Codex work now must use `agents/worker-wrapper.sh` (global hook enforces). `codex-run.sh` accepts a run only when the worker writes the named out-file.
+- Codex sandboxes cannot finish SQLite async tests, bind ports, or reach the network; rerun suites in the main checkout.

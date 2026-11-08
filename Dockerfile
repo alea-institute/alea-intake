@@ -10,6 +10,8 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY frontend/package.json ./frontend/
 RUN pnpm install --frozen-lockfile
 COPY frontend/ ./frontend/
+ARG VITE_SHOWCASE_MODE=false
+ENV VITE_SHOWCASE_MODE=${VITE_SHOWCASE_MODE}
 RUN pnpm --filter alea-intake-frontend run build
 
 # Stage 2: Backend
@@ -20,6 +22,11 @@ LABEL org.opencontainers.image.title="alea-intake" \
       org.opencontainers.image.description="ALEA Intake - AI-powered legal intake system" \
       org.opencontainers.image.source="https://github.com/alea/alea-intake" \
       org.opencontainers.image.licenses="MIT"
+
+# Coolify supplies SOURCE_COMMIT; other builders may pass GIT_COMMIT_SHA.
+ARG SOURCE_COMMIT
+ARG GIT_COMMIT_SHA=${SOURCE_COMMIT}
+ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
 
 WORKDIR /app
 
@@ -37,9 +44,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install uv via the official binary installer (bypasses flaky PyPI on
 # constrained build networks; pip-install of uv has timed out repeatedly).
 COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /usr/local/bin/uv
-COPY backend/pyproject.toml backend/uv.lock* ./backend/
+COPY backend/pyproject.toml backend/uv.lock ./backend/
 WORKDIR /app/backend
-RUN uv sync --no-dev
+RUN uv sync --no-dev --frozen
 COPY backend/ ./
 COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 

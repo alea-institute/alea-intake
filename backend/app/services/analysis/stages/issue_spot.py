@@ -95,30 +95,7 @@ class IssueSpotStage:
             {"role": "user", "content": f"Extracted facts:\n{facts_text}"},
         ]
 
-        config = self._llm.get_client_config()
-
-        from alea_llm_client import AnthropicModel, GoogleModel, OpenAIModel, VLLMModel
-
-        _provider_map = {
-            "openai": OpenAIModel,
-            "anthropic": AnthropicModel,
-            "google": GoogleModel,
-            "vllm": VLLMModel,
-        }
-
-        model_cls = _provider_map.get(config["provider"])
-        if model_cls is None:
-            logger.error("Unknown LLM provider: %s", config["provider"])
-            return {"claims": [], "jurisdictions": [], "summary": ""}
-
-        init_kwargs: dict[str, Any] = {
-            "api_key": config.get("api_key"),
-            "model": config.get("model"),
-        }
-        if "endpoint" in config:
-            init_kwargs["endpoint"] = config["endpoint"]
-
-        model = model_cls(**init_kwargs)
+        model = self._llm.create_client()
         response = await model.json_async(messages=messages)
         return response.data
 
@@ -138,12 +115,8 @@ class IssueSpotStage:
             )
             if resolved:
                 return resolved[0]
-        except Exception:
-            logger.debug(
-                "ConceptResolver failed for claim '%s', proceeding without IRI",
-                claim_name,
-                exc_info=True,
-            )
+        except Exception as exc:
+            logger.debug("ConceptResolver failed; proceeding without IRI (%s)", type(exc).__name__)
         return None
 
     async def execute(
@@ -269,11 +242,7 @@ class IssueSpotStage:
                 spotted.rationale, [f.assertion_text for f in facts]
             )
             if hedges:
-                logger.info(
-                    "Rationale grounding guard hedged claim %r: %s",
-                    spotted.claim_name,
-                    "; ".join(hedges),
-                )
+                logger.info("Rationale grounding guard hedged claim in run %d (%d changes)", run.id, len(hedges))
 
             # Persist AnalysisClaim
             claim = AnalysisClaim(

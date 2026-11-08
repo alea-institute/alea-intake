@@ -13,7 +13,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace import TracerProvider, SpanProcessor, ReadableSpan
+from app.observability.redaction import scrub
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -39,7 +40,7 @@ def setup_telemetry(app: FastAPI) -> None:
     if settings.otel_endpoint:
         exporter = OTLPSpanExporter(endpoint=settings.otel_endpoint)
         provider = TracerProvider()
-        provider.add_span_processor(BatchSpanProcessor(exporter))
+        provider.add_span_processor(RedactingSpanProcessor(BatchSpanProcessor(exporter)))
         trace.set_tracer_provider(provider)
         FastAPIInstrumentor.instrument_app(app)
         logger.info("OTel tracing enabled (endpoint=%s)", settings.otel_endpoint)
@@ -58,3 +59,31 @@ def setup_prometheus(app: FastAPI) -> None:
     """
     Instrumentator().instrument(app).expose(app, endpoint="/metrics")
     logger.info("Prometheus /metrics endpoint enabled")
+
+
+class RedactingSpanProcessor(SpanProcessor):
+    """Sanitize immutable export snapshots, including exception events."""
+    def __init__(self, downstream):
+        self.downstream = downstream
+
+    def on_start(self, span, parent_context=None):
+        pass
+
+    def on_end(self, span):
+        from opentelemetry.trace import Status
+        from opentelemetry.sdk.trace import Event
+        clean = ReadableSpan(
+            name=scrub(span.name), context=span.context, parent=span.parent,
+            resource=span.resource, attributes=scrub(dict(span.attributes or {})),
+            events=[Event('event', attributes=scrub(dict(e.attributes or {})), timestamp=e.timestamp) for e in span.events],
+            links=[], kind=span.kind, status=Status(span.status.status_code),
+            start_time=span.start_time, end_time=span.end_time,
+            instrumentation_scope=span.instrumentation_scope,
+        )
+        self.downstream.on_end(clean)
+
+    def shutdown(self):
+        self.downstream.shutdown()
+
+    def force_flush(self, timeout_millis=30000):
+        return self.downstream.force_flush(timeout_millis)

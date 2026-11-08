@@ -34,16 +34,14 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from folio_resolve import compute_relevance_score, content_words
 
-from app.services.embedding.backends import SearchResult
 from app.services.folio.term_expansions import (
     SEARCH_STOPWORDS,
     expand_legal_terms,
-    get_branch_signals,
 )
 
 if TYPE_CHECKING:
@@ -60,7 +58,7 @@ LABEL_WEIGHT: float = 0.3
 LLM_WEIGHT: float = 0.4
 
 # Penalty multiplier for concepts appearing in only one stage
-SINGLE_STAGE_PENALTY: float = 0.7
+SINGLE_STAGE_PENALTY: float = 0.85
 
 
 @dataclass
@@ -81,7 +79,7 @@ class ResolvedConcept:
 class ConceptResolutionConfig:
     """Configuration for the concept resolution pipeline."""
 
-    confidence_threshold: float = 0.5
+    confidence_threshold: float = 0.55
     high_confidence_threshold: float = 0.85
     max_embedding_candidates: int = 20
     max_label_results: int = 10
@@ -98,7 +96,8 @@ def _combine_score(
 
     Each score should be normalized to 0.0-1.0 range.
     Concepts appearing in multiple stages get weighted average.
-    Concepts in only one stage get a penalty.
+    Concepts in only one stage get a penalty. The strongest penalized
+    signal floors the result when weaker stages corroborate it.
     """
     stages: list[tuple[float, float]] = []
     if embedding_score is not None:
@@ -120,7 +119,8 @@ def _combine_score(
     if len(stages) == 1:
         combined *= SINGLE_STAGE_PENALTY
 
-    return combined
+    # Weak corroboration must not demote the strongest penalized signal.
+    return max(combined, SINGLE_STAGE_PENALTY * max(s for s, _ in stages))
 
 
 def _determine_branch(iri: str, folio: FOLIO, metadata: dict | None = None) -> str:
@@ -247,7 +247,11 @@ async def resolve_concepts(
         List of ResolvedConcept sorted by confidence descending.
     """
     if config is None:
-        config = ConceptResolutionConfig()
+        from app.config import get_settings
+
+        config = ConceptResolutionConfig(
+            confidence_threshold=get_settings().folio_confidence_threshold
+        )
 
     # Pre-processing: filter empty / stopword-only text
     if not text or not text.strip():
@@ -257,7 +261,6 @@ async def resolve_concepts(
 
     # Expand legal terms for enriched search
     expanded_queries = expand_legal_terms(text)
-    branch_signals = get_branch_signals(text)
 
     # Candidate accumulator: iri -> {embedding_score, label_score, llm_score, label, metadata, reason}
     candidates: dict[str, dict] = {}
@@ -393,11 +396,6 @@ async def _stage_label_prefix(
                     "label": owl_cls.label,
                     "metadata": None,
                 }
-            # Prefix hits are scored on their evidence like every other label candidate.
-            # They used to get a flat 0.7 constant, which was simultaneously too generous
-            # (a 40-character label that merely starts with the query) and too stingy (an
-            # exact-label prefix hit could never clear the 0.5 bar on its own, because
-            # 0.7 * SINGLE_STAGE_PENALTY = 0.49).
             candidates[iri]["label_score"] = max(
                 _label_match_score(text.strip(), owl_cls),
                 candidates[iri].get("label_score", 0.0),
@@ -418,7 +416,7 @@ async def _stage_llm(
             include_reason=True,
         )
     except Exception as e:
-        logger.warning("LLM search failed: %s", e)
+        logger.warning('LLM search failed: %s', type(e).__name__)
         return
 
     for owl_cls in llm_results:

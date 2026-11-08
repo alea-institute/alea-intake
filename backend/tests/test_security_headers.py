@@ -45,6 +45,7 @@ class TestSecurityHeaders:
             patch("app.main.get_engine"),
             patch("app.main.dispose_engine", new_callable=lambda: _noop_coro),
             patch("app.main.get_settings") as mock_gs,
+            patch("app.config.get_settings") as mock_config_gs,
             patch("app.observability.telemetry.get_settings") as mock_tel_gs,
             patch("app.observability.logging.get_settings") as mock_log_gs,
             patch("app.observability.health.get_engine") as mock_health_engine,
@@ -55,6 +56,7 @@ class TestSecurityHeaders:
                 database_backend="sqlite",
             )
             mock_gs.return_value = test_settings
+            mock_config_gs.return_value = test_settings
             mock_tel_gs.return_value = test_settings
             mock_log_gs.return_value = test_settings
             mock_owl.return_value = {"cached": True}

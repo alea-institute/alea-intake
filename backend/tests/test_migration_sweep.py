@@ -1,18 +1,14 @@
 """Guards for the operating-point calibration study (``backend/migration/sweep.py``).
 
-The study's whole claim to being evidence is that (a) its reconstruction of the resolver is
-faithful, (b) it measures the *production* combine function rather than a lookalike, and
-(c) it changes nothing. These tests assert all three, plus the integrity of the hand-written
-gold labels the recommendation rests on.
-
-They are tests OF THE HARNESS. Nothing here exercises ``app/`` behavior that the rest of the
-suite does not already cover — see ``test_concept_resolver.py`` and ``test_folio_resolve_pin.py``
-for that.
+The historical weighted-average arm preserves the signed-off baseline; the adopted floor
+arm must match production. Tests also pin gold-label integrity, the predicted acceptance
+deltas, and the study's lack of persistent changes to production configuration.
 """
 
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 from pathlib import Path
@@ -29,8 +25,15 @@ MIGRATION = Path(__file__).resolve().parent.parent / "migration"
 os.environ.setdefault("PYTHONHASHSEED", "0")
 sys.path.insert(0, str(MIGRATION))
 
-import combine_lab  # noqa: E402
-import sweep  # noqa: E402
+# The CLI tools silence embedding-failure diagnostics at import time. Collection
+# must leave the application's logging threshold as it found it.
+_previous_logging_threshold = logging.root.manager.disable
+try:
+    import combine_lab  # noqa: E402
+    import sweep  # noqa: E402
+    import harness  # noqa: E402, F401 (otherwise imported lazily by build_pools)
+finally:
+    logging.disable(_previous_logging_threshold)
 
 from app.services.folio import concept_resolver as cr  # noqa: E402
 
@@ -59,14 +62,14 @@ def test_reconstruction_equals_the_real_resolver(corpus, pools):
     """The sweep evaluates a cached candidate pool instead of re-running the resolver 200×.
 
     That shortcut is only legitimate because neither knob can change retrieval or stage
-    scoring. This is the proof: at the production operating point the reconstruction must
+    scoring. This is the proof: at the adopted production operating point the reconstruction must
     reproduce ``resolve_concepts`` exactly, in both embedding modes, on every narrative.
     """
     assert sweep.verify_reference(corpus, pools) == []
 
 
-def test_current_rule_is_the_production_combine_function():
-    """The status-quo arm of every sweep must BE ``_combine_score``, not a reimplementation."""
+def test_floor_rule_matches_the_production_combine_function():
+    """The adopted floor rule must reproduce the production combine function."""
     for e, label, llm in [
         (0.8, 0.7, 0.9),
         (0.9, None, None),
@@ -77,7 +80,7 @@ def test_current_rule_is_the_production_combine_function():
         (0.0, 0.0, 0.0),
     ]:
         assert sweep.combined_score(
-            e, label, llm, penalty=cr.SINGLE_STAGE_PENALTY, rule="current"
+            e, label, llm, penalty=cr.SINGLE_STAGE_PENALTY, rule="floor"
         ) == cr._combine_score(embedding_score=e, label_score=label, llm_score=llm)
 
 
@@ -98,10 +101,10 @@ def test_reference_matches_the_signed_off_migration_capture(pools):
 # ---------------------------------------------------------------------------
 
 
-def test_production_operating_point_is_untouched():
-    """The knobs the study sweeps are still exactly where the migration left them."""
-    assert cr.SINGLE_STAGE_PENALTY == 0.7
-    assert cr.ConceptResolutionConfig().confidence_threshold == 0.5
+def test_production_operating_point_is_adopted():
+    """The adopted calibration keeps the stage weights unchanged."""
+    assert cr.SINGLE_STAGE_PENALTY == 0.85
+    assert cr.ConceptResolutionConfig().confidence_threshold == 0.55
     assert cr.EMBEDDING_WEIGHT == 0.3
     assert cr.LABEL_WEIGHT == 0.3
     assert cr.LLM_WEIGHT == 0.4
@@ -115,7 +118,7 @@ def test_sweeping_restores_every_patched_attribute(corpus):
     sweep.combined_score(0.4, 0.8, None, penalty=0.95, rule="current")
     sweep.build_pools(corpus, None, expansions=False)
     assert (cr.SINGLE_STAGE_PENALTY, cr.compute_relevance_score, cr.expand_legal_terms) == before
-    assert cr.SINGLE_STAGE_PENALTY == 0.7
+    assert cr.SINGLE_STAGE_PENALTY == 0.85
     assert cr.compute_relevance_score is folio_resolve.compute_relevance_score
 
 
@@ -194,9 +197,112 @@ def test_presence_weighting_fixes_it_but_rescales_the_axis():
     assert presence["exact_label_only"] < 0.35  # 0.5 would no longer mean anything
 
 
-def test_the_inversion_is_reproducible_end_to_end():
-    """Through the real ``resolve_concepts``: weak retrieval returns LESS than no retrieval."""
+def test_the_inversion_is_fixed_end_to_end():
+    """Through the real resolver, weak retrieval no longer suppresses the label match."""
     rows = {row["embedding"]: row for row in combine_lab.end_to_end()}
     assert rows[None]["resolved"] == 1
-    assert rows[0.10]["resolved"] == 0
+    assert rows[0.10]["resolved"] == 1
     assert rows[0.30]["resolved"] == 1
+
+
+@pytest.mark.parametrize("mode,seam,fails", [("healthy", "resolve", False), ("degraded", "resolve_no_embed", True)])
+def test_adopted_resolver_changes_only_predicted_golden_concepts(corpus, mode, seam, fails):
+    import asyncio
+    import harness
+
+    capture = json.loads((MIGRATION / "captures" / "candidate.json").read_text())
+    expected = {row["id"]: {r["iri"] for r in row["top"]} for row in capture[seam]}
+    if mode == "healthy":
+        for nid in ("n-exact-label", "n-word-order-2"):
+            expected[nid] -= {"r-premises-liability", "r-wrongful-termination"}
+    else:
+        expected["n-word-order-2"].add("r-retaliation")
+        expected["n-expansion-debt"].add("r-fair-debt-act")
+        expected["n-homonym-habitability"].add("r-habitability")
+    folio = harness._FakeFOLIO(corpus["ontology"])
+    embedding = harness._FakeEmbeddingService(corpus["ontology"], fail=fails)
+    for item in corpus["narratives"]:
+        actual = asyncio.run(cr.resolve_concepts(
+            item["text"], folio, embedding,
+            config=cr.ConceptResolutionConfig(enable_llm_stage=False),
+        ))
+        assert {r.iri for r in actual} == expected[item["id"]], item["id"]
+
+
+def test_empty_vocabulary_keeps_filtered_narrative_query(corpus):
+    from app.services.folio import term_expansions as te
+
+    before = te.LEGAL_TERM_EXPANSIONS
+    pools = sweep.build_pools(corpus, None, vocabulary={})
+    accepted = sweep.evaluate_point(pools, penalty=0.85, threshold=0.55, rule="floor")
+    assert te.LEGAL_TERM_EXPANSIONS is before
+    assert {iri for iri, _ in accepted["healthy"]["n-expansion-fired"]} == set()
+    assert {iri for iri, _ in accepted["degraded"]["n-exact-label"]} == {"r-retaliation"}
+
+    # A long filler prefix hides the label from fuzzy retrieval until filtering.
+    narrative = {"id": "filtered", "text": "I was am " * 15 + "Retaliation Claim"}
+    filtered_corpus = {**corpus, "narratives": [narrative]}
+    retained = sweep.build_pools(filtered_corpus, None, vocabulary={})
+    disabled = sweep.build_pools(filtered_corpus, None, expansions=False)
+    for mode in ("healthy", "degraded"):
+        assert {iri for iri, _ in sweep.evaluate_point(
+            retained, penalty=0.85, threshold=0.55, rule="floor"
+        )[mode]["filtered"]} == {"r-retaliation"}
+        assert sweep.evaluate_point(
+            disabled, penalty=0.85, threshold=0.55, rule="floor"
+        )[mode]["filtered"] == []
+
+
+def test_expansion_study_attributes_claim_false_positives(corpus, gold, monkeypatch, capsys):
+    from app.services.folio import term_expansions as te
+
+    before = te.LEGAL_TERM_EXPANSIONS
+    monkeypatch.setattr(sys, "argv", ["sweep.py", "--expansion-study"])
+    assert sweep.main() == 0
+    study = json.loads(capsys.readouterr().out)
+    assert te.LEGAL_TERM_EXPANSIONS is before
+    assert study["operating_point"] == {"penalty": 0.85, "threshold": 0.55, "rule": "floor"}
+    baseline = study["arms"][0]
+    assert baseline["name"] == "adopted"
+    assert baseline["metrics"]["healthy"]["tp"] == 20
+    assert baseline["metrics"]["healthy"]["fp"] == 6
+    claim = next(a for a in study["arms"] if a["name"] == "without-trigger:claim")
+    removed = claim["metrics"]["healthy"]["flips_reject_rows"]
+    assert {"narrative": "n-exact-label", "iri": "r-insurance-claims"} in removed
+    assert {"narrative": "n-word-order-2", "iri": "r-insurance-claims"} in removed
+    phrase = next(a for a in study["arms"] if a["name"] == "without-phrase:claim:insurance claim")
+    assert {"narrative": "n-exact-label", "iri": "r-insurance-claims"} in phrase["metrics"]["healthy"]["flips_reject_rows"]
+    assert len(study["trigger_coverage"]) == len(before)
+    assert {"narrative": "n-word-order-2", "iri": "r-lease-agreement"} in phrase["metrics"]["healthy"]["flips_accept_rows"]
+    fired = next(a for a in study["arms"] if a["name"] == "without-phrase:fired:wrongful termination")
+    rent = next(a for a in study["arms"] if a["name"] == "without-phrase:rent:housing")
+    for mode in ("healthy", "degraded"):
+        assert fired["metrics"][mode]["tp"] == 19
+        assert {"narrative": "n-expansion-fired", "iri": "r-wrongful-termination"} in fired["metrics"][mode]["flips_reject_rows"]
+        assert rent["metrics"][mode]["fp"] == 4
+        assert rent["metrics"][mode]["tp"] == 20
+
+
+def test_collection_preserves_global_logging_threshold():
+    """Importing calibration tests must not silence the rest of the suite."""
+    import subprocess
+
+    result = subprocess.run(
+        [sys.executable, "-c", """
+import logging
+import logging.handlers
+import runpy
+from unittest.mock import patch
+logging.disable(logging.WARNING)
+with patch('logging.handlers.RotatingFileHandler', return_value=logging.NullHandler()):
+    runpy.run_path('tests/test_migration_sweep.py')
+    import harness  # Imported lazily by the calibration pool fixture.
+assert logging.root.manager.disable == logging.WARNING, (
+    f'calibration tests changed logging threshold to {logging.root.manager.disable}'
+)
+"""],
+        cwd=MIGRATION.parent,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

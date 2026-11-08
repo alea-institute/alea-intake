@@ -5,6 +5,8 @@ import type { ReactNode } from 'react'
 import { createElement } from 'react'
 import { useWebSocket } from './useWebSocket'
 import { useWSStore } from '../store'
+import { ConnectionBanner } from '../components/ConnectionBanner'
+import { render, screen } from '@testing-library/react'
 
 // Minimal WebSocket mock — fires onopen asynchronously via queueMicrotask
 // (survives fake timers since microtasks are not affected by vi.useFakeTimers)
@@ -52,16 +54,28 @@ describe('useWebSocket', () => {
     vi.useRealTimers()
   })
 
-  it('connects to correct URL with token', async () => {
+  it('authenticates in the first frame without secrets in the URL', async () => {
     renderHook(() => useWebSocket('s1', 'tok-abc'), { wrapper: makeWrapper(qc) })
     await waitFor(() =>
-      expect(MockWebSocket.instances[0].url).toContain('/api/ws/intake/s1?token=tok-abc'),
+      expect(MockWebSocket.instances[0].url).toMatch(/\/api\/ws\/intake\/s1$/),
     )
+    expect(JSON.parse(MockWebSocket.instances[0].send.mock.calls[0][0])).toMatchObject({ type: 'auth', token: 'tok-abc' })
   })
 
   it('transitions to connected status on open', async () => {
     renderHook(() => useWebSocket('s1', 'tok'), { wrapper: makeWrapper(qc) })
     await waitFor(() => expect(useWSStore.getState().status).toBe('connected'))
+  })
+
+  it('ignores malformed frames and continues processing valid messages', async () => {
+    renderHook(() => useWebSocket('s1', 'tok'), { wrapper: makeWrapper(qc) })
+    await waitFor(() => expect(useWSStore.getState().status).toBe('connected'))
+    const socket = MockWebSocket.instances[0]
+    for (const data of ['invalid json', 'null', '[]']) {
+      expect(() => socket.onmessage?.({ data })).not.toThrow()
+    }
+    act(() => socket.simulate({ type: 'analysis_progress', data: { stage: 2 } }))
+    expect(qc.getQueryData(['intake', 's1', 'progress'])).toEqual({ stage: 2 })
   })
 
   it('resets reconnect attempt on open', async () => {
@@ -132,6 +146,18 @@ describe('useWebSocket', () => {
     expect(MockWebSocket.instances).toHaveLength(1) // no new instance created
     expect(useWSStore.getState().status).toBe('error')
     vi.useRealTimers()
+  })
+
+  it('shows expired and does not reconnect on close code 4004', async () => {
+    renderHook(() => useWebSocket('s1', 'tok'), { wrapper: makeWrapper(qc) })
+    render(createElement(ConnectionBanner))
+    await waitFor(() => expect(MockWebSocket.instances[0].readyState).toBe(1))
+    vi.useFakeTimers()
+    act(() => MockWebSocket.instances[0].close(4004))
+    act(() => vi.advanceTimersByTime(120000))
+    expect(MockWebSocket.instances).toHaveLength(1)
+    expect(useWSStore.getState().status).toBe('error')
+    expect(screen.getByRole('status')).toHaveTextContent('errors.sessionExpired')
   })
 
   it('returns new array reference on setQueryData (Pitfall 2)', async () => {

@@ -73,8 +73,8 @@ describe('ChatPage', () => {
     })
     useWSStore.setState({ status: 'connecting', ws: null, reconnectAttempt: 0 })
     server.use(
-      http.get('http://localhost:3000/api/v1/intakes/s1/messages', () =>
-        HttpResponse.json({ items: [] }),
+      http.get('http://localhost:3000/api/v1/intake/s1/messages', () =>
+        HttpResponse.json([]),
       ),
     )
   })

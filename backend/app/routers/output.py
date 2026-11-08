@@ -41,6 +41,8 @@ from app.services.output.schemas import (
 from app.services.output.template_engine import TemplateEngine
 from app.services.output.triage_scorer import TriageScorer
 
+from app.services.llm_service import LLMService, get_request_llm_service
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/output", tags=["output"])
@@ -119,6 +121,7 @@ async def generate_output(
     request: GenerateRequest,
     db: AsyncSession = Depends(get_tenant_session),
     current_user: User = Depends(get_current_active_user),
+    llm_service: LLMService = Depends(get_request_llm_service),
 ) -> GenerateResponse:
     """Generate output documents for one or more profiles.
 
@@ -144,19 +147,6 @@ async def generate_output(
     action_gen = ActionItemGenerator()
     language_adapter = LanguageAdapter()
     engine = TemplateEngine()
-
-    # LLM service for language adaptation (RUB-10). Instantiated lazily; if
-    # construction fails we adapt with a null service (adapter keeps original
-    # text) so output generation never hard-fails on LLM wiring.
-    llm_service = None
-    try:
-        from app.services.llm_service import LLMService
-
-        llm_service = LLMService()
-    except Exception:
-        logger.warning(
-            "LLMService unavailable; language adaptation will no-op", exc_info=True
-        )
 
     documents: list[OutputDocument] = []
 
@@ -186,12 +176,6 @@ async def generate_output(
         if profile.language_level == "professional":
             logger.info(
                 "Language adaptation skipped for professional profile %s",
-                profile.profile_type,
-            )
-        elif llm_service is None:
-            logger.warning(
-                "Language adaptation no-op for profile %s: no LLM service; "
-                "prose renders at original (professional) reading level",
                 profile.profile_type,
             )
         else:

@@ -27,7 +27,7 @@ _MIME_EXTRACTOR_MAP: dict[str, Callable[..., Coroutine[Any, Any, tuple[str, list
 
 # Extraction method names by MIME type (for DocumentExtraction.extraction_method)
 _MIME_EXTRACTION_METHOD: dict[str, str] = {
-    "application/pdf": "pymupdf",
+    "application/pdf": "pdfplumber",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "python-docx",
     "image/png": "tesseract",
     "image/jpeg": "tesseract",
@@ -56,6 +56,7 @@ class DocumentService:
             max_page_count: Override max page count (defaults to config).
         """
         settings = get_settings()
+        self.showcase_mode = settings.showcase_mode
         self.upload_dir = Path(upload_dir or settings.intake_upload_dir)
         self.max_file_size_mb = max_file_size_mb or settings.intake_max_file_size_mb
         self.max_page_count = max_page_count or settings.intake_max_page_count
@@ -137,7 +138,14 @@ class DocumentService:
             )
 
         # Call the extractor
-        text, elements = await extractor(file_path)
+        if self.showcase_mode and (
+            mime_type == "application/pdf" or mime_type.startswith("image/")
+        ):
+            from app.services.document.bounded import run_document_worker
+            mode = "pdf" if mime_type == "application/pdf" else "ocr"
+            text, elements = await run_document_worker(mode, path=file_path)
+        else:
+            text, elements = await extractor(file_path)
 
         # Convert to TextElement objects
         text_elements = [

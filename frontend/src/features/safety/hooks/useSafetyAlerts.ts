@@ -6,7 +6,8 @@ export function useSafetyAlerts(sessionId: string | null) {
   return useQuery<SafetyAlert[]>({
     queryKey: ['intake', sessionId, 'safety'],
     queryFn: () => fetchSafetyAlerts(sessionId!),
-    enabled: !!sessionId,
+    enabled: false,
+    initialData: [],
     staleTime: 30_000,
   })
 }

@@ -14,7 +14,7 @@ DB persistence, dict return for orchestrator.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from app.models.analysis import AnalysisClaim
 from app.services.analysis.rationale_guard import ground_rationale
@@ -214,11 +214,7 @@ class ExploreStage:
                 raw_rationale, [f.assertion_text for f in facts]
             )
             if hedges:
-                logger.info(
-                    "Rationale grounding guard hedged discovered claim %r: %s",
-                    new_claim.get("claim_name"),
-                    "; ".join(hedges),
-                )
+                logger.info("Rationale grounding guard hedged discovered claim in run %d (%d changes)", run.id, len(hedges))
 
             claim = AnalysisClaim(
                 run_id=run.id,

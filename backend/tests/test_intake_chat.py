@@ -9,15 +9,16 @@ Covers:
   - ConversationService unit tests
 """
 
-import json
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
+
+from starlette.testclient import TestClient
+from starlette.websockets import WebSocketDisconnect
+from tests.test_showcase_mode import showcase as showcase, guest  # noqa: F401
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.intake import Intake, IntakeParty, IntakeSession, Message
 from app.services.intake.session_service import IntakeSessionService
 from app.services.intake.conversation import ConversationService, INTAKE_SYSTEM_PROMPT
 
@@ -268,21 +269,135 @@ class TestWebSocketEndpoints:
     def test_websocket_auth_reject_no_token(self):
         """WebSocket connect without token should close with code 4001."""
         from starlette.testclient import TestClient
+        from starlette.websockets import WebSocketDisconnect
 
         app = _make_ws_test_app()
         with TestClient(app) as client:
-            with pytest.raises(Exception):
+            with pytest.raises(WebSocketDisconnect) as exc:
                 with client.websocket_connect("/api/ws/intake/999") as ws:
-                    pass
+                    ws.send_json({"type": "auth"})
+                    ws.receive_json()
+            assert exc.value.code == 4001
 
     def test_websocket_auth_reject_invalid_token(self):
         """WebSocket connect with bad token should close with code 4001."""
         from starlette.testclient import TestClient
+        from starlette.websockets import WebSocketDisconnect
 
         app = _make_ws_test_app()
         with TestClient(app) as client:
-            with pytest.raises(Exception):
+            with pytest.raises(WebSocketDisconnect) as exc:
                 with client.websocket_connect(
                     "/api/ws/intake/999?token=invalid-jwt-token"
                 ) as ws:
-                    pass
+                    ws.receive_json()
+            assert exc.value.code == 4001
+
+
+@pytest.mark.parametrize('query_token', [False, True])
+async def test_standard_socket_rejects_another_consumers_session(showcase, query_token):
+    client, settings, app = showcase
+    owner, other = await guest(client), await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    settings.showcase_mode = False
+    path = f'/api/ws/intake/{created["session_id"]}'
+    if query_token:
+        path += '?token=' + other['Authorization'][7:]
+    with TestClient(app) as sync:
+        with pytest.raises(WebSocketDisconnect) as exc:
+            with sync.websocket_connect(path) as ws:
+                if not query_token:
+                    ws.send_json({'type': 'auth', 'token': other['Authorization'][7:]})
+                ws.receive_json()
+        assert exc.value.code == 4003
+
+
+async def test_standard_socket_uses_auth_frame_key_with_real_header_parser(showcase, monkeypatch):
+    client, settings, app = showcase
+    owner = await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    settings.showcase_mode = False
+    reply = AsyncMock(return_value='When were your wages due?')
+    monkeypatch.setattr('app.routers.intake.ConversationService.generate_response', reply)
+    monkeypatch.setattr('app.routers.intake.screen_message_fast', AsyncMock(return_value=None))
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({'type': 'auth', 'token': owner['Authorization'][7:], 'llm_api_key': 'visitor-key'})
+            assert ws.receive_json()['type'] == 'session_state'
+            ws.send_json({'type': 'text_message', 'content': 'My wages are unpaid.'})
+            assert ws.receive_json()['type'] == 'message_ack'
+            response = ws.receive_json()
+            assert response['type'] == 'system_message'
+            assert response['content'] == 'When were your wages due?'
+    reply.assert_awaited_once()
+
+
+@pytest.mark.parametrize('showcase_mode', [False, True])
+@pytest.mark.parametrize('key', [False, 0, 123, [], {}, ['not', 'a', 'key'], {'key': 'invalid'}, 'bad\nkey'])
+async def test_socket_malformed_key_closes_4001(showcase, showcase_mode, key):
+    client, settings, app = showcase
+    owner = await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    settings.showcase_mode = showcase_mode
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({'type': 'auth', 'token': owner['Authorization'][7:], 'llm_api_key': key})
+            with pytest.raises(WebSocketDisconnect) as exc:
+                ws.receive_json()
+            assert exc.value.code == 4001
+
+
+@pytest.mark.parametrize('key', ['', None, '   '])
+async def test_showcase_socket_still_requires_key(showcase, key):
+    client, _, app = showcase
+    owner = await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({'type': 'auth', 'token': owner['Authorization'][7:], 'llm_api_key': key})
+            with pytest.raises(WebSocketDisconnect) as exc:
+                ws.receive_json()
+            assert exc.value.code == 4001
+
+
+async def test_socket_closes_4004_when_guest_touch_fails(showcase, monkeypatch):
+    client, _, app = showcase
+    owner = await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({'type': 'auth', 'token': owner['Authorization'][7:], 'llm_api_key': 'visitor-key'})
+            assert ws.receive_json()['type'] == 'session_state'
+            monkeypatch.setattr('app.db.retention.touch_guest', AsyncMock(return_value=False))
+            ws.send_json({'type': 'text_message', 'content': 'My wages are unpaid.'})
+            with pytest.raises(WebSocketDisconnect) as exc:
+                ws.receive_json()
+            assert exc.value.code == 4004
+
+
+@pytest.mark.parametrize('role', ['admin', 'professional'])
+@pytest.mark.parametrize('same_org', [True, False])
+async def test_standard_socket_respects_staff_org_access(showcase, role, same_org):
+    from app.db.engine import get_engine
+    from app.models import User, Intake
+    from sqlalchemy import select, update
+
+    client, settings, app = showcase
+    owner, staff = await guest(client), await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    async with get_engine().begin() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        owner_id = (await conn.execute(select(Intake.created_by_user_id).where(
+            Intake.id == created['id']))).scalar_one()
+        await conn.execute(update(User).where(User.id != owner_id).values(
+            role=role, org_id=1 if same_org else 999))
+    settings.showcase_mode = False
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({'type': 'auth', 'token': staff['Authorization'][7:]})
+            if same_org:
+                assert ws.receive_json()['type'] == 'session_state'
+            else:
+                with pytest.raises(WebSocketDisconnect) as exc:
+                    ws.receive_json()
+                assert exc.value.code == 4003

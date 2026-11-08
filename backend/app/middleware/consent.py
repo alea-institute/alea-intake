@@ -78,7 +78,8 @@ class ConsentMiddleware(BaseHTTPMiddleware):
 
         # Extract user info from auth header
         user_id = await self._extract_user_id(request)
-        session_id = request.headers.get("X-Session-ID")
+        from app import config
+        session_id = None if config.get_settings().showcase_mode else request.headers.get("X-Session-ID")
 
         if user_id is None and session_id is None:
             return False
@@ -111,7 +112,8 @@ class ConsentMiddleware(BaseHTTPMiddleware):
         from app.models.consent import ConsentRecord
 
         user_id = await self._extract_user_id(request)
-        session_id = request.headers.get("X-Session-ID")
+        from app import config
+        session_id = None if config.get_settings().showcase_mode else request.headers.get("X-Session-ID")
 
         if user_id is None and session_id is None:
             return False

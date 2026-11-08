@@ -60,6 +60,9 @@ class AuditMiddleware(BaseHTTPMiddleware):
     """
 
     async def dispatch(self, request: Request, call_next) -> Response:
+        from app import config
+        if config.get_settings().showcase_mode:
+            return await call_next(request)
         path = request.url.path.rstrip("/") or "/"
 
         # Skip audit for non-API paths

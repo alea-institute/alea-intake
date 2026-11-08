@@ -90,13 +90,8 @@ class ResearchStubStage:
                     notes_parts.append(
                         f"Claim '{claim.claim_name}': no adjacent concepts in FOLIO"
                     )
-            except Exception:
-                logger.debug(
-                    "FOLIO adjacency failed for claim '%s' (IRI: %s)",
-                    claim.claim_name,
-                    claim.folio_iri,
-                    exc_info=True,
-                )
+            except Exception as exc:
+                logger.debug("FOLIO adjacency failed for claim %d (%s)", claim.id, type(exc).__name__)
                 notes_parts.append(
                     f"Claim '{claim.claim_name}': adjacency traversal failed"
                 )

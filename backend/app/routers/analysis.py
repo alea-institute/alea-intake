@@ -41,6 +41,8 @@ from app.schemas.visualization import (
     VisualizationSourceSpan,
 )
 
+from app.services.llm_service import LLMService, get_request_llm_service
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/analysis", tags=["analysis"])
@@ -57,6 +59,7 @@ async def trigger_analysis(
     request: Request,
     db: AsyncSession = Depends(get_tenant_session),
     user: User = Depends(get_current_active_user),
+    llm_service: LLMService = Depends(get_request_llm_service),
 ) -> dict[str, Any]:
     """Manual analysis trigger. Returns 202 Accepted with run_id.
 
@@ -66,9 +69,6 @@ async def trigger_analysis(
     from app.services.analysis.orchestrator import AnalysisOrchestrator
     from app.services.analysis.trigger import AnalysisTrigger
     from app.services.extraction.backfill import backfill_intake_facts
-    from app.services.llm_service import LLMService
-
-    llm_service = LLMService()
 
     # Resolve FOLIO + embedding singletons (loaded at startup) for concept
     # resolution during extraction; degrade gracefully if unavailable (e.g. tests).
@@ -152,6 +152,7 @@ async def trigger_analysis(
         "run_id": run.id,
         "status": run.status,
         "message": "Analysis triggered",
+        "is_reference_model": llm_service.is_reference_model,
     }
 
 
@@ -333,10 +334,10 @@ async def override_convergence(
     request: Request,
     db: AsyncSession = Depends(get_tenant_session),
     user: User = Depends(get_current_active_user),
+    llm_service: LLMService = Depends(get_request_llm_service),
 ) -> dict[str, Any]:
     """Override convergence and continue analysis (D-16)."""
     from app.services.analysis.orchestrator import AnalysisOrchestrator
-    from app.services.llm_service import LLMService
 
     # Find the latest converged run
     result = await db.execute(
@@ -356,7 +357,6 @@ async def override_convergence(
             detail="No converged analysis run found to override",
         )
 
-    llm_service = LLMService()
     orchestrator = AnalysisOrchestrator(
         db_session=db,
         llm_service=llm_service,
@@ -371,6 +371,7 @@ async def override_convergence(
         "status": updated_run.status,
         "iteration": updated_run.current_iteration_number,
         "message": "Convergence overridden, analysis continued",
+        "is_reference_model": llm_service.is_reference_model,
     }
 
 

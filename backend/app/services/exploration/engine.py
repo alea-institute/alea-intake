@@ -100,6 +100,12 @@ class ExplorationEngine:
         else:
             self._config = ExplorationConfig()
 
+        exploration_config = self._config.model_dump()
+        if exploration_config.get("cheap_llm_provider") != self._llm.get_client_config()["provider"]:
+            exploration_config.pop("cheap_llm_provider", None)
+            exploration_config.pop("cheap_llm_model", None)
+        self._org_config = {**self._org_config, "exploration": exploration_config}
+
     async def explore(
         self,
         run: Any,
@@ -247,10 +253,10 @@ class ExplorationEngine:
 
         # Handle exceptions from gather
         if isinstance(cheap_results, Exception):
-            logger.warning("Cheap LLM branch failed: %s", cheap_results)
+            logger.warning('Cheap LLM branch failed: %s', type(cheap_results).__name__)
             cheap_results = []
         if isinstance(sequential_results, Exception):
-            logger.warning("Sequential pipeline failed: %s", sequential_results)
+            logger.warning('Sequential pipeline failed: %s', type(sequential_results).__name__)
             sequential_results = []
 
         # Merge all results
@@ -326,8 +332,8 @@ class ExplorationEngine:
                     else:
                         # Unresolvable -- keep as-is
                         iri_groups.setdefault(f"_unresolved_{id(r)}", []).append(r)
-                except Exception:
-                    logger.debug("ConceptResolver failed for '%s'", r.claim_name, exc_info=True)
+                except Exception as exc:
+                    logger.debug("ConceptResolver failed (%s)", type(exc).__name__)
                     iri_groups.setdefault(f"_unresolved_{id(r)}", []).append(r)
         else:
             # No FOLIO/embedding -- keep unresolved as-is

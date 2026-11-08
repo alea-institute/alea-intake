@@ -12,7 +12,8 @@ import logging
 import structlog
 from opentelemetry import trace
 
-from app.config import get_settings
+from app.config import get_settings as get_settings  # Existing monitoring/test patch interface.
+from app.observability.redaction import redact_event
 
 
 def add_otel_context(
@@ -34,7 +35,9 @@ def setup_logging() -> None:
 
     Reads log_level and log_format from Settings.
     """
-    settings = get_settings()
+    from app import config
+    settings = config.get_settings()
+    logging.getLogger("uvicorn.access").disabled = settings.showcase_mode or bool(settings.preview_passphrase)
     log_level = getattr(logging, settings.log_level.upper(), logging.INFO)
 
     shared_processors: list = [
@@ -44,6 +47,7 @@ def setup_logging() -> None:
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
+        redact_event,
     ]
 
     if settings.log_format == "console":
@@ -73,6 +77,12 @@ def setup_logging() -> None:
     # Replace existing handlers with structlog formatter
     for handler in root_logger.handlers:
         handler.setFormatter(formatter)
+
+    # Dependency loggers may own non-propagating file/console handlers.
+    for named_logger in logging.Logger.manager.loggerDict.values():
+        if isinstance(named_logger, logging.Logger):
+            for handler in named_logger.handlers:
+                handler.setFormatter(formatter)
 
     # Ensure at least one handler exists
     if not root_logger.handlers:

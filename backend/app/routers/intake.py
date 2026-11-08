@@ -10,29 +10,29 @@ Voice modality: voice_upload -> ASR transcription -> transcript_ready for review
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import logging
 from collections import defaultdict
 from dataclasses import asdict
 from datetime import datetime, timezone
-from typing import Any
 
 import jwt as pyjwt
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, Request, UploadFile, WebSocket, WebSocketDisconnect, status
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.showcase import admit, client_ip, guest_lock, guest_task
 from app.config import get_settings
-from app.core.permissions import get_current_active_user
+from app.core.permissions import ROLE_PERMISSIONS, get_current_active_user
 from app.db.session import get_tenant_session
 from app.models.audio import AudioRecording, Transcript
 from app.models.document import DocumentExtraction, UploadedDocument
-from app.models.intake import Intake, IntakeParty, IntakeSession, Message
+from app.models.intake import Intake, IntakeSession, Message
 from app.models.user import User
-from app.services.asr import ASRService, TranscriptionResult
+from app.services.asr import ASRService
 from app.services.document import DocumentService
 from app.services.intake.conversation import ConversationService
 from app.services.intake.message_pipeline import normalize_text, process_message
@@ -45,6 +45,8 @@ from app.services.screening.middleware import (
     queue_elevated_screening,
     screen_message_fast,
 )
+
+from app.services.llm_service import LLMService, get_request_llm_service, llm_service_from_headers
 
 logger = logging.getLogger(__name__)
 
@@ -62,9 +64,10 @@ class IntakeConnectionManager:
         # session_id -> list of active WebSocket connections
         self._connections: dict[int, list[WebSocket]] = defaultdict(list)
 
-    async def connect(self, websocket: WebSocket, session_id: int) -> None:
+    async def connect(self, websocket: WebSocket, session_id: int, accept: bool = True) -> None:
         """Accept and register a WebSocket connection for a session."""
-        await websocket.accept()
+        if accept:
+            await websocket.accept()
         self._connections[session_id].append(websocket)
 
     def disconnect(self, websocket: WebSocket, session_id: int) -> None:
@@ -203,6 +206,8 @@ async def list_intakes(
     org_id = _get_org_id(request)
     svc = IntakeSessionService(session)
     intakes = await svc.list_intakes(org_id=org_id)
+    if get_settings().showcase_mode:
+        intakes = [i for i in intakes if i.created_by_user_id == current_user.id]
     return [
         {
             "id": i.id,
@@ -300,6 +305,7 @@ async def document_upload(
     party_id: int | None = Form(None),
     current_user: User = Depends(get_current_active_user),
     db_session: AsyncSession = Depends(get_tenant_session),
+    llm_service: LLMService = Depends(get_request_llm_service),
 ):
     """Upload a document, extract text, store records, and notify via WebSocket.
 
@@ -331,6 +337,20 @@ async def document_upload(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
             detail=f"File size exceeds maximum {settings.intake_max_file_size_mb} MB",
         )
+
+    if settings.showcase_mode:
+        if len(file_bytes) > settings.showcase_upload_max_bytes:
+            raise HTTPException(413, "Upload exceeds showcase byte limit")
+        if file.content_type == "application/pdf":
+            from app.services.document.bounded import run_document_worker
+            try:
+                page_count = await run_document_worker("pages", content=file_bytes)
+            except TimeoutError:
+                raise HTTPException(413, "PDF processing time limit exceeded")
+            except (ValueError, OSError, json.JSONDecodeError):
+                raise HTTPException(422, "PDF could not be read") from None
+            if page_count > settings.showcase_pdf_max_pages:
+                raise HTTPException(413, "PDF exceeds showcase page limit")
 
     # Get org slug for directory structure
     org_slug = getattr(request.state, "tenant_slug", "default")
@@ -394,7 +414,7 @@ async def document_upload(
 
         await db_session.flush()
     except Exception as e:
-        logger.error("Document extraction failed for message %s: %s", msg.id, e)
+        logger.error('Document extraction failed for message %s: %s', msg.id, type(e).__name__)
         uploaded_doc.extraction_status = "failed"
         extraction_status = "failed"
         await db_session.flush()
@@ -403,7 +423,8 @@ async def document_upload(
     try:
         practice_area_id = await _lookup_session_practice_area_id(db_session, session_id)
         conversation_svc = ConversationService(
-            practice_areas=_get_practice_areas(request.app)
+            llm_service=llm_service,
+            practice_areas=_get_practice_areas(request.app),
         )
         llm_response = await conversation_svc.generate_response(
             messages=[{"role": "user", "content": f"[Document uploaded: {file.filename}]"}],
@@ -416,7 +437,7 @@ async def document_upload(
             content=llm_response,
         )
     except Exception as e:
-        logger.error("LLM follow-up generation failed: %s", e)
+        logger.error('LLM follow-up generation failed: %s', type(e).__name__)
 
     # Send WebSocket notification
     text_preview = normalized.text[:200] if normalized else ""
@@ -449,24 +470,26 @@ async def document_upload(
 ws_router = APIRouter(tags=["intake-ws"])
 
 
-@ws_router.websocket("/api/ws/intake/{session_id}")
-async def intake_websocket(websocket: WebSocket, session_id: int):
-    """Real-time WebSocket chat endpoint for intake sessions.
-
-    Authentication:
-      - JWT token passed as query parameter ?token={jwt}
-      - Close 4001 if token is invalid or expired
-      - Close 4003 if user lacks access to the session
-
-    Message types handled:
-      - text_message: Store, normalize, ack, generate LLM follow-up
-      - session_pause: Pause the session
-      - typing_indicator: Broadcast to other connections
-    """
+async def websocket_access(websocket: WebSocket, session_id: int):
+    """Authenticate the socket and enforce session access in both modes."""
     settings = get_settings()
 
-    # Step 1: Extract and validate JWT from query param
+    llm_service = None
+    auth = {}
     token = websocket.query_params.get("token")
+    if settings.showcase_mode or not token:
+        await websocket.accept()
+        if settings.showcase_mode and "token" in websocket.query_params:
+            await websocket.close(code=4001, reason="Use the auth message")
+            return
+        try:
+            auth = await asyncio.wait_for(websocket.receive_json(), settings.showcase_ws_auth_timeout)
+            if not isinstance(auth, dict) or auth.get("type") != "auth":
+                raise ValueError("Authentication required")
+            token = auth.get("token")
+        except (asyncio.TimeoutError, ValueError, WebSocketDisconnect):
+            await websocket.close(code=4001, reason="Authentication required")
+            return
     if not token:
         await websocket.close(code=4001, reason="Authentication required")
         return
@@ -482,8 +505,88 @@ async def intake_websocket(websocket: WebSocket, session_id: int):
         await websocket.close(code=4001, reason="Invalid token payload")
         return
 
-    # Step 2: Accept connection and register with manager
-    await manager.connect(websocket, session_id)
+    if settings.showcase_mode:
+        from app.db.engine import get_engine
+        from app.showcase import require_owner
+        from app.services.consent_service import ConsentService
+        async with get_engine().connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+            async with AsyncSession(bind=conn) as db:
+                user = await db.get(User, user_id)
+                try:
+                    if user is None or not user.is_active or payload.get("type") != "access":
+                        raise HTTPException(404)
+                    await require_owner(db, user, session_id=session_id)
+                    if not await ConsentService(db).check_consent(user_id=user_id):
+                        raise HTTPException(403)
+                except HTTPException:
+                    await websocket.close(code=4003, reason="Session unavailable")
+                    return
+        try:
+            admit(websocket.app, user_id, client_ip(websocket))
+            llm_service = llm_service_from_headers({
+                "X-LLM-API-Key": auth.get("llm_api_key", ""),
+                "X-LLM-Provider": auth.get("llm_provider", "openai"),
+                "X-LLM-Model": auth.get("llm_model", ""),
+            })
+        except HTTPException:
+            await websocket.close(code=4001, reason="Request key or admission required")
+            return
+    else:
+        from app.db.engine import get_engine
+        async with get_engine().connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+            async with AsyncSession(bind=conn) as db:
+                user = await db.get(User, user_id)
+                intake = (await db.execute(select(Intake).join(
+                    IntakeSession, IntakeSession.intake_id == Intake.id
+                ).where(IntakeSession.id == session_id))).scalar_one_or_none()
+                permissions = ROLE_PERMISSIONS.get(user.role, set()) if user else set()
+                # Standard roles grant staff access within their organization;
+                # consumers have only cases.write.own, scoped to the creator.
+                if (user is None or not user.is_active or payload.get("type") != "access"
+                        or intake is None or intake.org_id != user.org_id
+                        or not ("cases.write" in permissions or (
+                            "cases.write.own" in permissions and intake.created_by_user_id == user.id))):
+                    await websocket.close(code=4003, reason="Session unavailable")
+                    return
+        headers = {
+            "X-LLM-API-Key": auth.get("llm_api_key", websocket.headers.get("x-llm-api-key", "")),
+            "X-LLM-Provider": auth.get("llm_provider", websocket.headers.get("x-llm-provider", "openai")),
+            "X-LLM-Model": auth.get("llm_model", websocket.headers.get("x-llm-model", "")),
+        }
+        key = headers["X-LLM-API-Key"]
+        if key is not None and (not isinstance(key, str) or key.strip()):
+            try:
+                llm_service = llm_service_from_headers(headers)
+            except HTTPException:
+                await websocket.close(code=4001, reason="Invalid LLM credentials")
+                return
+    return user_id, llm_service
+
+
+@ws_router.websocket("/api/ws/intake/{session_id}")
+async def intake_websocket(websocket: WebSocket, session_id: int,
+                           access=Depends(websocket_access)):
+    """Real-time WebSocket chat endpoint for intake sessions.
+
+    Authentication:
+      - Showcase: first auth message carries JWT and request LLM credentials
+      - Standard mode: first auth message, with legacy ?token={jwt} fallback
+      - Close 4001 if token is invalid or expired
+      - Close 4003 if user lacks access to the session
+
+    Message types handled:
+      - text_message: Store, normalize, ack, generate LLM follow-up
+      - session_pause: Pause the session
+      - typing_indicator: Broadcast to other connections
+    """
+    if access is None:
+        return
+    user_id, llm_service = access
+    settings = get_settings()
+    from starlette.websockets import WebSocketState
+    await manager.connect(websocket, session_id, accept=websocket.application_state != WebSocketState.CONNECTED)
 
     # Step 3: Create a DB session for message operations
     from app.db.engine import get_engine
@@ -507,41 +610,77 @@ async def intake_websocket(websocket: WebSocket, session_id: int):
                 break
 
             msg_type = data.get("type")
+            if settings.showcase_mode and msg_type in {
+                "text_message", "voice_upload", "transcript_approve", "transcript_edit"
+            }:
+                try:
+                    admit(websocket.app, user_id, client_ip(websocket))
+                except HTTPException:
+                    await websocket.send_json({"type": "error", "status": 429,
+                                               "message": "Admission limit reached; retry later"})
+                    continue
 
-            if msg_type == "text_message":
-                await _handle_text_message(
-                    websocket, session_id, user_id, data, engine
-                )
-            elif msg_type == "voice_upload":
-                await _handle_voice_upload(
-                    websocket, session_id, user_id, data, engine
-                )
-            elif msg_type == "transcript_approve":
-                await _handle_transcript_approve(
-                    websocket, session_id, user_id, data, engine
-                )
-            elif msg_type == "transcript_edit":
-                await _handle_transcript_edit(
-                    websocket, session_id, user_id, data, engine
-                )
-            elif msg_type == "session_pause":
-                await _handle_session_pause(
-                    websocket, session_id, engine
-                )
-            elif msg_type == "typing_indicator":
-                await manager.send_to_others(session_id, websocket, {
-                    "type": "typing_indicator",
-                    "user_id": user_id,
-                    "is_typing": data.get("is_typing", False),
-                })
+            await asyncio.create_task(_dispatch_socket_message(
+                websocket, session_id, user_id, data, engine, llm_service
+            ))
+            if websocket.application_state == WebSocketState.DISCONNECTED:
+                break
 
     except WebSocketDisconnect:
         pass
+    except asyncio.CancelledError:
+        # Handler sessions have rolled back before we reach this boundary.
+        # End-session waits for this task to exit before purging the guest.
+        if websocket.application_state != WebSocketState.DISCONNECTED:
+            await websocket.close(code=4004, reason="Session unavailable")
     except Exception as e:
-        logger.error("WebSocket error for session %d: %s", session_id, e)
+        logger.error('WebSocket error for session %d: %s', session_id, type(e).__name__)
     finally:
         manager.disconnect(websocket, session_id)
 
+
+async def _dispatch_socket_message(websocket, session_id, user_id, data, engine, llm_service):
+    """Own a cancellable task for one message, independent of connection lifetime."""
+    settings = get_settings()
+    msg_type = data.get("type")
+    from app.db.retention import guest_activity, touch_guest
+    async with guest_task(user_id), guest_activity(user_id), guest_lock(user_id):
+        if settings.showcase_mode:
+            async with engine.begin() as conn:
+                conn = await conn.execution_options(schema_translate_map={"tenant": None})
+                touched = await touch_guest(conn, user_id)
+                exists = (await conn.execute(select(IntakeSession.id).join(
+                    Intake, Intake.id == IntakeSession.intake_id).where(
+                    IntakeSession.id == session_id, Intake.created_by_user_id == user_id))).first()
+            if not touched or exists is None:
+                await websocket.close(code=4004, reason="Session unavailable")
+                return
+        if msg_type == "text_message":
+            await _handle_text_message(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "voice_upload":
+            await _handle_voice_upload(
+                websocket, session_id, user_id, data, engine
+            )
+        elif msg_type == "transcript_approve":
+            await _handle_transcript_approve(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "transcript_edit":
+            await _handle_transcript_edit(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "session_pause":
+            await _handle_session_pause(
+                websocket, session_id, engine
+            )
+        elif msg_type == "typing_indicator":
+            await manager.send_to_others(session_id, websocket, {
+                "type": "typing_indicator",
+                "user_id": user_id,
+                "is_typing": data.get("is_typing", False),
+            })
 
 async def _handle_text_message(
     websocket: WebSocket,
@@ -549,6 +688,7 @@ async def _handle_text_message(
     user_id: int,
     data: dict,
     engine,
+    llm_service: LLMService | None = None,
 ) -> None:
     """Handle an incoming text_message: screen, store, normalize, ack, generate LLM response.
 
@@ -608,9 +748,9 @@ async def _handle_text_message(
             )
 
             # Normalize the message
-            normalized = normalize_text(content, message.id, party_id)
+            normalize_text(content, message.id, party_id)
 
-            # Send acknowledgment (include client_id for optimistic update reconciliation)
+            await db_session.commit()
             await websocket.send_json({
                 "type": "message_ack",
                 "id": str(message.id),
@@ -620,12 +760,21 @@ async def _handle_text_message(
                 "sequence_number": message.sequence_number,
             })
 
+            if llm_service is None:
+                await websocket.send_json({
+                    "type": "error",
+                    "status": 400,
+                    "message": "A visitor LLM API key is required",
+                })
+                return
+
             # Generate and send LLM response (bound to session's practice area, if any)
             practice_area_id = await _lookup_session_practice_area_id(
                 db_session, session_id
             )
             conversation_svc = ConversationService(
-                practice_areas=_get_practice_areas(websocket.app)
+                llm_service=llm_service,
+                practice_areas=_get_practice_areas(websocket.app),
             )
             llm_response = await conversation_svc.generate_response(
                 messages=[{"role": "user", "content": content}],
@@ -662,7 +811,7 @@ async def _handle_session_pause(
         )
         async with AsyncSession(bind=conn, expire_on_commit=False) as db_session:
             svc = IntakeSessionService(db_session)
-            session = await svc.pause_session(session_id)
+            await svc.pause_session(session_id)
             await db_session.commit()
 
             await websocket.send_json({
@@ -766,6 +915,7 @@ async def _handle_transcript_approve(
     user_id: int,
     data: dict,
     engine,
+    llm_service: LLMService | None = None,
 ) -> None:
     """Handle transcript_approve: mark as approved, normalize, generate LLM follow-up.
 
@@ -787,9 +937,14 @@ async def _handle_transcript_approve(
 
             # Lookup transcript by recording_id
             result = await db_session.execute(
-                select(Transcript).where(Transcript.recording_id == recording_id)
+                select(Transcript).join(AudioRecording, AudioRecording.id == Transcript.recording_id)
+                .join(Message, Message.id == AudioRecording.message_id)
+                .where(Transcript.recording_id == recording_id, Message.session_id == session_id)
             )
-            transcript = result.scalar_one()
+            transcript = result.scalar_one_or_none()
+            if transcript is None:
+                await websocket.send_json({"type": "error", "message": "Transcript not found"})
+                return
 
             # Update status to approved
             transcript.status = "approved"
@@ -828,28 +983,37 @@ async def _handle_transcript_approve(
 
             # Normalize the approved transcript text
             try:
-                normalized = await process_message(
+                await process_message(
                     "voice", approved_text, original_message.id, original_message.party_id
                 )
             except NotImplementedError:
                 # Voice normalization falls back to text normalization
-                normalized = normalize_text(
+                normalize_text(
                     approved_text, original_message.id, original_message.party_id
                 )
 
-            # Send message_ack
+            await db_session.commit()
             await websocket.send_json({
                 "type": "message_ack",
                 "message_id": original_message.id,
                 "sequence_number": original_message.sequence_number,
             })
 
+            if llm_service is None:
+                await websocket.send_json({
+                    "type": "error",
+                    "status": 400,
+                    "message": "A visitor LLM API key is required",
+                })
+                return
+
             # Generate LLM follow-up (practice-area bound when available)
             practice_area_id = await _lookup_session_practice_area_id(
                 db_session, session_id
             )
             conversation_svc = ConversationService(
-                practice_areas=_get_practice_areas(websocket.app)
+                llm_service=llm_service,
+                practice_areas=_get_practice_areas(websocket.app),
             )
             llm_response = await conversation_svc.generate_response(
                 messages=[{"role": "user", "content": approved_text}],
@@ -880,6 +1044,7 @@ async def _handle_transcript_edit(
     user_id: int,
     data: dict,
     engine,
+    llm_service: LLMService | None = None,
 ) -> None:
     """Handle transcript_edit: update text, mark as edited, normalize, generate LLM follow-up.
 
@@ -902,9 +1067,14 @@ async def _handle_transcript_edit(
 
             # Lookup transcript by recording_id
             result = await db_session.execute(
-                select(Transcript).where(Transcript.recording_id == recording_id)
+                select(Transcript).join(AudioRecording, AudioRecording.id == Transcript.recording_id)
+                .join(Message, Message.id == AudioRecording.message_id)
+                .where(Transcript.recording_id == recording_id, Message.session_id == session_id)
             )
-            transcript = result.scalar_one()
+            transcript = result.scalar_one_or_none()
+            if transcript is None:
+                await websocket.send_json({"type": "error", "message": "Transcript not found"})
+                return
 
             # Update text and status
             transcript.text_encrypted = edited_text.encode("utf-8")
@@ -923,29 +1093,48 @@ async def _handle_transcript_edit(
             )
             original_message = msg_result.scalar_one()
 
+            try:
+                screening_result = await screen_message_fast(edited_text, session_id, db_session)
+                if screening_result and screening_result.has_critical:
+                    await websocket.send_json(build_safety_alert_message(screening_result))
+                    for tp in screening_result.triggered_protocols:
+                        if isinstance(tp, dict) and tp.get("severity_tier") == "critical":
+                            await persist_screening_event(db_session, session_id, tp, "immediate_alert")
+            except Exception:
+                logger.warning("Transcript screening failed for session %d; continuing", session_id, exc_info=True)
+
             # Normalize the edited text
             try:
-                normalized = await process_message(
+                await process_message(
                     "voice", edited_text, original_message.id, original_message.party_id
                 )
             except NotImplementedError:
-                normalized = normalize_text(
+                normalize_text(
                     edited_text, original_message.id, original_message.party_id
                 )
 
-            # Send message_ack
+            await db_session.commit()
             await websocket.send_json({
                 "type": "message_ack",
                 "message_id": original_message.id,
                 "sequence_number": original_message.sequence_number,
             })
 
+            if llm_service is None:
+                await websocket.send_json({
+                    "type": "error",
+                    "status": 400,
+                    "message": "A visitor LLM API key is required",
+                })
+                return
+
             # Generate LLM follow-up (practice-area bound when available)
             practice_area_id = await _lookup_session_practice_area_id(
                 db_session, session_id
             )
             conversation_svc = ConversationService(
-                practice_areas=_get_practice_areas(websocket.app)
+                llm_service=llm_service,
+                practice_areas=_get_practice_areas(websocket.app),
             )
             llm_response = await conversation_svc.generate_response(
                 messages=[{"role": "user", "content": edited_text}],
@@ -968,3 +1157,17 @@ async def _handle_transcript_edit(
                 "content": llm_response,
                 "message_id": sys_message.id,
             })
+
+
+@router.post("/{intake_id}/end-session")
+async def end_session(intake_id: int, current_user: User = Depends(get_current_active_user),
+                      session: AsyncSession = Depends(get_tenant_session)):
+    if not get_settings().showcase_mode:
+        raise HTTPException(404, "Not found")
+    # showcase_access holds guest_lock through this handler and its commit.
+    from app.db.retention import purge_intake
+    ids = list((await session.execute(select(Intake.id).where(
+        Intake.created_by_user_id == current_user.id))).scalars())
+    for owned_id in ids:
+        await purge_intake(session, owned_id)
+    return {"status": "completed"}

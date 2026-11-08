@@ -20,7 +20,7 @@ def _make_org_config(
     provider: str | None = "openai",
     model: str | None = "gpt-4",
     data_policy: str = "cloud_optout",
-    api_key_encrypted: bytes | None = None,
+    api_key_encrypted: bytes | None = b"test-visitor-key",
 ) -> MagicMock:
     """Create a mock OrganizationConfig with the given LLM settings."""
     config = MagicMock()
@@ -101,7 +101,7 @@ class TestLLMServicePlatformEnvOverride:
 
         monkeypatch.setenv("ALEA_LLM_PROVIDER", "openai")
         monkeypatch.setenv("ALEA_LLM_API_KEY", "sk-test-platform")
-        service = LLMService()
+        service = LLMService(allow_server_keys=True)
         assert service.provider == "openai"
         assert service.api_key == "sk-test-platform"
 
@@ -186,7 +186,7 @@ class TestLLMServiceConnectionCheck:
             result = await service.check_connection()
 
         assert result["status"] == "error"
-        assert "Connection refused" in result["detail"]
+        assert result["detail"] == "LLM connection failed"
 
     async def test_llm_service_no_case_data_in_check(self):
         """check_connection does not send any PII or case data."""
@@ -397,3 +397,20 @@ class TestGetLLMServiceFactory:
         org_config = _make_org_config(provider="anthropic", model="claude-sonnet-4-6")
         service = get_llm_service(org_config=org_config)
         assert service.provider == "anthropic"
+
+
+def test_client_uses_dependency_constructor(monkeypatch):
+    from unittest.mock import MagicMock
+    from app.services.llm_service import LLMService
+
+    from alea_llm_client import OpenAIModel
+
+    def stale_constructor(*args, **kwargs):
+        raise AssertionError("stale dependency constructor")
+
+    monkeypatch.setattr(OpenAIModel, "__init__", stale_constructor)
+    expected_client = object()
+    constructor = MagicMock(return_value=expected_client)
+    monkeypatch.setattr("alea_llm_client.OpenAIModel", constructor)
+    service = LLMService(api_key="visitor-key", provider="openai", model="visitor-model")
+    assert service.create_client() is expected_client

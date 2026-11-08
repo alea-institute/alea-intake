@@ -51,5 +51,4 @@ htmlcov/
 .ruff_cache/
 
 # uv
-uv.lock
 .claude/worktrees/

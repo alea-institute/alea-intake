@@ -127,7 +127,7 @@ export function MatrixView({ data, onCellSelect }: MatrixViewProps) {
       <div
         ref={scrollContainerRef}
         className="overflow-auto"
-        style={{ height: 'calc(100vh - 280px)', maxHeight: 600 }}
+        style={{ maxHeight: 'min(600px, calc(100vh - 280px))' }}
         onScroll={handleScroll}
       >
         <div

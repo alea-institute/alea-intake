@@ -39,26 +39,30 @@ OWL_THING = "http://www.w3.org/2002/07/owl#Thing"
 def load_folio():
     from folio import FOLIO
 
-    return FOLIO()  # default branch; OWL is cached after first load
+    return FOLIO(llm=object())  # ontology only; never construct an ambient LLM client
 
 
 def iter_iris(run: dict):
-    """Yield (kind, name, iri) for every FOLIO IRI a persona run.json carries."""
-    a = run.get("analysis", {}) or {}
-    for c in a.get("claims", []) or []:
-        iri = c.get("folio_iri")
-        if iri:
-            yield ("claim", c.get("claim_name", "") or "", iri)
-        for el in c.get("elements", []) or []:
-            iri = el.get("folio_iri")
-            if iri:
-                yield ("element", el.get("name", el.get("element_name", "")) or "", iri)
-    # facts / resolved concepts, if the payload carries them
-    for f in a.get("facts", []) or []:
-        for rc in f.get("resolved_iris", []) or f.get("folio_concepts", []) or []:
-            iri = rc.get("iri") if isinstance(rc, dict) else rc
-            if iri:
-                yield ("fact", (f.get("assertion_text") or "")[:50], iri)
+    """Yield every mapped ontology identifier, including nested output concepts."""
+    def visit(value, kind="concept", name=""):
+        if isinstance(value, dict):
+            name = value.get("claim_name", value.get("name", name))
+            for key, child in value.items():
+                if isinstance(child, str) and (key == "folio_iri" or
+                    (key == "iri" and "folio.openlegalstandard.org/" in child)):
+                    yield kind, name, child
+                elif key in {"resolved_iris", "folio_concepts"} and isinstance(child, list):
+                    for concept in child:
+                        if isinstance(concept, str):
+                            yield kind, name, concept
+                        else:
+                            yield from visit(concept, kind, name)
+                else:
+                    yield from visit(child, key, name)
+        elif isinstance(value, list):
+            for child in value:
+                yield from visit(child, kind, name)
+    yield from visit(run)
 
 
 def branch_of(folio, iri: str) -> tuple[str, bool]:
@@ -92,9 +96,12 @@ def branch_of(folio, iri: str) -> tuple[str, bool]:
 def check_iri(folio, iri: str) -> dict:
     """Return a structured verdict for a single IRI."""
     normalized = folio.normalize_iri(iri) if hasattr(folio, "normalize_iri") else iri
-    if normalized not in folio:
+    # Membership can perform label search; require an exact concept identifier.
+    if not normalized.startswith(("https://folio.openlegalstandard.org/", "http://folio.openlegalstandard.org/")) or normalized not in folio:
         return {"iri": iri, "ok": False, "reason": "does-not-resolve"}
     obj = folio[normalized]
+    if getattr(obj, "iri", None) != normalized:
+        return {"iri": iri, "ok": False, "reason": "does-not-resolve"}
     branch, rooted = branch_of(folio, normalized)
     deprecated = bool(getattr(obj, "deprecated", False))
     ok = not deprecated and rooted

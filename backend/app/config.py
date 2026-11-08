@@ -36,12 +36,29 @@ class LLMDataPolicy(str, Enum):
     LOCAL_ONLY = "local_only"
 
 
+DEFAULT_REFERENCE_MODEL = "gpt-4o-mini"
+
+
 class Settings(BaseSettings):
     """Application settings loaded from environment variables with ALEA_ prefix."""
 
     app_name: str = "alea-intake"
     debug: bool = False
     secret_key: str  # Required -- no default
+
+    reference_model: str = DEFAULT_REFERENCE_MODEL
+    preview_passphrase: str = ""
+    showcase_mode: bool = False
+    showcase_idle_ttl_seconds: int = 3600
+    showcase_ws_auth_timeout: float = 5.0
+    showcase_upload_max_bytes: int = 10 * 1024 * 1024
+    showcase_pdf_max_pages: int = 30
+    showcase_extraction_timeout_seconds: float = 30.0
+    showcase_max_body_bytes: int = 12 * 1024 * 1024
+    showcase_concurrent_analyses: int = 2
+    showcase_analysis_queue: int = 4
+    showcase_guest_limit: str = "30/minute"
+    showcase_ip_limit: str = "120/minute"
 
     # Database
     database_backend: DatabaseBackend = DatabaseBackend.POSTGRESQL
@@ -65,7 +82,7 @@ class Settings(BaseSettings):
     folio_owl_branch: str = "main"
     folio_update_interval_hours: int = 24
     folio_cache_dir: str = "./data/folio_cache"
-    folio_confidence_threshold: float = 0.5
+    folio_confidence_threshold: float = 0.55
     folio_traversal_depth: int = 2
 
     # Intake

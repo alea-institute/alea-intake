@@ -5,26 +5,25 @@
 synthetic corpus the migration harness uses) plus ``migration/sweep_gold.json`` (concept-level
 labels owned by this study), then measures what *would* happen at other operating points:
 
-* ``SINGLE_STAGE_PENALTY``   — ``concept_resolver.SINGLE_STAGE_PENALTY`` (production: 0.7)
-* ``confidence_threshold``   — ``ConceptResolutionConfig.confidence_threshold`` (production: 0.5)
+* ``SINGLE_STAGE_PENALTY``   — ``concept_resolver.SINGLE_STAGE_PENALTY`` (production: 0.85)
+* ``confidence_threshold``   — ``ConceptResolutionConfig.confidence_threshold`` (production: 0.55)
 * ``specificity_penalty``    — folio-resolve ≥ 0.3.0's optional scorer knob (production: 1.0,
                                i.e. the call site does not pass it at all)
-* the **combine rule** itself — the status quo weighted average and three candidate remedies
+* the **combine rule** itself — the historical weighted average and three remedies
   for the "a weak embedding hit is worse than no embedding hit" inversion recorded in
   ``migration/README.md``
 
 Same rules as ``harness.py``: ``PYTHONHASHSEED=0``, $0 LLM spend, no network, no database, no
-ontology download. Nothing under ``app/`` is edited; the penalty is swept by setting the module
-attribute **inside this process only**, and the specificity knob by wrapping the scorer at the
-resolver's call site, also in-process. ``verify_reference()`` proves the reconstruction is
-faithful before any of that happens.
+ontology download. Nothing under ``app/`` is edited; combine policies are evaluated locally,
+and the specificity knob wraps the scorer at the resolver's call site in-process.
+``verify_reference()`` proves fidelity to the adopted production operating point.
 
 Why a reconstruction instead of N full ``resolve_concepts`` runs: neither knob can change which
 candidates the two stages *retrieve* or what they *score* — ``SINGLE_STAGE_PENALTY`` and
 ``confidence_threshold`` are consumed strictly downstream, in ``_combine_and_rank``. So the
 candidate pool is built once per (specificity, embedding-mode) pair through the real stage
-functions, and every grid point is then evaluated over that pool using the real
-``_combine_score``. ``--verify`` re-runs the true ``resolve_concepts`` at the reference point and
+functions, and every grid point is evaluated over that pool using explicit combine policies.
+``--verify`` re-runs the true ``resolve_concepts`` at the adopted operating point and
 asserts equality, which is what makes the shortcut legitimate.
 
 Usage::
@@ -137,7 +136,8 @@ async def _pool_for(text: str, folio, embedding, config) -> dict[str, dict]:
 
 
 def build_pools(
-    corpus: dict, spec: float | None, *, expansions: bool = True
+    corpus: dict, spec: float | None, *, expansions: bool = True,
+    vocabulary: dict[str, list[str]] | None = None,
 ) -> dict[str, dict[str, dict[str, dict]]]:
     """Retrieve + score every candidate once per embedding mode.
 
@@ -149,10 +149,14 @@ def build_pools(
     """
     import harness
     from app.services.folio import concept_resolver as cr
+    from app.services.folio import term_expansions as te
     from app.services.folio.concept_resolver import ConceptResolutionConfig
 
     undo = _spec_patch(spec)
     saved_expand = cr.expand_legal_terms
+    saved_vocabulary = te.LEGAL_TERM_EXPANSIONS
+    if vocabulary is not None:
+        te.LEGAL_TERM_EXPANSIONS = vocabulary
     if not expansions:
         cr.expand_legal_terms = lambda text: []
     try:
@@ -180,7 +184,65 @@ def build_pools(
         return pools
     finally:
         cr.expand_legal_terms = saved_expand
+        te.LEGAL_TERM_EXPANSIONS = saved_vocabulary
         undo()
+
+
+def expansion_study(corpus: dict, gold: dict) -> dict:
+    """Leave-one-out vocabulary ablations at the adopted point, never persisted to app/.
+
+    Rebuild retrieval for changed queries (including entries exposed by the five-query
+    limit). Unchanged queries reuse the identical baseline pool. The filtered narrative
+    query remains in vocabulary ablations; the separate no-query arm removes it too.
+    """
+    from app.services.folio import term_expansions as te
+
+    point = {"penalty": 0.85, "threshold": 0.55, "rule": "floor"}
+    vocabulary = te.LEGAL_TERM_EXPANSIONS
+    baseline_pools = build_pools(corpus, None)
+    problems = verify_reference(corpus, baseline_pools)
+    if problems:
+        raise AssertionError(problems)
+    baseline = evaluate_point(baseline_pools, **point)
+    original_queries = {n["id"]: te.expand_legal_terms(n["text"]) for n in corpus["narratives"]}
+    arms = []
+
+    def measure(name, pool):
+        accepted = evaluate_point(pool, **point)
+        arms.append({"name": name, "metrics": score_point(
+            accepted, gold, baseline, corpus, detail=True)})
+
+    def ablate(name, reduced):
+        te.LEGAL_TERM_EXPANSIONS = reduced
+        try:
+            queries = {n["id"]: te.expand_legal_terms(n["text"]) for n in corpus["narratives"]}
+        finally:
+            te.LEGAL_TERM_EXPANSIONS = vocabulary
+        changed = [n for n in corpus["narratives"]
+                   if queries[n["id"]][:5] != original_queries[n["id"]][:5]]
+        pool = {mode: dict(rows) for mode, rows in baseline_pools.items()}
+        if changed:
+            rebuilt = build_pools({**corpus, "narratives": changed}, None, vocabulary=reduced)
+            for mode in pool:
+                pool[mode].update(rebuilt[mode])
+        measure(name, pool)
+        arms[-1]["changed_queries"] = {
+            n["id"]: {"before": original_queries[n["id"]][:5], "after": queries[n["id"]][:5]}
+            for n in changed}
+        return [nid for nid in queries if queries[nid] != original_queries[nid]]
+
+    measure("adopted", baseline_pools)
+    ablate("filtered-query-only", {})
+    measure("no-expanded-queries", build_pools(corpus, None, expansions=False))
+    coverage = {}
+    for trigger, phrases in vocabulary.items():
+        reduced = {k: v for k, v in vocabulary.items() if k != trigger}
+        coverage[trigger] = ablate(f"without-trigger:{trigger}", reduced)
+        for phrase in phrases:
+            reduced = {**vocabulary, trigger: [p for p in phrases if p != phrase]}
+            ablate(f"without-phrase:{trigger}:{phrase}", reduced)
+    return {"operating_point": point, "fidelity_problems": problems,
+            "trigger_coverage": coverage, "arms": arms}
 
 
 # ---------------------------------------------------------------------------
@@ -202,9 +264,8 @@ def combined_score(
 ) -> float:
     """Score one candidate under ``rule``.
 
-    ``current`` delegates to the production ``_combine_score`` with the module's penalty
-    constant temporarily set to ``penalty`` — so the status quo arm of every sweep is the real
-    function, not a lookalike. The remedies are implemented here and here only.
+    ``current`` preserves the historical weighted average for comparison after adoption.
+    ``floor`` is the adopted production rule; fidelity is checked by ``verify_reference``.
 
     * ``current``   — weighted average over the stages that fired; ×penalty if only one did.
     * ``floor``     — *penalty-then-floor*: ``max(current, penalty × best single stage)``. A
@@ -218,20 +279,6 @@ def combined_score(
                       generalization of the flat single-stage penalty. Included because the
                       obvious generalization does NOT fix the inversion; see the study doc.
     """
-    from app.services.folio import concept_resolver as cr
-
-    if rule == "current":
-        saved = cr.SINGLE_STAGE_PENALTY
-        cr.SINGLE_STAGE_PENALTY = penalty
-        try:
-            return cr._combine_score(
-                embedding_score=embedding_score,
-                label_score=label_score,
-                llm_score=llm_score,
-            )
-        finally:
-            cr.SINGLE_STAGE_PENALTY = saved
-
     stages = [
         (s, w)
         for s, w in (
@@ -247,6 +294,8 @@ def combined_score(
     total_weight = EMBEDDING_WEIGHT + LABEL_WEIGHT + LLM_WEIGHT
     avg = sum(s * w for s, w in stages) / present_weight
 
+    if rule == "current":
+        return avg * penalty if len(stages) == 1 else avg
     if rule == "floor":
         base = avg * penalty if len(stages) == 1 else avg
         return max(base, penalty * max(s for s, _ in stages))
@@ -463,7 +512,7 @@ def event_tables(pools: dict, gold: dict) -> dict[str, list[dict]]:
 
 
 def verify_reference(corpus: dict, pools: dict) -> list[str]:
-    """Assert the pool reconstruction reproduces ``resolve_concepts`` at the reference point.
+    """Assert the pool reconstruction reproduces the adopted production resolver.
 
     Also re-asserts the claim-fitness canary (PLACE-REJECTED), which the sweep knobs cannot
     move but which must be shown green for the study to mean anything.
@@ -472,14 +521,20 @@ def verify_reference(corpus: dict, pools: dict) -> list[str]:
     from app.services.analysis.semantic_fit import FitItem, SemanticFitValidator
     from app.services.folio.concept_resolver import ConceptResolutionConfig, resolve_concepts
 
+    from app.services.folio import concept_resolver as cr
+
     problems: list[str] = []
+
     reconstructed = evaluate_point(
-        pools, penalty=REF_PENALTY, threshold=REF_THRESHOLD, rule=REF_RULE
+        pools,
+        penalty=cr.SINGLE_STAGE_PENALTY,
+        threshold=ConceptResolutionConfig().confidence_threshold,
+        rule="floor",
     )
     config = ConceptResolutionConfig(
         max_embedding_candidates=MAX_EMBEDDING_CANDIDATES,
         max_label_results=MAX_LABEL_RESULTS,
-        confidence_threshold=REF_THRESHOLD,
+        confidence_threshold=ConceptResolutionConfig().confidence_threshold,
         enable_llm_stage=False,
     )
     for mode, fails in (("healthy", False), ("degraded", True)):
@@ -601,6 +656,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", default="sweep", help="capture stem under migration/captures/")
     parser.add_argument("--verify", action="store_true", help="fidelity check only")
+    parser.add_argument("--expansion-study", action="store_true",
+                        help="print vocabulary ablation evidence as JSON, then exit")
     parser.add_argument("--no-spec-axis", action="store_true")
     parser.add_argument("--dump-pools", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--spec", type=float, default=None, help=argparse.SUPPRESS)
@@ -613,6 +670,9 @@ def main() -> int:
         return 0
 
     gold = _gold()
+    if args.expansion_study:
+        print(json.dumps(expansion_study(corpus, gold), indent=2))
+        return 0
     pools = build_pools(corpus, None)
 
     problems = verify_reference(corpus, pools)
@@ -620,7 +680,7 @@ def main() -> int:
         for p in problems:
             print(f"FATAL: {p}")
         return 2
-    print("fidelity: reconstruction == resolve_concepts at the reference point ✅")
+    print("fidelity: reconstruction == resolve_concepts at the adopted point ✅")
     print("canary PLACE-REJECTED (knob-independent, claim-fitness seam) ✅")
     if args.verify:
         return 0

@@ -4,14 +4,14 @@ import userEvent from '@testing-library/user-event'
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { http, HttpResponse } from 'msw'
-import { server } from '@/test/msw/server'
 import { ThemeProvider } from '@/shared/components/ThemeProvider'
 import { SafetyBanner } from './SafetyBanner'
 import { useSafetyUI } from '../store'
 
+let alerts: unknown[] = []
 function renderSafety(ui: React.ReactElement) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  qc.setQueryData(['intake','s1','safety'], alerts)
   return render(
     <QueryClientProvider client={qc}>
       <ThemeProvider defaultTheme="modern-conversational">
@@ -24,10 +24,9 @@ function renderSafety(ui: React.ReactElement) {
 }
 
 describe('SafetyBanner', () => {
-  beforeEach(() => { useSafetyUI.setState({ drawerOpen: false }) })
+  beforeEach(() => { alerts = []; useSafetyUI.setState({ drawerOpen: false }) })
 
   it('renders nothing when no critical alerts', async () => {
-    server.use(http.get('/api/v1/intakes/s1/safety', () => HttpResponse.json({ items: [] })))
     const { container } = renderSafety(<SafetyBanner sessionId="s1" />)
     // Wait for query to settle
     await waitFor(() => {
@@ -36,18 +35,14 @@ describe('SafetyBanner', () => {
   })
 
   it('renders banner when critical alert exists', async () => {
-    server.use(http.get('/api/v1/intakes/s1/safety', () =>
-      HttpResponse.json({ items: [{ tier: 'critical', category: 'dv', message: 'DV detected', resources: [] }] })
-    ))
+    alerts = [{ tier: 'critical', category: 'dv', message: 'DV detected', resources: [] }]
     renderSafety(<SafetyBanner sessionId="s1" />)
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument())
     expect(screen.getByText(/safety comes first/i)).toBeInTheDocument()
   })
 
   it('has NO close button (non-dismissible per D-29)', async () => {
-    server.use(http.get('/api/v1/intakes/s1/safety', () =>
-      HttpResponse.json({ items: [{ tier: 'critical', category: 'dv', message: 'DV', resources: [] }] })
-    ))
+    alerts = [{ tier: 'critical', category: 'dv', message: 'DV', resources: [] }]
     renderSafety(<SafetyBanner sessionId="s1" />)
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument())
     // No separate close/dismiss button should exist
@@ -56,9 +51,7 @@ describe('SafetyBanner', () => {
   })
 
   it('opens drawer on click', async () => {
-    server.use(http.get('/api/v1/intakes/s1/safety', () =>
-      HttpResponse.json({ items: [{ tier: 'critical', category: 'dv', message: 'DV', resources: [] }] })
-    ))
+    alerts = [{ tier: 'critical', category: 'dv', message: 'DV', resources: [] }]
     renderSafety(<SafetyBanner sessionId="s1" />)
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument())
     await userEvent.click(screen.getByRole('alert'))

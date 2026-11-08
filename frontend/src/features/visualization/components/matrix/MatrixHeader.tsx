@@ -34,25 +34,24 @@ export function MatrixHeader({
     >
       {/* Row 1: Claim group headers */}
       <div className="flex" role="row">
-        {/* Empty corner cell above fact labels */}
         <div
           className="sticky left-0 z-30 shrink-0 border-b border-r border-border bg-background"
           style={{ width: factLabelWidth, minWidth: factLabelWidth }}
           role="columnheader"
           aria-label="Facts"
-        />
+        >Facts</div>
 
         {columnGroups.map((group) => (
           <div
             key={group.claimId}
             className="flex items-center border-b border-r border-border bg-muted/50 px-2"
-            style={{ width: group.collapsed ? 40 : group.columns.length * 80 }}
+            style={{ width: group.collapsed ? 200 : group.columns.length * 80 }}
             role="columnheader"
             aria-label={group.claimName}
           >
             <button
               type="button"
-              className="mr-1 flex h-6 w-6 shrink-0 items-center justify-center rounded hover:bg-muted"
+              className="flex w-full items-center gap-1 rounded p-1 text-xs hover:bg-muted"
               onClick={() => onToggleCollapse(group.claimId)}
               aria-label={`${group.collapsed ? 'Expand' : 'Collapse'} ${group.claimName}`}
             >
@@ -61,33 +60,28 @@ export function MatrixHeader({
               ) : (
                 <ChevronDown className="h-4 w-4" />
               )}
+              <span><span className="sr-only">{group.collapsed ? 'Expand' : 'Collapse'} </span>{group.claimName}</span>
             </button>
-            {!group.collapsed && (
-              <span className="truncate text-xs font-semibold">
-                {group.claimName}
-              </span>
-            )}
           </div>
         ))}
       </div>
 
       {/* Row 2: Element column headers */}
       <div className="flex" role="row">
-        {/* Empty cell under the corner */}
         <div
           className="sticky left-0 z-30 shrink-0 border-b border-r border-border bg-background"
           style={{ width: factLabelWidth, minWidth: factLabelWidth }}
           role="columnheader"
-        />
+        >Fact</div>
 
         {columnGroups.map((group) =>
           group.collapsed ? (
             <div
               key={`collapsed-${group.claimId}`}
               className="h-8 border-b border-r border-border bg-muted/30"
-              style={{ width: 40 }}
+              style={{ width: 200 }}
               role="columnheader"
-            />
+            >{group.claimName} elements (collapsed)</div>
           ) : (
             group.columns.map((col) => (
               <div

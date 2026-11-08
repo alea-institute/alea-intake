@@ -1,9 +1,11 @@
+import { showcaseMode } from '@/features/showcase/session'
+import { ShowcasePage } from '@/features/showcase/ShowcasePage'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppShell } from '@/shared/components/AppShell'
 import { RequireAuth } from '@/features/auth/RequireAuth'
 import { RequireConsent } from '@/features/auth/RequireConsent'
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(showcaseMode ? [{ path: '*', Component: ShowcasePage }] : [
   {
     path: '/',
     Component: AppShell,

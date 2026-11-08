@@ -1,3 +1,4 @@
+import { authFrame, intakeSocketUrl } from '@/features/showcase/session'
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useWSStore } from '../store'
@@ -24,10 +25,11 @@ export function useWebSocket(sessionId: string | null, token: string | null): vo
       setStatus(attempt === 0 ? 'connecting' : 'reconnecting')
       setReconnectAttempt(attempt)
 
-      const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/ws/intake/${sessionId}?token=${encodeURIComponent(token)}`
+      const wsUrl = intakeSocketUrl(sessionId)
       ws = new WebSocket(wsUrl)
 
       ws.onopen = () => {
+        ws?.send(JSON.stringify(authFrame(token)))
         attempt = 0
         setReconnectAttempt(0)
         setStatus('connected')
@@ -43,6 +45,7 @@ export function useWebSocket(sessionId: string | null, token: string | null): vo
         } catch {
           return
         }
+        if (!msg || typeof msg !== 'object') return
         handleEvent(msg, queryClient, sessionId)
       }
 
@@ -50,8 +53,8 @@ export function useWebSocket(sessionId: string | null, token: string | null): vo
         setStatus('disconnected')
         setWs(null)
         if (disposed) return
-        // Auth failures: don't reconnect (prevents infinite loop)
-        if (e.code === 4001 || e.code === 4003) {
+        // Auth failures and expired sessions: don't reconnect (prevents infinite loop)
+        if (e.code === 4001 || e.code === 4003 || e.code === 4004) {
           setStatus('error')
           return
         }
@@ -125,7 +128,7 @@ function handleEvent(
       break
 
     case 'safety_alert':
-      queryClient.invalidateQueries({ queryKey: ['intake', sessionId, 'safety'] })
+      queryClient.setQueryData(['intake', sessionId, 'safety'], (old: unknown[] = []) => [...old, msg.payload])
       break
 
     case 'fact_extracted':

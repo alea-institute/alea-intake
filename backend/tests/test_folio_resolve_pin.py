@@ -197,4 +197,4 @@ def test_combine_policy_stays_local():
     assert concept_resolver.EMBEDDING_WEIGHT == 0.3
     assert concept_resolver.LABEL_WEIGHT == 0.3
     assert concept_resolver.LLM_WEIGHT == 0.4
-    assert concept_resolver.SINGLE_STAGE_PENALTY == 0.7
+    assert concept_resolver.SINGLE_STAGE_PENALTY == 0.85

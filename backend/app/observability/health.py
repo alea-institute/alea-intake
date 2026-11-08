@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import text
 
-from app.config import get_settings
+from app.config import get_settings as get_settings  # Existing monitoring/test patch interface.
 from app.db.engine import get_engine
 from app.services.folio.owl_cache import get_owl_status
 
@@ -31,7 +31,6 @@ async def check_health(app: FastAPI) -> dict[str, Any]:
     Returns:
         Dict with keys: status, version, database, folio_owl, folio_mcp, llm_provider.
     """
-    settings = get_settings()
     degraded = False
 
     # --- Database ---
@@ -75,9 +74,9 @@ async def check_health(app: FastAPI) -> dict[str, Any]:
     return {
         "status": overall,
         "version": _VERSION,
-        # Deployed git commit (injected by Railway at build/runtime). Lets CI confirm
+        # Deployed git commit supplied at build/runtime. Lets CI confirm
         # the exact pushed commit is live before running post-deploy smoke tests.
-        "commit": os.environ.get("RAILWAY_GIT_COMMIT_SHA"),
+        "commit": os.environ.get("GIT_COMMIT_SHA") or os.environ.get("RAILWAY_GIT_COMMIT_SHA"),
         "database": db_status,
         "folio_owl": folio_owl_status,
         "folio_mcp": folio_mcp_status,

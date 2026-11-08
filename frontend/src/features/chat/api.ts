@@ -2,10 +2,10 @@ import { apiFetch } from '@/features/auth/api'
 import type { Message, PracticeArea } from './types'
 
 export async function fetchMessages(sessionId: string): Promise<Message[]> {
-  const res = await apiFetch(`/api/v1/intakes/${sessionId}/messages`)
+  const res = await apiFetch(`/api/v1/intake/${sessionId}/messages?session_id=${encodeURIComponent(sessionId)}`)
   if (!res.ok) throw new Error('Failed to load messages')
   const body = await res.json()
-  return body.items ?? []
+  return (Array.isArray(body) ? body : []).map((m: {id:number;content:string;sender_type:Message['sender'];modality:Message['modality'];created_at:string}) => ({ id: String(m.id), sessionId, content: m.content, sender: m.sender_type, modality: m.modality, timestamp: m.created_at, status: 'done' as const }))
 }
 
 /**
