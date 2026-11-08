@@ -170,7 +170,7 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
             if not await touch_guest(db, user.id):
                 raise HTTPException(404, "Session unavailable")
             await _check_identifiers(request, db, user)
-            if request.method != "GET":
+            if request.method != "GET" and not erase:
                 admit(request.app, user.id, client_ip(request))
             from app.db.retention import guest_activity
             async with guest_activity(user.id):

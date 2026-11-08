@@ -183,6 +183,35 @@ async def test_body_and_admission_limits(showcase, monkeypatch):
     call.assert_not_called()
 
 
+async def test_erase_bypasses_exhausted_admission_and_purges(showcase):
+    from app.db.engine import get_engine
+    from app.models.intake import Intake, Message
+    from app.services.intake.session_service import IntakeSessionService
+    from sqlalchemy import select
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    client, settings, _ = showcase
+    headers = await guest(client)
+    created = (await client.post("/api/v1/intake/", headers=headers, json={})).json()
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+        async with AsyncSession(bind=conn) as db:
+            await IntakeSessionService(db).store_message(
+                created["session_id"], "consumer", "text", "Private story")
+            await db.commit()
+
+    settings.showcase_guest_limit = settings.showcase_ip_limit = "0/minute"
+    blocked = await client.post(f'/api/v1/analysis/{created["id"]}/analyze', headers=headers)
+    assert blocked.status_code == 429
+    erased = await client.post(f'/api/v1/intake/{created["id"]}/end-session', headers=headers)
+    assert erased.status_code == 200, erased.text
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+        assert (await conn.execute(select(Intake.id).where(Intake.id == created["id"]))).first() is None
+        assert (await conn.execute(select(Message.id).where(
+            Message.session_id == created["session_id"]))).first() is None
+
+
 async def test_analysis_queue_is_bounded(showcase):
     _, settings, app = showcase
     from app.showcase import analysis_slot
@@ -347,8 +376,11 @@ async def test_non_object_body_is_422(showcase, body):
     assert response.status_code == 422
 
 
-@pytest.mark.parametrize("query_token", [False, True])
-async def test_standard_socket_without_llm_key_stores_and_screens_message_then_errors(showcase, monkeypatch, query_token):
+@pytest.mark.parametrize("query_token,key_fields", [
+    (True, {}), (False, {}), (False, {"llm_api_key": ""}),
+    (False, {"llm_api_key": None}), (False, {"llm_api_key": "   "}),
+])
+async def test_standard_socket_without_llm_key_stores_and_screens_message_then_errors(showcase, monkeypatch, query_token, key_fields):
     from app.db.engine import get_engine
     from app.models.intake import Message
     from sqlalchemy import select
@@ -365,7 +397,7 @@ async def test_standard_socket_without_llm_key_stores_and_screens_message_then_e
     with TestClient(app) as sync:
         with sync.websocket_connect(path) as ws:
             if not query_token:
-                ws.send_json({"type": "auth", "token": headers["Authorization"][7:]})
+                ws.send_json({"type": "auth", "token": headers["Authorization"][7:], **key_fields})
             assert ws.receive_json()["type"] == "session_state"
             ws.send_json({"type": "text_message", "content": "My wages are unpaid."})
             assert ws.receive_json()["type"] == "message_ack"

@@ -333,12 +333,25 @@ async def test_standard_socket_uses_auth_frame_key_with_real_header_parser(showc
 
 
 @pytest.mark.parametrize('showcase_mode', [False, True])
-@pytest.mark.parametrize('key', [123, ['not', 'a', 'key'], {'key': 'invalid'}, 'bad\nkey'])
+@pytest.mark.parametrize('key', [False, 0, 123, [], {}, ['not', 'a', 'key'], {'key': 'invalid'}, 'bad\nkey'])
 async def test_socket_malformed_key_closes_4001(showcase, showcase_mode, key):
     client, settings, app = showcase
     owner = await guest(client)
     created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
     settings.showcase_mode = showcase_mode
+    with TestClient(app) as sync:
+        with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
+            ws.send_json({'type': 'auth', 'token': owner['Authorization'][7:], 'llm_api_key': key})
+            with pytest.raises(WebSocketDisconnect) as exc:
+                ws.receive_json()
+            assert exc.value.code == 4001
+
+
+@pytest.mark.parametrize('key', ['', None, '   '])
+async def test_showcase_socket_still_requires_key(showcase, key):
+    client, _, app = showcase
+    owner = await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
     with TestClient(app) as sync:
         with sync.websocket_connect(f'/api/ws/intake/{created["session_id"]}') as ws:
             ws.send_json({'type': 'auth', 'token': owner['Authorization'][7:], 'llm_api_key': key})

@@ -246,6 +246,70 @@ async def test_chat_without_key_does_not_construct_client(handler, async_engine,
                 assert transcript.text_encrypted == expected_text.encode()
 
 
+@pytest.mark.parametrize("handler", [
+    intake._handle_text_message, intake._handle_transcript_approve, intake._handle_transcript_edit,
+])
+async def test_acknowledged_input_survives_llm_failure(handler, async_engine, monkeypatch):
+    from sqlalchemy import select
+    from sqlalchemy.ext.asyncio import AsyncSession
+    from app.models.audio import AudioRecording, Transcript
+    from app.models.intake import Message
+    from app.models.screening import ScreeningEvent
+    from app.services.intake.session_service import IntakeSessionService
+
+    content = "My employer fired me."
+    data = {"content": content, "edited_text": "Corrected transcript"}
+    async with async_engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+        async with AsyncSession(bind=conn, expire_on_commit=False) as db:
+            svc = IntakeSessionService(db)
+            record = await svc.create_intake(org_id=1, user_id=None)
+            session = await svc.create_session(record.id)
+            if handler != intake._handle_text_message:
+                message = await svc.store_message(session.id, "consumer", "voice", content)
+                recording = AudioRecording(message_id=message.id, intake_id=record.id, original_format="wav")
+                db.add(recording)
+                await db.flush()
+                db.add(Transcript(recording_id=recording.id, text_encrypted=content.encode(), asr_provider="test"))
+                data["recording_id"] = recording.id
+            await db.commit()
+
+    async def assert_persisted():
+        async with async_engine.connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+            async with AsyncSession(bind=conn) as db:
+                messages = (await db.execute(select(Message).where(Message.session_id == session.id))).scalars().all()
+                assert len(messages) == 1
+                assert messages[0].sender_type == "consumer"
+                assert messages[0].content_encrypted == content.encode()
+                event = (await db.execute(select(ScreeningEvent).where(
+                    ScreeningEvent.session_id == session.id))).scalar_one()
+                assert event.action_taken == "immediate_alert"
+                if handler != intake._handle_text_message:
+                    transcript = (await db.execute(select(Transcript).where(
+                        Transcript.recording_id == data["recording_id"]))).scalar_one()
+                    assert transcript.status == ("edited" if handler == intake._handle_transcript_edit else "approved")
+                    assert transcript.reviewed_at is not None
+                    assert transcript.text_encrypted == (
+                        data["edited_text"] if handler == intake._handle_transcript_edit else content
+                    ).encode()
+
+    websocket = SimpleNamespace(app=SimpleNamespace(state=SimpleNamespace()), send_json=AsyncMock())
+    monkeypatch.setattr(intake, "screen_message_fast", AsyncMock(return_value=SimpleNamespace(
+        has_critical=True, has_elevated=False, has_advisory=False,
+        safety_resources=[], mandatory_questions=[], triggered_protocols=[{
+            "protocol_id": 1, "version_id": 1, "severity_tier": "critical",
+        }],
+    )))
+    generate = AsyncMock(side_effect=RuntimeError("provider unavailable"))
+    monkeypatch.setattr(intake.ConversationService, "generate_response", generate)
+    with pytest.raises(RuntimeError, match="provider unavailable"):
+        await handler(websocket, session.id, 1, data, async_engine, llm_service=object())
+    assert any(call.args[0]["type"] == "message_ack" for call in websocket.send_json.await_args_list)
+    assert not any(call.args[0]["type"] == "system_message" for call in websocket.send_json.await_args_list)
+    await assert_persisted()
+
+
 async def test_chat_handler_returns_model_reply(async_engine, monkeypatch, caplog):
     from sqlalchemy.ext.asyncio import AsyncSession
     from app.services.intake.session_service import IntakeSessionService

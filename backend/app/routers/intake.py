@@ -555,7 +555,8 @@ async def websocket_access(websocket: WebSocket, session_id: int):
             "X-LLM-Provider": auth.get("llm_provider", websocket.headers.get("x-llm-provider", "openai")),
             "X-LLM-Model": auth.get("llm_model", websocket.headers.get("x-llm-model", "")),
         }
-        if "llm_api_key" in auth or headers["X-LLM-API-Key"]:
+        key = headers["X-LLM-API-Key"]
+        if key is not None and (not isinstance(key, str) or key.strip()):
             try:
                 llm_service = llm_service_from_headers(headers)
             except HTTPException:
@@ -749,7 +750,7 @@ async def _handle_text_message(
             # Normalize the message
             normalize_text(content, message.id, party_id)
 
-            # Send acknowledgment (include client_id for optimistic update reconciliation)
+            await db_session.commit()
             await websocket.send_json({
                 "type": "message_ack",
                 "id": str(message.id),
@@ -760,7 +761,6 @@ async def _handle_text_message(
             })
 
             if llm_service is None:
-                await db_session.commit()
                 await websocket.send_json({
                     "type": "error",
                     "status": 400,
@@ -992,7 +992,7 @@ async def _handle_transcript_approve(
                     approved_text, original_message.id, original_message.party_id
                 )
 
-            # Send message_ack
+            await db_session.commit()
             await websocket.send_json({
                 "type": "message_ack",
                 "message_id": original_message.id,
@@ -1000,7 +1000,6 @@ async def _handle_transcript_approve(
             })
 
             if llm_service is None:
-                await db_session.commit()
                 await websocket.send_json({
                     "type": "error",
                     "status": 400,
@@ -1114,7 +1113,7 @@ async def _handle_transcript_edit(
                     edited_text, original_message.id, original_message.party_id
                 )
 
-            # Send message_ack
+            await db_session.commit()
             await websocket.send_json({
                 "type": "message_ack",
                 "message_id": original_message.id,
@@ -1122,7 +1121,6 @@ async def _handle_transcript_edit(
             })
 
             if llm_service is None:
-                await db_session.commit()
                 await websocket.send_json({
                     "type": "error",
                     "status": 400,
