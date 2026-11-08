@@ -2,17 +2,17 @@
 topic: public-showcase-brainstorm
 ---
 
-# Handoff — alea-intake public showcase (brainstorm done, planning next)
+# Handoff — alea-intake public showcase (plan done, ce-work starting)
 
 ## State
-- Requirements plan committed: `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md`.
-- Tests green on master: backend 1281 passed / 3 skipped; frontend 192 passed.
-- No live deployment: the Railway dev server was drained 2026-07-26 (returns "Application not found").
+- Implementation-ready plan: `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md` (19 units, 3 PRs; reviewed by 6 Claude reviewers plus a Codex cross-model pass; 24 fixes applied).
+- Tests green on master before work: backend 1281 passed / 3 skipped; frontend 192 passed.
+- No live deployment yet; Railway was drained 2026-07-26.
 
 ## Next
-1. Run `ce-plan` on the plan above.
-2. Cleanup lane first (R16–R18): adopt calibration q1/q2, run expansion-vocab calibration (q3), and replace PyMuPDF (stale branch `feat/s075.4-pymupdf-to-pdfplumber`).
-3. Then the quality lane (50-state cited deadlines, issue completeness), the production stack, and the 8-persona launch campaign.
+1. `ce-work` on PR1 (U1–U11): cleanup, CPU image, BYOK, guest mode with ownership checks, retention purge, frontend flow, regression replay, Coolify deploy behind an access gate, persona harness.
+2. PR2 (U12–U16) and PR3 (U17–U19) follow per the plan.
 
-## Blocker
-- Hosting on the ALEA EC2 host needs Mike (SSH allowlist + `intake.` DNS). Damien sends that request; the agent drafts it.
+## Open with Damien
+- Spend: which LLM key and budget fund live persona runs and UAT. Blocks only live runs.
+- Landing-page copy approval (Claude Doc) gates the PR3 merge.
