@@ -213,6 +213,14 @@ describe('MatrixHeader', () => {
     },
   ]
 
+  it.each([false, true])('gives every header and collapse control visible text when collapsed is %s', collapsed => {
+    render(<MatrixHeader columnGroups={columnGroups.map(group => ({...group, collapsed}))} onToggleCollapse={vi.fn()} />)
+    for (const header of screen.getAllByRole('columnheader')) expect(header.textContent?.trim()).toBeTruthy()
+    const control = screen.getByRole('button', {name:collapsed ? 'Expand Breach of Warranty' : 'Collapse Breach of Warranty'})
+    expect(control).toHaveTextContent(collapsed ? 'Expand' : 'Collapse')
+    expect(control).toHaveTextContent('Breach of Warranty')
+  })
+
   it('renders claim name as group header and element names as column headers', () => {
     render(<MatrixHeader columnGroups={columnGroups} onToggleCollapse={vi.fn()} />)
 

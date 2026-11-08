@@ -91,3 +91,11 @@ describe('HighlightSpan', () => {
     expect(label).toContain('Breach of Warranty')
   })
 })
+
+it('opens a highlighted fact with the keyboard', () => {
+  const click = vi.fn()
+  render(<HighlightSpan segment={baseSeg} isSelected={false} onClick={click} />)
+  const mark = screen.getByRole('mark')
+  expect(mark).toHaveAttribute('tabindex','0')
+  fireEvent.keyDown(mark,{key:'Enter'}); expect(click).toHaveBeenCalledOnce()
+})

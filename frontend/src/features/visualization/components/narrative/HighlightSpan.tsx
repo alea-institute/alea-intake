@@ -64,6 +64,8 @@ export function HighlightSpan({
       role="mark"
       aria-label={ariaLabel}
       data-claim-ids={segment.claimIds.join(',')}
+      tabIndex={0}
+      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } }}
       onClick={onClick}
       style={{
         background,

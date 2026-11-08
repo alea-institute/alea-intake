@@ -24,7 +24,7 @@ export function OutputPage() {
             {t('heading', 'Output')}
           </h1>
           {data?.profiles && data.profiles.length > 0 && (
-            <ExportMenu outputId={id} />
+            <ExportMenu outputId={data.profiles[0].id!} />
           )}
         </div>
         {isLoading ? (

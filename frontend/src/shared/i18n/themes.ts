@@ -19,7 +19,7 @@ export async function loadThemeFonts(theme: Theme): Promise<void> {
       break
     case 'courthouse-classic':
       await Promise.all([
-        import('@fontsource/libre-caslon-text/600.css'),
+        import('@fontsource/libre-caslon-text/700.css'),
         import('@fontsource/libre-franklin/400.css'),
         import('@fontsource/libre-franklin/600.css'),
       ])

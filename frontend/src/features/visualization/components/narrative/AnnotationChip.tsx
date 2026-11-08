@@ -19,6 +19,8 @@ export function AnnotationChip({ claimName, color, onClick }: AnnotationChipProp
     <button
       type="button"
       data-testid="annotation-chip"
+      aria-label={claimName}
+      title={claimName}
       onClick={onClick}
       className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-accent"
     >

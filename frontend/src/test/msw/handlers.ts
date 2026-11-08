@@ -15,8 +15,8 @@ export const handlers = [
       user: { id: 'u1' },
     })
   ),
-  http.get('/api/v1/intakes', () =>
-    HttpResponse.json({ items: [], total: 0 })
+  http.get('/api/v1/intake/', () =>
+    HttpResponse.json([])
   ),
   http.get('/api/v1/orgs/:id', () =>
     HttpResponse.json({
@@ -32,22 +32,9 @@ export const handlers = [
       deployment_type: 'law_firm',
     })
   ),
-  http.get('/api/v1/outputs/:id', () =>
-    HttpResponse.json({
-      profiles: [
-        {
-          profile_key: 'law_firm_memo',
-          content: '# Memo\n\nSample output.',
-          rendered_at: '2026-04-01T00:00:00Z',
-        },
-      ],
-    })
-  ),
-  http.get('/api/v1/outputs/:id/export', () =>
-    new HttpResponse(new Blob(['pdf-data']), {
-      headers: { 'Content-Type': 'application/pdf' },
-    })
-  ),
+  http.get('/api/v1/output/intake/:id', () => HttpResponse.json([{id:1,profile_type:'law_firm',created_at:'2026-04-01'}])),
+  http.get('/api/v1/output/:id', () => HttpResponse.json({id:1,markdown_content:'# Memo\n\nSample output.'})),
+  http.get('/api/v1/output/:id/export/:format', () => new HttpResponse('pdf-data')),
   http.post('/api/v1/auth/login', () =>
     HttpResponse.json({
       access_token: 'tok',

@@ -32,7 +32,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev',
+    command: 'VITE_SHOWCASE_MODE=true npm run dev',
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

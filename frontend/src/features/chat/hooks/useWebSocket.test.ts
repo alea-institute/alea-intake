@@ -52,11 +52,12 @@ describe('useWebSocket', () => {
     vi.useRealTimers()
   })
 
-  it('connects to correct URL with token', async () => {
+  it('authenticates in the first frame without secrets in the URL', async () => {
     renderHook(() => useWebSocket('s1', 'tok-abc'), { wrapper: makeWrapper(qc) })
     await waitFor(() =>
-      expect(MockWebSocket.instances[0].url).toContain('/api/ws/intake/s1?token=tok-abc'),
+      expect(MockWebSocket.instances[0].url).toMatch(/\/api\/ws\/intake\/s1$/),
     )
+    expect(JSON.parse(MockWebSocket.instances[0].send.mock.calls[0][0])).toMatchObject({ type: 'auth', token: 'tok-abc' })
   })
 
   it('transitions to connected status on open', async () => {
