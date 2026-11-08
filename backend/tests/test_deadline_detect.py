@@ -163,7 +163,7 @@ async def test_detect_persists_deadlines(db_session, intake_scaffold):
     asylum = by_rule["asylum_one_year"]
     assert asylum.computed_date == date(2020, 8, 14)
     assert asylum.urgency == "lapsed"
-    assert "ALREADY PASSED" in asylum.hedge
+    assert "may already have passed" in asylum.hedge
 
 
 @pytest.mark.asyncio

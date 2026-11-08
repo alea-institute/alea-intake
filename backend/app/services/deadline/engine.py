@@ -17,11 +17,15 @@ from __future__ import annotations
 
 from datetime import date
 
+from app.services.deadline.dates import utc_today
 from app.services.deadline.rules import find_rule
 from app.services.deadline.schemas import ComputedDeadline, DeadlineEvent
 
 # Universal hedge (kept in sync with rules._VERIFY).
 GENERIC_HEDGE = "Estimated — confirm the exact date with the court or a lawyer."
+
+# Calm, plain-language flag for a computed date earlier than the reference date.
+LAPSED_NOTICE = "This date may already have passed — check with the court."
 
 # Urgency sort order (lower sorts first / more prominent).
 _URGENCY_ORDER = {"lapsed": 0, "high": 1, "medium": 2, "low": 3, "unknown": 4}
@@ -38,7 +42,8 @@ def compute_deadlines(
     Args:
         events: Normalized detected events (dates as ``datetime.date``).
         jurisdiction: Jurisdiction context for rule matching (event hint wins).
-        today: Reference "now" for the lapsed-SOL check. Defaults to date.today().
+        today: Reference "now" for the lapsed-SOL check (the intake's
+            reference date). Defaults to today in UTC.
         domains: Practice-area domains inferred from the narrative (round 7,
             BUG-32 cross-domain guard). Passed through to ``find_rule``; None
             means no domain restriction (legacy pure-date-math behavior).
@@ -46,7 +51,7 @@ def compute_deadlines(
     Returns:
         ComputedDeadlines sorted by urgency (lapsed/high first).
     """
-    ref_today = today or date.today()
+    ref_today = today or utc_today()
     out: list[ComputedDeadline] = []
 
     for ev in events:
@@ -61,8 +66,8 @@ def compute_deadlines(
             hedge = rule.hedge_text
             if lapsed:
                 hedge = (
-                    f"WARNING: this deadline appears to have ALREADY PASSED as of "
-                    f"{ref_today.isoformat()}. " + hedge
+                    f"{LAPSED_NOTICE} (Compared with {ref_today.isoformat()}.) "
+                    + hedge
                 )
                 # RUB-08 (Damien r2 2026-07-10): a lapsed deadline must be routed
                 # to its exception/fallback pathway, with the governing authority.

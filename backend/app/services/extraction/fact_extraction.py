@@ -11,6 +11,7 @@ passed to ConceptResolver for FOLIO IRI matching (per CONTEXT.md locked decision
 from __future__ import annotations
 
 import logging
+from datetime import date
 from typing import TYPE_CHECKING, Any
 
 from pydantic import ValidationError
@@ -19,6 +20,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
 from app.models.fact import ExtractedFact, FactSourceSpan
+from app.services.deadline.dates import utc_today
 from app.services.extraction.schemas import ExtractedFactSchema, ExtractionResultSchema
 from app.services.folio.concept_resolver import resolve_concepts
 
@@ -90,6 +92,18 @@ COMPACT_RETRY_INSTRUCTION = (
     f"complete JSON object containing at most {COMPACT_MAX_FACTS} facts, each "
     "assertion under 15 words and each source_quote under 10 words."
 )
+
+
+def date_anchor_instruction(reference: date) -> str:
+    """Tell the model today's date so yearless dates land in the right year."""
+    return (
+        f"Today's date is {reference.isoformat()} (the date the client wrote "
+        "this). Keep dates as the client stated them. If an assertion gives a "
+        "date with no year (\"march 3rd\"), either keep it without a year or "
+        "resolve it to the nearest past-or-near-future date consistent with "
+        "the story: something that already happened is on or before today. "
+        "Never move an event into a later year than the story supports."
+    )
 
 
 def _system_prompt(max_facts: int) -> str:
@@ -247,6 +261,7 @@ class FactExtractionService:
         max_facts = min(COMPACT_MAX_FACTS, full_max) if compact else full_max
         messages = [
             {"role": "system", "content": _system_prompt(max_facts)},
+            {"role": "system", "content": date_anchor_instruction(utc_today())},
         ]
 
         # Include session context for contradiction detection

@@ -28,6 +28,7 @@ from app.models.analysis import (
 from app.models.fact import ExtractedFact
 from app.models.intake import Intake, IntakeSession, Message
 from app.models.research import Authority
+from app.services.output.deadline_display import dedupe_deadlines
 from app.services.output.gap_report_builder import GapReportBuilder
 from app.services.output.schemas import (
     AdditionalClaimRef,
@@ -889,7 +890,7 @@ class DataAssembler:
             for d in rows
         ]
         refs.sort(key=lambda r: _URGENCY_ORDER.get(r.urgency, 99))
-        return refs
+        return dedupe_deadlines(refs)
 
     # ------------------------------------------------------------------
     # Private helpers

@@ -57,7 +57,8 @@ elif path == '/api/v1/intake/42/messages?session_id=43':
     if headers['Authorization'] == 'Bearer guest-2':
         status = 200 if broken == 'isolation' else 404
     elif s['ended']:
-        status = 200 if broken == 'purge' else 401
+        # Live deploys answer 403 here: consent middleware runs before auth.
+        status = 200 if broken == 'purge' else 403
     else:
         body = {'messages': []}
 else:

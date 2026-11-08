@@ -1,6 +1,7 @@
 {# Deadlines & Time-Sensitive Items -- rendered FIRST, before CIRAC (v1 "detect + hedge").
    Every item is hedged: a computed date is always presented as an estimate to verify,
-   and events without a matching rule are surfaced as "date unclear". #}
+   and events without a matching rule are surfaced as "date unclear". Headings come
+   from structured fields (label + normalized date); the visitor's words sit in the body. #}
 # ⏰ Deadlines & Time-Sensitive Items
 
 > **Read this first.** Missing a legal deadline can end a case. The dates below are
@@ -9,9 +10,12 @@
 
 {% for d in context.deadlines %}
 {% if d.urgency == "lapsed" %}
-## ⛔ {{ d.event_text }} — DEADLINE MAY HAVE PASSED
+## ⛔ {{ d.heading }} (may have passed)
 {% else %}
-## ⚠️ {{ d.event_text }}
+## ⚠️ {{ d.heading }}
+{% endif %}
+{% if d.event_text %}
+- **In your words:** "{{ d.event_text }}"
 {% endif %}
 {% if d.computed and d.computed_date %}
 - **Estimated deadline:** {{ d.computed_date }}

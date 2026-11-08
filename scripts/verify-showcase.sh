@@ -66,8 +66,22 @@ def expect(label, method, path, expected, **kwargs):
 
 status, body = request('GET', '/health', gated=False)
 health = object_body('health', body)
+def commit_matches(deployed, expected):
+    # /health reports the full SHA (Coolify's SOURCE_COMMIT); accept an
+    # abbreviated --commit of at least 7 hex characters as a prefix match.
+    deployed = str(deployed or '').strip().lower()
+    expected = str(expected or '').strip().lower()
+    if not deployed or not expected:
+        return False
+    if len(deployed) == len(expected):
+        return deployed == expected
+    shorter, longer = sorted((deployed, expected), key=len)
+    return len(shorter) >= 7 and longer.startswith(shorter)
+
+
 check('health', status == 200 and bool(health.get('commit')) and
-      (args.commit is None or health['commit'] == args.commit), 'health or deployed commit mismatch')
+      (args.commit is None or commit_matches(health['commit'], args.commit)),
+      f"health or deployed commit mismatch (deployed {health.get('commit')!r})")
 if args.mode == 'gated':
     if not preview:
         fail('preview credential', 'VERIFY_PREVIEW_KEY is required in gated mode')
@@ -91,7 +105,9 @@ expect('guest A reads intake', 'GET', messages, (200,), token=a)
 expect('no-key analyze', 'POST', f'/api/v1/analysis/{intake}/analyze', (400,), token=a, body={})
 expect('isolation', 'GET', messages, (404,), token=b)
 expect('end session', 'POST', f'/api/v1/intake/{intake}/end-session', (200,), token=a)
-expect('purge guest access', 'GET', messages, (401, 404), token=a)
+# A purged guest token is denied: the consent middleware runs before auth and
+# answers 403 (no consent on record); auth itself answers 401 or 404.
+expect('purge guest access', 'GET', messages, (401, 403, 404), token=a)
 expect('purge intake inaccessible', 'GET', messages, (404,), token=b)
 body = expect('guest B cleanup intake', 'POST', '/api/v1/intake/', (201,), token=b, body={})
 cleanup_id = object_body('guest B cleanup intake', body).get('id')
