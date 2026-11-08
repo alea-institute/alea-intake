@@ -13,12 +13,13 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any
 
+from pydantic import ValidationError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
 from app.models.fact import ExtractedFact, FactSourceSpan
-from app.services.extraction.schemas import ExtractionResultSchema
+from app.services.extraction.schemas import ExtractedFactSchema, ExtractionResultSchema
 from app.services.folio.concept_resolver import resolve_concepts
 
 if TYPE_CHECKING:
@@ -31,10 +32,19 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+# Output bounds (2026-11-08 live run): unbounded prompts produced replies that
+# hit the 8192-token JSON ceiling on a ~1,700-token message, so every reply was
+# truncated JSON. Cap the facts per call and chunk long messages instead.
+MAX_FACTS_PER_CALL = 25
+COMPACT_MAX_FACTS = 10
+CHUNK_CHARS = 6000
+# One retry, with a stricter (non-identical) request; never more.
+MAX_EXTRACTION_ATTEMPTS = 2
+
 EXTRACTION_SYSTEM_PROMPT = """You are a legal fact extraction assistant. Given narrative text from a legal intake,
 extract atomic factual assertions. Each fact should be the smallest meaningful unit.
 
-Entity types to extract:
+Entity types:
 - person: Named individuals
 - date: Specific dates or date ranges
 - location: Places, addresses, jurisdictions
@@ -48,35 +58,148 @@ Entity types to extract:
 
 Rules:
 1. Only extract facts explicitly stated in the text. Never infer unstated facts.
-2. Each fact must have a source_start and source_end character offset in the original text.
-3. Use confidence 0.0-1.0 based on how clearly the fact is stated.
-4. If a fact contradicts a previously extracted fact, still extract it -- note both.
-5. Decompose compound statements into atomic facts.
+2. Use confidence 0.0-1.0 based on how clearly the fact is stated.
+3. If a fact contradicts a previously extracted fact, still extract it -- note both.
+4. Decompose compound statements into atomic facts.
+5. Be concise. Return at most {max_facts} facts, the most legally important first.
+   Each assertion is one short sentence (at most 25 words). Do not repeat the
+   narrative, do not restate a fact, and add no commentary.
+6. "source_quote" is a short excerpt (at most 15 words) copied character for
+   character from the text that states the fact.
+7. Every item in "entities" MUST be an object with "entity_type" and "value",
+   never a bare string. List only entities named in that fact.
 
-Return ONLY a JSON object with EXACTLY this structure (field names are mandatory):
-{
+Return ONLY a JSON object, with no prose and no markdown fences, in EXACTLY this structure:
+{{
   "facts": [
-    {
-      "assertion": "natural-language statement of the atomic fact",
+    {{
+      "assertion": "one short sentence stating the fact",
       "fact_type": "event | relationship | amount | date | condition | sequence",
-      "entities": [],
-      "confidence": 0.0,
-      "source_start": 0,
-      "source_end": 0
-    }
-  ],
-  "entities": [
-    {
-      "entity_type": "one of the entity types listed above",
-      "value": "the verbatim text of the entity",
-      "confidence": 0.0,
-      "source_start": 0,
-      "source_end": 0
-    }
+      "entities": [
+        {{"entity_type": "one of the entity types above", "value": "verbatim entity text"}}
+      ],
+      "confidence": 0.9,
+      "source_quote": "verbatim excerpt from the text"
+    }}
   ]
-}
-Every fact MUST include "assertion" and "fact_type". Every entity MUST include
-"entity_type", "value", "source_start", and "source_end"."""
+}}
+Every fact MUST include "assertion", "fact_type", "entities", "confidence", and "source_quote"."""
+
+COMPACT_RETRY_INSTRUCTION = (
+    "Your previous reply was cut off or was not valid JSON. Reply again with a "
+    f"complete JSON object containing at most {COMPACT_MAX_FACTS} facts, each "
+    "assertion under 15 words and each source_quote under 10 words."
+)
+
+
+def _system_prompt(max_facts: int) -> str:
+    return EXTRACTION_SYSTEM_PROMPT.format(max_facts=max_facts)
+
+
+def _chunk_text(text: str, limit: int = CHUNK_CHARS) -> list[tuple[int, str]]:
+    """Split text into (offset, chunk) pieces at paragraph or sentence breaks."""
+    if len(text) <= limit:
+        return [(0, text)]
+    chunks: list[tuple[int, str]] = []
+    start = 0
+    while start < len(text):
+        end = min(start + limit, len(text))
+        if end < len(text):
+            window = text[start:end]
+            cut = max(window.rfind("\n\n"), window.rfind("\n"), window.rfind(". "))
+            if cut > limit // 2:
+                end = start + cut + 1
+        chunks.append((start, text[start:end]))
+        start = end
+    return chunks
+
+
+def _resolve_span(fact: ExtractedFactSchema, text: str) -> tuple[int, int]:
+    """Locate a fact's source span; fall back to the whole message.
+
+    Models cannot count characters reliably, so a verbatim quote wins over
+    model-supplied offsets. A fact whose source cannot be located keeps
+    message-level provenance instead of being discarded.
+    """
+    quote = (fact.source_quote or "").strip()
+    if quote:
+        index = text.find(quote)
+        if index < 0:
+            lowered = text.lower()
+            if len(lowered) == len(text):
+                index = lowered.find(quote.lower())
+        if index >= 0:
+            return index, index + len(quote)
+    start, end = fact.source_start, fact.source_end
+    if start is not None and end is not None and 0 <= start < end <= len(text):
+        return start, end
+    return 0, len(text)
+
+
+def _first_error(exc: ValidationError) -> str:
+    """Describe a validation failure by type and field path, never by content."""
+    errors = exc.errors(include_input=False, include_url=False)
+    if not errors:
+        return "unknown"
+    first = errors[0]
+    loc = ".".join(str(part) for part in first.get("loc", ())) or "<root>"
+    return f"{first.get('type', 'unknown')} at {loc}"
+
+
+def parse_extraction(raw: Any) -> ExtractionResultSchema | None:
+    """Validate an extraction reply fact by fact.
+
+    Returns None when the reply has no usable shape (not an object with a
+    "facts" list). A single malformed fact is dropped and counted; it never
+    discards the rest of the extraction. Logs only counts, error types, and
+    field paths -- extraction input and output are visitor data.
+    """
+    if isinstance(raw, list):
+        raw = {"facts": raw}
+    if not isinstance(raw, dict) or not isinstance(raw.get("facts"), list):
+        logger.warning(
+            "LLM extraction reply has no facts list (got %s)", type(raw).__name__
+        )
+        return None
+    facts: list[ExtractedFactSchema] = []
+    dropped = 0
+    first_error = None
+    for item in raw["facts"]:
+        try:
+            facts.append(ExtractedFactSchema.model_validate(item))
+        except ValidationError as exc:
+            dropped += 1
+            first_error = first_error or _first_error(exc)
+    entities = []
+    raw_entities = raw.get("entities")
+    if isinstance(raw_entities, list):
+        try:
+            entities = ExtractionResultSchema.model_validate(
+                {"entities": raw_entities}
+            ).entities
+        except ValidationError as exc:
+            first_error = first_error or _first_error(exc)
+    if dropped:
+        logger.warning(
+            "Dropped %d of %d extracted facts failing validation (first: %s)",
+            dropped, len(raw["facts"]), first_error,
+        )
+    return ExtractionResultSchema(facts=facts, entities=entities)
+
+
+def _limit_client_retries(client: Any) -> None:
+    """Stop alea-llm-client re-sending an identical request on a bad reply.
+
+    Its retry wrapper resends the same request up to three times when the JSON
+    reply fails to parse, which multiplied truncated 8192-token replies. The
+    service owns the single retry instead.
+    """
+    target = getattr(client, "_model", client)
+    if hasattr(target, "retry_limit"):
+        try:
+            target.retry_limit = 1
+        except (AttributeError, TypeError):  # pragma: no cover - exotic clients
+            pass
 
 
 class FactExtractionService:
@@ -107,14 +230,19 @@ class FactExtractionService:
         self._embedding_service = embedding_service
 
     async def _call_llm_extraction(
-        self, text: str, session_facts: list[dict] | None = None
+        self,
+        text: str,
+        session_facts: list[dict] | None = None,
+        compact: bool = False,
     ) -> dict[str, Any]:
         """Call LLM to extract facts from text. Returns raw JSON dict.
 
-        This method is separated for easy mocking in tests.
+        This method is separated for easy mocking in tests. ``compact`` asks
+        for a shorter reply after a truncated or invalid one.
         """
+        max_facts = COMPACT_MAX_FACTS if compact else MAX_FACTS_PER_CALL
         messages = [
-            {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
+            {"role": "system", "content": _system_prompt(max_facts)},
         ]
 
         # Include session context for contradiction detection
@@ -124,11 +252,39 @@ class FactExtractionService:
                 context += f"- {f.get('assertion_text', '')}\n"
             messages.append({"role": "system", "content": context})
 
+        if compact:
+            messages.append({"role": "system", "content": COMPACT_RETRY_INSTRUCTION})
+
         messages.append({"role": "user", "content": text})
 
         model = self._llm.create_client()
+        _limit_client_retries(model)
         response = await model.json_async(messages=messages)
         return response.data
+
+    async def _extract_chunk(
+        self, text: str, session_facts: list[dict] | None
+    ) -> ExtractionResultSchema:
+        """Extract one chunk, retrying at most once with a compact request."""
+        for attempt in range(1, MAX_EXTRACTION_ATTEMPTS + 1):
+            try:
+                raw = await self._call_llm_extraction(
+                    text, session_facts, compact=attempt > 1
+                )
+            except Exception as exc:
+                # Truncated JSON surfaces here as a parse failure. Log the type
+                # only: the exception chain can carry the visitor's reply.
+                logger.warning(
+                    "LLM extraction attempt %d/%d failed (%s)",
+                    attempt, MAX_EXTRACTION_ATTEMPTS, type(exc).__name__,
+                )
+                continue
+            result = parse_extraction(raw)
+            if result is not None:
+                return result
+        logger.warning("Failed to parse LLM extraction output after %d attempts",
+                       MAX_EXTRACTION_ATTEMPTS)
+        return ExtractionResultSchema(facts=[], entities=[])
 
     async def extract_facts(
         self,
@@ -136,6 +292,9 @@ class FactExtractionService:
         session_facts: list[dict] | None = None,
     ) -> ExtractionResultSchema:
         """Extract atomic facts from text via LLM structured output.
+
+        Long text is chunked so no single reply has to describe all of it.
+        Every returned fact carries resolved, in-bounds source offsets.
 
         Args:
             text: Normalized text to extract facts from.
@@ -147,25 +306,17 @@ class FactExtractionService:
         if not text or not text.strip():
             return ExtractionResultSchema(facts=[], entities=[])
 
-        try:
-            raw_result = await self._call_llm_extraction(text, session_facts)
-            result = ExtractionResultSchema.model_validate(raw_result)
-        except Exception:
-            logger.warning("Failed to parse LLM extraction output", exc_info=True)
-            return ExtractionResultSchema(facts=[], entities=[])
+        facts: list[ExtractedFactSchema] = []
+        entities = []
+        for offset, chunk in _chunk_text(text):
+            result = await self._extract_chunk(chunk, session_facts)
+            for fact in result.facts:
+                start, end = _resolve_span(fact, chunk)
+                fact.source_start, fact.source_end = offset + start, offset + end
+                facts.append(fact)
+            entities.extend(result.entities)
 
-        # Validate source spans: drop facts with out-of-bounds offsets
-        text_len = len(text)
-        valid_facts = [
-            f
-            for f in result.facts
-            if f.source_start >= 0
-            and f.source_end <= text_len
-            and f.source_start < f.source_end
-        ]
-        result.facts = valid_facts
-
-        return result
+        return ExtractionResultSchema(facts=facts, entities=entities)
 
     async def extract_and_persist(
         self,
@@ -231,10 +382,9 @@ class FactExtractionService:
                 party_id=party_id,
                 assertion_text=fact_schema.assertion,
                 fact_type=fact_schema.fact_type,
-                entity_type=(
-                    fact_schema.entities[0].entity_type
-                    if fact_schema.entities
-                    else None
+                entity_type=next(
+                    (e.entity_type for e in fact_schema.entities if e.entity_type),
+                    None,
                 ),
                 confidence=fact_schema.confidence,
                 is_active=True,
@@ -279,7 +429,8 @@ class FactExtractionService:
         If an existing active fact from the same party has overlapping
         entity types and values, mark it as superseded.
         """
-        new_entity_types = {e.entity_type for e in new_schema.entities}
+        # Untyped entities (coerced from bare strings) never drive supersession.
+        new_entity_types = {e.entity_type for e in new_schema.entities if e.entity_type}
 
         for existing in session_facts:
             if existing.get("party_id") != party_id:
@@ -290,7 +441,9 @@ class FactExtractionService:
             # Check for overlapping entity types
             existing_entities = existing.get("metadata_json", {}).get("entities", [])
             existing_entity_types = {
-                e.get("entity_type") for e in existing_entities if isinstance(e, dict)
+                e.get("entity_type")
+                for e in existing_entities
+                if isinstance(e, dict) and e.get("entity_type")
             }
 
             if new_entity_types & existing_entity_types:

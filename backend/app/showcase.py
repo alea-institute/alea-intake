@@ -63,6 +63,29 @@ async def guest_task(user_id: int, *, erase: bool = False):
             _erasing_guests.discard(user_id)
 
 
+def spawn_guest_task(user_id: int, coro) -> asyncio.Task:
+    """Start background work registered to the guest before it first runs.
+
+    Registration is synchronous, so an erase that starts at any later point
+    cancels and awaits the task; work is refused while an erase is pending.
+    """
+    if user_id in _erasing_guests:
+        coro.close()
+        raise HTTPException(409, "Session is being erased; retry later")
+    task = asyncio.get_running_loop().create_task(coro)
+    _guest_tasks.setdefault(user_id, set()).add(task)
+
+    def _forget(done: asyncio.Task) -> None:
+        tasks = _guest_tasks.get(user_id)
+        if tasks is not None:
+            tasks.discard(done)
+            if not tasks:
+                _guest_tasks.pop(user_id, None)
+
+    task.add_done_callback(_forget)
+    return task
+
+
 async def _check_identifiers(request, db, user):
     from app.models.analysis import AnalysisRun
     from app.models.output import OutputDocument
@@ -141,8 +164,13 @@ def admit(app, user_id, ip):
             raise HTTPException(429, "Admission limit reached; retry later", headers={"Retry-After": "60"})
 
 
-@asynccontextmanager
-async def analysis_slot(app):
+def reserve_analysis(app):
+    """Admit one analysis into the bounded queue, or refuse with 429.
+
+    Returns an idempotent release callable. Background work calls it when it
+    ends; its task's done-callback calls it too, so admission never leaks
+    even when the task is cancelled before it first runs.
+    """
     settings = config.get_settings()
     if not hasattr(app.state, "analysis_semaphore"):
         app.state.analysis_semaphore = asyncio.Semaphore(settings.showcase_concurrent_analyses)
@@ -150,11 +178,31 @@ async def analysis_slot(app):
     if app.state.analysis_admitted >= settings.showcase_concurrent_analyses + settings.showcase_analysis_queue:
         raise HTTPException(429, "Analysis queue full; retry later", headers={"Retry-After": "5"})
     app.state.analysis_admitted += 1
+    held = [True]
+
+    def release() -> None:
+        if held[0]:
+            held[0] = False
+            app.state.analysis_admitted -= 1
+
+    return release
+
+
+@asynccontextmanager
+async def reserved_analysis_slot(app, release):
+    """Run admitted work under the concurrency bound; always release admission."""
     try:
         async with app.state.analysis_semaphore:
             yield
     finally:
-        app.state.analysis_admitted -= 1
+        release()
+
+
+@asynccontextmanager
+async def analysis_slot(app):
+    release = reserve_analysis(app)
+    async with reserved_analysis_slot(app, release):
+        yield
 
 
 async def showcase_access(request: Request, user: User = Depends(get_current_active_user),
@@ -174,7 +222,8 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
                 admit(request.app, user.id, client_ip(request))
             from app.db.retention import guest_activity
             async with guest_activity(user.id):
-                if request.url.path.endswith(("/analyze", "/override")):
+                # /analyze reserves its own slot and holds it in background work.
+                if request.url.path.endswith("/override"):
                     async with analysis_slot(request.app):
                         yield
                 else:

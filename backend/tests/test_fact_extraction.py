@@ -519,7 +519,7 @@ async def test_extract_and_persist_no_folio(db_session, intake_fixture):
 
 @pytest.mark.asyncio
 async def test_source_span_validation(db_session, intake_fixture):
-    """Facts with source_start > len(text) are dropped."""
+    """Facts with out-of-bounds offsets keep message-level provenance."""
     from app.services.extraction.fact_extraction import FactExtractionService
     from app.services.intake.message_pipeline import NormalizedContent, SourceSpan
 
@@ -561,9 +561,10 @@ async def test_source_span_validation(db_session, intake_fixture):
         mock_call.return_value = bad_extraction
         result = await service.extract_facts(short_text)
 
-    # Only the valid fact should remain
-    assert len(result.facts) == 1
-    assert result.facts[0].assertion == "Valid fact"
+    # Models cannot count characters; a bad span must not discard the fact.
+    assert [f.assertion for f in result.facts] == ["Valid fact", "Invalid fact with bad span"]
+    assert (result.facts[0].source_start, result.facts[0].source_end) == (0, 10)
+    assert (result.facts[1].source_start, result.facts[1].source_end) == (0, len(short_text))
 
 
 def test_extraction_system_prompt_entity_types():
@@ -677,3 +678,169 @@ async def test_fact_supersession(db_session, intake_fixture):
     await db_session.refresh(old_fact)
     assert old_fact.is_active is False
     assert old_fact.superseded_by_id == new_facts[0].id
+
+
+# ---- Live-shape robustness (2026-11-08 live run) ----
+
+# A live Sonnet reply: per-fact entities as bare strings, no character offsets.
+LIVE_SHAPED_REPLY = {
+    "facts": [
+        {
+            "assertion": "Landlord served a notice to pay rent on March 3, 2026",
+            "fact_type": "event",
+            "entities": ["March 3, 2026", "NOTICE TO PAY RENT"],
+            "confidence": 0.9,
+            "source_quote": "served me a NOTICE TO PAY RENT",
+        },
+        {
+            "assertion": "Tenant owes $1,200",
+            "fact_type": "amount",
+            "entities": [{"entity_type": "amount", "value": "$1,200"}],
+            "confidence": 0.8,
+        },
+    ],
+}
+LIVE_TEXT = "On March 3, 2026 my landlord served me a NOTICE TO PAY RENT for $1,200."
+
+
+@pytest.mark.asyncio
+async def test_extract_facts_accepts_string_entities_and_missing_offsets(db_session):
+    from app.services.extraction.fact_extraction import FactExtractionService
+
+    service = FactExtractionService(llm_service=MagicMock(), db_session=db_session)
+    with patch.object(service, "_call_llm_extraction", new_callable=AsyncMock) as call:
+        call.return_value = LIVE_SHAPED_REPLY
+        result = await service.extract_facts(LIVE_TEXT)
+
+    assert [f.fact_type for f in result.facts] == ["event", "amount"]
+    first, second = result.facts
+    assert [(e.entity_type, e.value) for e in first.entities] == [
+        (None, "March 3, 2026"), (None, "NOTICE TO PAY RENT")]
+    # Offsets come from the verbatim quote; a fact without one keeps the message span.
+    assert LIVE_TEXT[first.source_start:first.source_end] == "served me a NOTICE TO PAY RENT"
+    assert (second.source_start, second.source_end) == (0, len(LIVE_TEXT))
+    call.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_one_malformed_fact_is_dropped_and_logged_without_content(db_session, caplog):
+    from app.services.extraction.fact_extraction import FactExtractionService
+
+    reply = {"facts": [*LIVE_SHAPED_REPLY["facts"],
+                       {"fact_type": "event", "source_quote": "PRIVATE-VISITOR-TEXT"}]}
+    service = FactExtractionService(llm_service=MagicMock(), db_session=db_session)
+    with patch.object(service, "_call_llm_extraction", new_callable=AsyncMock) as call:
+        call.return_value = reply
+        result = await service.extract_facts(LIVE_TEXT)
+
+    assert len(result.facts) == 2
+    assert "Dropped 1 of 3" in caplog.text
+    assert "missing at assertion" in caplog.text
+    assert "PRIVATE-VISITOR-TEXT" not in caplog.text
+
+
+@pytest.mark.asyncio
+async def test_untyped_entities_do_not_supersede(db_session, intake_fixture):
+    from app.services.extraction.fact_extraction import FactExtractionService
+    from app.services.intake.message_pipeline import NormalizedContent, SourceSpan
+
+    service = FactExtractionService(llm_service=MagicMock(), db_session=db_session)
+    normalized = NormalizedContent(
+        text=LIVE_TEXT, source_type="chat",
+        source_id=str(intake_fixture["message"].id),
+        source_spans=[SourceSpan(start_char=0, end_char=len(LIVE_TEXT))],
+    )
+    reply = {"facts": [LIVE_SHAPED_REPLY["facts"][0]]}
+    kwargs = dict(intake_id=intake_fixture["intake"].id, message_id=intake_fixture["message"].id,
+                  party_id=intake_fixture["party"].id)
+    with patch.object(service, "_call_llm_extraction", new_callable=AsyncMock, return_value=reply):
+        first = await service.extract_and_persist(normalized, **kwargs)
+        session_facts = await service.get_session_facts(intake_fixture["intake"].id)
+        await service.extract_and_persist(normalized, session_facts=session_facts, **kwargs)
+    assert first[0].entity_type is None
+    assert first[0].is_active is True
+
+
+class _TruncatingModel:
+    """Stands in for a provider whose replies always hit max_tokens."""
+
+    retry_limit = 3
+
+    def __init__(self, replies):
+        self.replies = list(replies)
+        self.calls = []
+
+    async def json_async(self, **kwargs):
+        self.calls.append(kwargs)
+        reply = self.replies.pop(0)
+        if isinstance(reply, Exception):
+            raise reply
+        return MagicMock(data=reply)
+
+
+@pytest.mark.asyncio
+async def test_truncated_reply_retries_once_with_compact_request(db_session):
+    from app.services.extraction.fact_extraction import (
+        COMPACT_RETRY_INSTRUCTION, FactExtractionService)
+    from app.services.llm_service import AnthropicAdapter
+
+    model = _TruncatingModel([ValueError("Unterminated string"), ValueError("Unterminated string")])
+    llm = MagicMock()
+    llm.create_client.return_value = AnthropicAdapter(model)
+    result = await FactExtractionService(llm, db_session).extract_facts(LIVE_TEXT)
+
+    assert result.facts == []
+    assert len(model.calls) == 2  # never more than one retry
+    assert model.retry_limit == 1  # the client does not resend identical requests
+    assert COMPACT_RETRY_INSTRUCTION not in model.calls[0]["system"]
+    assert COMPACT_RETRY_INSTRUCTION in model.calls[1]["system"]
+    assert "at most 25 facts" in model.calls[0]["system"]
+
+
+@pytest.mark.asyncio
+async def test_retry_after_truncation_can_recover(db_session):
+    from app.services.extraction.fact_extraction import FactExtractionService
+
+    model = _TruncatingModel([ValueError("Unterminated string"), LIVE_SHAPED_REPLY])
+    llm = MagicMock()
+    llm.create_client.return_value = model
+    result = await FactExtractionService(llm, db_session).extract_facts(LIVE_TEXT)
+    assert len(result.facts) == 2
+    assert len(model.calls) == 2
+
+
+@pytest.mark.asyncio
+async def test_alea_client_sends_each_request_once(db_session):
+    """End to end through alea-llm-client: two provider requests, not six."""
+    import alea_llm_client
+
+    from app.services.extraction.fact_extraction import FactExtractionService
+    from app.services.llm_service import AnthropicAdapter
+
+    client = alea_llm_client.AnthropicModel(api_key="test-not-real", model="claude-sonnet-5-5")
+    attempts = AsyncMock(side_effect=ValueError("Unterminated string"))
+    client._json_async = attempts
+    llm = MagicMock()
+    llm.create_client.side_effect = lambda: AnthropicAdapter(client)
+    result = await FactExtractionService(llm, db_session).extract_facts(LIVE_TEXT)
+    assert result.facts == []
+    assert attempts.await_count == 2
+
+
+@pytest.mark.asyncio
+async def test_long_text_is_chunked_with_shifted_offsets(db_session):
+    from app.services.extraction import fact_extraction
+    from app.services.extraction.fact_extraction import FactExtractionService
+
+    filler = "Nothing happened that day. " * 300
+    text = filler + "\n\n" + LIVE_TEXT
+    service = FactExtractionService(llm_service=MagicMock(), db_session=db_session)
+
+    async def reply(chunk, session_facts=None, compact=False):
+        return LIVE_SHAPED_REPLY if "NOTICE" in chunk else {"facts": []}
+
+    with patch.object(service, "_call_llm_extraction", side_effect=reply) as call:
+        result = await service.extract_facts(text)
+    assert call.call_count == len(fact_extraction._chunk_text(text)) > 1
+    fact = result.facts[0]
+    assert text[fact.source_start:fact.source_end] == "served me a NOTICE TO PAY RENT"
