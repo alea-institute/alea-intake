@@ -22,7 +22,7 @@ test('showcase story, views, accessibility and mobile layout', async ({ page }) 
     ws.onMessage(raw=>{
       const m=JSON.parse(String(raw))
       if(!authenticated) {expect(m.type).toBe('auth');expect(m.token).toBe('guest');authenticated=true}
-      else if(m.type==='text_message') ws.send(JSON.stringify({type:'system_message',content:'Saved'}))
+      else if(m.type==='text_message') {ws.send(JSON.stringify({type:'message_ack',client_id:m.client_id,message_id:1}));ws.send(JSON.stringify({type:'system_message',content:'Saved'}))}
     })
   })
   await page.setViewportSize({width:390,height:844})
