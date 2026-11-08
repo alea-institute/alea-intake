@@ -154,7 +154,11 @@ Never build images on hetzner-dev. Build on the home box, then ship and restart:
 Known trap: a Coolify **deploy** rebuilds on the box even when the image exists, because any
 environment or commit change counts as a build-impacting change. That build does not pass
 `VITE_SHOWCASE_MODE`, so the site serves the standard sign-in page instead of the showcase.
-If a deploy ran anyway, re-run step 2 (which retags the correct image) and restart. Check the
+A restart right after changing `git_commit_sha` also rebuilds on the box. The sequence that
+works today: set `git_commit_sha`, restart (Coolify rebuilds the wrong image under the tag), then
+re-run step 2 to retag the correct image and restart again with the commit unchanged; that second
+restart reuses the tag. This still costs one on-box build per release; moving the app to a
+registry-image build pack would remove it. Check the
 served bundle: the page at `/` must show the showcase, and `/health` must report `<sha>`.
 
 PR preview deployments are disabled for this app, and auto-deploy is paused while the app is
