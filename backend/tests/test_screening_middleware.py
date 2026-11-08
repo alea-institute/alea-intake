@@ -629,7 +629,7 @@ async def test_handle_text_message_calls_screening():
         _setup_session_and_svc_mocks(mock_session, entered_patches)
 
         await _handle_text_message(
-            AsyncMock(), 1, 10, {"content": "test message", "party_id": None}, mock_engine
+            AsyncMock(headers={"X-LLM-API-Key": "test-screening-visitor-key"}), 1, 10, {"content": "test message", "party_id": None}, mock_engine
         )
 
         mock_screen.assert_called_once()
@@ -643,6 +643,7 @@ async def test_critical_trigger_sends_safety_alert():
     from app.routers.intake import _handle_text_message
 
     mock_ws = AsyncMock()
+    mock_ws.headers = {"X-LLM-API-Key": "test-screening-visitor-key"}
     mock_engine, mock_conn, mock_session = _make_engine_mock()
 
     critical_result = ScreeningResult(
@@ -685,6 +686,7 @@ async def test_elevated_trigger_persists_queued_no_ws_alert():
     from app.routers.intake import _handle_text_message
 
     mock_ws = AsyncMock()
+    mock_ws.headers = {"X-LLM-API-Key": "test-screening-visitor-key"}
     mock_engine, mock_conn, mock_session = _make_engine_mock()
 
     elevated_result = ScreeningResult(
@@ -724,6 +726,7 @@ async def test_advisory_trigger_folds_to_exploration():
     from app.routers.intake import _handle_text_message
 
     mock_ws = AsyncMock()
+    mock_ws.headers = {"X-LLM-API-Key": "test-screening-visitor-key"}
     mock_engine, mock_conn, mock_session = _make_engine_mock()
 
     advisory_result = ScreeningResult(
@@ -759,6 +762,7 @@ async def test_message_processing_continues_after_screening():
     from app.routers.intake import _handle_text_message
 
     mock_ws = AsyncMock()
+    mock_ws.headers = {"X-LLM-API-Key": "test-screening-visitor-key"}
     mock_engine, mock_conn, mock_session = _make_engine_mock()
 
     critical_result = ScreeningResult(
@@ -796,6 +800,7 @@ async def test_screening_does_not_block_ack():
     from app.routers.intake import _handle_text_message
 
     mock_ws = AsyncMock()
+    mock_ws.headers = {"X-LLM-API-Key": "test-screening-visitor-key"}
     mock_engine, mock_conn, mock_session = _make_engine_mock()
 
     critical_result = ScreeningResult(
@@ -832,6 +837,7 @@ async def test_transcript_approve_also_screens():
     from app.routers.intake import _handle_transcript_approve
 
     mock_ws = AsyncMock()
+    mock_ws.headers = {"X-LLM-API-Key": "test-screening-visitor-key"}
     mock_engine, mock_conn, mock_session = _make_engine_mock()
     empty_result = ScreeningResult()
 

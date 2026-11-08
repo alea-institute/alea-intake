@@ -100,6 +100,13 @@ class ExplorationEngine:
         else:
             self._config = ExplorationConfig()
 
+        # A cheap-model override must use the provider that owns this key.
+        exploration_config = self._config.model_dump()
+        if exploration_config.get("cheap_llm_provider") != self._llm.get_client_config()["provider"]:
+            exploration_config.pop("cheap_llm_provider", None)
+            exploration_config.pop("cheap_llm_model", None)
+        self._org_config = {**self._org_config, "exploration": exploration_config}
+
     async def explore(
         self,
         run: Any,

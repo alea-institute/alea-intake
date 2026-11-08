@@ -184,7 +184,8 @@ class TestVoiceUploadFlow:
                  patch("app.routers.intake.get_settings", env["get_test_settings"]):
                 with TestClient(test_app) as client:
                     with client.websocket_connect(
-                        f"/api/ws/intake/{env['session_id']}?token={token}"
+                        f"/api/ws/intake/{env['session_id']}?token={token}",
+                        headers={"X-LLM-API-Key": "test-voice-visitor-key"}
                     ) as ws:
                         # Read initial session_state
                         initial = ws.receive_json()
@@ -219,7 +220,8 @@ class TestVoiceUploadFlow:
                  patch("app.routers.intake.get_settings", env["get_test_settings"]):
                 with TestClient(test_app) as client:
                     with client.websocket_connect(
-                        f"/api/ws/intake/{env['session_id']}?token={token}"
+                        f"/api/ws/intake/{env['session_id']}?token={token}",
+                        headers={"X-LLM-API-Key": "test-voice-visitor-key"}
                     ) as ws:
                         initial = ws.receive_json()
 
@@ -263,7 +265,8 @@ class TestVoiceUploadFlow:
                  patch("app.routers.intake.get_settings", env["get_test_settings"]):
                 with TestClient(test_app) as client:
                     with client.websocket_connect(
-                        f"/api/ws/intake/{env['session_id']}?token={token}"
+                        f"/api/ws/intake/{env['session_id']}?token={token}",
+                        headers={"X-LLM-API-Key": "test-voice-visitor-key"}
                     ) as ws:
                         initial = ws.receive_json()
 

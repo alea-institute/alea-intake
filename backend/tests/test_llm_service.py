@@ -20,7 +20,7 @@ def _make_org_config(
     provider: str | None = "openai",
     model: str | None = "gpt-4",
     data_policy: str = "cloud_optout",
-    api_key_encrypted: bytes | None = None,
+    api_key_encrypted: bytes | None = b"test-visitor-key",
 ) -> MagicMock:
     """Create a mock OrganizationConfig with the given LLM settings."""
     config = MagicMock()
@@ -101,7 +101,7 @@ class TestLLMServicePlatformEnvOverride:
 
         monkeypatch.setenv("ALEA_LLM_PROVIDER", "openai")
         monkeypatch.setenv("ALEA_LLM_API_KEY", "sk-test-platform")
-        service = LLMService()
+        service = LLMService(allow_server_keys=True)
         assert service.provider == "openai"
         assert service.api_key == "sk-test-platform"
 
@@ -186,7 +186,7 @@ class TestLLMServiceConnectionCheck:
             result = await service.check_connection()
 
         assert result["status"] == "error"
-        assert "Connection refused" in result["detail"]
+        assert result["detail"] == "LLM connection failed"
 
     async def test_llm_service_no_case_data_in_check(self):
         """check_connection does not send any PII or case data."""

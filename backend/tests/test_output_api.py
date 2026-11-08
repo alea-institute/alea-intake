@@ -36,6 +36,7 @@ async def _register_and_get_headers(client: AsyncClient) -> dict[str, str]:
     return {
         "Authorization": f"Bearer {data['access_token']}",
         "X-Tenant-Slug": "test-legal-aid",
+        "X-LLM-API-Key": "test-output-visitor-key",
     }
 
 

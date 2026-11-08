@@ -13,6 +13,8 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING, Any
 
+from fastapi import HTTPException, Request
+
 from alea_llm_client import AnthropicModel, GoogleModel, OpenAIModel, VLLMModel
 
 if TYPE_CHECKING:
@@ -54,12 +56,22 @@ class LLMService:
         self,
         org_config: OrganizationConfig | None = None,
         platform_settings: Any | None = None,
+        *,
+        api_key: str | None = None,
+        provider: str | None = None,
+        model: str | None = None,
+        allow_server_keys: bool = False,
     ) -> None:
         """Initialize LLM service from org config or platform defaults.
 
         Args:
             org_config: Per-org LLM configuration (provider, model, API key, data policy).
             platform_settings: Platform-level Settings for fallback config.
+            api_key: Explicit credential supplied by the caller.
+            provider: Explicit provider, overriding organization/environment defaults.
+            model: Explicit model, overriding organization/environment defaults.
+            allow_server_keys: Non-request development opt-in to ALEA_LLM_API_KEY.
+                HTTP dependencies never enable this setting.
 
         Raises:
             ValueError: If data_policy is 'local_only' but provider is a cloud provider.
@@ -68,7 +80,9 @@ class LLMService:
         # ALEA_LLM_PROVIDER lets a deployment (e.g. the dev server) pick a
         # provider without per-org DB config; org_config always wins when set.
         env_provider = os.getenv("ALEA_LLM_PROVIDER")
-        if org_config and org_config.llm_provider:
+        if provider:
+            self.provider = provider
+        elif org_config and org_config.llm_provider:
             self.provider: str = org_config.llm_provider
         elif env_provider:
             self.provider = env_provider
@@ -79,7 +93,9 @@ class LLMService:
         # ALEA_LLM_MODEL lets a deployment select a cheap model in a dev loop
         # (policy 5) instead of the expensive per-provider default (e.g. gpt-4).
         env_model = os.getenv("ALEA_LLM_MODEL")
-        if org_config and org_config.llm_model:
+        if model:
+            self.model = model
+        elif org_config and org_config.llm_model:
             self.model: str = org_config.llm_model
         elif env_model:
             self.model = env_model
@@ -94,16 +110,12 @@ class LLMService:
         else:
             self.data_policy = "cloud_optout"
 
-        # Determine API key: org config > platform env override. When neither is
-        # set, api_key stays None and alea-llm-client falls back to its own
-        # provider env var (e.g. OPENAI_API_KEY). ALEA_LLM_API_KEY supplies a key
-        # explicitly, provider-agnostically, without per-org DB config.
-        self.api_key: str | None = None
-        if org_config and org_config.llm_api_key_encrypted:
-            # In production, this would be decrypted via the encryption service.
-            # For now, treat the stored bytes as the key directly.
+        # Request callers always supply a key. Ambient keys are available only
+        # to explicitly opted-in non-request development callers.
+        self.api_key = api_key
+        if not self.api_key and org_config and org_config.llm_api_key_encrypted:
             self.api_key = org_config.llm_api_key_encrypted.decode("utf-8", errors="replace")
-        elif os.getenv("ALEA_LLM_API_KEY"):
+        if not self.api_key and allow_server_keys:
             self.api_key = os.getenv("ALEA_LLM_API_KEY")
 
         # Level 3: Enforce local_only policy
@@ -147,6 +159,23 @@ class LLMService:
 
         return config
 
+    @property
+    def is_reference_model(self) -> bool:
+        return self.model == os.getenv("ALEA_REFERENCE_MODEL", "gpt-4")
+
+    def create_client(self) -> Any:
+        """Construct a client only with an explicit, nonempty credential."""
+        if not self.api_key or not self.api_key.strip():
+            raise ValueError("A visitor LLM API key is required")
+        config = self.get_client_config()
+        model_cls = _PROVIDER_MODEL_MAP.get(self.provider)
+        if model_cls is None:
+            raise ValueError(f"Unknown LLM provider: {self.provider}")
+        kwargs = {"api_key": self.api_key, "model": self.model}
+        if "endpoint" in config:
+            kwargs["endpoint"] = config["endpoint"]
+        return model_cls(**kwargs)
+
     async def acomplete(
         self,
         messages: list[dict[str, str]],
@@ -159,17 +188,7 @@ class LLMService:
         Uses the same provider/model/api-key resolution as get_client_config().
         Raises on provider errors — callers choose their own fallback.
         """
-        config = self.get_client_config()
-        model_cls = _PROVIDER_MODEL_MAP.get(config["provider"])
-        if model_cls is None:
-            raise ValueError(f"Unknown LLM provider: {config['provider']}")
-        init_kwargs: dict[str, Any] = {
-            "api_key": config.get("api_key"),
-            "model": config.get("model"),
-        }
-        if "endpoint" in config:
-            init_kwargs["endpoint"] = config["endpoint"]
-        model = model_cls(**init_kwargs)
+        model = self.create_client()
 
         full_messages: list[dict[str, str]] = []
         if system_prompt:
@@ -194,17 +213,7 @@ class LLMService:
         is validated and returned as a schema instance. Raises on provider
         errors or validation failure — callers choose their own fallback.
         """
-        config = self.get_client_config()
-        model_cls = _PROVIDER_MODEL_MAP.get(config["provider"])
-        if model_cls is None:
-            raise ValueError(f"Unknown LLM provider: {config['provider']}")
-        init_kwargs: dict[str, Any] = {
-            "api_key": config.get("api_key"),
-            "model": config.get("model"),
-        }
-        if "endpoint" in config:
-            init_kwargs["endpoint"] = config["endpoint"]
-        model = model_cls(**init_kwargs)
+        model = self.create_client()
 
         full_messages: list[dict[str, str]] = []
         if system_prompt:
@@ -214,9 +223,7 @@ class LLMService:
         # OpenAI's JSON mode (response_format=json_object) rejects requests
         # unless the word "json" appears somewhere in the messages (BUG-6).
         if not any("json" in (m.get("content") or "").lower() for m in full_messages):
-            full_messages.insert(
-                0, {"role": "system", "content": "Respond with a single valid JSON object."}
-            )
+            full_messages.insert(0, {"role": "system", "content": "Respond with a single valid JSON object."})
 
         response = await model.json_async(messages=full_messages)
         return schema.model_validate(response.data)
@@ -239,26 +246,17 @@ class LLMService:
             }
 
         try:
-            # Only initialize the client -- verify credentials are accepted.
-            # No generate/complete calls = no case data sent.
-            kwargs: dict[str, Any] = {
-                "api_key": self.api_key,
-                "model": self.model,
-            }
-            if self.provider == "vllm":
-                kwargs["endpoint"] = "http://localhost:8000/"
-
-            model_cls(**kwargs)
+            self.create_client()
 
             return {
                 "status": "connected",
                 "provider": self.provider,
                 "model": self.model,
             }
-        except Exception as e:
+        except Exception:
             return {
                 "status": "error",
-                "detail": str(e),
+                "detail": "LLM connection failed",
             }
 
 
@@ -276,3 +274,20 @@ def get_llm_service(
         Configured LLMService instance.
     """
     return LLMService(org_config=org_config, platform_settings=platform_settings)
+
+
+def llm_service_from_headers(headers: Any) -> LLMService:
+    """Build an in-memory visitor context; never consult ambient credentials."""
+    key = headers.get("X-LLM-API-Key", "").strip()
+    if not key:
+        raise HTTPException(status_code=400, detail="A visitor LLM API key is required")
+    provider = headers.get("X-LLM-Provider", "openai").strip().lower()
+    if provider not in {"openai", "anthropic", "google"}:
+        raise HTTPException(status_code=400, detail="Unsupported LLM provider")
+    model = headers.get("X-LLM-Model") or os.getenv("ALEA_REFERENCE_MODEL", "gpt-4")
+    return LLMService(api_key=key, provider=provider, model=model)
+
+
+async def get_request_llm_service(request: Request) -> LLMService:
+    """REST credentials are headers, never query parameters or stored data."""
+    return llm_service_from_headers(request.headers)

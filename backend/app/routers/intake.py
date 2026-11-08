@@ -46,6 +46,8 @@ from app.services.screening.middleware import (
     screen_message_fast,
 )
 
+from app.services.llm_service import LLMService, get_request_llm_service, llm_service_from_headers
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/intake", tags=["intake"])
@@ -300,6 +302,7 @@ async def document_upload(
     party_id: int | None = Form(None),
     current_user: User = Depends(get_current_active_user),
     db_session: AsyncSession = Depends(get_tenant_session),
+    llm_service: LLMService = Depends(get_request_llm_service),
 ):
     """Upload a document, extract text, store records, and notify via WebSocket.
 
@@ -403,7 +406,8 @@ async def document_upload(
     try:
         practice_area_id = await _lookup_session_practice_area_id(db_session, session_id)
         conversation_svc = ConversationService(
-            practice_areas=_get_practice_areas(request.app)
+            llm_service=llm_service,
+            practice_areas=_get_practice_areas(request.app),
         )
         llm_response = await conversation_svc.generate_response(
             messages=[{"role": "user", "content": f"[Document uploaded: {file.filename}]"}],
@@ -549,6 +553,7 @@ async def _handle_text_message(
     user_id: int,
     data: dict,
     engine,
+    llm_service: LLMService | None = None,
 ) -> None:
     """Handle an incoming text_message: screen, store, normalize, ack, generate LLM response.
 
@@ -556,6 +561,17 @@ async def _handle_text_message(
     triggers send immediate safety_alert via WebSocket. Screening never blocks
     the message flow — errors are logged and swallowed.
     """
+    if llm_service is None:
+        try:
+            llm_service = llm_service_from_headers(websocket.headers)
+        except HTTPException:
+            await websocket.send_json({
+                "type": "error",
+                "status": 400,
+                "message": "A visitor LLM API key is required",
+            })
+            return
+
     content = data.get("content", "")
     client_id = data.get("client_id")
     party_id = data.get("party_id")
@@ -625,7 +641,8 @@ async def _handle_text_message(
                 db_session, session_id
             )
             conversation_svc = ConversationService(
-                practice_areas=_get_practice_areas(websocket.app)
+                llm_service=llm_service,
+                practice_areas=_get_practice_areas(websocket.app),
             )
             llm_response = await conversation_svc.generate_response(
                 messages=[{"role": "user", "content": content}],
@@ -766,6 +783,7 @@ async def _handle_transcript_approve(
     user_id: int,
     data: dict,
     engine,
+    llm_service: LLMService | None = None,
 ) -> None:
     """Handle transcript_approve: mark as approved, normalize, generate LLM follow-up.
 
@@ -776,6 +794,17 @@ async def _handle_transcript_approve(
       4. Store system response message
       5. Send message_ack + system_message
     """
+    if llm_service is None:
+        try:
+            llm_service = llm_service_from_headers(websocket.headers)
+        except HTTPException:
+            await websocket.send_json({
+                "type": "error",
+                "status": 400,
+                "message": "A visitor LLM API key is required",
+            })
+            return
+
     recording_id = data.get("recording_id")
 
     async with engine.connect() as conn:
@@ -849,7 +878,8 @@ async def _handle_transcript_approve(
                 db_session, session_id
             )
             conversation_svc = ConversationService(
-                practice_areas=_get_practice_areas(websocket.app)
+                llm_service=llm_service,
+                practice_areas=_get_practice_areas(websocket.app),
             )
             llm_response = await conversation_svc.generate_response(
                 messages=[{"role": "user", "content": approved_text}],
@@ -880,6 +910,7 @@ async def _handle_transcript_edit(
     user_id: int,
     data: dict,
     engine,
+    llm_service: LLMService | None = None,
 ) -> None:
     """Handle transcript_edit: update text, mark as edited, normalize, generate LLM follow-up.
 
@@ -890,6 +921,17 @@ async def _handle_transcript_edit(
       4. Store system response message
       5. Send message_ack + system_message
     """
+    if llm_service is None:
+        try:
+            llm_service = llm_service_from_headers(websocket.headers)
+        except HTTPException:
+            await websocket.send_json({
+                "type": "error",
+                "status": 400,
+                "message": "A visitor LLM API key is required",
+            })
+            return
+
     recording_id = data.get("recording_id")
     edited_text = data.get("edited_text", "")
 
@@ -945,7 +987,8 @@ async def _handle_transcript_edit(
                 db_session, session_id
             )
             conversation_svc = ConversationService(
-                practice_areas=_get_practice_areas(websocket.app)
+                llm_service=llm_service,
+                practice_areas=_get_practice_areas(websocket.app),
             )
             llm_response = await conversation_svc.generate_response(
                 messages=[{"role": "user", "content": edited_text}],
