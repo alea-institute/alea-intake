@@ -136,7 +136,8 @@ async def _pool_for(text: str, folio, embedding, config) -> dict[str, dict]:
 
 
 def build_pools(
-    corpus: dict, spec: float | None, *, expansions: bool = True
+    corpus: dict, spec: float | None, *, expansions: bool = True,
+    vocabulary: dict[str, list[str]] | None = None,
 ) -> dict[str, dict[str, dict[str, dict]]]:
     """Retrieve + score every candidate once per embedding mode.
 
@@ -148,10 +149,14 @@ def build_pools(
     """
     import harness
     from app.services.folio import concept_resolver as cr
+    from app.services.folio import term_expansions as te
     from app.services.folio.concept_resolver import ConceptResolutionConfig
 
     undo = _spec_patch(spec)
     saved_expand = cr.expand_legal_terms
+    saved_vocabulary = te.LEGAL_TERM_EXPANSIONS
+    if vocabulary is not None:
+        te.LEGAL_TERM_EXPANSIONS = vocabulary
     if not expansions:
         cr.expand_legal_terms = lambda text: []
     try:
@@ -179,7 +184,65 @@ def build_pools(
         return pools
     finally:
         cr.expand_legal_terms = saved_expand
+        te.LEGAL_TERM_EXPANSIONS = saved_vocabulary
         undo()
+
+
+def expansion_study(corpus: dict, gold: dict) -> dict:
+    """Leave-one-out vocabulary ablations at the adopted point, never persisted to app/.
+
+    Rebuild retrieval for changed queries (including entries exposed by the five-query
+    limit). Unchanged queries reuse the identical baseline pool. The filtered narrative
+    query remains in vocabulary ablations; the separate no-query arm removes it too.
+    """
+    from app.services.folio import term_expansions as te
+
+    point = {"penalty": 0.85, "threshold": 0.55, "rule": "floor"}
+    vocabulary = te.LEGAL_TERM_EXPANSIONS
+    baseline_pools = build_pools(corpus, None)
+    problems = verify_reference(corpus, baseline_pools)
+    if problems:
+        raise AssertionError(problems)
+    baseline = evaluate_point(baseline_pools, **point)
+    original_queries = {n["id"]: te.expand_legal_terms(n["text"]) for n in corpus["narratives"]}
+    arms = []
+
+    def measure(name, pool):
+        accepted = evaluate_point(pool, **point)
+        arms.append({"name": name, "metrics": score_point(
+            accepted, gold, baseline, corpus, detail=True)})
+
+    def ablate(name, reduced):
+        te.LEGAL_TERM_EXPANSIONS = reduced
+        try:
+            queries = {n["id"]: te.expand_legal_terms(n["text"]) for n in corpus["narratives"]}
+        finally:
+            te.LEGAL_TERM_EXPANSIONS = vocabulary
+        changed = [n for n in corpus["narratives"]
+                   if queries[n["id"]][:5] != original_queries[n["id"]][:5]]
+        pool = {mode: dict(rows) for mode, rows in baseline_pools.items()}
+        if changed:
+            rebuilt = build_pools({**corpus, "narratives": changed}, None, vocabulary=reduced)
+            for mode in pool:
+                pool[mode].update(rebuilt[mode])
+        measure(name, pool)
+        arms[-1]["changed_queries"] = {
+            n["id"]: {"before": original_queries[n["id"]][:5], "after": queries[n["id"]][:5]}
+            for n in changed}
+        return [nid for nid in queries if queries[nid] != original_queries[nid]]
+
+    measure("adopted", baseline_pools)
+    ablate("filtered-query-only", {})
+    measure("no-expanded-queries", build_pools(corpus, None, expansions=False))
+    coverage = {}
+    for trigger, phrases in vocabulary.items():
+        reduced = {k: v for k, v in vocabulary.items() if k != trigger}
+        coverage[trigger] = ablate(f"without-trigger:{trigger}", reduced)
+        for phrase in phrases:
+            reduced = {**vocabulary, trigger: [p for p in phrases if p != phrase]}
+            ablate(f"without-phrase:{trigger}:{phrase}", reduced)
+    return {"operating_point": point, "fidelity_problems": problems,
+            "trigger_coverage": coverage, "arms": arms}
 
 
 # ---------------------------------------------------------------------------
@@ -593,6 +656,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", default="sweep", help="capture stem under migration/captures/")
     parser.add_argument("--verify", action="store_true", help="fidelity check only")
+    parser.add_argument("--expansion-study", action="store_true",
+                        help="print vocabulary ablation evidence as JSON, then exit")
     parser.add_argument("--no-spec-axis", action="store_true")
     parser.add_argument("--dump-pools", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--spec", type=float, default=None, help=argparse.SUPPRESS)
@@ -605,6 +670,9 @@ def main() -> int:
         return 0
 
     gold = _gold()
+    if args.expansion_study:
+        print(json.dumps(expansion_study(corpus, gold), indent=2))
+        return 0
     pools = build_pools(corpus, None)
 
     problems = verify_reference(corpus, pools)

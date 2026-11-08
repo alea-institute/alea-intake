@@ -219,3 +219,57 @@ def test_adopted_resolver_changes_only_predicted_golden_concepts(corpus, mode, s
             config=cr.ConceptResolutionConfig(enable_llm_stage=False),
         ))
         assert {r.iri for r in actual} == expected[item["id"]], item["id"]
+
+
+def test_empty_vocabulary_keeps_filtered_narrative_query(corpus):
+    from app.services.folio import term_expansions as te
+
+    before = te.LEGAL_TERM_EXPANSIONS
+    pools = sweep.build_pools(corpus, None, vocabulary={})
+    accepted = sweep.evaluate_point(pools, penalty=0.85, threshold=0.55, rule="floor")
+    assert te.LEGAL_TERM_EXPANSIONS is before
+    assert {iri for iri, _ in accepted["healthy"]["n-expansion-fired"]} == set()
+    assert {iri for iri, _ in accepted["degraded"]["n-exact-label"]} == {"r-retaliation"}
+
+    # A long filler prefix hides the label from fuzzy retrieval until filtering.
+    narrative = {"id": "filtered", "text": "I was am " * 15 + "Retaliation Claim"}
+    filtered_corpus = {**corpus, "narratives": [narrative]}
+    retained = sweep.build_pools(filtered_corpus, None, vocabulary={})
+    disabled = sweep.build_pools(filtered_corpus, None, expansions=False)
+    for mode in ("healthy", "degraded"):
+        assert {iri for iri, _ in sweep.evaluate_point(
+            retained, penalty=0.85, threshold=0.55, rule="floor"
+        )[mode]["filtered"]} == {"r-retaliation"}
+        assert sweep.evaluate_point(
+            disabled, penalty=0.85, threshold=0.55, rule="floor"
+        )[mode]["filtered"] == []
+
+
+def test_expansion_study_attributes_claim_false_positives(corpus, gold, monkeypatch, capsys):
+    from app.services.folio import term_expansions as te
+
+    before = te.LEGAL_TERM_EXPANSIONS
+    monkeypatch.setattr(sys, "argv", ["sweep.py", "--expansion-study"])
+    assert sweep.main() == 0
+    study = json.loads(capsys.readouterr().out)
+    assert te.LEGAL_TERM_EXPANSIONS is before
+    assert study["operating_point"] == {"penalty": 0.85, "threshold": 0.55, "rule": "floor"}
+    baseline = study["arms"][0]
+    assert baseline["name"] == "adopted"
+    assert baseline["metrics"]["healthy"]["tp"] == 20
+    assert baseline["metrics"]["healthy"]["fp"] == 6
+    claim = next(a for a in study["arms"] if a["name"] == "without-trigger:claim")
+    removed = claim["metrics"]["healthy"]["flips_reject_rows"]
+    assert {"narrative": "n-exact-label", "iri": "r-insurance-claims"} in removed
+    assert {"narrative": "n-word-order-2", "iri": "r-insurance-claims"} in removed
+    phrase = next(a for a in study["arms"] if a["name"] == "without-phrase:claim:insurance claim")
+    assert {"narrative": "n-exact-label", "iri": "r-insurance-claims"} in phrase["metrics"]["healthy"]["flips_reject_rows"]
+    assert len(study["trigger_coverage"]) == len(before)
+    assert {"narrative": "n-word-order-2", "iri": "r-lease-agreement"} in phrase["metrics"]["healthy"]["flips_accept_rows"]
+    fired = next(a for a in study["arms"] if a["name"] == "without-phrase:fired:wrongful termination")
+    rent = next(a for a in study["arms"] if a["name"] == "without-phrase:rent:housing")
+    for mode in ("healthy", "degraded"):
+        assert fired["metrics"][mode]["tp"] == 19
+        assert {"narrative": "n-expansion-fired", "iri": "r-wrongful-termination"} in fired["metrics"][mode]["flips_reject_rows"]
+        assert rent["metrics"][mode]["fp"] == 4
+        assert rent["metrics"][mode]["tp"] == 20
