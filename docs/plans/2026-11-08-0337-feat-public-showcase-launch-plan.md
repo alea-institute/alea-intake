@@ -162,7 +162,7 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 ### Dependencies / Assumptions
 
 - Hosting follows the folio-insights pattern: Coolify on hetzner-dev under `*.dev.openlegalstandard.org` (`folio-insights/docs/deploying.md`). The wildcard already resolves `intake.dev.openlegalstandard.org` to that box.
-- hetzner-dev is shared and tight: on 2026-11-08 it showed 7 GB RAM with about 1 GB available and 86% disk use. If alea-intake will not fit, a larger box is spend, which needs Damien's approval.
+- hetzner-dev is shared and tight: on 2026-11-08 `free -m` showed 7.5 GB RAM with 1.7 GB available, its 4 GB swap fully used, and 86% disk use. If alea-intake will not fit, a larger box is spend, which needs Damien's approval.
 - The landing page ships through the `openlegalstandard.org` repo, where a push to `main` triggers the Amplify deploy. Another session is building that repo's Tools showcase (`feat/folio-tools-showcase`), so the intake page coordinates with it. Damien line-edits the page copy before it ships, per that repo's copy rule.
 - Primary-source verification is agent-performed: fetch and check each citation, then run a judging pass. Damien does not review rules one by one.
 - All 8 personas are Minnesota cases (`docs/evidence/persona-campaign/personas/ANSWER-KEYS.md`), so the R1 gate cannot test other states. The R22 matrix covers out-of-state behavior.
@@ -171,7 +171,7 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 
 ### Sources / Research
 
-- `docs/evidence/persona-campaign/pack.html` and `manifest.json`: the last campaign (22 pass, 3 borderline, 10 fail).
+- `docs/evidence/persona-campaign/pack.html` and `manifest.json`: every campaign round (22 pass, 3 borderline, 10 fail summed across rounds 1–7; round 7 alone records all 8 personas passing).
 - `docs/rubrics/intake-quality-v1.3.md` and `docs/rubrics/practice-areas/`: the locked rubric and its addenda.
 - `docs/plans/deadline-detection-v1.md`: the deadline engine framework and the 50-state scaling notes.
 - `docs/plans/2026-07-11-round7-expansion-domain-rules.md`: the last round of quality work.
@@ -202,17 +202,22 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 
   Postgres wins on concurrency and single-dialect parity, which matter more than SQLite's simplicity for a public multi-user site. The showcase database gets its own role with no access to other apps' databases, and it is excluded from any backup job. Governs R11.
 - KTD4. **Retention is a session-scoped purge, not a mode flag.** `ALEA_PERSISTENCE_MODE` is never read and `PersistenceManager.handle_session_complete` has no callers, so the existing "ephemeral" mode does nothing. Every row and file an intake creates hangs off one showcase session. A purge deletes the session's whole graph (messages, facts, analysis, deadlines, outputs, uploaded files, audit rows) when the visitor ends the session, and a sweeper deletes any session idle past a short TTL. Logging redacts narrative text and keys at the structlog processor and OTel attribute level, and error reports scrub request bodies. Governs R11.
-- KTD5. **Deadline rules become verified data.** Rules move from Python lambdas (`backend/app/services/deadline/rules.py`, 15 rules) to data records. Each record holds the trigger event, count, unit (calendar, court, or business days), direction, roll rule, service add-on, holiday calendar, jurisdiction, matter type, citation, source URL, exact supporting quote, as-of date, and a SHA-256 of the fetched source text. The schema starts from `docs/plans/deadline-detection-v1.md` and borrows lexdays' design (rule packs with test cases, refuse-to-guess on unverified holiday years), but not its AGPL code. Governs R5, R6, R7, R23.
-- KTD6. **Verification is mechanical.** A rule is verified only when a fetcher retrieves the primary source and the stored quote, including its number and unit, appears in that text. Sources:
+- KTD5. **Deadline rules become verified data.** Rules move from Python lambdas (`backend/app/services/deadline/rules.py`, 15 rules) to data records. Each record holds the trigger event, count (fixed, or event-supplied with a verified default), unit (hours, calendar days, court days, business days, or years), cap, direction, per-record roll rule taken from the cited source, service add-on, holiday calendar, jurisdiction, matter type, citation, source URL, exact supporting quote, as-of date, and a SHA-256 of the normalized source text. A second, document-sourced class covers dates the client's own papers state (a hearing date on a summons or notice to appear): it computes the stated date, cites the document plus the procedural authority (for example 8 CFR 1003.18 or Minn. Stat. 504B.321), and verifies only that procedural citation. Contractual or practical dates (a severance deadline, a bank's window) render as "stated in your document, not a legal deadline," never with the R6 label. The schema starts from `docs/plans/deadline-detection-v1.md` and borrows lexdays' design (rule packs with test cases, refuse-to-guess on unverified holiday years), but not its AGPL code. Governs R5, R6, R7, R23.
+- KTD6. **Verification is mechanical, then judged.** A rule is verified only when all three hold:
+  1. A fetcher retrieves the primary source, and the stored quote appears in its normalized section text.
+  2. The count and unit parsed from the quote equal the record's count and unit fields.
+  3. A recorded judging pass (an independent agent review) confirms the trigger event, direction, roll rule, service add-on, and applicability against the quote.
+
+  Sources:
   - **Minnesota statutes and court rules:** revisor.mn.gov, which hosts both.
   - **Federal regulations:** the eCFR versioner API (no key needed).
   - **Federal statutes:** uscode.house.gov.
-  - **Recheck:** a scheduled job refetches each source, compares hashes, and reports any drift without auto-editing rules.
+  - **Recheck:** a scheduled job refetches each source, hashes the normalized section text (not the whole page), and reports any drift without auto-editing rules.
 
   Governs R7.
 - KTD7. **State detection is explicit.** Replace the substring `_is_mn()` check (`rules.py:51`) with a jurisdiction value resolved from extracted facts, defaulting to "unknown" (which yields R6 output). The EEOC charge rule also collects city, discrimination basis, and employer size. Governs R5, R6.
-- KTD8. **BYOK is request-scoped.** The visitor's key travels with each request and WebSocket session in memory only, is never written to the database or logs, and builds a per-request LLM client. Remove every ambient fallback: the alea-llm-client env and `~/.alea/keys` lookup, the zero-argument `LLMService()` constructions (`routers/analysis.py:71,359`, `routers/output.py:155`), the five stages that build their own provider maps, and any LLM the folio-python library builds from server env (its `folio/graph.py`, unused today because no caller passes `llm_model`). A missing key returns a clean 400 before any LLM call. This follows folio-enrich's key-drain hardening. Governs R9, R15.
-- KTD9. **Showcase mode is one env flag.** It mints a throwaway guest identity per browser session (reusing the existing auth and consent plumbing), records consent from a click-through notice, and leaves the admin, SSO, CMS, autonomy, and organization routers unmounted. Governs R8, R10.
+- KTD8. **BYOK is request-scoped.** The visitor's key travels with each request and WebSocket session in memory only, is never written to the database or logs, and builds a per-request LLM client. Remove every ambient fallback: the alea-llm-client env and `~/.alea/keys` lookup, the zero-argument `LLMService()` constructions (`routers/analysis.py:71,359`, `routers/output.py:155`), the five stages that build their own provider maps, and any LLM the folio-python library builds from server env (its `folio/graph.py`, unused today because no caller passes `llm_model`). A missing key returns a clean 400 before any LLM call. No secret ever travels in a URL: REST calls carry the key in a request header, and the WebSocket authenticates with a first message carrying the guest token and key, closing with 4001 if it does not arrive promptly. Uvicorn's access log is disabled or routed through the redaction processor, and the proxy logs no query strings. This follows folio-enrich's key-drain hardening. Governs R9, R15.
+- KTD9. **Showcase mode is one env flag.** It mints a throwaway guest identity per browser session (reusing the existing auth and consent plumbing), records consent from a click-through notice, and leaves the admin, SSO, CMS, autonomy, and organization routers unmounted. Every mounted intake, analysis, output, document, consent, end-session, and WebSocket route resolves its intake or session and returns 404 unless the requesting guest owns it; today `list_intakes` filters only by organization, so all guests would otherwise see each other's intakes. Governs R8, R10, R11.
 - KTD10. **Pre-launch access gate at the proxy.** Until U18, Coolify's proxy requires a shared preview credential stored on the box by location, so the app is reachable for UAT but not public. Removing it is a config change. Governs R19.
 - KTD11. **Three-layer verification.** Every PR runs unit and integration tests plus the regression replay (U9). PR2 and PR3 add live persona runs on the gated deployment. The launch adds the full browser UAT matrix (U16). Judging follows the round-3 adjudication rules: evidence comes only from the current run's artifacts, FOLIO matches are checked by resolving the IRI, and the deterministic checks (`folio_check.py`, `memo_checks.py`, export integrity, deadlines against the answer key) always run. Governs R1, R2, R21, R22.
 
@@ -291,7 +296,7 @@ Cleanup (U1–U3) lands first because it changes scores. The runtime units (U4�
 | U14 | Minnesota and federal rule set | `backend/data/deadline_rules/` | U12, U13 |
 | U15 | State scoping and issue completeness | `backend/app/services/analysis/doctrine_probes.py` | U5 |
 | U16 | User-story UAT matrix | `frontend/tests/e2e/`, `docs/evidence/persona-campaign/personas/stories/` | U8, U11 |
-| U17 | Launch campaign to green | `docs/evidence/persona-campaign/` | U14, U15, U16 |
+| U17 | Launch campaign to green | `docs/evidence/persona-campaign/` | U2, U14, U15, U16 |
 | U18 | Lift the access gate | Coolify config | U17 |
 | U19 | Landing page on openlegalstandard.org | site repo `src/pages/intake` | U17 |
 
@@ -326,7 +331,7 @@ Waits on: nothing.
 - **Files:** `backend/migration/sweep.py`, `backend/migration/sweep_gold.json`, `docs/evidence/calibration/`.
 - **Approach:** Extend the sweep to the expansion vocabulary on top of U1's operating point. Publish the evidence and file a `cockpit-decide` ask if it recommends a change. Adopt nothing without his answer.
 - **Test expectation:** none -- study only, no behavior change.
-- **Verification:** The evidence file exists and the ask is filed or explicitly not needed.
+- **Verification:** The evidence file exists, and Damien's answer to the ask is recorded (or the study recommends no change) before U17 starts.
 
 ### U3. Replace PyMuPDF with pdfplumber
 
@@ -384,11 +389,15 @@ Waits on: nothing.
 - **Requirements:** R8, R10.
 - **Dependencies:** U5.
 - **Files:** `backend/app/main.py`, `backend/app/config.py`, `backend/app/routers/auth.py`, `backend/tests/test_showcase_mode.py`.
-- **Approach:** Implement KTD9. The WebSocket keeps its `?token=` contract, now with the guest token. Expose a disclaimer and consent text endpoint the UI renders.
+- **Approach:** Implement KTD9 and KTD8's no-secrets-in-URL rule. In showcase mode the WebSocket drops the `?token=` contract and authenticates with its first message, and checks ownership before accepting. Expose a disclaimer and consent text endpoint the UI renders.
 - **Test scenarios:**
   - With showcase mode on, `/api/v1/admin`, SSO, CMS, autonomy, and organization routes return 404.
   - A new browser session receives a guest token and can run an intake after consent.
   - Without consent, intake creation is refused.
+  - Guest B gets 404 on guest A's intake messages, results, audit, visualization, export, analyze, and end-session.
+  - Guest B's WebSocket connect to guest A's session closes with 4003.
+  - Guest A's intake does not appear in guest B's list.
+  - A WebSocket that sends no auth message within the timeout closes with 4001.
   - With showcase mode off, existing auth tests still pass unchanged.
 - **Verification:** Both modes' test suites pass.
 
@@ -404,7 +413,7 @@ Waits on: nothing.
   - Covers AE4. After a full intake with a PDF upload and an end-session call, every intake-linked table has zero rows for that session, and the upload directory is empty.
   - A session idle past the TTL is purged by the sweeper, and an active session is not.
   - A purge interrupted midway completes on the next sweep.
-  - Captured structlog output, OTel span attributes, and a forced 500's error report contain no narrative text or key.
+  - Captured structlog output, uvicorn access-log output, proxy-style request lines, OTel span attributes, and a forced 500's error report contain no narrative text, key, or guest token.
   - The showcase DB role cannot read another database on the instance.
 - **Verification:** The retention test passes against real Postgres (Phase 14 found SQLite-only tests hid real bugs).
 
@@ -415,13 +424,15 @@ Waits on: nothing.
 - **Dependencies:** U5, U6.
 - **Files:** `frontend/src/api/`, `frontend/src/pages/`, `frontend/src/components/`, `frontend/src/i18n/`, `frontend/tests/`.
 - **Approach:**
-  1. Fix the client's calls to routes that do not exist (`/api/v1/intakes`, `/api/v1/outputs`, `/api/v1/intakes/{id}/safety`, `/api/v1/orgs`).
-  2. Add key entry, kept in sessionStorage or memory only (never localStorage), with a reference-model recommendation and the R15 notice.
+  1. Fix the client's calls to routes that do not exist (`/api/v1/intakes`, `/api/v1/outputs`, `/api/v1/intakes/{id}/safety`). Showcase mode makes no organization calls.
+  2. Add key entry, kept in sessionStorage or memory only (never localStorage): a provider and model selector with the reference model preselected, inline format validation, a help link on getting a key and the typical cost per intake, a privacy line, and the R15 notice. Error states cover a rejected key, quota or rate limit, network drop, and mid-run failure, each with a retry that keeps the entered story.
   3. Add a curated-scenario picker seeded from the persona narratives.
   4. Add an analyze action with progress, wired to the existing views.
-  5. Add a deadlines view that shows the date with citation or the R6 label.
-  6. Add the disclaimer banner, and hide login and admin.
-  7. Apply the `frontend-design` skill.
+  5. Add a deadlines view. Each card shows the event, the computed date, how it was counted, the citation link, and the as-of date, with distinct treatments for computed, document-stated, contractual, lapsed, R6, and unknown-state deadlines. R6 cards point to a verified per-state self-help destination, with a generic fallback; that pointer table is rule-adjacent data U13 verifies.
+  6. Add session lifecycle: an "End session and erase" control with confirmation, an idle warning before the TTL with "Export memo" and "Keep session" actions, and an expired-session screen that says the data was erased and offers a fresh start.
+  7. Make the flow keyboard-operable, announce progress and errors in a live region, give each visualization a text or table alternative, and lay out cleanly at 390 px.
+  8. Add the disclaimer banner, and hide login and admin.
+  9. Apply the `frontend-design` skill.
 - **Test scenarios:**
   - A curated scenario runs end to end against MSW mocks and renders issues, concepts, deadlines, and export.
   - A free-text story and a PDF upload each start an analysis.
@@ -429,6 +440,10 @@ Waits on: nothing.
   - Reloading the tab keeps the key for the session; closing the browser forgets it.
   - The deadlines view renders a cited date and an R6 label from fixtures.
   - The disclaimer is present on every route.
+  - A rejected key, a quota error, and a mid-run failure each show their message and a retry that keeps the story.
+  - The idle warning appears before the TTL, and after expiry the expired-session screen replaces the views.
+  - "End session and erase" purges the session and returns to a fresh start.
+  - An axe accessibility check passes on each view, and no view scrolls horizontally at 390 px.
 - **Verification:** vitest and the Playwright smoke pass, and a screenshot of each view is inspected.
 
 ### U9. Regression replay harness
@@ -438,14 +453,16 @@ Waits on: nothing.
 - **Dependencies:** U1, U3.
 - **Files:** `scripts/regression_replay.py`, `backend/tests/regression/`, `docs/evidence/regression/baseline/`.
 - **Approach:**
-  1. Replay the 8 persona narratives and the U16 stories through the pipeline with recorded LLM responses, so CI is deterministic and costs $0.
-  2. Diff issues, FOLIO IRIs, deadlines, and citations against an accepted baseline.
-  3. A baseline changes only by an explicit accept step that records why.
+  1. Replay the 8 persona narratives through the pipeline with recorded LLM responses, so CI is deterministic and costs $0. U16 adds each new story and its baseline entry through step 4's accept step.
+  2. Key each recording by a hash of the stage's normalized prompt and model. A missing recording fails closed and names the stage, so a prompt-changing PR (such as U15) cannot pass on stale answers.
+  3. Diff issues, FOLIO IRIs, deadlines, and citations against an accepted baseline.
+  4. A prompt-changing PR re-records the affected stages with a live run on the operator's key against the gated deployment. A baseline changes only by an explicit accept step that records the prompt diff, the issue diff, and why.
 - **Patterns to follow:** `backend/migration/` golden harness (PYTHONHASHSEED=0, offline).
 - **Test scenarios:**
   - A seeded change that drops one issue from a persona fails the replay and names the issue.
   - A new extra concept is reported as an addition, not a failure.
   - An unchanged run passes in under a few minutes.
+  - A changed probe prompt with no new recording fails and names the stage.
 - **Verification:** The replay runs in CI on the PR1 branch and passes against the accepted baseline.
 
 ### U10. Coolify deploy behind access gate
@@ -458,7 +475,7 @@ Waits on: nothing.
   1. Apply KTD1, KTD3, and KTD10.
   2. Create the dedicated database and role on the existing instance.
   3. Point the Coolify GitHub App at master, with no second deploy Action.
-  4. Write `verify-showcase.sh`. It checks `/health` reports the deployed commit, that a no-key request returns 400, that a guest session works, that the purge leaves zero rows, and that the gate blocks anonymous requests.
+  4. Write `verify-showcase.sh`. It checks `/health` reports the deployed commit, that a no-key request returns 400, that a guest session works, that one guest cannot read another's intake, that the purge leaves zero rows, and that the gate blocks anonymous requests.
   5. Remove the Railway-era instructions and the committed smoke password from the runbook.
 - **Execution note:** Smoke-first: the live probe script is the proof.
 - **Test scenarios:**
@@ -484,7 +501,7 @@ Waits on: nothing.
 
 ### PR2: Deadline rules and quality
 
-Waits on: PR1, needed before this group can start: its verification runs live personas and UAT on PR1's deployed stack. Reason for a separate PR: PR2 cannot merge until PR1 is deployed, because its gate is measured on that deployment.
+Waits on: PR1, merge order for building (U12–U15 can start once PR1 is built), and PR1's deployment before merge: PR2's live persona and UAT verification runs on the deployed stack. Reason for a separate PR: PR2 cannot merge until PR1 is deployed, because its gate is measured on that deployment.
 
 ### U12. Deadline rules as data
 
@@ -494,7 +511,7 @@ Waits on: PR1, needed before this group can start: its verification runs live pe
 - **Files:** `backend/app/services/deadline/rules.py`, `backend/app/services/deadline/engine.py`, `backend/app/services/deadline/schemas.py`, `backend/app/services/deadline/jurisdiction.py`, `backend/app/services/output/templates/deadlines.md.j2`, `backend/tests/test_deadline_engine.py`.
 - **Approach:**
   1. Implement KTD5 and KTD7.
-  2. Implement counting: exclude the trigger day, include the last day, roll weekends and holidays forward, add the service add-ons, and count court days for short periods. Holiday calendars come from `python-holidays` plus Minnesota court closure dates.
+  2. Implement counting: exclude the trigger day, include the last day, apply each record's own roll rule (never a blanket roll), add the service add-ons, and count court days for short periods. Holiday calendars come from `python-holidays` plus Minnesota court closure dates.
   3. Migrate the 15 existing rules into records before deleting the lambdas.
   4. An unverified or missing rule yields the R6 output.
 - **Execution note:** Characterize the current 15 rules' outputs first, then migrate, and confirm identical dates.
@@ -505,7 +522,10 @@ Waits on: PR1, needed before this group can start: its verification runs live pe
   - Covers AE1. A rule marked unverified yields the R6 label with a self-help pointer and no date.
   - An unknown jurisdiction yields R6 output, never a default state.
   - A holiday year with no verified calendar refuses to compute rather than guess.
-  - All 15 migrated rules reproduce their pre-migration dates.
+  - All 15 migrated rules reproduce their pre-migration dates, except where a verified roll rule applies; each difference is listed.
+  - The immigration persona's stated hearing date and the eviction persona's stated hearing date still compute, cited to the document and procedural authority.
+  - A severance deadline from the client's papers renders as a contractual date, not as an R6 label.
+  - The asylum one-year rule counts in years, and the Minn. Stat. 181.13 penalty clock counts in hours with its 15-day cap.
 - **Verification:** Engine tests pass, and the memo template renders the citation on every computed deadline.
 
 ### U13. Primary-source fetch and verify
@@ -518,6 +538,8 @@ Waits on: PR1, needed before this group can start: its verification runs live pe
 - **Test scenarios:**
   - A rule whose quote "within 90 days" appears in the fetched 7 CFR 273.15 text is verified with its SHA-256 recorded.
   - A rule whose quote says "30 days" when the source says "90 days" is rejected.
+  - A rule whose quote appears verbatim in the source but whose stored count differs from the quoted number is rejected.
+  - A rule with no recorded judging pass stays unverified.
   - An unreachable source leaves the rule unverified, not verified.
   - A changed source hash is reported as drift and does not flip the rule silently.
 - **Verification:** The verifier runs over the rule set, and its report lists every rule's status.
@@ -530,7 +552,7 @@ Waits on: PR1, needed before this group can start: its verification runs live pe
 - **Files:** `backend/data/deadline_rules/mn/`, `backend/data/deadline_rules/federal/`, `backend/tests/test_rule_set.py`.
 - **Approach:** Codex workers draft the rules per matter type from each practice-area addendum's deadline section (`docs/rubrics/practice-areas/`). U13 verifies them, and only verified rules ship as verified. Federal rules cover immigration, benefits regulations, FLSA, FDCPA, and EEOC.
 - **Test scenarios:**
-  - Every deadline named in the Minnesota answer keys (`docs/evidence/persona-campaign/personas/ANSWER-KEYS.md`) has a verified rule, and the engine reproduces the key's date.
+  - Every deadline named in the Minnesota answer keys (`docs/evidence/persona-campaign/personas/ANSWER-KEYS.md`) has a verified rule, and the engine reproduces the key's date. Where a verified roll rule moves a key date (the FDCPA date falls on a Saturday, the EEOC date on a Sunday), a dated answer-key correction citing the source quote lands first.
   - No rule lacks a source URL, quote, or hash.
 - **Verification:** The verifier reports 100% verified for rules the answer keys require.
 
@@ -560,6 +582,7 @@ Waits on: PR1, needed before this group can start: its verification runs live pe
   - An out-of-state eviction shows R6 labels and no Minnesota citation (Covers AE1, AE2).
   - An emergency-safety story leads with safety framing.
   - A lapsed asylum one-year deadline is flagged as lapsed with routing.
+  - A story submitted as an uploaded PDF (an eviction summons) surfaces the same issues and stated hearing date as the typed version.
   - A missing key blocks the start (Covers AE3).
   - A non-reference model shows the notice (Covers AE6).
   - Every story's export opens and matches the on-screen analysis.
@@ -573,9 +596,9 @@ Waits on: PR2, needed before this group can start: the launch campaign runs only
 
 - **Goal:** One run on one build passes every gate.
 - **Requirements:** R1, R2, R3, R4; F3; AE5.
-- **Dependencies:** U14, U15, U16.
+- **Dependencies:** U2, U14, U15, U16.
 - **Files:** `docs/evidence/persona-campaign/`, `EVIDENCE.md`.
-- **Approach:** Run all 8 personas plus the U16 matrix on the reference model and one recorded commit. If any gate fails, fix forward through PR2-style changes and rerun the whole campaign. Publish the new pack revision.
+- **Approach:** Run all 8 personas plus the U16 matrix on the reference model and one recorded commit. If any gate fails, fix forward through PR2-style changes and rerun the whole campaign. A rerun is allowed only after a recorded code or configuration change, never as a pure retry. The evidence pack records every campaign run made on the launch commit, with its gate results. Publish the new pack revision.
 - **Test expectation:** none -- this unit is the verification itself.
 - **Verification:** Every gate passes in one run on one commit, and `EVIDENCE.md` links the pack.
 
@@ -641,6 +664,17 @@ Waits on: PR2, needed before this group can start: the launch campaign runs only
 
 - **Gate on the PR3 merge (U19):** Damien approves the landing-page copy in a Claude Doc before it ships.
 - **Possible spend (U4):** if the measured footprint will not fit hetzner-dev, Damien decides on a larger server.
+- **Spend: LLM key for live runs (U9, U11, U16, U17).** Showcase mode removes the server key, so persona campaigns, recordings, the reference-model bake-off, and UAT reruns need an operator key and budget. Damien chooses which key funds them and the ceiling.
+- **Decision: visitor-visible state (U8, U12).** Recommended: show "State detected: X" with a confirm-or-choose control, because a vague story otherwise defaults to the R6 label even for a Minnesota visitor.
+- **Deferred to implementation: court closure dates (U12).** Which primary source verifies Minnesota court closure days; the refuse-to-guess rule applies when a year cannot be verified.
+
+### Review items awaiting approval
+
+These came from an independent cross-model review only, so they wait for approval before they land:
+
+- **Public abuse limits (U3, U6, U10).** Add upload byte and page limits, bounded PDF and OCR time, request body limits, capped concurrent analyses with a bounded queue, and per-guest and per-IP admission limits before expensive work. Without them one visitor can exhaust the shared box.
+- **Candidate-commit verification (PR2).** Deploy PR2's candidate commit to the gated stack before merge, and require the live evidence to record that commit; otherwise PR2's live checks run against PR1's code.
+- **Gated and public probe modes (U10, U18).** Give `verify-showcase.sh` a gated mode (anonymous rejected, credentialed works) and a public mode (anonymous guest flow works), since U18 reruns it without the credential.
 
 ---
 
