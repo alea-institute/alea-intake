@@ -141,3 +141,25 @@ scripts/verify-showcase.sh https://intake.dev.openlegalstandard.org --mode publi
 Repeat for both domains and complete anonymous narrative and curated-example
 journeys in a real browser. To restore preview access, set the passphrase and
 redeploy. Changing it or `ALEA_SECRET_KEY` invalidates existing preview cookies.
+
+## Shipping an image built off the deploy box (2026-11-08)
+
+Never build images on hetzner-dev. Build on the home box, then ship and restart:
+
+1. `docker build --build-arg SOURCE_COMMIT=<sha> --build-arg VITE_SHOWCASE_MODE=true -t <app-uuid>:<sha> .`
+2. `docker save <app-uuid>:<sha> | gzip -1 | ssh hetzner-dev 'gunzip | docker load'`
+3. Point the Coolify app at that commit (`git_commit_sha`), then use the Coolify **restart**
+   action, which recreates the container from the existing `<app-uuid>:<sha>` tag.
+
+Known trap: a Coolify **deploy** rebuilds on the box even when the image exists, because any
+environment or commit change counts as a build-impacting change. That build does not pass
+`VITE_SHOWCASE_MODE`, so the site serves the standard sign-in page instead of the showcase.
+If a deploy ran anyway, re-run step 2 (which retags the correct image) and restart. Check the
+served bundle: the page at `/` must show the showcase, and `/health` must report `<sha>`.
+
+PR preview deployments are disabled for this app, and auto-deploy is paused while the app is
+pinned to the PR1 branch for the showcase demo. Re-enable auto-deploy and repoint to `master`
+when PR1 merges.
+
+The Cloudflare Access hostname `intake.damienriehl.com` (twin tunnel, Damien-only one-time PIN)
+reaches the same app; the preview gate trusts its Access JWT (settings above).
