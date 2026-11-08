@@ -106,3 +106,44 @@ async def logout(
         await session.flush()
 
     return {"message": "Logged out successfully"}
+
+
+# Mounted instead of account authentication in showcase mode.
+guest_router = APIRouter(prefix="/api/v1/auth", tags=["showcase"])
+SHOWCASE_NOTICE = {
+    "version": "1",
+    "disclaimer": "This is a FOLIO demonstration and is not legal advice.",
+    "consent_text": "I consent to AI processing of my submissions for this demonstration. "
+                    "Results may be incorrect. My LLM provider receives my inputs under its policies.",
+}
+
+
+@guest_router.get("/showcase-notice")
+async def showcase_notice():
+    return SHOWCASE_NOTICE
+
+
+from pydantic import BaseModel
+
+
+class GuestRequest(BaseModel):
+    consent: bool = False
+
+
+@guest_router.post("/guest", status_code=201)
+async def create_guest(body: GuestRequest, request: Request,
+                       session: AsyncSession = Depends(get_tenant_session)):
+    from app import config
+    from app.core.security import create_access_token
+    from app.services.consent_service import ConsentService
+    from app.showcase import admit
+    admit(request.app, None, request.client.host if request.client else "unknown")
+    user = User(org_id=_get_org_id(request), role="consumer", is_active=True)
+    session.add(user)
+    await session.flush()
+    if body.consent:
+        await ConsentService(session).grant_consent(
+            user_id=user.id, session_id=None, consent_version=SHOWCASE_NOTICE["version"],
+            consent_items={"ai_processing": True})
+    token = create_access_token(user.id, user.org_id, user.role, config.get_settings().secret_key)
+    return {"access_token": token, "token_type": "bearer"}

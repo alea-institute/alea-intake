@@ -205,6 +205,8 @@ async def list_intakes(
     org_id = _get_org_id(request)
     svc = IntakeSessionService(session)
     intakes = await svc.list_intakes(org_id=org_id)
+    if get_settings().showcase_mode:
+        intakes = [i for i in intakes if i.created_by_user_id == current_user.id]
     return [
         {
             "id": i.id,
@@ -335,6 +337,18 @@ async def document_upload(
             detail=f"File size exceeds maximum {settings.intake_max_file_size_mb} MB",
         )
 
+    if settings.showcase_mode:
+        if len(file_bytes) > settings.showcase_upload_max_bytes:
+            raise HTTPException(413, "Upload exceeds showcase byte limit")
+        if file.content_type == "application/pdf":
+            from app.services.document.bounded import run_document_worker
+            try:
+                page_count = await run_document_worker("pages", content=file_bytes)
+            except TimeoutError:
+                raise HTTPException(413, "PDF processing time limit exceeded")
+            if page_count > settings.showcase_pdf_max_pages:
+                raise HTTPException(413, "PDF exceeds showcase page limit")
+
     # Get org slug for directory structure
     org_slug = getattr(request.state, "tenant_slug", "default")
 
@@ -453,24 +467,28 @@ async def document_upload(
 ws_router = APIRouter(tags=["intake-ws"])
 
 
-@ws_router.websocket("/api/ws/intake/{session_id}")
-async def intake_websocket(websocket: WebSocket, session_id: int):
-    """Real-time WebSocket chat endpoint for intake sessions.
-
-    Authentication:
-      - JWT token passed as query parameter ?token={jwt}
-      - Close 4001 if token is invalid or expired
-      - Close 4003 if user lacks access to the session
-
-    Message types handled:
-      - text_message: Store, normalize, ack, generate LLM follow-up
-      - session_pause: Pause the session
-      - typing_indicator: Broadcast to other connections
-    """
+async def websocket_access(websocket: WebSocket, session_id: int):
+    """Authenticate the socket and enforce showcase session ownership."""
     settings = get_settings()
 
-    # Step 1: Extract and validate JWT from query param
-    token = websocket.query_params.get("token")
+    # Extract and validate JWT using the mode's authentication contract.
+    llm_service = None
+    if settings.showcase_mode:
+        import asyncio
+        await websocket.accept()
+        if "token" in websocket.query_params:
+            await websocket.close(code=4001, reason="Use the auth message")
+            return
+        try:
+            auth = await asyncio.wait_for(websocket.receive_json(), settings.showcase_ws_auth_timeout)
+            if not isinstance(auth, dict) or auth.get("type") != "auth":
+                raise ValueError("Authentication required")
+            token = auth.get("token")
+        except (asyncio.TimeoutError, ValueError, WebSocketDisconnect):
+            await websocket.close(code=4001, reason="Authentication required")
+            return
+    else:
+        token = websocket.query_params.get("token")
     if not token:
         await websocket.close(code=4001, reason="Authentication required")
         return
@@ -486,8 +504,62 @@ async def intake_websocket(websocket: WebSocket, session_id: int):
         await websocket.close(code=4001, reason="Invalid token payload")
         return
 
-    # Step 2: Accept connection and register with manager
-    await manager.connect(websocket, session_id)
+    # Check showcase session ownership, consent, and admission.
+    if settings.showcase_mode:
+        from app.db.engine import get_engine
+        from app.showcase import require_owner, admit
+        from app.models.user import User
+        from app.services.consent_service import ConsentService
+        async with get_engine().connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+            async with AsyncSession(bind=conn) as db:
+                user = await db.get(User, user_id)
+                try:
+                    if user is None or not user.is_active or payload.get("type") != "access":
+                        raise HTTPException(404)
+                    await require_owner(db, user, session_id=session_id)
+                    if not await ConsentService(db).check_consent(user_id=user_id):
+                        raise HTTPException(403)
+                except HTTPException:
+                    await websocket.close(code=4003, reason="Session unavailable")
+                    return
+        try:
+            admit(websocket.app, user_id, websocket.client.host if websocket.client else "unknown")
+            llm_service = llm_service_from_headers({
+                "X-LLM-API-Key": auth.get("llm_api_key", ""),
+                "X-LLM-Provider": auth.get("llm_provider", "openai"),
+                "X-LLM-Model": auth.get("llm_model", ""),
+            })
+        except HTTPException:
+            await websocket.close(code=4001, reason="Request key or admission required")
+            return
+    return user_id, llm_service
+
+
+@ws_router.websocket("/api/ws/intake/{session_id}")
+async def intake_websocket(websocket: WebSocket, session_id: int,
+                           access=Depends(websocket_access)):
+    """Real-time WebSocket chat endpoint for intake sessions.
+
+    Authentication:
+      - Showcase: first auth message carries JWT and request LLM credentials
+      - Standard mode: JWT token passed as query parameter ?token={jwt}
+      - Close 4001 if token is invalid or expired
+      - Close 4003 if user lacks access to the session
+
+    Message types handled:
+      - text_message: Store, normalize, ack, generate LLM follow-up
+      - session_pause: Pause the session
+      - typing_indicator: Broadcast to other connections
+    """
+    if access is None:
+        return
+    user_id, llm_service = access
+    settings = get_settings()
+    if settings.showcase_mode:
+        manager._connections.setdefault(session_id, []).append(websocket)
+    else:
+        await manager.connect(websocket, session_id)
 
     # Step 3: Create a DB session for message operations
     from app.db.engine import get_engine
@@ -511,10 +583,19 @@ async def intake_websocket(websocket: WebSocket, session_id: int):
                 break
 
             msg_type = data.get("type")
+            if settings.showcase_mode and msg_type in {
+                "text_message", "voice_upload", "transcript_approve", "transcript_edit"
+            }:
+                try:
+                    admit(websocket.app, user_id, websocket.client.host if websocket.client else "unknown")
+                except HTTPException:
+                    await websocket.send_json({"type": "error", "status": 429,
+                                               "message": "Admission limit reached; retry later"})
+                    continue
 
             if msg_type == "text_message":
                 await _handle_text_message(
-                    websocket, session_id, user_id, data, engine
+                    websocket, session_id, user_id, data, engine, llm_service=llm_service
                 )
             elif msg_type == "voice_upload":
                 await _handle_voice_upload(
@@ -522,11 +603,11 @@ async def intake_websocket(websocket: WebSocket, session_id: int):
                 )
             elif msg_type == "transcript_approve":
                 await _handle_transcript_approve(
-                    websocket, session_id, user_id, data, engine
+                    websocket, session_id, user_id, data, engine, llm_service=llm_service
                 )
             elif msg_type == "transcript_edit":
                 await _handle_transcript_edit(
-                    websocket, session_id, user_id, data, engine
+                    websocket, session_id, user_id, data, engine, llm_service=llm_service
                 )
             elif msg_type == "session_pause":
                 await _handle_session_pause(
@@ -1011,3 +1092,17 @@ async def _handle_transcript_edit(
                 "content": llm_response,
                 "message_id": sys_message.id,
             })
+
+
+@router.post("/{intake_id}/end-session")
+async def end_session(intake_id: int, current_user: User = Depends(get_current_active_user),
+                      session: AsyncSession = Depends(get_tenant_session)):
+    if not get_settings().showcase_mode:
+        raise HTTPException(404, "Not found")
+    from app.models.intake import IntakeSession, Intake
+    from sqlalchemy import update
+    from datetime import datetime, timezone
+    await session.execute(update(IntakeSession).where(IntakeSession.intake_id == intake_id)
+                          .values(status="completed", ended_at=datetime.now(timezone.utc)))
+    await session.execute(update(Intake).where(Intake.id == intake_id).values(status="completed"))
+    return {"status": "completed"}

@@ -145,6 +145,7 @@ async def test_extract_image_ocr_element_structure():
 def doc_service(tmp_path):
     """Create a DocumentService with tmp_path as upload dir."""
     with patch("app.services.document.document_service.get_settings") as mock_settings:
+        mock_settings.return_value.showcase_mode = False
         mock_settings.return_value.intake_upload_dir = str(tmp_path)
         mock_settings.return_value.intake_max_file_size_mb = 50
         mock_settings.return_value.intake_max_page_count = 200

@@ -43,6 +43,17 @@ class Settings(BaseSettings):
     debug: bool = False
     secret_key: str  # Required -- no default
 
+    showcase_mode: bool = False
+    showcase_ws_auth_timeout: float = 5.0
+    showcase_upload_max_bytes: int = 10 * 1024 * 1024
+    showcase_pdf_max_pages: int = 30
+    showcase_extraction_timeout_seconds: float = 30.0
+    showcase_max_body_bytes: int = 12 * 1024 * 1024
+    showcase_concurrent_analyses: int = 2
+    showcase_analysis_queue: int = 4
+    showcase_guest_limit: str = "30/minute"
+    showcase_ip_limit: str = "120/minute"
+
     # Database
     database_backend: DatabaseBackend = DatabaseBackend.POSTGRESQL
     db_host: str = "localhost"
