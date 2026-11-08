@@ -10,6 +10,7 @@ Voice modality: voice_upload -> ASR transcription -> transcript_ready for review
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import logging
@@ -23,7 +24,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.showcase import admit, client_ip, guest_lock
+from app.showcase import admit, client_ip, guest_lock, guest_task
 from app.config import get_settings
 from app.core.permissions import get_current_active_user
 from app.db.session import get_tenant_session
@@ -604,52 +605,66 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
                                                "message": "Admission limit reached; retry later"})
                     continue
 
-            from app.db.retention import guest_activity, touch_guest
-            async with guest_activity(user_id), guest_lock(user_id):
-                if settings.showcase_mode:
-                    async with engine.begin() as conn:
-                        conn = await conn.execution_options(schema_translate_map={"tenant": None})
-                        touched = await touch_guest(conn, user_id)
-                        exists = (await conn.execute(select(IntakeSession.id).join(
-                            Intake, Intake.id == IntakeSession.intake_id).where(
-                            IntakeSession.id == session_id, Intake.created_by_user_id == user_id))).first()
-                        if not touched or exists is None:
-                            await websocket.close(code=4004, reason="Session unavailable")
-                            break
-                if msg_type == "text_message":
-                    await _handle_text_message(
-                        websocket, session_id, user_id, data, engine, llm_service=llm_service
-                    )
-                elif msg_type == "voice_upload":
-                    await _handle_voice_upload(
-                        websocket, session_id, user_id, data, engine
-                    )
-                elif msg_type == "transcript_approve":
-                    await _handle_transcript_approve(
-                        websocket, session_id, user_id, data, engine, llm_service=llm_service
-                    )
-                elif msg_type == "transcript_edit":
-                    await _handle_transcript_edit(
-                        websocket, session_id, user_id, data, engine, llm_service=llm_service
-                    )
-                elif msg_type == "session_pause":
-                    await _handle_session_pause(
-                        websocket, session_id, engine
-                    )
-                elif msg_type == "typing_indicator":
-                    await manager.send_to_others(session_id, websocket, {
-                        "type": "typing_indicator",
-                        "user_id": user_id,
-                        "is_typing": data.get("is_typing", False),
-                    })
+            await asyncio.create_task(_dispatch_socket_message(
+                websocket, session_id, user_id, data, engine, llm_service
+            ))
+            if websocket.application_state == WebSocketState.DISCONNECTED:
+                break
 
     except WebSocketDisconnect:
         pass
+    except asyncio.CancelledError:
+        # Handler sessions have rolled back before we reach this boundary.
+        # End-session waits for this task to exit before purging the guest.
+        await websocket.close(code=4004, reason="Session unavailable")
     except Exception as e:
         logger.error('WebSocket error for session %d: %s', session_id, type(e).__name__)
     finally:
         manager.disconnect(websocket, session_id)
 
+
+async def _dispatch_socket_message(websocket, session_id, user_id, data, engine, llm_service):
+    """Own a cancellable task for one message, independent of connection lifetime."""
+    settings = get_settings()
+    msg_type = data.get("type")
+    from app.db.retention import guest_activity, touch_guest
+    async with guest_task(user_id), guest_activity(user_id), guest_lock(user_id):
+        if settings.showcase_mode:
+            async with engine.begin() as conn:
+                conn = await conn.execution_options(schema_translate_map={"tenant": None})
+                touched = await touch_guest(conn, user_id)
+                exists = (await conn.execute(select(IntakeSession.id).join(
+                    Intake, Intake.id == IntakeSession.intake_id).where(
+                    IntakeSession.id == session_id, Intake.created_by_user_id == user_id))).first()
+                if not touched or exists is None:
+                    await websocket.close(code=4004, reason="Session unavailable")
+                    return
+        if msg_type == "text_message":
+            await _handle_text_message(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "voice_upload":
+            await _handle_voice_upload(
+                websocket, session_id, user_id, data, engine
+            )
+        elif msg_type == "transcript_approve":
+            await _handle_transcript_approve(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "transcript_edit":
+            await _handle_transcript_edit(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "session_pause":
+            await _handle_session_pause(
+                websocket, session_id, engine
+            )
+        elif msg_type == "typing_indicator":
+            await manager.send_to_others(session_id, websocket, {
+                "type": "typing_indicator",
+                "user_id": user_id,
+                "is_typing": data.get("is_typing", False),
+            })
 
 async def _handle_text_message(
     websocket: WebSocket,
