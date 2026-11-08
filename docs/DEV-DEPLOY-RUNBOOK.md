@@ -167,3 +167,16 @@ when PR1 merges.
 
 The Cloudflare Access hostname `intake.damienriehl.com` (twin tunnel, Damien-only one-time PIN)
 reaches the same app; the preview gate trusts its Access JWT (settings above).
+
+## Box hazards found on 2026-11-08
+
+- **Two hosts answer to `postgres`.** On the `coolify` Docker network, both the shared database
+  container and Coolify's internal `coolify-db` carry the alias `postgres`, so connections to host
+  `postgres` alternate between them and half fail with "password authentication failed". Point
+  `ALEA_DB_HOST` at the shared database's unique alias, `ok-postgres`. Other apps that use host
+  `postgres` are exposed to the same intermittent failure.
+- **Docker's data disk is separate from `/`.** Images, build cache and the shared database's
+  volume live on `/mnt/docker-data`. Check `df -h /mnt/docker-data` before loading an image, and
+  remove the previous release's image once the new one is confirmed running. On 2026-11-08 that
+  disk reached 100% after repeated image loads and on-box rebuilds, and the shared database
+  crash-looped until space was freed.
