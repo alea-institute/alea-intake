@@ -12,9 +12,9 @@ execution: code
 
 ## Goal Capsule
 
-- **Objective:** A visitor to `intake.openlegalstandard.org` can describe a legal situation, or pick a curated example, and get an analysis that finds every relevant legal issue, links claims and elements to their facts, maps them to FOLIO concepts, and computes cited deadlines for their state. The analysis must be good enough to put in public under FOLIO's name.
+- **Objective:** A visitor who opens the intake showcase from `openlegalstandard.org/intake` can describe a legal situation, or pick a curated example, and get an analysis that finds every relevant legal issue, links claims and elements to their facts, maps them to FOLIO concepts, and computes cited deadlines for their state. The analysis must be good enough to put in public under FOLIO's name.
 - **Product authority:** Damien Riehl (ALEA Institute). The audience and the launch quality bar were chosen in dialogue on 2026-11-08. The legal-aid professional and public self-help audiences are later milestones and are not active scope.
-- **Open blockers:** Hosting on the ALEA EC2 host needs Mike's help with SSH allowlisting and the `intake.` DNS record. That request goes out in Damien's voice, so Damien sends it. See Dependencies.
+- **Open blockers:** None. Hosting uses only access ALEA already has (see Key Decisions). Server capacity is a risk that planning must measure (see Dependencies).
 
 ---
 
@@ -22,7 +22,7 @@ execution: code
 
 ### Summary
 
-Launch alea-intake as a public, no-login FOLIO showcase at `intake.openlegalstandard.org`. Visitors bring their own LLM key, and nothing they enter is kept. The site goes public only after all 8 persona tests pass every gate in the locked rubric, and only with correct, primary-source-cited deadlines or a plain "no verified rule" label for each state.
+Launch alea-intake as a public, no-login FOLIO showcase. A landing page at `openlegalstandard.org/intake` introduces it, and the app runs at `intake.dev.openlegalstandard.org`. Visitors bring their own LLM key, and nothing they enter is kept. The site goes public only after all 8 persona tests pass every gate in the locked rubric, and only with correct, primary-source-cited deadlines or a plain "no verified rule" label for each state.
 
 ### Problem Frame
 
@@ -41,14 +41,14 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 - **Curated scenarios and free-text input both launch.** Damien named both, so neither waits for the other. Governs R13, R14.
 - **Deadline coverage spans all 50 states for the covered practice areas.** Free-text visitors can be in any state, and the locked rubric judges deadlines against the client's actual state. Governs R5, R6.
 - **Visitors bring their own LLM key, with no accounts and no retention.** This matches mapper and enrich and removes server-side AI cost and key-drain risk. Governs R9, R11, R15.
+- **Host only on access we already have.** The app runs on the hetzner-dev box through Coolify, under the existing `*.dev.openlegalstandard.org` wildcard, and the landing page ships through the site repo's existing push-to-deploy. A path proxy at `openlegalstandard.org/intake` would need AWS Amplify console access, and a new subdomain would need Route 53 access; both belong to Mike. (session-settled: user-directed — chosen over the ALEA EC2 host and a new `intake.` record: "so we don't have to bug Mike.") Governs R19, R20.
 - **The decisions already answered land first.** Calibration (q1, q2), the expansion-vocabulary calibration (q3), and the PyMuPDF replacement were decided on 2026-07-26 and change what the gates measure. Governs R16, R17, R18.
 
 ### Actors
 
 - A1. Visitor: a legal technologist, legal aid staffer, or FOLIO adopter using the public site with their own LLM key.
 - A2. Persona campaign: the 8 scripted personas plus the rubric judge. Together they set the launch gate.
-- A3. ALEA host operator (Mike): controls the EC2 host and the `openlegalstandard.org` DNS.
-- A4. Damien: product authority, and sender of any request to A3.
+- A3. Damien: product authority.
 
 ### Requirements
 
@@ -82,6 +82,11 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 - R17. The expansion-vocabulary calibration runs, and any operating point it recommends goes to Damien before adoption, per q3.
 - R18. PyMuPDF (AGPL) is removed from the shipped product, with no loss in PDF heading or provenance extraction, per `portfolio-2026-07-24-license-sweep` q1. The README and THIRD-PARTY files no longer list it as an open question.
 
+**Hosting and entry point**
+
+- R19. The app is served at `intake.dev.openlegalstandard.org` and stays unlisted and access-gated until the R1 gate passes.
+- R20. A page at `openlegalstandard.org/intake` introduces the showcase, states that it is a demonstration and not legal advice, and launches the app. It appears in the site's Tools menu alongside Enrich and Mapper.
+
 ### Key Flows
 
 - F1. Curated example
@@ -94,8 +99,8 @@ A showcase that misses an issue or states a wrong deadline with confidence would
   - **Covered by:** R5, R6, R11, R14, R15
 - F3. Launch gate
   - **Trigger:** R16–R18 have landed and the production stack is up.
-  - **Steps:** A2 runs all 8 personas on the production stack with the reference model, and the judge scores them under v1.3. Every failure is fixed and the full campaign reruns until one run passes every gate. Then the public DNS goes live.
-  - **Covered by:** R1, R2, R3, R4
+  - **Steps:** A2 runs all 8 personas on the production stack with the reference model, and the judge scores them under v1.3. Every failure is fixed and the full campaign reruns until one run passes every gate. Then the access gate comes off and the landing page ships.
+  - **Covered by:** R1, R2, R3, R4, R19, R20
 
 ### Acceptance Examples
 
@@ -109,7 +114,7 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 ### Success Criteria
 
 - One campaign run on the production stack scores every gate as passing for all 8 personas, and it is recorded as a new evidence pack revision linked from `EVIDENCE.md`.
-- `https://intake.openlegalstandard.org/` serves the showcase, and a real browser run of F1 and F2 completes on it.
+- `https://openlegalstandard.org/intake` launches the app at `https://intake.dev.openlegalstandard.org/`, and a real browser run of F1 and F2 completes there.
 - Every shown deadline in that campaign has a citation that resolves to the primary source text.
 
 ### Scope Boundaries
@@ -129,7 +134,9 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 
 ### Dependencies / Assumptions
 
-- Hosting follows the mapper and enrich pattern on the ALEA EC2 host (`folio-enrich` BYOK production runbook). This needs A3 to allowlist SSH and create the `intake.openlegalstandard.org` DNS record. Damien sends that request; the agent drafts it.
+- Hosting follows the folio-insights pattern: Coolify on hetzner-dev under `*.dev.openlegalstandard.org` (`folio-insights/docs/deploying.md`). The wildcard already resolves `intake.dev.openlegalstandard.org` to that box.
+- hetzner-dev is shared and tight: on 2026-11-08 it showed 7 GB RAM with about 1 GB available and 86% disk use. If alea-intake will not fit, a larger box is spend, which needs Damien's approval.
+- The landing page ships through the `openlegalstandard.org` repo, where a push to `main` triggers the Amplify deploy. Another session is building that repo's Tools showcase (`feat/folio-tools-showcase`), so the intake page coordinates with it. Damien line-edits the page copy before it ships, per that repo's copy rule.
 - Primary-source verification for 50 states is agent-performed: fetch and check each citation, then run a judging pass. Damien does not review states one by one.
 - The reference model is cheap enough that visitors with their own keys will accept the cost of a typical intake.
 
@@ -151,4 +158,5 @@ A showcase that misses an issue or states a wrong deadline with confidence would
 - `docs/solutions/2026-07-07-pdf-agpl-swap-and-folio-python-resolve.md`: why pdfplumber over pypdf.
 - `docs/solutions/live-validation-unit-green-integration-dead.md`: passing unit tests did not prove the live system worked.
 - Commit `1e3af71` (calibration study) and branch `feat/s075.4-pymupdf-to-pdfplumber` (commit `980c255`).
-- Sibling pattern: folio-enrich `docs/HANDOFF-2026-06-28-byok-prod-deploy-DONE.md` (BYOK on the ALEA EC2 host).
+- BYOK pattern: folio-enrich `docs/HANDOFF-2026-06-28-byok-prod-deploy-DONE.md`.
+- Hosting pattern: folio-insights `docs/deploying.md` (Coolify on hetzner-dev); `openlegalstandard.org` `docs/plans/2026-11-07-0913-feat-folio-tools-showcase-plan.md` (Amplify deploy, Tools menu).
