@@ -14,6 +14,7 @@ from opentelemetry import trace
 
 from app.config import get_settings as get_settings  # Existing monitoring/test patch interface.
 from app.observability.redaction import redact_event
+from app.observability.third_party_logs import install_third_party_log_guard
 
 
 def add_otel_context(
@@ -37,6 +38,9 @@ def setup_logging() -> None:
     """
     from app import config
     settings = config.get_settings()
+    # f-string messages from LLM-path libraries embed reply text; rewrite them
+    # at record creation so no handler ever sees that content.
+    install_third_party_log_guard()
     logging.getLogger("uvicorn.access").disabled = settings.showcase_mode or bool(settings.preview_passphrase)
     log_level = getattr(logging, settings.log_level.upper(), logging.INFO)
 
