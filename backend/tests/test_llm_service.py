@@ -364,14 +364,20 @@ class TestNoPositionalMessageCalls:
     """Source tripwire (BUG-4): no app code may call the LLM client positionally."""
 
     def test_no_positional_json_or_chat_async_calls_in_app(self):
-        """`json_async(*` / `chat_async(*` wrap dicts as content — always a bug."""
-        import pathlib
+        """`json_async(*` / `chat_async(*` wrap dicts as content — always a bug.
 
+        Keyword forwarding (`json_async(**kwargs)`) is allowed: it is how the
+        Anthropic adapter passes `messages=` through unchanged.
+        """
+        import pathlib
+        import re
+
+        positional = re.compile(r"(?:json|chat)_async\(\*(?!\*)")
         app_root = pathlib.Path(__file__).resolve().parents[1] / "app"
         offenders = []
         for py in app_root.rglob("*.py"):
             src = py.read_text()
-            if "json_async(*" in src or "chat_async(*" in src:
+            if positional.search(src):
                 offenders.append(str(py))
         assert offenders == [], (
             f"Positional LLM-client calls found (pass messages= instead): {offenders}"
