@@ -40,9 +40,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install uv via the official binary installer (bypasses flaky PyPI on
 # constrained build networks; pip-install of uv has timed out repeatedly).
 COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /usr/local/bin/uv
-COPY backend/pyproject.toml backend/uv.lock* ./backend/
+COPY backend/pyproject.toml backend/uv.lock ./backend/
 WORKDIR /app/backend
-RUN uv sync --no-dev
+RUN uv sync --no-dev --frozen
 COPY backend/ ./
 COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 
