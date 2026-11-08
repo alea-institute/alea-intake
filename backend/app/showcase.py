@@ -26,6 +26,9 @@ async def require_owner(db, user, *, intake_id=None, session_id=None):
     intake = await db.get(Intake, int(intake_id)) if intake_id is not None else None
     if intake is None or intake.created_by_user_id != user.id or intake.org_id != user.org_id:
         raise HTTPException(404, "Intake not found")
+    from datetime import datetime, timezone
+    intake.updated_at = datetime.now(timezone.utc)
+    await db.flush()
     return intake
 
 
@@ -63,6 +66,12 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
     if not config.get_settings().showcase_mode:
         yield
         return
+    from datetime import datetime, timezone
+    from sqlalchemy import update
+    # Serialize active request work with the sweeper's guest-row lock.
+    touched = await db.execute(update(User).where(User.id == user.id).values(updated_at=datetime.now(timezone.utc)))
+    if not touched.rowcount:
+        raise HTTPException(404, "Session unavailable")
     data = dict(request.query_params)
     if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
         if "application/json" in request.headers.get("content-type", ""):
@@ -90,11 +99,16 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
                 raise HTTPException(404, "Party not found")
     if request.method != "GET":
         admit(request.app, user.id, request.client.host if request.client else "unknown")
-    if request.url.path.endswith(("/analyze", "/override")):
-        async with analysis_slot(request.app):
-            yield
-    else:
-        yield
+    from app.db.retention import guest_activity
+    async with guest_activity(user.id):
+        try:
+            if request.url.path.endswith(("/analyze", "/override")):
+                async with analysis_slot(request.app):
+                    yield
+            else:
+                yield
+        finally:
+            await db.execute(update(User).where(User.id == user.id).values(updated_at=datetime.now(timezone.utc)))
 
 
 class ShowcaseBodyLimit:
@@ -124,3 +138,37 @@ class ShowcaseBodyLimit:
             except StopIteration:
                 return await receive()
         await self.app(scope, replay, send)
+
+
+class ShowcasePrivacy:
+    """Keep request bodies and exception text out of showcase error reports."""
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope['type'] != 'http' or not config.get_settings().showcase_mode:
+            return await self.app(scope, receive, send)
+        started = False
+        error_response = False
+        async def safe_send(message):
+            nonlocal started, error_response
+            if message['type'] == 'http.response.start':
+                started = True
+                error_response = message['status'] >= 400
+                if error_response:
+                    # Framework validation errors include rejected body values.
+                    message = dict(message)
+                    message['headers'] = [(k, v) for k, v in message.get('headers', [])
+                                          if k.lower() not in (b'content-length', b'content-type')]
+                    message['headers'].append((b'content-type', b'application/json'))
+            if message['type'] == 'http.response.body' and error_response:
+                if message.get('more_body', False):
+                    return
+                message = {'type': 'http.response.body', 'body': b'{"detail":"Request failed; retry or start a new session"}'}
+            await send(message)
+        try:
+            await self.app(scope, receive, safe_send)
+        except Exception:
+            # Do not forward the exception to server logs or report request data.
+            if not started:
+                await JSONResponse({'detail': 'Internal server error'}, status_code=500)(scope, receive, send)

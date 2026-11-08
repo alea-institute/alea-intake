@@ -248,7 +248,17 @@ async def lifespan(app: FastAPI):
         logger.warning("FolioMCPClient connection failed; folio-mcp unavailable", exc_info=True)
         folio_mcp_client = None
 
+    from app.db.retention import run_showcase_sweeper
+    purge_task = asyncio.create_task(run_showcase_sweeper()) if settings.showcase_mode else None
+
     yield
+
+    if purge_task is not None:
+        purge_task.cancel()
+        try:
+            await purge_task
+        except asyncio.CancelledError:
+            pass
 
     # Shutdown
     if cms_sync_task is not None:
@@ -364,6 +374,8 @@ def mount_routers(application, settings):
 mount_routers(app, settings)
 from app.showcase import ShowcaseBodyLimit
 app.add_middleware(ShowcaseBodyLimit)
+from app.showcase import ShowcasePrivacy
+app.add_middleware(ShowcasePrivacy)
 
 
 # Health endpoint

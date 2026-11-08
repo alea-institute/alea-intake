@@ -593,32 +593,49 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
                                                "message": "Admission limit reached; retry later"})
                     continue
 
-            if msg_type == "text_message":
-                await _handle_text_message(
-                    websocket, session_id, user_id, data, engine, llm_service=llm_service
-                )
-            elif msg_type == "voice_upload":
-                await _handle_voice_upload(
-                    websocket, session_id, user_id, data, engine
-                )
-            elif msg_type == "transcript_approve":
-                await _handle_transcript_approve(
-                    websocket, session_id, user_id, data, engine, llm_service=llm_service
-                )
-            elif msg_type == "transcript_edit":
-                await _handle_transcript_edit(
-                    websocket, session_id, user_id, data, engine, llm_service=llm_service
-                )
-            elif msg_type == "session_pause":
-                await _handle_session_pause(
-                    websocket, session_id, engine
-                )
-            elif msg_type == "typing_indicator":
-                await manager.send_to_others(session_id, websocket, {
-                    "type": "typing_indicator",
-                    "user_id": user_id,
-                    "is_typing": data.get("is_typing", False),
-                })
+            from app.db.retention import guest_activity
+            async with guest_activity(user_id):
+                if settings.showcase_mode:
+                    from sqlalchemy import update
+                    from datetime import datetime, timezone
+                    from app.models.user import User
+                    async with engine.begin() as conn:
+                        conn = await conn.execution_options(schema_translate_map={"tenant": None})
+                        result = await conn.execute(update(User).where(User.id == user_id).values(updated_at=datetime.now(timezone.utc)))
+                        if not result.rowcount:
+                            await websocket.close(code=4003, reason="Session unavailable")
+                            break
+                if msg_type == "text_message":
+                    await _handle_text_message(
+                        websocket, session_id, user_id, data, engine, llm_service=llm_service
+                    )
+                elif msg_type == "voice_upload":
+                    await _handle_voice_upload(
+                        websocket, session_id, user_id, data, engine
+                    )
+                elif msg_type == "transcript_approve":
+                    await _handle_transcript_approve(
+                        websocket, session_id, user_id, data, engine, llm_service=llm_service
+                    )
+                elif msg_type == "transcript_edit":
+                    await _handle_transcript_edit(
+                        websocket, session_id, user_id, data, engine, llm_service=llm_service
+                    )
+                elif msg_type == "session_pause":
+                    await _handle_session_pause(
+                        websocket, session_id, engine
+                    )
+                elif msg_type == "typing_indicator":
+                    await manager.send_to_others(session_id, websocket, {
+                        "type": "typing_indicator",
+                        "user_id": user_id,
+                        "is_typing": data.get("is_typing", False),
+                    })
+
+                if settings.showcase_mode:
+                    async with engine.begin() as conn:
+                        conn = await conn.execution_options(schema_translate_map={"tenant": None})
+                        await conn.execute(update(User).where(User.id == user_id).values(updated_at=datetime.now(timezone.utc)))
 
     except WebSocketDisconnect:
         pass
@@ -1099,10 +1116,11 @@ async def end_session(intake_id: int, current_user: User = Depends(get_current_a
                       session: AsyncSession = Depends(get_tenant_session)):
     if not get_settings().showcase_mode:
         raise HTTPException(404, "Not found")
-    from app.models.intake import IntakeSession, Intake
-    from sqlalchemy import update
-    from datetime import datetime, timezone
-    await session.execute(update(IntakeSession).where(IntakeSession.intake_id == intake_id)
-                          .values(status="completed", ended_at=datetime.now(timezone.utc)))
-    await session.execute(update(Intake).where(Intake.id == intake_id).values(status="completed"))
+    from app.db.retention import purge_intake
+    from app.models.intake import Intake
+    # End the browser's guest session, including any sibling intakes it opened.
+    ids = list((await session.execute(select(Intake.id).where(
+        Intake.created_by_user_id == current_user.id))).scalars())
+    for owned_id in ids:
+        await purge_intake(session, owned_id)
     return {"status": "completed"}

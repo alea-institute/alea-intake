@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     secret_key: str  # Required -- no default
 
     showcase_mode: bool = False
+    showcase_idle_ttl_seconds: int = 3600
     showcase_ws_auth_timeout: float = 5.0
     showcase_upload_max_bytes: int = 10 * 1024 * 1024
     showcase_pdf_max_pages: int = 30
