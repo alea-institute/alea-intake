@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 export const pendingEraseStorageKey = 'showcase-erase-pending'
 const retryDelays = [2000, 5000, 15000, 30000]
-type PendingErase = {token: string | null; intakeId: number}
+type PendingErase = {token: string | null; intakeId: number; failed?: boolean}
 type EraseTask = {
   cancelled: boolean
   controller?: AbortController
@@ -11,7 +11,16 @@ type EraseTask = {
 }
 
 function readPending(): PendingErase[] {
-  return JSON.parse(sessionStorage.getItem(pendingEraseStorageKey) || '[]')
+  try {
+    const pending = JSON.parse(sessionStorage.getItem(pendingEraseStorageKey) || '[]')
+    if (Array.isArray(pending) && pending.every(item => item &&
+      (item.token === null || typeof item.token === 'string') &&
+      typeof item.intakeId === 'number' && Number.isFinite(item.intakeId))) return pending
+  } catch {
+    // Discard malformed recovery data so it cannot prevent the page from loading.
+  }
+  sessionStorage.removeItem(pendingEraseStorageKey)
+  return []
 }
 
 function savePending(pending: PendingErase[]) {
@@ -20,10 +29,11 @@ function savePending(pending: PendingErase[]) {
 }
 
 export function usePendingErases() {
-  const [pendingErases, setPendingErases] = useState(readPending)
+  const [pendingErases, setPendingErases] = useState<PendingErase[]>(() => readPending().map(pending => ({...pending, failed: true})))
   const tasks = useRef(new Map<string, EraseTask>())
 
   useEffect(() => {
+    savePending(pendingErases)
     for (const pending of pendingErases) {
       const id = JSON.stringify([pending.token, pending.intakeId])
       if (tasks.current.has(id)) continue
@@ -57,7 +67,7 @@ export function usePendingErases() {
             tasks.current.delete(id)
             setPendingErases(remaining)
           } else {
-            retry = [409, 503].includes(response.status)
+            retry = true
           }
         } catch {
           retry = true
@@ -65,6 +75,11 @@ export function usePendingErases() {
           clearTimeout(task.deadlineTimer)
         }
         if (retry && !task.cancelled) {
+          const failed = readPending().map(item =>
+            item.token === pending.token && item.intakeId === pending.intakeId
+              ? {...item, failed: true} : item)
+          savePending(failed)
+          setPendingErases(failed)
           task.retryTimer = setTimeout(() => void attempt(), retryDelays[Math.min(retries++, retryDelays.length - 1)])
         }
       }

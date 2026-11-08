@@ -134,7 +134,7 @@ export function ShowcasePage() {
   return <ThemeProvider defaultTheme="courthouse-classic"><div className="showcase">
     <header className="showcase-banner"><div role="note">{t('banner')}</div></header>
     <main id="main-content"><header><h1>{t('title')}</h1><p>{t('intro')}</p></header>
-    {pendingErases.length>0&&<div role="alert">{t('eraseError',{defaultValue:'Local data was erased. The server could not confirm erasure; its session will expire automatically.'})}</div>}
+    {pendingErases.some(pending=>pending.failed)&&<div role="alert">{t('eraseError',{defaultValue:'Local data was erased. The server could not confirm erasure; its session will expire automatically.'})}</div>}
     {expired ? <section><h2>{t('expired')}</h2><Button onClick={()=>{setExpired(false);lastActive.current=Date.now()}}>{t('fresh')}</Button></section> : <>
     {idle&&<aside role="alert"><p>{t('idle')}</p><button disabled={!memo} onClick={exportMemo}>{t('export')}</button><button onClick={()=>{lastActive.current=Date.now();setIdle(false);void keepalive?.().catch(()=>{})}}>{t('keep')}</button></aside>}
     <section className="showcase-inputs"><fieldset><legend>{t('key')}</legend><div className="key-fields">
