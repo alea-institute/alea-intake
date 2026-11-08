@@ -57,6 +57,9 @@ class Settings(BaseSettings):
     showcase_max_body_bytes: int = 12 * 1024 * 1024
     showcase_concurrent_analyses: int = 2
     showcase_analysis_queue: int = 4
+    # Caps orchestrator iterations in showcase mode only, so a live demo run
+    # reaches a terminal status in minutes; the general default stays 10.
+    showcase_max_iterations: int = 10
     showcase_guest_limit: str = "30/minute"
     showcase_ip_limit: str = "120/minute"
 

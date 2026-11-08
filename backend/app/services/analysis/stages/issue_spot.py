@@ -14,7 +14,14 @@ from typing import TYPE_CHECKING, Any
 
 from app.models.analysis import AnalysisClaim, ClaimElement
 from app.services.analysis.rationale_guard import ground_rationale
-from app.services.analysis.schemas import IssueSpotResult
+from app.services.analysis.schemas import IssueSpotResult, SpottedClaim
+from app.services.llm_bounds import (
+    bounded_call,
+    compact_instruction,
+    limit_client_retries,
+    list_field,
+    validate_items,
+)
 
 if TYPE_CHECKING:
     from folio import FOLIO
@@ -26,6 +33,11 @@ if TYPE_CHECKING:
     from app.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
+
+# The first request's messages stay byte-identical: the offline replay
+# harness keys recordings by prompt hash. The bound lives in the retry.
+MAX_CLAIMS = 15
+COMPACT_MAX_CLAIMS = 8
 
 ISSUE_SPOT_SYSTEM_PROMPT = """You are a legal issue-spotting assistant. Given a set of extracted facts from a consumer intake, identify all relevant legal claims.
 
@@ -80,10 +92,13 @@ class IssueSpotStage:
         self._folio = folio
         self._embedding_service = embedding_service
 
-    async def _call_llm(self, facts: list[ExtractedFact]) -> dict[str, Any]:
+    async def _call_llm(
+        self, facts: list[ExtractedFact], compact: bool = False
+    ) -> dict[str, Any]:
         """Call LLM with facts and return parsed JSON response.
 
-        Separated for easy mocking in tests.
+        Separated for easy mocking in tests. ``compact`` asks for a shorter
+        reply after a truncated or invalid one.
         """
         facts_text = "\n".join(
             f"- [{f.fact_type}] (confidence: {f.confidence:.2f}) {f.assertion_text}"
@@ -94,8 +109,11 @@ class IssueSpotStage:
             {"role": "system", "content": ISSUE_SPOT_SYSTEM_PROMPT},
             {"role": "user", "content": f"Extracted facts:\n{facts_text}"},
         ]
+        if compact:
+            messages.append({"role": "system", "content": compact_instruction(COMPACT_MAX_CLAIMS)})
 
         model = self._llm.create_client()
+        limit_client_retries(model)
         response = await model.json_async(messages=messages)
         return response.data
 
@@ -143,14 +161,29 @@ class IssueSpotStage:
                 "claims": [],
             }
 
-        # Call LLM for issue-spotting
-        raw_result = await self._call_llm(facts)
+        # Call LLM for issue-spotting: at most two attempts, claims validated
+        # one by one so a single malformed claim never discards the rest.
+        def parse(raw: Any) -> IssueSpotResult | None:
+            items = list_field(raw, "claims")
+            if items is None:
+                return None
+            claims = validate_items(items, SpottedClaim, stage="issue_spot", limit=MAX_CLAIMS)
+            jurisdictions = raw.get("jurisdictions") if isinstance(raw, dict) else None
+            summary = raw.get("summary") if isinstance(raw, dict) else None
+            return IssueSpotResult(
+                claims=claims,
+                jurisdictions=[j for j in (jurisdictions or []) if isinstance(j, str)]
+                if isinstance(jurisdictions, list) else [],
+                summary=summary if isinstance(summary, str) else "",
+            )
 
-        # Parse through Pydantic schema for validation
-        try:
-            result = IssueSpotResult.model_validate(raw_result)
-        except Exception:
-            logger.warning("Failed to parse LLM issue-spot output", exc_info=True)
+        result = await bounded_call(
+            lambda compact: self._call_llm(facts, compact=compact),
+            parse,
+            stage="issue_spot",
+            default=None,
+        )
+        if result is None:
             return {
                 "claims_count": 0,
                 "jurisdictions": [],

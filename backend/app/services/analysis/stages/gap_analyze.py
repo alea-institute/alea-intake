@@ -19,10 +19,31 @@ from app.models.analysis import (
     ClaimElement,
     FactClaimMapping,
 )
-from app.services.analysis.schemas import GapAnalysisResult
+from pydantic import BaseModel, ConfigDict
+
+from app.services.analysis.schemas import GapSchema
+from app.services.llm_bounds import (
+    TERSE_JSON_RULES,
+    bounded_call,
+    compact_instruction,
+    validate_items,
+)
 
 if TYPE_CHECKING:
     from app.services.llm_service import LLMService
+
+# Output bounds (2026-11-08 live run): "surface EVERY gap" on a ~1,700-token
+# prompt ran to the 8192-token ceiling in ~63 s and was retried. Cap the list
+# and the field lengths; the compact retry asks for fewer still.
+MAX_PROCEDURAL_GAPS = 12
+COMPACT_PROCEDURAL_GAPS = 6
+
+
+class _GapReply(BaseModel):
+    """Lenient envelope: gaps are validated one by one, extras ignored."""
+
+    model_config = ConfigDict(extra="ignore")
+    gaps: list[Any] = []
 
 
 class GapAnalyzeStage:
@@ -267,8 +288,9 @@ class GapAnalyzeStage:
             "imply but the client likely did not name — particular forms of "
             "relief, ELIGIBILITY criteria, statutory EXCEPTIONS, statutory BARS "
             "and their EXEMPTIONS, and procedural DEFECTS an attorney would "
-            "investigate. Surface EVERY doctrine-level sub-issue the facts fairly "
-            "raise, not just the obvious one (Damien r1 2026-07-10). Examples of "
+            "investigate. Surface the doctrine-level sub-issues the facts fairly "
+            "raise, not just the obvious one (Damien r1 2026-07-10), most "
+            "important first, up to the cap below. Examples of "
             "the non-obvious linkages to probe when the facts support them:\n"
             "   - eligibility for a specific immigration relief such as a VAWA "
             "self-petition (battered spouse/child of a U.S. citizen or LPR) or a "
@@ -295,24 +317,35 @@ class GapAnalyzeStage:
             "determine whether the doctrine applies. Only surface doctrine the "
             "facts fairly raise; never invent facts.\n\n"
             f"Identified claims: {claims_desc}.\n\n"
-            "Return EVERY gap with gap_type 'procedural_requirement'.\n"
+            f"Return at most {MAX_PROCEDURAL_GAPS} gaps, most important first, "
+            "each with gap_type 'procedural_requirement'. Each description is ONE "
+            "question under 30 words; the summary is under 15 words.\n"
+            f"{TERSE_JSON_RULES}\n"
             'Return ONLY a JSON object with EXACTLY this structure:\n'
             '{"gaps": [{"gap_type": "procedural_requirement", "claim_name": "name or null", '
             '"element_name": null, "description": "the question / what is missing", "priority": 50}], '
             '"coverage_pct": 0.0, "summary": "one-line overview"}'
         )
 
-        try:
-            result: GapAnalysisResult = await self.llm_service.json_async(
-                prompt=prompt,
-                schema=GapAnalysisResult,
-            )
-        except Exception:
-            # If LLM fails, return empty -- procedural gaps are optional
-            return []
+        async def call(compact: bool) -> Any:
+            text = prompt
+            if compact:
+                text += "\n" + compact_instruction(COMPACT_PROCEDURAL_GAPS)
+            return await self.llm_service.json_async(prompt=text, schema=_GapReply)
+
+        def parse(reply: Any) -> list[GapSchema] | None:
+            raw = getattr(reply, "gaps", None)
+            if raw is None:
+                return None
+            ready = [g for g in raw if isinstance(g, GapSchema)]
+            pending = [g for g in raw if not isinstance(g, GapSchema)]
+            return ready + validate_items(pending, GapSchema, stage="gap_analyze")
+
+        # Procedural gaps are optional: two failed attempts degrade to none.
+        gap_schemas = await bounded_call(call, parse, stage="gap_analyze", default=[])
 
         procedural_gaps: list[AnalysisGap] = []
-        for gap_schema in result.gaps:
+        for gap_schema in gap_schemas[:MAX_PROCEDURAL_GAPS]:
             if gap_schema.gap_type != "procedural_requirement":
                 continue
             # Find matching claim for claim_id
