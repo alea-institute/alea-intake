@@ -52,6 +52,31 @@ def fk_grade(text: str) -> float | None:
     )
 
 
+# Fixed operative dates transcribed from personas/ANSWER-KEYS.md. Relative,
+# contingent and practical deadlines still require rubric adjudication.
+EXPECTED_DATES = {
+    "landlord-tenant": ["2026-03-17", "2026-04-01"],
+    "immigration": ["2026-08-20", "2020-08-14"],
+    "family-custody": ["2026-07-15", "2026-07-22"],
+    "consumer-debt": ["2026-07-25"],
+    "wage-theft": ["2026-07-08"],
+    "benefits-denial": ["2026-07-13"],
+    "employment-discrimination": ["2027-03-18", "2027-01-31"],
+    "elder-exploitation": [],
+}
+
+
+def deadline_check(persona: str, deadlines: list) -> dict:
+    """Compare structured output dates to the fixed-date answer-key oracle."""
+    dates = set(re.findall(r"\d{4}-\d{2}-\d{2}", json.dumps(deadlines)))
+    expected = EXPECTED_DATES.get(persona)
+    if expected is None:
+        return {"ok": False, "reason": "no-answer-key"}
+    missing = sorted(set(expected) - dates)
+    return {"ok": not missing, "expected": expected, "missing": missing,
+            "scope": "fixed dates only; relative dates and legal characterization need judging"}
+
+
 def check_run(run_path: Path) -> dict:
     r = json.loads(run_path.read_text())
     persona = r.get("persona") or run_path.parent.name
@@ -63,6 +88,7 @@ def check_run(run_path: Path) -> dict:
         "gaps": len(a.get("gaps") or []),
         "questions": len(a.get("questions") or []),
         "deadlines": a.get("deadlines") if isinstance(a.get("deadlines"), list) else [],
+        "deadline_check": deadline_check(persona, a.get("deadlines") or []),
         "memos": [],
         "exports_ok": True,
     }

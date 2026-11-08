@@ -121,7 +121,9 @@ SHOWCASE_NOTICE = {
 @guest_router.get("/showcase-notice")
 async def showcase_notice():
     from app import config
-    return {**SHOWCASE_NOTICE, "idle_ttl_seconds": config.get_settings().showcase_idle_ttl_seconds}
+    settings = config.get_settings()
+    return {**SHOWCASE_NOTICE, "idle_ttl_seconds": settings.showcase_idle_ttl_seconds,
+            "reference_model": settings.reference_model}
 
 
 from pydantic import BaseModel

@@ -17,6 +17,8 @@ from typing import TYPE_CHECKING, Any
 
 from fastapi import HTTPException, Request
 
+from app import config as app_config
+
 from alea_llm_client import AnthropicModel, GoogleModel, OpenAIModel, VLLMModel
 
 if TYPE_CHECKING:
@@ -38,7 +40,6 @@ _PROVIDER_MODEL_MAP: dict[str, type] = {
 
 # Default model per provider
 _DEFAULT_MODELS: dict[str, str] = {
-    "openai": "gpt-4",
     "anthropic": "claude-sonnet-4-6",
     "google": "gemini-pro",
     "vllm": "meta-llama/Meta-Llama-3.1-8B-Instruct",
@@ -115,7 +116,7 @@ class LLMService:
         elif env_model:
             self.model = env_model
         else:
-            self.model = _DEFAULT_MODELS.get(self.provider, "gpt-4")
+            self.model = _DEFAULT_MODELS.get(self.provider, os.getenv("ALEA_REFERENCE_MODEL", app_config.DEFAULT_REFERENCE_MODEL))
 
         # Determine data policy
         if org_config and org_config.llm_data_policy:
@@ -176,7 +177,7 @@ class LLMService:
 
     @property
     def is_reference_model(self) -> bool:
-        return self.model == os.getenv("ALEA_REFERENCE_MODEL", "gpt-4")
+        return self.model == os.getenv("ALEA_REFERENCE_MODEL", app_config.DEFAULT_REFERENCE_MODEL)
 
     def create_client(self) -> Any:
         """Construct a client only with an explicit, nonempty credential."""
@@ -302,7 +303,7 @@ def llm_service_from_headers(headers: Any) -> LLMService:
     provider = headers.get("X-LLM-Provider", "openai").strip().lower()
     if provider not in {"openai", "anthropic", "google"}:
         raise HTTPException(status_code=400, detail="Unsupported LLM provider")
-    model = headers.get("X-LLM-Model") or os.getenv("ALEA_REFERENCE_MODEL", "gpt-4")
+    model = headers.get("X-LLM-Model") or os.getenv("ALEA_REFERENCE_MODEL", app_config.DEFAULT_REFERENCE_MODEL)
     return LLMService(api_key=key, provider=provider, model=model)
 
 

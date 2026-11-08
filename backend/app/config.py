@@ -36,6 +36,9 @@ class LLMDataPolicy(str, Enum):
     LOCAL_ONLY = "local_only"
 
 
+DEFAULT_REFERENCE_MODEL = "gpt-4o-mini"
+
+
 class Settings(BaseSettings):
     """Application settings loaded from environment variables with ALEA_ prefix."""
 
@@ -43,6 +46,7 @@ class Settings(BaseSettings):
     debug: bool = False
     secret_key: str  # Required -- no default
 
+    reference_model: str = DEFAULT_REFERENCE_MODEL
     showcase_mode: bool = False
     showcase_idle_ttl_seconds: int = 3600
     showcase_ws_auth_timeout: float = 5.0

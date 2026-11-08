@@ -213,3 +213,26 @@ async def test_pdf_worker_has_a_hard_deadline(showcase, tmp_path):
     showcase[1].showcase_extraction_timeout_seconds = 0.000001
     with pytest.raises(TimeoutError):
         await run_document_worker("pdf", path=path)
+
+
+@pytest.mark.parametrize('reference', ['gpt-4o-mini', 'candidate-model'])
+async def test_notice_and_llm_share_reference_model(monkeypatch, reference):
+    from app.config import Settings
+    import logging.handlers
+    monkeypatch.setattr(logging.handlers, "RotatingFileHandler", lambda *a, **kw: logging.NullHandler())
+    from app.services.llm_service import LLMService
+    assert Settings.model_fields['reference_model'].default == 'gpt-4o-mini'
+    import app.config as config
+    from app.routers.auth import guest_router
+    settings = Settings(secret_key="test-only", reference_model=reference, _env_file=None)
+    monkeypatch.setattr(config, "get_settings", lambda: settings)
+    app = FastAPI()
+    app.include_router(guest_router)
+    monkeypatch.setenv("ALEA_REFERENCE_MODEL", reference)
+    monkeypatch.delenv('ALEA_LLM_MODEL', raising=False)
+    monkeypatch.delenv('ALEA_LLM_PROVIDER', raising=False)
+    async with AsyncClient(transport=ASGITransport(app=app), base_url='http://test') as client:
+        assert (await client.get('/api/v1/auth/showcase-notice')).json()['reference_model'] == reference
+    service = LLMService(api_key='test-only')
+    assert service.model == reference
+    assert service.is_reference_model
