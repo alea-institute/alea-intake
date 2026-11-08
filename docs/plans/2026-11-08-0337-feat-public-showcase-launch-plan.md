@@ -215,9 +215,9 @@ A showcase that misses an issue or states a wrong deadline with confidence would
   - **Recheck:** a scheduled job refetches each source, hashes the normalized section text (not the whole page), and reports any drift without auto-editing rules.
 
   Governs R7.
-- KTD7. **State detection is explicit.** Replace the substring `_is_mn()` check (`rules.py:51`) with a jurisdiction value resolved from extracted facts, defaulting to "unknown" (which yields R6 output). The EEOC charge rule also collects city, discrimination basis, and employer size. Governs R5, R6.
+- KTD7. **State detection is explicit.** Replace the substring `_is_mn()` check (`rules.py:51`) with a jurisdiction value resolved from extracted facts, defaulting to "unknown" (which yields R6 output). The visitor sees "State detected: X" and can confirm or change it; their choice sets the jurisdiction for the session. (session-settled: user-approved — chosen over silent inference: a vague Minnesota story would otherwise get the R6 label, and a wrong guess would silently apply the wrong law.) The EEOC charge rule also collects city, discrimination basis, and employer size. Governs R5, R6.
 - KTD8. **BYOK is request-scoped.** The visitor's key travels with each request and WebSocket session in memory only, is never written to the database or logs, and builds a per-request LLM client. Remove every ambient fallback: the alea-llm-client env and `~/.alea/keys` lookup, the zero-argument `LLMService()` constructions (`routers/analysis.py:71,359`, `routers/output.py:155`), the five stages that build their own provider maps, and any LLM the folio-python library builds from server env (its `folio/graph.py`, unused today because no caller passes `llm_model`). A missing key returns a clean 400 before any LLM call. No secret ever travels in a URL: REST calls carry the key in a request header, and the WebSocket authenticates with a first message carrying the guest token and key, closing with 4001 if it does not arrive promptly. Uvicorn's access log is disabled or routed through the redaction processor, and the proxy logs no query strings. This follows folio-enrich's key-drain hardening. Governs R9, R15.
-- KTD9. **Showcase mode is one env flag.** It mints a throwaway guest identity per browser session (reusing the existing auth and consent plumbing), records consent from a click-through notice, and leaves the admin, SSO, CMS, autonomy, and organization routers unmounted. Every mounted intake, analysis, output, document, consent, end-session, and WebSocket route resolves its intake or session and returns 404 unless the requesting guest owns it; today `list_intakes` filters only by organization, so all guests would otherwise see each other's intakes. Governs R8, R10, R11.
+- KTD9. **Showcase mode is one env flag.** It mints a throwaway guest identity per browser session (reusing the existing auth and consent plumbing), records consent from a click-through notice, and leaves the admin, SSO, CMS, autonomy, and organization routers unmounted. Every mounted intake, analysis, output, document, consent, end-session, and WebSocket route resolves its intake or session and returns 404 unless the requesting guest owns it; today `list_intakes` filters only by organization, so all guests would otherwise see each other's intakes. Abuse limits apply before any expensive work: upload byte and page caps, bounded PDF and OCR time, request body limits, a cap on concurrent analyses with a bounded queue, and per-guest and per-IP admission limits. Governs R8, R10, R11.
 - KTD10. **Pre-launch access gate at the proxy.** Until U18, Coolify's proxy requires a shared preview credential stored on the box by location, so the app is reachable for UAT but not public. Removing it is a config change. Governs R19.
 - KTD11. **Three-layer verification.** Every PR runs unit and integration tests plus the regression replay (U9). PR2 and PR3 add live persona runs on the gated deployment. The launch adds the full browser UAT matrix (U16). Judging follows the round-3 adjudication rules: evidence comes only from the current run's artifacts, FOLIO matches are checked by resolving the IRI, and the deterministic checks (`folio_check.py`, `memo_checks.py`, export integrity, deadlines against the answer key) always run. Governs R1, R2, R21, R22.
 
@@ -343,7 +343,7 @@ Waits on: nothing.
 - **Patterns to follow:** `docs/solutions/2026-07-07-pdf-agpl-swap-and-folio-python-resolve.md`.
 - **Test scenarios:**
   - A PDF with a 18 pt title and 11 pt body yields one heading element and paragraph elements with page and bbox.
-  - A scanned, text-free PDF falls through to OCR as before.
+  - A scanned, text-free PDF falls through to OCR as before, within the bounded processing time.
   - `pymupdf` and `fitz` appear nowhere in the lock or source.
 - **Verification:** Extraction tests pass and the license audit lists no AGPL package.
 
@@ -398,6 +398,9 @@ Waits on: nothing.
   - Guest B's WebSocket connect to guest A's session closes with 4003.
   - Guest A's intake does not appear in guest B's list.
   - A WebSocket that sends no auth message within the timeout closes with 4001.
+  - An upload over the byte or page cap is refused before extraction starts.
+  - With the concurrent-analysis cap reached, a new analysis queues, and past the queue bound it is refused with a retry message.
+  - A guest or IP over its admission limit gets 429 before any LLM or OCR work.
   - With showcase mode off, existing auth tests still pass unchanged.
 - **Verification:** Both modes' test suites pass.
 
@@ -429,10 +432,11 @@ Waits on: nothing.
   3. Add a curated-scenario picker seeded from the persona narratives.
   4. Add an analyze action with progress, wired to the existing views.
   5. Add a deadlines view. Each card shows the event, the computed date, how it was counted, the citation link, and the as-of date, with distinct treatments for computed, document-stated, contractual, lapsed, R6, and unknown-state deadlines. R6 cards point to a verified per-state self-help destination, with a generic fallback; that pointer table is rule-adjacent data U13 verifies.
-  6. Add session lifecycle: an "End session and erase" control with confirmation, an idle warning before the TTL with "Export memo" and "Keep session" actions, and an expired-session screen that says the data was erased and offers a fresh start.
-  7. Make the flow keyboard-operable, announce progress and errors in a live region, give each visualization a text or table alternative, and lay out cleanly at 390 px.
-  8. Add the disclaimer banner, and hide login and admin.
-  9. Apply the `frontend-design` skill.
+  6. Add a "State detected: X" control at intake start and in the deadlines view that lets the visitor confirm or choose a state (KTD7), with an explicit prompt when the state is unknown.
+  7. Add session lifecycle: an "End session and erase" control with confirmation, an idle warning before the TTL with "Export memo" and "Keep session" actions, and an expired-session screen that says the data was erased and offers a fresh start.
+  8. Make the flow keyboard-operable, announce progress and errors in a live region, give each visualization a text or table alternative, and lay out cleanly at 390 px.
+  9. Add the disclaimer banner, and hide login and admin.
+  10. Apply the `frontend-design` skill.
 - **Test scenarios:**
   - A curated scenario runs end to end against MSW mocks and renders issues, concepts, deadlines, and export.
   - A free-text story and a PDF upload each start an analysis.
@@ -440,6 +444,7 @@ Waits on: nothing.
   - Reloading the tab keeps the key for the session; closing the browser forgets it.
   - The deadlines view renders a cited date and an R6 label from fixtures.
   - The disclaimer is present on every route.
+  - Changing the detected state from Wisconsin to Minnesota re-renders deadlines with Minnesota rules.
   - A rejected key, a quota error, and a mid-run failure each show their message and a retry that keeps the story.
   - The idle warning appears before the TTL, and after expiry the expired-session screen replaces the views.
   - "End session and erase" purges the session and returns to a fresh start.
@@ -475,11 +480,11 @@ Waits on: nothing.
   1. Apply KTD1, KTD3, and KTD10.
   2. Create the dedicated database and role on the existing instance.
   3. Point the Coolify GitHub App at master, with no second deploy Action.
-  4. Write `verify-showcase.sh`. It checks `/health` reports the deployed commit, that a no-key request returns 400, that a guest session works, that one guest cannot read another's intake, that the purge leaves zero rows, and that the gate blocks anonymous requests.
+  4. Write `verify-showcase.sh` with a gated mode and a public mode. Both check `/health` reports the deployed commit, that a no-key request returns 400, that a guest session works, that one guest cannot read another's intake, and that the purge leaves zero rows. Gated mode also checks that anonymous requests are refused and credentialed ones work; public mode checks that an anonymous visitor completes the guest flow.
   5. Remove the Railway-era instructions and the committed smoke password from the runbook.
 - **Execution note:** Smoke-first: the live probe script is the proof.
 - **Test scenarios:**
-  - `verify-showcase.sh` passes against the deployment.
+  - `verify-showcase.sh` passes in gated mode against the deployment.
   - A request without the preview credential is refused at the proxy.
 - **Verification:** The probe passes, and hetzner-dev's other apps stay healthy after the deploy (check `docker ps` health and free memory).
 
@@ -501,7 +506,7 @@ Waits on: nothing.
 
 ### PR2: Deadline rules and quality
 
-Waits on: PR1, merge order for building (U12–U15 can start once PR1 is built), and PR1's deployment before merge: PR2's live persona and UAT verification runs on the deployed stack. Reason for a separate PR: PR2 cannot merge until PR1 is deployed, because its gate is measured on that deployment.
+Waits on: PR1, merge order for building (U12–U15 can start once PR1 is built), and PR1's deployment before merge. PR2's candidate commit is deployed to the gated stack for its live persona and UAT verification, and that evidence must record the candidate commit; after merge, `master` redeploys and is probed before PR3. Reason for a separate PR: PR2 cannot merge until PR1 is deployed, because its gate is measured on that deployment.
 
 ### U12. Deadline rules as data
 
@@ -521,6 +526,7 @@ Waits on: PR1, merge order for building (U12–U15 can start once PR1 is built),
   - A Wisconsin custody fact pattern gets no Minnesota period (Covers AE2).
   - Covers AE1. A rule marked unverified yields the R6 label with a self-help pointer and no date.
   - An unknown jurisdiction yields R6 output, never a default state.
+  - A visitor-confirmed state overrides the extracted one for the session.
   - A holiday year with no verified calendar refuses to compute rather than guess.
   - All 15 migrated rules reproduce their pre-migration dates, except where a verified roll rule applies; each difference is listed.
   - The immigration persona's stated hearing date and the eviction persona's stated hearing date still compute, cited to the document and procedural authority.
@@ -608,7 +614,7 @@ Waits on: PR2, needed before this group can start: the launch campaign runs only
 - **Requirements:** R19.
 - **Dependencies:** U17.
 - **Files:** Coolify proxy configuration; `docs/DEV-DEPLOY-RUNBOOK.md`.
-- **Approach:** Remove the KTD10 gate, then rerun `verify-showcase.sh` without the credential.
+- **Approach:** Remove the KTD10 gate, then run `verify-showcase.sh` in public mode.
 - **Test expectation:** none -- config change, proven by the live probe.
 - **Verification:** Anonymous F1 and F2 pass in a real browser.
 
@@ -641,7 +647,7 @@ Waits on: PR2, needed before this group can start: the launch campaign runs only
 | Browser e2e | `cd frontend && npx playwright test --trace off` | U8, U16 |
 | Regression replay | `scripts/regression_replay.py` vs `docs/evidence/regression/baseline/` | every PR (R21) |
 | Rule verification | `scripts/rules/verify_rules.py` | U13, U14 |
-| Live deployment probe | `scripts/verify-showcase.sh <url>` | U10, U18 |
+| Live deployment probe | `scripts/verify-showcase.sh` gated mode (U10), public mode (U18) | U10, U18 |
 | Live persona campaign | `backend/.venv/bin/python scripts/persona_run.py <persona_dir> <url>` | U11, U17 |
 | License audit | no AGPL in `backend/uv.lock`; `THIRD-PARTY.md` current | U3, any new dependency |
 | Visual check | screenshot of each changed view, inspected | U8, U19 |
@@ -652,7 +658,7 @@ Waits on: PR2, needed before this group can start: the launch campaign runs only
 
 - Every unit's Verification holds, and every test layer in the Verification Contract is green on the launch commit.
 - The Success Criteria in the Product Contract hold.
-- `verify-showcase.sh` passes anonymously against the public URL, and hetzner-dev's other services stay healthy.
+- `verify-showcase.sh` passes in public mode against the public URL, and hetzner-dev's other services stay healthy.
 - No server-side LLM key exists in the showcase's environment.
 - The Railway-era runbooks and `.planning/STATE.md` no longer describe a Railway deployment.
 - Code from abandoned approaches is removed from the diff.
@@ -665,16 +671,7 @@ Waits on: PR2, needed before this group can start: the launch campaign runs only
 - **Gate on the PR3 merge (U19):** Damien approves the landing-page copy in a Claude Doc before it ships.
 - **Possible spend (U4):** if the measured footprint will not fit hetzner-dev, Damien decides on a larger server.
 - **Spend: LLM key for live runs (U9, U11, U16, U17).** Showcase mode removes the server key, so persona campaigns, recordings, the reference-model bake-off, and UAT reruns need an operator key and budget. Damien chooses which key funds them and the ceiling.
-- **Decision: visitor-visible state (U8, U12).** Recommended: show "State detected: X" with a confirm-or-choose control, because a vague story otherwise defaults to the R6 label even for a Minnesota visitor.
 - **Deferred to implementation: court closure dates (U12).** Which primary source verifies Minnesota court closure days; the refuse-to-guess rule applies when a year cannot be verified.
-
-### Review items awaiting approval
-
-These came from an independent cross-model review only, so they wait for approval before they land:
-
-- **Public abuse limits (U3, U6, U10).** Add upload byte and page limits, bounded PDF and OCR time, request body limits, capped concurrent analyses with a bounded queue, and per-guest and per-IP admission limits before expensive work. Without them one visitor can exhaust the shared box.
-- **Candidate-commit verification (PR2).** Deploy PR2's candidate commit to the gated stack before merge, and require the live evidence to record that commit; otherwise PR2's live checks run against PR1's code.
-- **Gated and public probe modes (U10, U18).** Give `verify-showcase.sh` a gated mode (anonymous rejected, credentialed works) and a public mode (anonymous guest flow works), since U18 reruns it without the credential.
 
 ---
 
