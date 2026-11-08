@@ -60,6 +60,25 @@ def _any(text: str, *kws: str) -> bool:
     return any(k in text for k in kws)
 
 
+# Unambiguous tenancy words. Round 7 fix: bare "rent" matched "diffe-rent" /
+# "cur-rent" in an elder matter, so an ATM "cash / no receipt" fact triggered a
+# deposit probe.
+_TENANCY = ("landlord", "lease", "the rent", "pay rent", "evict", "apartment", "tenant")
+_DEPOSIT_TENANCY = ("landlord", "lease", "apartment", "tenant", "move out", "moved out")
+
+
+def _cash_deposit_irregularity(t: str) -> bool:
+    """Cash/no-receipt deposit facts only.
+
+    The `security_deposit_irregularity` question says the visitor paid extra
+    money with no receipt, so it fires only when the narrative says so. A plain
+    unreturned deposit goes to `security_deposit_return` instead.
+    """
+    return ("no receipt" in t and "cash" in t and _any(t, *_TENANCY)) or (
+        "pet deposit" in t and ("cash" in t or "no receipt" in t)
+    )
+
+
 # Shared fact-pattern keyword groups (lowercase).
 _ABUSE = (
     "hit me",
@@ -324,15 +343,31 @@ PROBES: list[DoctrineProbe] = [
             "much did you pay, when, and do you have any proof (texts, "
             "witnesses, bank withdrawal)?"
         ),
+        applies=_cash_deposit_irregularity,
+        priority=82,
+    ),
+    DoctrineProbe(
+        id="security_deposit_return",
+        domains=frozenset({"landlord_tenant"}),
+        authority="Minn. Stat. § 504B.178 (security deposits: return, itemized statement, bad-faith penalty)",
+        question=(
+            "You mentioned a deposit you have not gotten back. In Minnesota, "
+            "after a tenancy ends the landlord must return the deposit with "
+            "interest, or give a written statement explaining any amount kept, "
+            "within 21 days after the tenancy ends and the landlord receives "
+            "your forwarding address (Minn. Stat. § 504B.178); keeping it in "
+            "bad faith can add a penalty of up to $500. Other states have "
+            "similar rules. When did you move out, when did the landlord get "
+            "your forwarding address, and did you receive any written statement?"
+        ),
+        # Any deposit mention, unless the cash/no-receipt probe above already
+        # covers it: the question asserts only that a deposit exists, never a
+        # cash or receipt fact the visitor did not state.
         applies=lambda t: (
-            _any(t, "pet deposit", "security deposit", "damage deposit")
-            or (
-                "no receipt" in t
-                and "cash" in t
-                # Round 7 fix: bare "rent" matched "diffe-rent"/"cur-rent" in an
-                # elder matter; require an unambiguous tenancy word so an ATM
-                # "cash / no receipt" fact cannot trigger a deposit probe.
-                and _any(t, "landlord", "lease", "the rent", "pay rent", "evict", "apartment", "tenant")
+            not _cash_deposit_irregularity(t)
+            and (
+                _any(t, "security deposit", "damage deposit", "pet deposit")
+                or ("deposit" in t and _any(t, *_DEPOSIT_TENANCY))
             )
         ),
         priority=82,

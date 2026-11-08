@@ -148,4 +148,5 @@ def test_lt_probes_do_not_bleed_into_employment():
     ids = _ids(EMPLOYMENT)
     assert "retaliatory_eviction_defense" not in ids
     assert "security_deposit_irregularity" not in ids
+    assert "security_deposit_return" not in ids
     assert "mn_service_by_posting_504b331" not in ids
