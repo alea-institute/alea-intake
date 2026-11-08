@@ -133,9 +133,10 @@ async def sweep_showcase_sessions():
                 User.updated_at < cutoff))).scalars())
             from app.showcase import guest_lock
             for user_id in guests:
-                if user_id in _active:
+                lock = guest_lock(user_id)
+                if user_id in _active or lock.locked():
                     continue
-                async with guest_lock(user_id):
+                async with lock:
                     try:
                         guest = (await session.execute(select(User).where(User.id == user_id).with_for_update(skip_locked=True))).scalar_one_or_none()
                         if guest is None:

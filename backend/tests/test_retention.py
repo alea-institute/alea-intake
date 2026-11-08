@@ -348,9 +348,9 @@ async def test_sweep_logs_failure_and_continues_other_guests(retention, monkeypa
     assert record.exc_info is not None
 
 
-async def test_erase_waits_for_inflight_socket_and_prevents_later_writes(retention, monkeypatch):
+async def test_erase_cancels_inflight_socket_and_prevents_later_writes(retention, monkeypatch):
     import asyncio
-    from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+    from concurrent.futures import ThreadPoolExecutor
     from threading import Event
     from starlette.testclient import TestClient
     from starlette.websockets import WebSocketDisconnect
@@ -395,14 +395,7 @@ async def test_erase_waits_for_inflight_socket_and_prevents_later_writes(retenti
             # Both requests run on TestClient's event loop, as in one uvicorn worker.
             erase = executor.submit(sync.post, f'/api/v1/intake/{created["id"]}/end-session', headers=headers)
             assert erase_entered.wait(timeout=10)
-            try:
-                with pytest.raises(FutureTimeoutError):
-                    erase.result(timeout=1)
-            finally:
-                sync.portal.call(release.set)
-            assert erase.result(timeout=10).status_code == 200
-            assert ws.receive_json()['type'] == 'system_message'
-            ws.send_json({'type': 'text_message', 'content': 'must not survive erase'})
+            assert erase.result(timeout=1).status_code == 200
             with pytest.raises(WebSocketDisconnect) as exc:
                 ws.receive_json()
             assert exc.value.code == 4004
@@ -416,3 +409,130 @@ def test_graph_models_registered_before_database_setup():
     from app.db.base import TenantBase
     assert {'tenant.audio_recordings', 'tenant.transcripts', 'tenant.uploaded_documents',
             'tenant.document_extractions'} <= set(TenantBase.metadata.tables)
+
+
+async def test_end_session_cancels_slow_analysis_before_purge(retention, monkeypatch):
+    import asyncio
+    from app.db.retention import _active
+    from app.models import Intake, User
+    from app.models.analysis import AnalysisRun
+    from app.models.intake import IntakeSession
+    from app.showcase import guest_lock
+
+    client, _, app, engine = retention
+    headers = {**await guest(client), 'X-LLM-API-Key': 'visitor-key'}
+    created = (await client.post('/api/v1/intake/', headers=headers, json={})).json()
+    started, cancelled = asyncio.Event(), asyncio.Event()
+
+    async def slow_backfill(db, intake_id, *args, **kwargs):
+        db.add(AnalysisRun(intake_id=intake_id, trigger_type='manual'))
+        await db.flush()
+        started.set()
+        try:
+            await asyncio.Event().wait()
+        except asyncio.CancelledError:
+            cancelled.set()
+            raise
+        pytest.fail('Cancelled analysis resumed')
+
+    monkeypatch.setattr('app.services.extraction.backfill.backfill_intake_facts', slow_backfill)
+    monkeypatch.setattr('app.services.folio.folio_service.get_folio', lambda: None)
+    analysis = asyncio.create_task(client.post(f'/api/v1/analysis/{created["id"]}/analyze', headers=headers))
+    try:
+        await asyncio.wait_for(started.wait(), 5)
+        response = await asyncio.wait_for(client.post(
+            f'/api/v1/intake/{created["id"]}/end-session', headers=headers), 1)
+        assert response.status_code == 200, response.text
+        await asyncio.wait_for(asyncio.gather(analysis, return_exceptions=True), 1)
+        assert cancelled.is_set()
+        assert app.state.analysis_admitted == 0
+        assert not _active
+        async with engine.connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={'tenant': None})
+            for model in (Intake, IntakeSession, AnalysisRun, User):
+                assert (await conn.execute(select(func.count()).select_from(model))).scalar_one() == 0
+        assert not guest_lock(1).locked()
+    finally:
+        analysis.cancel()
+        await asyncio.gather(analysis, return_exceptions=True)
+
+
+async def test_sweeper_skips_locked_guest_and_retries_next_sweep(retention):
+    import asyncio
+    from app.db.retention import sweep_showcase_sessions
+    from app.models import Intake, User
+    from app.showcase import guest_lock
+
+    client, _, _, engine = retention
+    created = (await client.post('/api/v1/intake/', headers=await guest(client), json={})).json()
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=2)
+    async with engine.begin() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        user_id = (await conn.execute(select(Intake.created_by_user_id).where(
+            Intake.id == created['id']))).scalar_one()
+        await conn.execute(update(User).where(User.id == user_id).values(updated_at=cutoff))
+        await conn.execute(update(Intake).where(Intake.id == created['id']).values(updated_at=cutoff))
+    async with guest_lock(user_id):
+        await asyncio.wait_for(sweep_showcase_sessions(), 1)
+        async with engine.connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={'tenant': None})
+            assert (await conn.execute(select(Intake.id))).scalars().all() == [created['id']]
+    await sweep_showcase_sessions()
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        assert (await conn.execute(select(Intake.id))).scalars().all() == []
+
+
+@pytest.mark.parametrize('message_type', ['text_message', 'transcript_approve', 'transcript_edit'])
+async def test_end_session_cancels_socket_llm_work(retention, monkeypatch, message_type):
+    import asyncio
+    from types import SimpleNamespace
+    from unittest.mock import AsyncMock
+    from starlette.websockets import WebSocketState
+    from app.models import Intake, User
+    from app.models.intake import Message
+    from app.models.audio import AudioRecording, Transcript
+    from app.routers.intake import intake_websocket
+    from tests.test_showcase_mode import _seed_transcript
+
+    client, _, app, engine = retention
+    headers = await guest(client)
+    created = (await client.post('/api/v1/intake/', headers=headers, json={})).json()
+    async with engine.connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        user_id = (await conn.execute(select(Intake.created_by_user_id).where(
+            Intake.id == created['id']))).scalar_one()
+    data = {'type': message_type, 'content': 'Unpaid wages', 'edited_text': 'Unpaid wages'}
+    if message_type != 'text_message':
+        data['recording_id'] = await _seed_transcript(created['session_id'], created['id'])
+    started, cancelled = asyncio.Event(), asyncio.Event()
+
+    async def slow_reply(*args, **kwargs):
+        started.set()
+        try:
+            await asyncio.Event().wait()
+        except asyncio.CancelledError:
+            cancelled.set()
+            raise
+
+    monkeypatch.setattr('app.routers.intake.ConversationService.generate_response', slow_reply)
+    monkeypatch.setattr('app.routers.intake.screen_message_fast', AsyncMock(return_value=None))
+    socket = SimpleNamespace(
+        app=app, client=None, application_state=WebSocketState.CONNECTED,
+        receive_json=AsyncMock(return_value=data), send_json=AsyncMock(), close=AsyncMock())
+    work = asyncio.create_task(intake_websocket(socket, created['session_id'], access=(user_id, object())))
+    try:
+        await asyncio.wait_for(started.wait(), 5)
+        response = await asyncio.wait_for(client.post(
+            f'/api/v1/intake/{created["id"]}/end-session', headers=headers), 1)
+        assert response.status_code == 200, response.text
+        await asyncio.wait_for(asyncio.gather(work, return_exceptions=True), 1)
+        assert cancelled.is_set()
+        assert not any(call.args[0]['type'] == 'system_message' for call in socket.send_json.call_args_list)
+        async with engine.connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={'tenant': None})
+            for model in (Intake, Message, AudioRecording, Transcript, User):
+                assert (await conn.execute(select(func.count()).select_from(model))).scalar_one() == 0
+    finally:
+        work.cancel()
+        await asyncio.gather(work, return_exceptions=True)

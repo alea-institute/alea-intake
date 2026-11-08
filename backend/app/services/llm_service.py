@@ -302,7 +302,10 @@ def get_llm_service(
 
 def llm_service_from_headers(headers: Any) -> LLMService:
     """Build an in-memory visitor context; never consult ambient credentials."""
-    key = headers.get("X-LLM-API-Key", "").strip()
+    key = headers.get("X-LLM-API-Key", "")
+    if not isinstance(key, str) or any(ord(char) < 32 or ord(char) > 126 for char in key):
+        raise HTTPException(status_code=400, detail="Invalid visitor LLM API key")
+    key = key.strip()
     if not key:
         raise HTTPException(status_code=400, detail="A visitor LLM API key is required")
     provider = headers.get("X-LLM-Provider", "openai").strip().lower()

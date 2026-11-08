@@ -22,6 +22,8 @@ from app.models.user import User
 # The deployment runs one uvicorn worker. Multiple workers would require a
 # distributed lock shared by sockets, HTTP work, and the retention sweeper.
 _guest_locks: WeakValueDictionary[int, asyncio.Lock] = WeakValueDictionary()
+_guest_tasks: dict[int, set[asyncio.Task]] = {}
+_erasing_guests: set[int] = set()
 
 
 def guest_lock(user_id: int) -> asyncio.Lock:
@@ -30,6 +32,35 @@ def guest_lock(user_id: int) -> asyncio.Lock:
         lock = asyncio.Lock()
         _guest_locks[user_id] = lock
     return lock
+
+
+@asynccontextmanager
+async def guest_task(user_id: int, *, erase: bool = False):
+    """Track work, including lock waiters, and prevent new work during erase."""
+    if user_id in _erasing_guests:
+        raise HTTPException(409, "Session is being erased; retry later")
+    task = asyncio.current_task()
+    tasks = _guest_tasks.setdefault(user_id, set())
+    tasks.add(task)
+    if erase:
+        _erasing_guests.add(user_id)
+    try:
+        if erase:
+            others = tasks - {task}
+            for other in others:
+                other.cancel()
+            if others:
+                # wait_for would wait indefinitely if work suppresses cancellation.
+                _, pending = await asyncio.wait(others, timeout=10)
+                if pending:
+                    raise HTTPException(503, "Work is still stopping; retry erase")
+        yield
+    finally:
+        tasks.discard(task)
+        if not tasks:
+            _guest_tasks.pop(user_id, None)
+        if erase:
+            _erasing_guests.discard(user_id)
 
 
 async def _check_identifiers(request, db, user):
@@ -42,17 +73,22 @@ async def _check_identifiers(request, db, user):
     # overwrite another before its ownership has been checked.
     supplied = list(request.path_params.items()) + list(request.query_params.multi_items())
     if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
-        content_type = request.headers.get("content-type", "")
-        if "application/json" in content_type:
+        content_type = request.headers.get("content-type", "").split(';')[0].strip().lower()
+        if content_type == "application/json" or (
+            content_type.startswith("application/") and content_type.endswith("+json")
+        ):
             try:
-                body = await request.json()
+                raw_body = await request.body()
+                body = json.loads(raw_body) if raw_body else {}
             except (ValueError, json.JSONDecodeError):
                 raise HTTPException(422, "Expected a JSON object") from None
             if not isinstance(body, dict):
                 raise HTTPException(422, "Expected a JSON object")
             supplied.extend(body.items())
-        elif "multipart/form-data" in content_type:
+        elif content_type in {"multipart/form-data", "application/x-www-form-urlencoded"}:
             supplied.extend((await request.form()).multi_items())
+        elif await request.body():
+            raise HTTPException(415, "Unsupported media type")
     intake_ids = set()
     for name, value in supplied:
         if name not in models or value is None:
@@ -127,24 +163,30 @@ async def showcase_access(request: Request, user: User = Depends(get_current_act
     if not config.get_settings().showcase_mode:
         yield
         return
-    # Includes end_session: acquire before touching rows so an erase never
-    # waits for a socket while holding a conflicting database write lock.
-    async with guest_lock(user.id):
-        if not await touch_guest(db, user.id):
-            raise HTTPException(404, "Session unavailable")
-        await _check_identifiers(request, db, user)
-        if request.method != "GET":
-            admit(request.app, user.id, client_ip(request))
-        from app.db.retention import guest_activity
-        async with guest_activity(user.id):
-            if request.url.path.endswith(("/analyze", "/override")):
-                async with analysis_slot(request.app):
+    erase = request.method == "POST" and request.url.path.endswith("/end-session")
+    # Cancel and await prior work before acquiring its lock or touching rows.
+    async with guest_task(user.id, erase=erase), guest_lock(user.id):
+        try:
+            if not await touch_guest(db, user.id):
+                raise HTTPException(404, "Session unavailable")
+            await _check_identifiers(request, db, user)
+            if request.method != "GET":
+                admit(request.app, user.id, client_ip(request))
+            from app.db.retention import guest_activity
+            async with guest_activity(user.id):
+                if request.url.path.endswith(("/analyze", "/override")):
+                    async with analysis_slot(request.app):
+                        yield
+                else:
                     yield
-            else:
-                yield
-            await touch_guest(db, user.id)
-            # Finish writes (including erase) before releasing the guest lock.
-            await db.commit()
+                await touch_guest(db, user.id)
+                # Finish writes (including erase) before releasing the guest lock.
+                await db.commit()
+        except BaseException:
+            # CancelledError is not an Exception. Roll back before erase can
+            # acquire the guest lock and purge this transaction's graph.
+            await db.rollback()
+            raise
 
 
 class ShowcaseBodyLimit:
@@ -156,6 +198,15 @@ class ShowcaseBodyLimit:
         settings = config.get_settings()
         if scope["type"] != "http" or not settings.showcase_mode:
             return await self.app(scope, receive, send)
+        # FastAPI parses form parameters before dependencies run. Normalize the
+        # media type here too, preserving case-sensitive multipart boundaries.
+        scope = dict(scope)
+        scope["headers"] = [
+            (name, value.split(b';', 1)[0].strip().lower()
+             + (b';' + value.split(b';', 1)[1] if b';' in value else b''))
+            if name.lower() == b'content-type' else (name, value)
+            for name, value in scope.get("headers", [])
+        ]
         from starlette.datastructures import Headers
         try:
             content_length = int(Headers(scope=scope).get("content-length", "0"))

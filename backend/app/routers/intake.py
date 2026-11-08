@@ -10,6 +10,7 @@ Voice modality: voice_upload -> ASR transcription -> transcript_ready for review
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import logging
@@ -23,9 +24,9 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.showcase import admit, client_ip, guest_lock
+from app.showcase import admit, client_ip, guest_lock, guest_task
 from app.config import get_settings
-from app.core.permissions import get_current_active_user
+from app.core.permissions import ROLE_PERMISSIONS, get_current_active_user
 from app.db.session import get_tenant_session
 from app.models.audio import AudioRecording, Transcript
 from app.models.document import DocumentExtraction, UploadedDocument
@@ -470,14 +471,13 @@ ws_router = APIRouter(tags=["intake-ws"])
 
 
 async def websocket_access(websocket: WebSocket, session_id: int):
-    """Authenticate the socket and enforce showcase session ownership."""
+    """Authenticate the socket and enforce session access in both modes."""
     settings = get_settings()
 
     llm_service = None
     auth = {}
     token = websocket.query_params.get("token")
     if settings.showcase_mode or not token:
-        import asyncio
         await websocket.accept()
         if settings.showcase_mode and "token" in websocket.query_params:
             await websocket.close(code=4001, reason="Use the auth message")
@@ -508,7 +508,6 @@ async def websocket_access(websocket: WebSocket, session_id: int):
     if settings.showcase_mode:
         from app.db.engine import get_engine
         from app.showcase import require_owner
-        from app.models.user import User
         from app.services.consent_service import ConsentService
         async with get_engine().connect() as conn:
             conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
@@ -534,15 +533,31 @@ async def websocket_access(websocket: WebSocket, session_id: int):
             await websocket.close(code=4001, reason="Request key or admission required")
             return
     else:
-        headers = dict(websocket.headers)
-        if auth.get("llm_api_key"):
-            headers.update({"x-llm-api-key": auth["llm_api_key"],
-                            "x-llm-provider": auth.get("llm_provider", "openai"),
-                            "x-llm-model": auth.get("llm_model", "")})
-        if headers.get("x-llm-api-key", "").strip():
-            from starlette.datastructures import Headers
+        from app.db.engine import get_engine
+        async with get_engine().connect() as conn:
+            conn = await conn.execution_options(schema_translate_map={"tenant": None, "shared": None})
+            async with AsyncSession(bind=conn) as db:
+                user = await db.get(User, user_id)
+                intake = (await db.execute(select(Intake).join(
+                    IntakeSession, IntakeSession.intake_id == Intake.id
+                ).where(IntakeSession.id == session_id))).scalar_one_or_none()
+                permissions = ROLE_PERMISSIONS.get(user.role, set()) if user else set()
+                # Standard roles grant staff access within their organization;
+                # consumers have only cases.write.own, scoped to the creator.
+                if (user is None or not user.is_active or payload.get("type") != "access"
+                        or intake is None or intake.org_id != user.org_id
+                        or not ("cases.write" in permissions or (
+                            "cases.write.own" in permissions and intake.created_by_user_id == user.id))):
+                    await websocket.close(code=4003, reason="Session unavailable")
+                    return
+        headers = {
+            "X-LLM-API-Key": auth.get("llm_api_key", websocket.headers.get("x-llm-api-key", "")),
+            "X-LLM-Provider": auth.get("llm_provider", websocket.headers.get("x-llm-provider", "openai")),
+            "X-LLM-Model": auth.get("llm_model", websocket.headers.get("x-llm-model", "")),
+        }
+        if "llm_api_key" in auth or headers["X-LLM-API-Key"]:
             try:
-                llm_service = llm_service_from_headers(Headers(headers))
+                llm_service = llm_service_from_headers(headers)
             except HTTPException:
                 await websocket.close(code=4001, reason="Invalid LLM credentials")
                 return
@@ -604,52 +619,67 @@ async def intake_websocket(websocket: WebSocket, session_id: int,
                                                "message": "Admission limit reached; retry later"})
                     continue
 
-            from app.db.retention import guest_activity, touch_guest
-            async with guest_activity(user_id), guest_lock(user_id):
-                if settings.showcase_mode:
-                    async with engine.begin() as conn:
-                        conn = await conn.execution_options(schema_translate_map={"tenant": None})
-                        touched = await touch_guest(conn, user_id)
-                        exists = (await conn.execute(select(IntakeSession.id).join(
-                            Intake, Intake.id == IntakeSession.intake_id).where(
-                            IntakeSession.id == session_id, Intake.created_by_user_id == user_id))).first()
-                        if not touched or exists is None:
-                            await websocket.close(code=4004, reason="Session unavailable")
-                            break
-                if msg_type == "text_message":
-                    await _handle_text_message(
-                        websocket, session_id, user_id, data, engine, llm_service=llm_service
-                    )
-                elif msg_type == "voice_upload":
-                    await _handle_voice_upload(
-                        websocket, session_id, user_id, data, engine
-                    )
-                elif msg_type == "transcript_approve":
-                    await _handle_transcript_approve(
-                        websocket, session_id, user_id, data, engine, llm_service=llm_service
-                    )
-                elif msg_type == "transcript_edit":
-                    await _handle_transcript_edit(
-                        websocket, session_id, user_id, data, engine, llm_service=llm_service
-                    )
-                elif msg_type == "session_pause":
-                    await _handle_session_pause(
-                        websocket, session_id, engine
-                    )
-                elif msg_type == "typing_indicator":
-                    await manager.send_to_others(session_id, websocket, {
-                        "type": "typing_indicator",
-                        "user_id": user_id,
-                        "is_typing": data.get("is_typing", False),
-                    })
+            await asyncio.create_task(_dispatch_socket_message(
+                websocket, session_id, user_id, data, engine, llm_service
+            ))
+            if websocket.application_state == WebSocketState.DISCONNECTED:
+                break
 
     except WebSocketDisconnect:
         pass
+    except asyncio.CancelledError:
+        # Handler sessions have rolled back before we reach this boundary.
+        # End-session waits for this task to exit before purging the guest.
+        if websocket.application_state != WebSocketState.DISCONNECTED:
+            await websocket.close(code=4004, reason="Session unavailable")
     except Exception as e:
         logger.error('WebSocket error for session %d: %s', session_id, type(e).__name__)
     finally:
         manager.disconnect(websocket, session_id)
 
+
+async def _dispatch_socket_message(websocket, session_id, user_id, data, engine, llm_service):
+    """Own a cancellable task for one message, independent of connection lifetime."""
+    settings = get_settings()
+    msg_type = data.get("type")
+    from app.db.retention import guest_activity, touch_guest
+    async with guest_task(user_id), guest_activity(user_id), guest_lock(user_id):
+        if settings.showcase_mode:
+            async with engine.begin() as conn:
+                conn = await conn.execution_options(schema_translate_map={"tenant": None})
+                touched = await touch_guest(conn, user_id)
+                exists = (await conn.execute(select(IntakeSession.id).join(
+                    Intake, Intake.id == IntakeSession.intake_id).where(
+                    IntakeSession.id == session_id, Intake.created_by_user_id == user_id))).first()
+            if not touched or exists is None:
+                await websocket.close(code=4004, reason="Session unavailable")
+                return
+        if msg_type == "text_message":
+            await _handle_text_message(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "voice_upload":
+            await _handle_voice_upload(
+                websocket, session_id, user_id, data, engine
+            )
+        elif msg_type == "transcript_approve":
+            await _handle_transcript_approve(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "transcript_edit":
+            await _handle_transcript_edit(
+                websocket, session_id, user_id, data, engine, llm_service=llm_service
+            )
+        elif msg_type == "session_pause":
+            await _handle_session_pause(
+                websocket, session_id, engine
+            )
+        elif msg_type == "typing_indicator":
+            await manager.send_to_others(session_id, websocket, {
+                "type": "typing_indicator",
+                "user_id": user_id,
+                "is_typing": data.get("is_typing", False),
+            })
 
 async def _handle_text_message(
     websocket: WebSocket,
