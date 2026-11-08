@@ -37,7 +37,7 @@ def setup_logging() -> None:
     """
     from app import config
     settings = config.get_settings()
-    logging.getLogger("uvicorn.access").disabled = settings.showcase_mode
+    logging.getLogger("uvicorn.access").disabled = settings.showcase_mode or bool(settings.preview_passphrase)
     log_level = getattr(logging, settings.log_level.upper(), logging.INFO)
 
     shared_processors: list = [

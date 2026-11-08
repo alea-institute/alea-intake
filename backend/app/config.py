@@ -47,6 +47,7 @@ class Settings(BaseSettings):
     secret_key: str  # Required -- no default
 
     reference_model: str = DEFAULT_REFERENCE_MODEL
+    preview_passphrase: str = ""
     showcase_mode: bool = False
     showcase_idle_ttl_seconds: int = 3600
     showcase_ws_auth_timeout: float = 5.0

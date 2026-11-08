@@ -376,6 +376,8 @@ from app.showcase import ShowcaseBodyLimit
 app.add_middleware(ShowcaseBodyLimit)
 from app.showcase import ShowcasePrivacy
 app.add_middleware(ShowcasePrivacy)
+from app.preview import PreviewGate
+app.add_middleware(PreviewGate)
 
 
 # Health endpoint

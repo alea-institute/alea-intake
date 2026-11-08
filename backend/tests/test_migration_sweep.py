@@ -8,6 +8,7 @@ deltas, and the study's lack of persistent changes to production configuration.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 from pathlib import Path
@@ -24,8 +25,15 @@ MIGRATION = Path(__file__).resolve().parent.parent / "migration"
 os.environ.setdefault("PYTHONHASHSEED", "0")
 sys.path.insert(0, str(MIGRATION))
 
-import combine_lab  # noqa: E402
-import sweep  # noqa: E402
+# The CLI tools silence embedding-failure diagnostics at import time. Collection
+# must leave the application's logging threshold as it found it.
+_previous_logging_threshold = logging.root.manager.disable
+try:
+    import combine_lab  # noqa: E402
+    import sweep  # noqa: E402
+    import harness  # noqa: E402, F401 (otherwise imported lazily by build_pools)
+finally:
+    logging.disable(_previous_logging_threshold)
 
 from app.services.folio import concept_resolver as cr  # noqa: E402
 
@@ -273,3 +281,28 @@ def test_expansion_study_attributes_claim_false_positives(corpus, gold, monkeypa
         assert {"narrative": "n-expansion-fired", "iri": "r-wrongful-termination"} in fired["metrics"][mode]["flips_reject_rows"]
         assert rent["metrics"][mode]["fp"] == 4
         assert rent["metrics"][mode]["tp"] == 20
+
+
+def test_collection_preserves_global_logging_threshold():
+    """Importing calibration tests must not silence the rest of the suite."""
+    import subprocess
+
+    result = subprocess.run(
+        [sys.executable, "-c", """
+import logging
+import logging.handlers
+import runpy
+from unittest.mock import patch
+logging.disable(logging.WARNING)
+with patch('logging.handlers.RotatingFileHandler', return_value=logging.NullHandler()):
+    runpy.run_path('tests/test_migration_sweep.py')
+    import harness  # Imported lazily by the calibration pool fixture.
+assert logging.root.manager.disable == logging.WARNING, (
+    f'calibration tests changed logging threshold to {logging.root.manager.disable}'
+)
+"""],
+        cwd=MIGRATION.parent,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

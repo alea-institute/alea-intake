@@ -51,13 +51,14 @@ def test_guest_flow_secrets_preview_and_models(tmp_path, monkeypatch, caplog):
         if path.endswith('/export/pdf'):
             return httpx.Response(200, content=b'%PDF-1.4\noperator-secret')
         return httpx.Response(201 if request.method == 'POST' else 200, json=body)
-    campaign = runner.Campaign('https://preview.test', environ={'PERSONA_LLM_API_KEY': 'operator-secret', 'PERSONA_PREVIEW_AUTH': 'preview:secret', 'PERSONA_TOKEN_RATES': '{"gpt-4o-mini": [0.15, 0.6]}'}, transport=httpx.MockTransport(respond), folio={})
+    campaign = runner.Campaign('https://preview.test', environ={'PERSONA_LLM_API_KEY': 'operator-secret', 'PERSONA_PREVIEW_KEY': 'preview:secret', 'PERSONA_TOKEN_RATES': '{"gpt-4o-mini": [0.15, 0.6]}'}, transport=httpx.MockTransport(respond), folio={})
     async def narrative(*args):
         return []
     monkeypatch.setattr(campaign, 'stream_narrative', narrative)
     out = tmp_path / 'runs'
     campaign.run([persona], out, models=['gpt-4o-mini', 'other-model'])
-    assert all(r.headers['Proxy-Authorization'].startswith('Basic ') for r in requests)
+    assert all(r.headers['X-Preview-Key'] == 'preview:secret' for r in requests)
+    assert all('Proxy-Authorization' not in r.headers for r in requests)
     assert all(r.headers['X-LLM-API-Key'] == 'operator-secret' for r in requests if r.url.path != '/health')
     assert all('operator-secret' not in str(r.url) for r in requests)
     assert sum(r.url.path == '/api/v1/auth/guest' for r in requests) == 2
@@ -110,10 +111,10 @@ async def test_websocket_auth_is_first_message_and_preview_is_attached(monkeypat
         connections.append((url, kwargs))
         return Socket()
     monkeypatch.setattr(runner.websockets, 'connect', connect)
-    campaign = runner.Campaign('https://preview.test', environ={'PERSONA_LLM_API_KEY': 'operator-secret', 'PERSONA_PREVIEW_AUTH': 'preview-secret', 'PERSONA_PREVIEW_HEADER': 'X-Preview-Auth'})
+    campaign = runner.Campaign('https://preview.test', environ={'PERSONA_LLM_API_KEY': 'operator-secret', 'PERSONA_PREVIEW_KEY': 'preview-secret'})
     await campaign.stream_narrative(2, 'guest-token', 3, 'My story.', [])
     assert connections[0][0] == 'wss://preview.test/api/ws/intake/2'
-    assert connections[0][1]['additional_headers']['X-Preview-Auth'] == 'preview-secret'
+    assert connections[0][1]['additional_headers']['X-Preview-Key'] == 'preview-secret'
     assert sent[0] == {'type': 'auth', 'token': 'guest-token', 'llm_api_key': 'operator-secret', 'llm_provider': 'openai', 'llm_model': 'gpt-4o-mini'}
     assert sent[1]['content'] == 'My story.'
     assert 'operator-secret' not in caplog.text

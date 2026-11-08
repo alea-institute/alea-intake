@@ -5,14 +5,10 @@ Usage: persona_run.py <persona_dir> <base_url>
        persona_run.py --base-url URL --models gpt-4o-mini candidate-model
 
 PERSONA_LLM_API_KEY is required. PERSONA_LLM_PROVIDER/MODEL select the client.
-PERSONA_PREVIEW_AUTH accepts user:pass, or PERSONA_PREVIEW_HEADER selects a
-custom proxy header whose value is PERSONA_PREVIEW_AUTH (default Proxy-Authorization).
-Configure the preview proxy to verify that header, preserving Authorization for
-the application guest Bearer token.
+PERSONA_PREVIEW_KEY supplies X-Preview-Key for the app preview gate.
 """
 import argparse
 import asyncio
-import base64
 import importlib.util
 import json
 import logging
@@ -52,16 +48,10 @@ class Campaign:
         self.judge_model = env.get("PERSONA_JUDGE_MODEL", "gpt-4o-mini")
         self.secrets = [self.key]
         self.preview_headers = {}
-        preview = env.get("PERSONA_PREVIEW_AUTH")
+        preview = env.get("PERSONA_PREVIEW_KEY")
         if preview:
             self.secrets.append(preview)
-            header = env.get("PERSONA_PREVIEW_HEADER", "Proxy-Authorization")
-            if header.lower() in {"authorization", "proxy-authorization"} and ":" in preview and not preview.startswith(("Basic ", "Bearer ")):
-                preview = "Basic " + base64.b64encode(preview.encode()).decode()
-            if header.lower() == "authorization":
-                raise ValueError("Preview auth needs its own proxy header; Authorization is reserved for guests")
-            self.preview_headers[header] = preview
-            self.secrets.append(preview)
+            self.preview_headers["X-Preview-Key"] = preview
         self.client = httpx.Client(base_url=self.base, transport=transport, timeout=300)
         self.folio = folio
         self.usage = []
@@ -79,7 +69,7 @@ class Campaign:
                 "X-LLM-Model": self.model, **(headers or {}), **self.preview_headers}
         if token:
             hdrs["Authorization"] = "Bearer " + token
-        # A custom proxy header avoids colliding with guest Bearer authentication.
+        # Preview access and guest authentication use separate headers.
         response = self.client.request(method, path, headers=hdrs,
             content=body if raw else None, json=body if not raw else None, timeout=timeout)
         if not response.is_success:

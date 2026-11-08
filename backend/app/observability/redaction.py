@@ -4,15 +4,11 @@ from app import config
 
 _SENSITIVE = re.compile(r'narrative|content|text|body|document|message|key|token|authorization|cookie|password|exception|stack|url|query|headers|input|error|detail', re.I)
 _TOKEN = re.compile(r'(?:sk-|key[-_=])[\w.-]+|eyJ[\w-]+\.[\w-]+\.[\w-]+', re.I)
-_SAFE = {'level', 'log_level', 'timestamp', 'trace_id', 'span_id', 'http.method', 'http.request.method'}
+_REQUEST = re.compile(r'(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) /|https?://|(?:Authorization|Cookie|X-LLM-API-Key|X-Preview-Key):', re.I)
 
 
 def scrub(value, key=''):
-    """Drop content-bearing fields; in showcase discard all free-form strings.
-
-    Free-form exception/log messages can interpolate a story without a field
-    name. Keeping numeric diagnostics and trace IDs avoids that leak entirely.
-    """
+    """Preserve operational diagnostics while removing visitor content and secrets."""
     if _SENSITIVE.search(key):
         return '[redacted]'
     if isinstance(value, dict):
@@ -20,8 +16,15 @@ def scrub(value, key=''):
     if isinstance(value, (list, tuple)):
         return [scrub(v) for v in value]
     if isinstance(value, str):
-        if config.get_settings().showcase_mode and key not in _SAFE:
+        settings = config.get_settings()
+        # Raw request log lines can contain query credentials and visitor text.
+        if _REQUEST.search(value):
             return '[redacted]'
+        for secret in (settings.preview_passphrase, settings.secret_key, settings.db_password,
+                       settings.session_secret_key, settings.google_client_secret,
+                       settings.microsoft_client_secret):
+            if secret:
+                value = value.replace(secret, '[redacted]')
         return _TOKEN.sub('[redacted]', value)
     if isinstance(value, (int, float, bool)) or value is None:
         return value

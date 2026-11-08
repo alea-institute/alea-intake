@@ -156,7 +156,8 @@ async def test_observability_and_error_payload_scrub(retention):
     from opentelemetry.sdk.trace import TracerProvider
     from opentelemetry.sdk.trace.export import SimpleSpanProcessor
     from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-    client, _, app, _ = retention
+    client, settings, app, _ = retention
+    settings.preview_passphrase = 'preview-private-example'
     narrative, key, token = 'My employer stole my wages', 'sk-private-example-key', 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.signature'
     setup_logging()
     stream = io.StringIO()
@@ -164,7 +165,9 @@ async def test_observability_and_error_payload_scrub(retention):
     handler.setFormatter(logging.getLogger().handlers[0].formatter)
     logging.getLogger().addHandler(handler)
     try:
-        structlog.get_logger().error('request failed', narrative=narrative, headers={'X-LLM-API-Key': key}, token=token)
+        structlog.get_logger().error('request failed', narrative=narrative, message=narrative, document_text=narrative, headers={'Authorization': token, 'Cookie': token, 'X-LLM-API-Key': key, 'X-Preview-Key': settings.preview_passphrase}, token=token)
+        structlog.get_logger().warning('Health check: database down')
+        structlog.get_logger().info('Preview configured', value=settings.preview_passphrase)
         logging.getLogger('uvicorn.access').info('GET /?token=%s&key=%s %s', token, key, narrative)
         logging.getLogger('proxy').info('GET /?token=%s&key=%s %s', token, key, narrative)
     finally:
@@ -188,7 +191,61 @@ async def test_observability_and_error_payload_scrub(retention):
     async with AsyncClient(transport=ASGITransport(app=app, raise_app_exceptions=False), base_url='http://test') as errors:
         response = await errors.post('/force-error', json={'narrative': narrative, 'key': key, 'token': token})
     assert response.status_code == 500
-    for secret in (narrative, key, token):
+    for secret in (narrative, key, token, settings.preview_passphrase):
         assert secret not in stream.getvalue() + attrs + response.text
+    assert 'Health check: database down' in stream.getvalue()
+    assert '"level": "warning"' in stream.getvalue()
+    assert 'request failed' in stream.getvalue()
     assert logging.getLogger('uvicorn.access').disabled
     provider.shutdown()
+
+
+def test_redaction_keeps_operations_and_removes_visitor_fields(monkeypatch):
+    from app import config
+    from app.observability.redaction import scrub
+    settings = config.Settings(_env_file=None, secret_key='app-signing-secret',
+                               showcase_mode=True, preview_passphrase='shared-preview-secret')
+    monkeypatch.setattr(config, 'get_settings', lambda: settings)
+    result = scrub({'event': 'Health check: database down', 'level': 'warning',
+                    'narrative': 'My employer stole my wages',
+                    'message': 'My employer stole my wages', 'document_text': 'private document',
+                    'headers': {'Authorization': 'Bearer guest-opaque', 'Cookie': 'session=opaque',
+                                'X-LLM-API-Key': 'opaque-api-secret', 'X-Preview-Key': 'shared-preview-secret'},
+                    'diagnostic': 'configured shared-preview-secret app-signing-secret'})
+    assert result['event'] == 'Health check: database down'
+    assert result['level'] == 'warning'
+    import structlog
+    from app.observability.logging import setup_logging
+    setup_logging()
+    stream = io.StringIO()
+    handler = logging.StreamHandler(stream)
+    handler.setFormatter(logging.getLogger().handlers[0].formatter)
+    logging.getLogger().addHandler(handler)
+    try:
+        structlog.get_logger().warning('Health check: database down',
+                                      narrative='My employer stole my wages',
+                                      preview_passphrase=settings.preview_passphrase)
+    finally:
+        logging.getLogger().removeHandler(handler)
+    assert 'Health check: database down' in stream.getvalue()
+    assert '"level": "warning"' in stream.getvalue()
+    assert 'My employer' not in stream.getvalue()
+    assert settings.preview_passphrase not in stream.getvalue()
+    for value in ('My employer', 'private document', 'guest-opaque', 'session=opaque',
+                  'opaque-api-secret', 'shared-preview-secret', 'app-signing-secret'):
+        assert value not in str(result)
+
+
+def test_preview_access_logging_omits_query_credentials(monkeypatch):
+    from app import config
+    from app.observability.logging import setup_logging
+    settings = config.Settings(_env_file=None, secret_key='app-signing-secret',
+                               showcase_mode=False, preview_passphrase='shared-preview-secret')
+    monkeypatch.setattr(config, 'get_settings', lambda: settings)
+    access = logging.getLogger('uvicorn.access')
+    previous = access.disabled
+    try:
+        setup_logging()
+        assert access.disabled
+    finally:
+        access.disabled = previous
