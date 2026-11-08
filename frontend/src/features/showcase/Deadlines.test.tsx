@@ -13,3 +13,19 @@ it('distinguishes deadline sources, lapsed dates and missing rules with cited ev
  for (const label of ['Computed legal deadline','Date stated in your document','Contractual date — stated in your document, not a legal deadline','Deadline has lapsed','No verified rule for this deadline','Choose a state to check deadlines']) expect(screen.getByText(label)).toBeInTheDocument()
  expect(screen.getAllByRole('link',{name:'Find legal self-help'})).toHaveLength(2)
 })
+it('uses the memo heading, shows the quote as a secondary line, and trusts the API lapsed flag over the clock',()=>{
+ render(<Deadlines deadlines={[
+  {event_text:'march 3rd thats when the notice showed up',heading:'Notice to vacate — March 3, 2026',computed:true,computed_date:'2000-01-01',lapsed:false},
+  {event_text:'the hearing',heading:'Court hearing — April 1, 2099',computed:true,computed_date:'2099-04-01',lapsed:true},
+  {event_text:'Legacy quote',computed:true,computed_date:'2000-01-01'},
+ ]}/>);
+ expect(screen.getByRole('heading',{name:'Notice to vacate — March 3, 2026'})).toBeInTheDocument()
+ expect(screen.queryByRole('heading',{name:/march 3rd/})).not.toBeInTheDocument()
+ expect(screen.getByText('In your words: “march 3rd thats when the notice showed up”')).toBeInTheDocument()
+ const [past, future, legacy] = screen.getAllByRole('article')
+ expect(past).toHaveClass('deadline-computed')
+ expect(future).toHaveClass('deadline-lapsed')
+ expect(legacy).toHaveClass('deadline-lapsed')
+ expect(screen.getByRole('heading',{name:'Legacy quote'})).toBeInTheDocument()
+ expect(screen.queryByText(/In your words: “Legacy quote”/)).not.toBeInTheDocument()
+})

@@ -19,7 +19,7 @@
   "confirmState": "Confirm state and update analysis", "stateLabel": "State", "stateOption": "Choose a state",
   "computed": "Computed legal deadline", "document_stated": "Date stated in your document", "contractual": "Contractual date — stated in your document, not a legal deadline",
   "lapsed": "Deadline has lapsed", "no_verified_rule": "No verified rule for this deadline", "unknown_state": "Choose a state to check deadlines",
-  "counted": "How counted: {{method}}", "asOf": "As of {{date}}", "citation": "Read the cited rule", "selfHelp": "Find legal self-help", "noDeadlines": "No verified deadlines were returned. Check with legal self-help.",
+  "counted": "How counted: {{method}}", "asOf": "As of {{date}}", "inYourWords": "In your words: “{{quote}}”", "citation": "Read the cited rule", "selfHelp": "Find legal self-help", "noDeadlines": "No verified deadlines were returned. Check with legal self-help.",
   "export": "Export memo", "end": "End session and erase", "confirmErase": "Erase this session?", "eraseDetails": "This removes the session data and clears this tab’s key. Export your memo first if you want a copy.", "erase": "Erase this session", "cancel": "Keep working",
   "idle": "This session will expire soon. Export your memo or keep the session.", "keep": "Keep session", "expired": "Your session expired. The session data was erased.", "fresh": "Start a fresh session", "pendingErase": "Ending the session and erasing its data…"
 }

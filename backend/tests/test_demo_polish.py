@@ -372,3 +372,52 @@ def test_lapsed_uses_reference_date_and_calm_wording():
     assert "## ⛔ Eviction hearing — April 1, 2026 (may have passed)\n" in md
     assert "This date may already have passed — check with the court." in md
     assert "MAY HAVE PASSED" not in md
+
+
+@pytest.mark.asyncio
+async def test_results_endpoint_returns_memo_heading_lapsed_and_drops_duplicates(
+    db_session, intake_scaffold
+):
+    """The showcase page reads /results: it gets the memo's heading, the
+    engine's reference-date lapsed flag, and the memo's de-duplication."""
+    from app.routers.analysis import get_analysis_results
+
+    intake, run = intake_scaffold["intake"], intake_scaffold["run"]
+    common = dict(intake_id=intake.id, run_id=run.id, jurisdiction="Minnesota")
+    db_session.add_all(
+        [
+            Deadline(
+                event_text="march 3rd, thats when the 14 day notice showed up taped to the door",
+                event_type="notice_to_vacate", trigger="notice_posted",
+                trigger_date=date(2026, 3, 3), computed_date=date(2026, 3, 17),
+                computed=True, urgency="lapsed", hedge="h", **common,
+            ),
+            Deadline(
+                event_text="the 14 day notice showed up taped to the door",
+                event_type="notice_to_vacate", trigger="notice_posted",
+                trigger_date=date(2026, 3, 3), computed_date=date(2026, 3, 17),
+                computed=True, urgency="lapsed", hedge="h", **common,
+            ),
+            Deadline(
+                event_text="court date is april 1",
+                event_type="eviction_hearing", trigger="hearing",
+                trigger_date=date(2026, 4, 1), computed_date=date(2026, 4, 1),
+                computed=True, urgency="high", hedge="h", **common,
+            ),
+        ]
+    )
+    await db_session.flush()
+
+    body = await get_analysis_results(intake.id, db=db_session, user=MagicMock())
+    deadlines = body["deadlines"]
+
+    assert [d["heading"] for d in deadlines] == [
+        "Notice to vacate — March 3, 2026",
+        "Eviction hearing — April 1, 2026",
+    ]
+    assert [d["lapsed"] for d in deadlines] == [True, False]
+    # Existing fields stay for other consumers.
+    first = deadlines[0]
+    assert first["event_text"].startswith("march 3rd")
+    assert first["computed_date"] == "2026-03-17"
+    assert first["urgency"] == "lapsed"
