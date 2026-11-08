@@ -1,13 +1,8 @@
 """Guards for the operating-point calibration study (``backend/migration/sweep.py``).
 
-The study's whole claim to being evidence is that (a) its reconstruction of the resolver is
-faithful, (b) it measures the *production* combine function rather than a lookalike, and
-(c) it changes nothing. These tests assert all three, plus the integrity of the hand-written
-gold labels the recommendation rests on.
-
-They are tests OF THE HARNESS. Nothing here exercises ``app/`` behavior that the rest of the
-suite does not already cover — see ``test_concept_resolver.py`` and ``test_folio_resolve_pin.py``
-for that.
+The historical weighted-average arm preserves the signed-off baseline; the adopted floor
+arm must match production. Tests also pin gold-label integrity, the predicted acceptance
+deltas, and the study's lack of persistent changes to production configuration.
 """
 
 from __future__ import annotations
@@ -59,14 +54,14 @@ def test_reconstruction_equals_the_real_resolver(corpus, pools):
     """The sweep evaluates a cached candidate pool instead of re-running the resolver 200×.
 
     That shortcut is only legitimate because neither knob can change retrieval or stage
-    scoring. This is the proof: at the production operating point the reconstruction must
+    scoring. This is the proof: at the adopted production operating point the reconstruction must
     reproduce ``resolve_concepts`` exactly, in both embedding modes, on every narrative.
     """
     assert sweep.verify_reference(corpus, pools) == []
 
 
-def test_current_rule_is_the_production_combine_function():
-    """The status-quo arm of every sweep must BE ``_combine_score``, not a reimplementation."""
+def test_floor_rule_matches_the_production_combine_function():
+    """The adopted floor rule must reproduce the production combine function."""
     for e, label, llm in [
         (0.8, 0.7, 0.9),
         (0.9, None, None),
@@ -77,7 +72,7 @@ def test_current_rule_is_the_production_combine_function():
         (0.0, 0.0, 0.0),
     ]:
         assert sweep.combined_score(
-            e, label, llm, penalty=cr.SINGLE_STAGE_PENALTY, rule="current"
+            e, label, llm, penalty=cr.SINGLE_STAGE_PENALTY, rule="floor"
         ) == cr._combine_score(embedding_score=e, label_score=label, llm_score=llm)
 
 
@@ -98,10 +93,10 @@ def test_reference_matches_the_signed_off_migration_capture(pools):
 # ---------------------------------------------------------------------------
 
 
-def test_production_operating_point_is_untouched():
-    """The knobs the study sweeps are still exactly where the migration left them."""
-    assert cr.SINGLE_STAGE_PENALTY == 0.7
-    assert cr.ConceptResolutionConfig().confidence_threshold == 0.5
+def test_production_operating_point_is_adopted():
+    """The adopted calibration keeps the stage weights unchanged."""
+    assert cr.SINGLE_STAGE_PENALTY == 0.85
+    assert cr.ConceptResolutionConfig().confidence_threshold == 0.55
     assert cr.EMBEDDING_WEIGHT == 0.3
     assert cr.LABEL_WEIGHT == 0.3
     assert cr.LLM_WEIGHT == 0.4
@@ -115,7 +110,7 @@ def test_sweeping_restores_every_patched_attribute(corpus):
     sweep.combined_score(0.4, 0.8, None, penalty=0.95, rule="current")
     sweep.build_pools(corpus, None, expansions=False)
     assert (cr.SINGLE_STAGE_PENALTY, cr.compute_relevance_score, cr.expand_legal_terms) == before
-    assert cr.SINGLE_STAGE_PENALTY == 0.7
+    assert cr.SINGLE_STAGE_PENALTY == 0.85
     assert cr.compute_relevance_score is folio_resolve.compute_relevance_score
 
 
@@ -194,9 +189,33 @@ def test_presence_weighting_fixes_it_but_rescales_the_axis():
     assert presence["exact_label_only"] < 0.35  # 0.5 would no longer mean anything
 
 
-def test_the_inversion_is_reproducible_end_to_end():
-    """Through the real ``resolve_concepts``: weak retrieval returns LESS than no retrieval."""
+def test_the_inversion_is_fixed_end_to_end():
+    """Through the real resolver, weak retrieval no longer suppresses the label match."""
     rows = {row["embedding"]: row for row in combine_lab.end_to_end()}
     assert rows[None]["resolved"] == 1
-    assert rows[0.10]["resolved"] == 0
+    assert rows[0.10]["resolved"] == 1
     assert rows[0.30]["resolved"] == 1
+
+
+@pytest.mark.parametrize("mode,seam,fails", [("healthy", "resolve", False), ("degraded", "resolve_no_embed", True)])
+def test_adopted_resolver_changes_only_predicted_golden_concepts(corpus, mode, seam, fails):
+    import asyncio
+    import harness
+
+    capture = json.loads((MIGRATION / "captures" / "candidate.json").read_text())
+    expected = {row["id"]: {r["iri"] for r in row["top"]} for row in capture[seam]}
+    if mode == "healthy":
+        for nid in ("n-exact-label", "n-word-order-2"):
+            expected[nid] -= {"r-premises-liability", "r-wrongful-termination"}
+    else:
+        expected["n-word-order-2"].add("r-retaliation")
+        expected["n-expansion-debt"].add("r-fair-debt-act")
+        expected["n-homonym-habitability"].add("r-habitability")
+    folio = harness._FakeFOLIO(corpus["ontology"])
+    embedding = harness._FakeEmbeddingService(corpus["ontology"], fail=fails)
+    for item in corpus["narratives"]:
+        actual = asyncio.run(cr.resolve_concepts(
+            item["text"], folio, embedding,
+            config=cr.ConceptResolutionConfig(enable_llm_stage=False),
+        ))
+        assert {r.iri for r in actual} == expected[item["id"]], item["id"]

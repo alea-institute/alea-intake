@@ -65,7 +65,7 @@ class Settings(BaseSettings):
     folio_owl_branch: str = "main"
     folio_update_interval_hours: int = 24
     folio_cache_dir: str = "./data/folio_cache"
-    folio_confidence_threshold: float = 0.5
+    folio_confidence_threshold: float = 0.55
     folio_traversal_depth: int = 2
 
     # Intake
