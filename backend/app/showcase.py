@@ -42,17 +42,22 @@ async def _check_identifiers(request, db, user):
     # overwrite another before its ownership has been checked.
     supplied = list(request.path_params.items()) + list(request.query_params.multi_items())
     if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
-        content_type = request.headers.get("content-type", "")
-        if "application/json" in content_type:
+        content_type = request.headers.get("content-type", "").split(';')[0].strip().lower()
+        if content_type == "application/json" or (
+            content_type.startswith("application/") and content_type.endswith("+json")
+        ):
             try:
-                body = await request.json()
+                raw_body = await request.body()
+                body = json.loads(raw_body) if raw_body else {}
             except (ValueError, json.JSONDecodeError):
                 raise HTTPException(422, "Expected a JSON object") from None
             if not isinstance(body, dict):
                 raise HTTPException(422, "Expected a JSON object")
             supplied.extend(body.items())
-        elif "multipart/form-data" in content_type:
+        elif content_type in {"multipart/form-data", "application/x-www-form-urlencoded"}:
             supplied.extend((await request.form()).multi_items())
+        elif await request.body():
+            raise HTTPException(415, "Unsupported media type")
     intake_ids = set()
     for name, value in supplied:
         if name not in models or value is None:
@@ -156,6 +161,15 @@ class ShowcaseBodyLimit:
         settings = config.get_settings()
         if scope["type"] != "http" or not settings.showcase_mode:
             return await self.app(scope, receive, send)
+        # FastAPI parses form parameters before dependencies run. Normalize the
+        # media type here too, preserving case-sensitive multipart boundaries.
+        scope = dict(scope)
+        scope["headers"] = [
+            (name, value.split(b';', 1)[0].strip().lower()
+             + (b';' + value.split(b';', 1)[1] if b';' in value else b''))
+            if name.lower() == b'content-type' else (name, value)
+            for name, value in scope.get("headers", [])
+        ]
         from starlette.datastructures import Headers
         try:
             content_length = int(Headers(scope=scope).get("content-length", "0"))

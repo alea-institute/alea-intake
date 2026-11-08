@@ -492,3 +492,102 @@ async def test_standard_transcript_without_key_is_stored_and_screened_then_error
         row = (await conn.execute(select(Transcript.status, Transcript.text_encrypted).where(
             Transcript.recording_id == recording_id))).one()
         assert row == ("edited" if message_type == "transcript_edit" else "approved", expected_text.encode())
+
+
+@pytest.mark.parametrize("content_type", ["Application/JSON", "application/vnd.test+json",
+                                         " Application/JSON ; charset=utf-8", "MULTIPART/FORM-DATA"])
+@pytest.mark.parametrize("identifier", ["run_id", "intake_id", "session_id"])
+async def test_json_media_types_enforce_foreign_identifiers(showcase, content_type, identifier):
+    import json
+    from app.db.engine import get_engine
+    from app.models.output import OutputDocument
+    from sqlalchemy import select
+
+    client, _, _ = showcase
+    owner, other = await guest(client), await guest(client)
+    victim = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    document_id = await _seed_output(victim['id'])
+    async with get_engine().connect() as conn:
+        conn = await conn.execution_options(schema_translate_map={'tenant': None})
+        run_id = (await conn.execute(select(OutputDocument.run_id).where(
+            OutputDocument.id == document_id))).scalar_one()
+    ids = {'intake_id': victim['id'], 'session_id': victim['session_id'], 'run_id': run_id}
+    # Output generation has no path identifier to rescue a missed body check.
+    body = {'run_id': run_id, 'intake_id': victim['id']} if identifier == 'run_id' else {identifier: ids[identifier]}
+    headers = {**other, 'X-LLM-API-Key': 'visitor-key'}
+    if content_type == 'MULTIPART/FORM-DATA':
+        request = client.build_request('POST', '/api/v1/output/generate', headers=headers,
+                                       files=[(k, (None, str(v))) for k, v in body.items()])
+        request.headers['Content-Type'] = request.headers['Content-Type'].replace(
+            'multipart/form-data', content_type)
+        response = await client.send(request)
+    else:
+        response = await client.post('/api/v1/output/generate', content=json.dumps(body),
+                                    headers={**headers, 'Content-Type': content_type})
+    assert response.status_code == 404, response.text
+
+
+@pytest.mark.parametrize('duplicate', [False, True])
+@pytest.mark.parametrize('content_type', ['multipart/form-data', 'MULTIPART/FORM-DATA'])
+async def test_multipart_media_types_enforce_all_session_ids(showcase, monkeypatch, duplicate, content_type):
+    client, _, _ = showcase
+    owner, other = await guest(client), await guest(client)
+    victim = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    own = (await client.post('/api/v1/intake/', headers=other, json={})).json()
+    process = AsyncMock(side_effect=AssertionError('Foreign upload must not be processed'))
+    monkeypatch.setattr('app.routers.intake.DocumentService.process_document', process)
+    files = [('session_id', (None, str(victim['session_id'])))]
+    if duplicate:
+        files.append(('session_id', (None, str(own['session_id']))))
+    files.append(('file', ('story.txt', b'private narrative', 'text/plain')))
+    request = client.build_request('POST', f'/api/v1/intake/{own["id"]}/document',
+                                   headers={**other, 'X-LLM-API-Key': 'visitor-key'}, files=files)
+    request.headers['Content-Type'] = request.headers['Content-Type'].replace('multipart/form-data', content_type)
+    response = await client.send(request)
+    assert response.status_code == 404, response.text
+    process.assert_not_called()
+
+
+@pytest.mark.parametrize('method', ['POST', 'PUT', 'PATCH', 'DELETE'])
+async def test_unknown_mutating_media_type_is_415(showcase, method):
+    client, _, app = showcase
+    from fastapi import Depends
+    from app.showcase import showcase_access
+
+    @app.api_route('/media-probe', methods=[method], dependencies=[Depends(showcase_access)])
+    async def probe():
+        return {'ok': True}
+
+    headers = await guest(client)
+    response = await client.request(method, '/media-probe', content=b'intake_id=1',
+                                    headers={**headers, 'Content-Type': 'text/plain'})
+    assert response.status_code == 415
+
+
+@pytest.mark.parametrize('content_type', ['application/json', 'Application/JSON', 'application/vnd.test+json'])
+async def test_empty_json_is_allowed_and_malformed_json_is_422(showcase, content_type):
+    client, _, _ = showcase
+    headers = {**await guest(client), 'Content-Type': content_type}
+    assert (await client.post('/api/v1/intake/', headers=headers, content=b'')).status_code == 201
+    assert (await client.post('/api/v1/intake/', headers=headers, content=b'{')).status_code == 422
+
+
+async def test_urlencoded_form_checks_foreign_identifiers(showcase):
+    client, _, _ = showcase
+    owner, other = await guest(client), await guest(client)
+    victim = (await client.post('/api/v1/intake/', headers=owner, json={})).json()
+    response = await client.post('/api/v1/output/generate', headers=other,
+                                 data={'intake_id': victim['id']})
+    assert response.status_code == 404
+
+
+async def test_two_owned_intakes_cannot_be_combined(showcase):
+    client, _, _ = showcase
+    headers = await guest(client)
+    first = (await client.post('/api/v1/intake/', headers=headers, json={})).json()
+    second = (await client.post('/api/v1/intake/', headers=headers, json={})).json()
+    response = await client.get(f'/api/v1/intake/{first["id"]}/messages', headers=headers,
+                                params={'session_id': second['session_id']})
+    assert response.status_code == 404
+
+
