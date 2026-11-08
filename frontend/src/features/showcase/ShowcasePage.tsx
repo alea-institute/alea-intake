@@ -14,7 +14,10 @@ import scenarios from './scenarios.json'
 import './showcase.css'
 
 const providers = {openai:'OpenAI',anthropic:'Anthropic',google:'Google'}
-const models: Record<string,string[]> = {openai:[defaultModels.openai,'gpt-4.1'],anthropic:[defaultModels.anthropic,'claude-sonnet-4-5'],google:[defaultModels.google,'gemini-2.5-pro']}
+const models: Record<string,string[]> = {openai:[defaultModels.openai,'gpt-4.1'],anthropic:[defaultModels.anthropic,'claude-opus-5-5','claude-haiku-5-5'],google:[defaultModels.google,'gemini-2.5-pro']}
+// The server's reference model wins wherever a provider offers it, so the quality note stays quiet by default.
+const providerFor = (model:string) => Object.keys(models).find(provider=>models[provider].includes(model))
+const modelFor = (provider:string, reference:string) => models[provider].includes(reference) ? reference : models[provider][0]
 const states = 'Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|District of Columbia|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming'.split('|')
 export function ShowcasePage() {
   const {t,i18n} = useTranslation('showcase')
@@ -38,12 +41,13 @@ export function ShowcasePage() {
   const [iterationLimit,setIterationLimit] = useState(false)
   const [session,setSession] = useState<{id:number;session_id:number;party_id:number} | null>(()=>JSON.parse(sessionStorage.getItem('showcase-intake') || 'null'))
   const lastActive = useRef(Date.now())
+  const modelChosen = useRef(false)
   const generation = useRef(0)
   const analysisController = useRef<AbortController | null>(null)
   const erasing = useRef(false)
   const keepalive = useMemo(()=>session ? createSessionKeepalive(session.id,session.session_id) : undefined,[session])
   const recommended = notice?.reference_model || referenceModel
-  useEffect(()=> { loadThemeFonts('courthouse-classic'); json('/api/v1/auth/showcase-notice').then(n=>{setNotice(n); if(n.reference_model) setKey(k=>k.key?k:({...k,model:n.reference_model}))}).catch(()=>setError('network')) },[])
+  useEffect(()=> { loadThemeFonts('courthouse-classic'); json('/api/v1/auth/showcase-notice').then(n=>{setNotice(n); if(n.reference_model && !modelChosen.current) setKey(k=>k.key?k:({...k,provider:providerFor(n.reference_model)??k.provider,model:n.reference_model}))}).catch(()=>setError('network')) },[])
   // Warm late-rendered children without letting namespace loading interrupt this page's effects.
   useEffect(()=> { void i18n.loadNamespaces(['chat', 'showcase']) },[i18n])
   useEffect(()=> { key.key ? sessionStorage.setItem('showcase-key',JSON.stringify(key)) : sessionStorage.removeItem('showcase-key') },[key])
@@ -72,7 +76,7 @@ export function ShowcasePage() {
     for(const name of Object.keys(sessionStorage)) {
       if(name!==pendingEraseStorageKey) sessionStorage.removeItem(name)
     }
-    setSession(null);setState('');setError('');setIterationLimit(false);setNonReference(false);setReset(n=>n+1);setStory('');setPdf(undefined);setResult(undefined);setViz(undefined);setMemo('');setKey({key:'',provider:'openai',model:defaultModels.openai});setConsent(false);setErase(false);setIdle(false);setExpired(expire);setBusy(false);qc.clear();lastActive.current=Date.now()
+    setSession(null);setState('');setError('');setIterationLimit(false);setNonReference(false);setReset(n=>n+1);setStory('');setPdf(undefined);setResult(undefined);setViz(undefined);setMemo('');setKey({key:'',provider:providerFor(recommended)??'openai',model:providerFor(recommended)?recommended:defaultModels.openai});modelChosen.current=false;setConsent(false);setErase(false);setIdle(false);setExpired(expire);setBusy(false);qc.clear();lastActive.current=Date.now()
     erasing.current=false
   }
 
@@ -138,8 +142,8 @@ export function ShowcasePage() {
     {expired ? <section><h2>{t('expired')}</h2><Button onClick={()=>{setExpired(false);lastActive.current=Date.now()}}>{t('fresh')}</Button></section> : <>
     {idle&&<aside role="alert"><p>{t('idle')}</p><button disabled={!memo} onClick={exportMemo}>{t('export')}</button><button onClick={()=>{lastActive.current=Date.now();setIdle(false);void keepalive?.().catch(()=>{})}}>{t('keep')}</button></aside>}
     <section className="showcase-inputs"><fieldset><legend>{t('key')}</legend><div className="key-fields">
-      <label>{t('provider')}<select value={key.provider} onChange={e=>{const provider=e.target.value;setKey({...key,provider,model:models[provider][0]})}}>{Object.entries(providers).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
-      <label>{t('model')}<input list="showcase-models" value={key.model} onChange={e=>setKey({...key,model:e.target.value})}/><datalist id="showcase-models">{[...new Set([...models[key.provider],recommended])].map(m=><option key={m} value={m}/>)}</datalist></label>
+      <label>{t('provider')}<select value={key.provider} onChange={e=>{const provider=e.target.value;modelChosen.current=true;setKey({...key,provider,model:modelFor(provider,recommended)})}}>{Object.entries(providers).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
+      <label>{t('model')}<input list="showcase-models" value={key.model} onChange={e=>{modelChosen.current=true;setKey({...key,model:e.target.value})}}/><datalist id="showcase-models">{[...new Set([...models[key.provider],recommended])].map(m=><option key={m} value={m}/>)}</datalist></label>
       <label htmlFor="visitor-key">{t('key')}<input id="visitor-key" type="password" autoComplete="off" value={key.key} aria-invalid={!!key.key&&!keyValid} aria-describedby="key-privacy" onChange={e=>setKey({...key,key:e.target.value.trim()})}/></label></div>
       {key.key&&!keyValid&&<p>{t('keyError')}</p>}<p>{t('recommended',{model:recommended})}</p>
       <p>{t('keyHelp')} <a href={key.provider==='anthropic'?'https://console.anthropic.com/settings/keys':key.provider==='google'?'https://aistudio.google.com/apikey':'https://platform.openai.com/api-keys'} target="_blank" rel="noreferrer">{t('getKey')}</a></p><p id="key-privacy">{t('privacy')}</p>

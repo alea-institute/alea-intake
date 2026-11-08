@@ -1,5 +1,5 @@
 export const showcaseMode = import.meta.env.VITE_SHOWCASE_MODE === 'true'
-export const defaultModels: Record<string, string> = {openai:'gpt-4.1-mini',anthropic:'claude-haiku-4-5',google:'gemini-2.5-flash'}
+export const defaultModels: Record<string, string> = {openai:'gpt-4.1-mini',anthropic:'claude-sonnet-5-5',google:'gemini-2.5-flash'}
 export const referenceModel = import.meta.env.VITE_REFERENCE_MODEL || defaultModels[import.meta.env.VITE_REFERENCE_PROVIDER || 'openai']
 export const referenceProvider = import.meta.env.VITE_REFERENCE_PROVIDER || 'openai'
 export const TERMINAL_ANALYSIS_STATUSES = ['completed', 'complete', 'converged', 'max_iterations'] as const
