@@ -1221,13 +1221,12 @@ See [LICENSE](LICENSE) for the full license text.
 
 **Attribution and third-party licenses:**
 
-- **[THIRD-PARTY.md](THIRD-PARTY.md)** is the authoritative attribution notice — the openly-licensed *data* this project bundles and the copyleft components that need a compliance decision.
+- **[THIRD-PARTY.md](THIRD-PARTY.md)** is the authoritative attribution notice — the openly-licensed *data* this project bundles and notable dependency licenses.
 - **[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)** is the per-package appendix: every backend and frontend dependency with its SPDX identifier.
 
-Two obligations travel with a deployment of ALEA Intake:
+FOLIO attribution travels with a deployment of ALEA Intake:
 
-1. **FOLIO is CC-BY 4.0.** This repo *bundles* the ontology (`backend/data/folio_cache/folio.owl`), so any redistribution — source, container image, or hosted service — must attribute FOLIO to the **ALEA Institute** (originating from the **SALI Alliance**) under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-2. **PyMuPDF is AGPL-3.0.** It is a required backend dependency (`pymupdf`, used by the PDF extractor) and is installed into the built image. See THIRD-PARTY.md for the open compliance question.
+**FOLIO is CC-BY 4.0.** This repo *bundles* the ontology (`backend/data/folio_cache/folio.owl`), so any redistribution — source, container image, or hosted service — must attribute FOLIO to the **ALEA Institute** (originating from the **SALI Alliance**) under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ---
 

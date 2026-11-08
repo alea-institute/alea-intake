@@ -5,7 +5,7 @@ its SPDX license identifier.
 
 > **Appendix, not the notice.** [`THIRD-PARTY.md`](THIRD-PARTY.md) is the
 > authoritative attribution file — it covers the bundled CC-BY FOLIO data and the
-> open PyMuPDF/AGPL compliance question. This file is the per-package roster.
+> PDF extraction dependency notices. This file is the per-package roster.
 > Where the two disagree, THIRD-PARTY.md governs.
 
 ## Python Dependencies (backend)
@@ -33,9 +33,12 @@ its SPDX license identifier.
 | folio-resolve | MIT | Shared FOLIO source-text→concept matching engine; Stage-2 label scoring + semantic-fit place gate |
 | faiss-cpu | MIT | |
 | sentence-transformers | Apache-2.0 | |
+| torch | BSD-3-Clause | CPU wheels |
 | lxml | BSD-3-Clause | |
 | python-docx | MIT | |
-| pymupdf | AGPL-3.0-only | Used as a library via pip; not modified or redistributed; see compatibility notes below |
+| pdfplumber | MIT | PDF text and structural extraction |
+| pdfminer.six | MIT | PDF parsing backend |
+| pypdfium2 | Apache-2.0 OR BSD-3-Clause | Bindings; bundled PDFium is BSD-3-Clause with third-party notices |
 | pytesseract | Apache-2.0 | |
 | mcp | MIT | |
 | eyecite | BSD-2-Clause | |
@@ -113,19 +116,10 @@ its SPDX license identifier.
 
 ## License Compatibility Notes
 
-- **AGPL-3.0 (PyMuPDF): ⚠ OPEN QUESTION — do not treat the paragraph below as
-  settled.** It describes PyMuPDF as something "end users install independently",
-  but `backend/pyproject.toml` lists `pymupdf` as a **required** dependency and the
-  `Dockerfile` installs it into the built image, so a distributed build or hosted
-  deployment ships it. AGPL §13 reaches users of a hosted service. See the
-  "Open compliance question" section of [`THIRD-PARTY.md`](THIRD-PARTY.md) for the
-  three options (replace / commercial license / relicense) and how the sibling
-  repos folio-enrich and book-indexer each answered it.
-
-  *Original text, retained for reference:* PyMuPDF is licensed under AGPL-3.0-only.
-  This project uses PyMuPDF as a runtime library installed via pip. The ALEA Intake
-  source code is MIT-licensed and does not contain or modify any PyMuPDF source
-  code. Organizations with AGPL concerns may substitute an alternative PDF library.
+- **PDF extraction:** pdfplumber and pdfminer.six are MIT-licensed.
+  pypdfium2 offers Apache-2.0 or BSD-3-Clause terms; its bundled PDFium library
+  uses BSD-3-Clause and includes additional third-party notices distributed
+  with the wheel. Preserve those notices in redistributed images.
 
 - **LGPL-3.0 (psycopg):** psycopg is licensed under LGPL-3.0-or-later. This
   project uses psycopg as a dynamically-linked library installed via pip. The

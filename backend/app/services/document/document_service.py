@@ -27,7 +27,7 @@ _MIME_EXTRACTOR_MAP: dict[str, Callable[..., Coroutine[Any, Any, tuple[str, list
 
 # Extraction method names by MIME type (for DocumentExtraction.extraction_method)
 _MIME_EXTRACTION_METHOD: dict[str, str] = {
-    "application/pdf": "pymupdf",
+    "application/pdf": "pdfplumber",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "python-docx",
     "image/png": "tesseract",
     "image/jpeg": "tesseract",

@@ -28,9 +28,10 @@ dependencies = [
     "folio-resolve>=0.1.0",
     "faiss-cpu>=1.13.0",
     "sentence-transformers>=5.0.0",
+    "torch>=1.11.0",
     "lxml>=5.0.0",
     "python-docx>=1.2.0",
-    "pymupdf>=1.27.0",
+    "pdfplumber==0.11.10",
     "pytesseract>=0.3.13",
     "mcp>=1.27.0",
     "eyecite>=2.7.6",
@@ -68,3 +69,11 @@ markers = [
 [tool.ruff]
 target-version = "py312"
 line-length = 120
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

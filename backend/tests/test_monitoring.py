@@ -332,8 +332,10 @@ class TestEndpoints:
             assert "python_" in body or "process_" in body or "alea_" in body or "http_" in body
 
     @pytest.mark.asyncio
-    async def test_health_endpoint_returns_extended_json(self):
-        """GET /health returns extended component status JSON."""
+    async def test_health_endpoint_returns_extended_json(self, monkeypatch):
+        """GET /health returns component status and the generic build commit."""
+        monkeypatch.setenv("GIT_COMMIT_SHA", "0123456789abcdef")
+        monkeypatch.setenv("RAILWAY_GIT_COMMIT_SHA", "old-platform-commit")
         from app.main import app
 
         with (
@@ -375,6 +377,7 @@ class TestEndpoints:
             data = resp.json()
             assert data["status"] in ("healthy", "degraded")
             assert data["version"] == "1.0.0"
+            assert data["commit"] == "0123456789abcdef"
             assert "database" in data
             assert "folio_owl" in data
 

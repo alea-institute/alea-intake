@@ -21,6 +21,9 @@ LABEL org.opencontainers.image.title="alea-intake" \
       org.opencontainers.image.source="https://github.com/alea/alea-intake" \
       org.opencontainers.image.licenses="MIT"
 
+ARG GIT_COMMIT_SHA
+ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
+
 WORKDIR /app
 
 # Install system deps (curl for healthcheck, WeasyPrint C libs, Tesseract OCR)

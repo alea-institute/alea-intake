@@ -75,9 +75,9 @@ async def check_health(app: FastAPI) -> dict[str, Any]:
     return {
         "status": overall,
         "version": _VERSION,
-        # Deployed git commit (injected by Railway at build/runtime). Lets CI confirm
+        # Deployed git commit supplied at build/runtime. Lets CI confirm
         # the exact pushed commit is live before running post-deploy smoke tests.
-        "commit": os.environ.get("RAILWAY_GIT_COMMIT_SHA"),
+        "commit": os.environ.get("GIT_COMMIT_SHA") or os.environ.get("RAILWAY_GIT_COMMIT_SHA"),
         "database": db_status,
         "folio_owl": folio_owl_status,
         "folio_mcp": folio_mcp_status,
