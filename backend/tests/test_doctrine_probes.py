@@ -124,6 +124,93 @@ def test_deposit_probe_does_not_fire_without_rental_context():
     assert "security_deposit_irregularity" not in _ids(
         "I paid cash with no receipt for a used car."
     )
+    assert "security_deposit_return" not in _ids(
+        "I paid cash with no receipt for a used car."
+    )
+
+
+def _probe(probe_id: str):
+    return next(p for p in PROBES if p.id == probe_id)
+
+
+def test_plain_security_deposit_asks_return_question_not_cash_wording():
+    """Live rehearsal bug: a visitor who only said their deposit was not
+    returned got "You mentioned paying extra money (like a cash pet deposit)
+    with no receipt" -- a fact they never stated."""
+    probes = run_probes(
+        "my landlord still hasn't given back my $1,200 security deposit",
+        domains=frozenset({"landlord_tenant"}),
+    )
+    ids = {p.id for p in probes}
+    assert "security_deposit_return" in ids
+    assert "security_deposit_irregularity" not in ids
+    assert not any("cash pet deposit" in p.question for p in probes)
+    assert "21 days" in _probe("security_deposit_return").question
+
+
+def test_bare_deposit_with_tenancy_word_asks_return_question():
+    ids = _ids("I moved out in May and the landlord kept my deposit.")
+    assert "security_deposit_return" in ids
+    assert "security_deposit_irregularity" not in ids
+
+
+def test_landlord_kept_my_deposit_asks_return_question():
+    assert "security_deposit_return" in _ids("landlord kept my deposit")
+    assert "security_deposit_return" in _ids("the landlord never returned the $1,200 deposit")
+
+
+def test_rent_escrow_story_fires_neither_deposit_probe():
+    ids = _ids("I want to deposit the rent with the court because my landlord won't fix the heat")
+    assert "security_deposit_return" not in ids
+    assert "security_deposit_irregularity" not in ids
+
+
+def test_direct_deposit_paycheck_fires_neither_deposit_probe():
+    ids = _ids("my paycheck is direct deposit and my landlord keeps raising the rent")
+    assert "security_deposit_return" not in ids
+    assert "security_deposit_irregularity" not in ids
+
+
+def test_verb_deposit_forms_do_not_fire_return_probe():
+    for text in (
+        "my landlord said I deposited the money late",
+        "the tenant deposits rent with the court each month",
+        "I asked if I can deposit it with the court; my landlord refuses repairs",
+        "my landlord told me to use rent escrow",
+    ):
+        assert "security_deposit_return" not in _ids(text), text
+
+
+def test_cash_pet_deposit_no_receipt_keeps_original_wording():
+    text = "the landlord made me pay a $300 pet deposit in cash, no receipt."
+    probes = run_probes(text, domains=frozenset({"landlord_tenant"}))
+    ids = {p.id for p in probes}
+    assert "security_deposit_irregularity" in ids
+    assert "security_deposit_return" not in ids
+    assert _probe("security_deposit_irregularity").question.startswith(
+        "You mentioned paying extra money (like a cash pet deposit) with no receipt."
+    )
+
+
+def test_verbatim_lt_cash_excerpt_fires_irregularity_only():
+    ids = _ids(LT_DEPOSIT_NOTICE_EXCERPT)
+    assert "security_deposit_irregularity" in ids
+    assert "security_deposit_return" not in ids
+
+
+def test_elder_cash_no_receipt_without_tenancy_fires_neither_deposit_probe():
+    text = (
+        "my son took cash out at the atm every week with no receipt, different "
+        "amounts, current balance dropping. this is about a power of attorney."
+    )
+    ids = {
+        p.id
+        for p in run_probes(
+            text, domains=frozenset({"landlord_tenant", "elder_exploitation"})
+        )
+    }
+    assert "security_deposit_irregularity" not in ids
+    assert "security_deposit_return" not in ids
 
 
 def test_lt_rent_escrow_probe_fires_on_held_back_rent():
