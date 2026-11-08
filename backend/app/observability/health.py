@@ -24,6 +24,19 @@ logger = logging.getLogger(__name__)
 
 _VERSION = "1.0.0"
 
+# Commit env vars in precedence order. Coolify injects GIT_COMMIT_SHA as an
+# EMPTY string at runtime (overriding the image ENV) but sets SOURCE_COMMIT to
+# the full SHA, so empty values count as unset and SOURCE_COMMIT is a fallback.
+_COMMIT_ENV_VARS = ("GIT_COMMIT_SHA", "SOURCE_COMMIT", "RAILWAY_GIT_COMMIT_SHA")
+
+
+def deployed_commit() -> str | None:
+    """Return the deployed git commit from the first non-empty env var, else None."""
+    for name in _COMMIT_ENV_VARS:
+        value = (os.environ.get(name) or "").strip()
+        if value:
+            return value
+    return None
 
 async def check_health(app: FastAPI) -> dict[str, Any]:
     """Run all component health checks and return aggregate status.
@@ -76,7 +89,7 @@ async def check_health(app: FastAPI) -> dict[str, Any]:
         "version": _VERSION,
         # Deployed git commit supplied at build/runtime. Lets CI confirm
         # the exact pushed commit is live before running post-deploy smoke tests.
-        "commit": os.environ.get("GIT_COMMIT_SHA") or os.environ.get("RAILWAY_GIT_COMMIT_SHA"),
+        "commit": deployed_commit(),
         "database": db_status,
         "folio_owl": folio_owl_status,
         "folio_mcp": folio_mcp_status,

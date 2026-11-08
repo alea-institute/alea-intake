@@ -83,7 +83,7 @@ def test_asylum_one_year_lapsed():
     assert d.computed_date == date(2020, 8, 14)
     assert d.rule_id == "asylum_one_year"
     assert d.urgency == "lapsed"
-    assert "ALREADY PASSED" in d.hedge
+    assert "may already have passed" in d.hedge
     assert GENERIC_HEDGE in d.hedge
 
 

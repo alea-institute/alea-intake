@@ -73,7 +73,7 @@ class ActionItemGenerator:
             if not d.computed or not d.computed_date:
                 continue
             priority = "urgent" if d.urgency in ("lapsed", "high") else "important"
-            lapsed_prefix = "PAST-DUE? " if d.urgency == "lapsed" else ""
+            lapsed_prefix = "May have passed: " if d.urgency == "lapsed" else ""
             items.append(
                 ActionItem(
                     item_number=0,

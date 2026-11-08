@@ -20,11 +20,12 @@ import logging
 from datetime import date
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.models.analysis import Deadline
 from app.models.fact import ExtractedFact
-from app.models.intake import IntakeSession, Message
+from app.models.intake import Intake, IntakeSession, Message
+from app.services.deadline.dates import anchor_event_date, reference_date_from, utc_today
 from app.services.deadline.engine import compute_deadlines
 from app.services.llm_bounds import (
     bounded_call,
@@ -57,13 +58,18 @@ statute-of-limitations concern (eviction summons/hearing, being served with a
 petition, a notice to vacate or cure, a filing, an injury/incident, an
 immigration entry or hearing, etc.).
 
-TODAY'S DATE IS {today}. Interpret every date in the narrative relative to this
-anchor:
+TODAY'S DATE IS {today} (the date the client wrote this intake). Interpret
+every date in the narrative relative to this reference date:
 - Preserve any year the text states verbatim -- if the client writes
   "August 20, 2026", the year is 2026. NEVER shift a stated year.
-- If a month/day is given with no year, choose the year that makes the event
-  make sense relative to today (an upcoming hearing is in the future; a past
-  injury is in the past). Do NOT default to a prior year.
+- If a month/day is given with no year ("march 3rd", "april 1"), resolve it to
+  the NEAREST past-or-near-future date consistent with the story: something
+  that already happened (a notice posted, papers served, an injury) is on or
+  before today; an upcoming hearing or deadline is at most a few months after
+  today. Never push a date into a later year than the story supports -- with
+  today = 2026-03-10, "march 3rd" is 2026-03-03, not 2027-03-03. Use stated
+  years elsewhere in the story ("we moved in july 2025") and any date the
+  client calls "today" to keep the timeline consistent.
 - A stated court date, hearing date, or filing deadline that is already an
   explicit calendar date IS itself the operative deadline -- return it as the
   event's `date`.
@@ -147,7 +153,7 @@ class DeadlineDetectStage:
         ``today`` anchors the year-resolution guidance in the prompt so the model
         never mis-dates an event to a prior year (BUG-12).
         """
-        anchor = (today or date.today()).isoformat()
+        anchor = (today or utc_today()).isoformat()
         messages = [
             {"role": "system", "content": DEADLINE_SYSTEM_PROMPT.format(today=anchor)},
             {"role": "user", "content": text},
@@ -178,7 +184,9 @@ class DeadlineDetectStage:
         if not text.strip():
             return []
 
-        ref_today = today or date.today()
+        # One reference date for year resolution AND the lapsed check: the
+        # visitor's latest message date (fallback: today in UTC).
+        ref_today = today or await self._reference_date(intake_id)
 
         # --- Detect (probabilistic, mockable) ---
         def parse(raw: Any) -> DeadlineExtractionResult | None:
@@ -206,6 +214,11 @@ class DeadlineDetectStage:
             return []
 
         events = [self._to_event(e) for e in parsed.events]
+        # Deterministic guard: a yearless date the model pushed past the
+        # reference date (2027-03-03 for "march 3rd") rolls back to the year
+        # the story supports.
+        for ev in events:
+            ev.date = anchor_event_date(ev.date, ev.raw_text, ev.trigger, ref_today)
 
         # Grounding guard (round 4b): the extraction prompt's asylum-entry
         # emphasis caused gpt-4o-mini to FABRICATE an asylum_entry event in a
@@ -331,6 +344,31 @@ class DeadlineDetectStage:
             source_start=schema.source_start,
             source_end=schema.source_end,
         )
+
+    async def _reference_date(self, intake_id: int) -> date:
+        """The visitor's latest message date, else the intake's creation date, else UTC today."""
+        session_ids = (
+            await self._session.execute(
+                select(IntakeSession.id).where(IntakeSession.intake_id == intake_id)
+            )
+        ).scalars().all()
+        latest = None
+        if session_ids:
+            latest = (
+                await self._session.execute(
+                    select(func.max(Message.created_at)).where(
+                        Message.session_id.in_(session_ids),
+                        Message.sender_type != "system",
+                    )
+                )
+            ).scalar()
+        if latest is None:
+            latest = (
+                await self._session.execute(
+                    select(Intake.created_at).where(Intake.id == intake_id)
+                )
+            ).scalar()
+        return reference_date_from(latest)
 
     async def _gather_text(self, intake_id: int, include_facts: bool = True) -> str:
         """Concatenate the intake's consumer/professional message text + fact assertions.

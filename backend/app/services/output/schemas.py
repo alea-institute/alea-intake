@@ -19,6 +19,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.services.output.deadline_display import deadline_heading
+
 
 # ---------------------------------------------------------------------------
 # Authority / Fact / Element reference models (lightweight, for embedding in CIRAC)
@@ -196,6 +198,13 @@ class DeadlineRef(BaseModel):
     urgency: str = "unknown"
     hedge: str = ""
     jurisdiction: str | None = None
+
+    @property
+    def heading(self) -> str:
+        """Memo heading from structured fields, e.g. 'Court hearing — April 1, 2026'."""
+        return deadline_heading(
+            self.event_type, self.trigger, self.trigger_date, self.computed_date
+        )
 
 
 # ---------------------------------------------------------------------------
