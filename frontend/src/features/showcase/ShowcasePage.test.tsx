@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
 import { act, fireEvent, screen, waitFor, cleanup, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
@@ -7,11 +8,22 @@ import { ShowcasePage } from './ShowcasePage'
 import copy from '../../../public/locales/en/showcase.json'
 import { wageTheftVisualization } from '@/test/fixtures/showcase'
 
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, opts?: Record<string, unknown>) => {
+const translations = vi.hoisted(() => ({
+  i18n: { loadNamespaces: vi.fn().mockResolvedValue(undefined) },
+  pending: null as Promise<void> | null,
+  suspended: vi.fn(),
+}))
+vi.mock('react-i18next', () => ({ useTranslation: (namespace: string) => {
+  if (namespace === 'chat' && sessionStorage.getItem('showcase-intake') && translations.pending) {
+    translations.suspended()
+    throw translations.pending
+  }
+  return { i18n: translations.i18n, t: (key: string, opts?: Record<string, unknown>) => {
   let value = (copy as Record<string, string>)[key] ?? String(opts?.defaultValue ?? key)
   for (const [k,v] of Object.entries(opts ?? {})) value = value.replace(`{{${k}}}`, String(v))
   return value
-} }) }))
+} }
+} }))
 let submittedStory = '', hangSocket = false, socketClosed = false
 class Socket {
   onopen?: () => void; onmessage?: (e: {data:string}) => void; onerror?: () => void; onclose?: (e: {code:number}) => void
@@ -21,6 +33,7 @@ class Socket {
 }
 let analyses = 0, uploads = 0, ended = 0
 beforeEach(() => {
+  translations.pending = null; translations.suspended.mockClear(); translations.i18n.loadNamespaces.mockClear()
   sessionStorage.clear(); localStorage.clear(); analyses = uploads = ended = 0
   hangSocket = socketClosed = false
   vi.stubGlobal('WebSocket', Socket)
@@ -58,6 +71,36 @@ function expectLandmarkContainment() {
   expect(within(banners[0]).getByRole('note', {hidden:true})).toHaveTextContent('A FOLIO demonstration. Not legal advice.')
 }
 describe('showcase', () => {
+  it('completes analysis when a child namespace suspends after session creation', async () => {
+    let notices = 0
+    server.use(http.get('/api/v1/auth/showcase-notice', () => {
+      notices++
+      return HttpResponse.json({consent_text: 'Allow AI processing', idle_ttl_seconds: 120})
+    }))
+    let resolveNamespace!: () => void
+    translations.pending = new Promise<void>(resolve => { resolveNamespace = resolve })
+    const namespaceLoaded = translations.pending
+    server.use(http.post('/api/v1/analysis/1/analyze', async () => {
+      analyses++
+      await namespaceLoaded
+      return HttpResponse.json({run_id: 4, status: 'completed', is_reference_model: true})
+    }))
+    renderWithProviders(<Suspense fallback={<p>Loading application</p>}><ShowcasePage /></Suspense>)
+    await screen.findByText('Allow AI processing')
+    fireEvent.click(screen.getByLabelText('Allow AI processing'))
+    key(); story(); fireEvent.click(screen.getByText('Analyze my story'))
+    await waitFor(() => expect(translations.suspended).toHaveBeenCalled())
+    expect(screen.queryByText('Loading application')).not.toBeInTheDocument()
+    await act(async () => {
+      translations.pending = null
+      resolveNamespace()
+    })
+    await screen.findByRole('heading', {name: 'Unpaid wages'})
+    expect(analyses).toBe(1)
+    expect(screen.queryByText(/Analysis stopped/)).not.toBeInTheDocument()
+    expect(notices).toBe(1)
+    expect(translations.i18n.loadNamespaces).toHaveBeenCalledWith(['chat', 'showcase'])
+  })
   it('contains the disclaimer note and every result view in landmarks', async () => {
     await ready()
     expectLandmarkContainment()

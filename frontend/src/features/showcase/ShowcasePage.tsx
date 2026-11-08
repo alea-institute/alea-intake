@@ -1,5 +1,5 @@
 import { AlertDialog, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -16,7 +16,7 @@ const providers = {openai:'OpenAI',anthropic:'Anthropic',google:'Google'}
 const models: Record<string,string[]> = {openai:[defaultModels.openai,'gpt-4.1'],anthropic:[defaultModels.anthropic,'claude-sonnet-4-5'],google:[defaultModels.google,'gemini-2.5-pro']}
 const states = 'Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|District of Columbia|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming'.split('|')
 export function ShowcasePage() {
-  const {t} = useTranslation('showcase')
+  const {t,i18n} = useTranslation('showcase')
   const qc = useQueryClient()
   const [key,setKey] = useState(readKey)
   const [notice,setNotice] = useState<{consent_text:string;idle_ttl_seconds?:number;reference_model?:string}>()
@@ -44,6 +44,8 @@ export function ShowcasePage() {
   const keepalive = useMemo(()=>session ? createSessionKeepalive(session.id,session.session_id) : undefined,[session])
   const recommended = notice?.reference_model || referenceModel
   useEffect(()=> { loadThemeFonts('courthouse-classic'); json('/api/v1/auth/showcase-notice').then(n=>{setNotice(n); if(n.reference_model) setKey(k=>k.key?k:({...k,model:n.reference_model}))}).catch(()=>setError('network')) },[])
+  // Warm late-rendered children without letting namespace loading interrupt this page's effects.
+  useEffect(()=> { void i18n.loadNamespaces(['chat', 'showcase']) },[i18n])
   useEffect(()=> { key.key ? sessionStorage.setItem('showcase-key',JSON.stringify(key)) : sessionStorage.removeItem('showcase-key') },[key])
   useEffect(()=>()=>analysisController.current?.abort(),[])
   useEffect(()=> {
@@ -147,10 +149,10 @@ export function ShowcasePage() {
       {notice&&<label className="consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>{notice.consent_text}</label>}
       {error&&<div role="alert">{t(error)}</div>}
       <Button disabled={busy||!notice} onClick={()=>void analyze()}>{busy?t('busy'):error?t('retry'):t('analyze')}</Button>
-      {busy&&<div role="status">{t('busy')}<AnalysisProgressPanel sessionId={String(session?.session_id||'')}/></div>}
+      {busy&&<div role="status">{t('busy')}<Suspense fallback={null}><AnalysisProgressPanel sessionId={String(session?.session_id||'')}/></Suspense></div>}
     </section>
     {iterationLimit&&<p role="note">{t('iterationLimit',{defaultValue:'Analysis stopped at its iteration limit. The available results are shown below.'})}</p>}
-    {result&&viz&&<Results data={result} visualization={viz} memo={memo} stateControl={stateControl} exportMemo={exportMemo}/>}
+    {result&&viz&&<Suspense fallback={null}><Results data={result} visualization={viz} memo={memo} stateControl={stateControl} exportMemo={exportMemo}/></Suspense>}
     {session&&<footer><button onClick={exportMemo} disabled={!memo}>{t('export')}</button><button onClick={()=>setErase(true)}>{t('end')}</button></footer>}
     <AlertDialog open={erase} onOpenChange={setErase}><AlertDialogContent><AlertDialogTitle>{t('confirmErase')}</AlertDialogTitle><AlertDialogDescription>{t('eraseDetails')}</AlertDialogDescription><AlertDialogAction onClick={()=>void end()}>{t('erase')}</AlertDialogAction><AlertDialogCancel>{t('cancel')}</AlertDialogCancel></AlertDialogContent></AlertDialog>
     </>}
