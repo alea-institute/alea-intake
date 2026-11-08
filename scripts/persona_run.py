@@ -162,20 +162,37 @@ class Campaign:
                          "client_id": f"c{i}", "party_id": party_id}
                 await ws.send(json.dumps(frame))
                 transcript.append({"dir": "send", "msg": {"type": "text_message", "len": len(chunk)}})
-                got_system = False
-                for _ in range(6):
-                    try:
-                        resp = json.loads(await asyncio.wait_for(ws.recv(), timeout=90))
-                    except asyncio.TimeoutError:
+                deadline = asyncio.get_running_loop().time() + 120
+                acknowledged = False
+                while True:
+                    remaining = deadline - asyncio.get_running_loop().time()
+                    if remaining <= 0:
+                        if not acknowledged:
+                            raise TimeoutError("Narrative acknowledgement deadline exceeded")
                         break
+                    try:
+                        raw = await asyncio.wait_for(ws.recv(), timeout=remaining)
+                    except asyncio.TimeoutError:
+                        if not acknowledged:
+                            raise TimeoutError("Narrative acknowledgement deadline exceeded")
+                        break
+                    except websockets.exceptions.ConnectionClosed:
+                        if not acknowledged:
+                            raise
+                        break
+                    try:
+                        resp = json.loads(raw)
+                    except json.JSONDecodeError:
+                        continue
+                    if not isinstance(resp, dict):
+                        continue
                     transcript.append({"dir": "recv", "msg": resp})
                     if resp.get("type") == "safety_alert":
                         safety_alerts.append(resp)
-                    if resp.get("type") == "system_message":
-                        got_system = True
+                    if resp.get("type") == "message_ack" and resp.get("client_id") == frame["client_id"]:
+                        acknowledged = True
+                    if resp.get("type") == "system_message" and acknowledged:
                         break
-                if not got_system:
-                    transcript.append({"dir": "note", "msg": "no system_message before timeout"})
         return safety_alerts
 
 
