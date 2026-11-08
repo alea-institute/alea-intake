@@ -10,6 +10,9 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY frontend/package.json ./frontend/
 RUN pnpm install --frozen-lockfile
 COPY frontend/ ./frontend/
+# Showcase mode is decided at build time by the frontend bundle.
+ARG VITE_SHOWCASE_MODE=false
+ENV VITE_SHOWCASE_MODE=${VITE_SHOWCASE_MODE}
 RUN pnpm --filter alea-intake-frontend run build
 
 # Stage 2: Backend
@@ -21,7 +24,9 @@ LABEL org.opencontainers.image.title="alea-intake" \
       org.opencontainers.image.source="https://github.com/alea/alea-intake" \
       org.opencontainers.image.licenses="MIT"
 
-ARG GIT_COMMIT_SHA
+# Coolify supplies SOURCE_COMMIT; other builders may pass GIT_COMMIT_SHA.
+ARG SOURCE_COMMIT
+ARG GIT_COMMIT_SHA=${SOURCE_COMMIT}
 ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
 
 WORKDIR /app
