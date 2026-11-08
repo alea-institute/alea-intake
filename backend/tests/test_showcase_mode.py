@@ -589,5 +589,3 @@ async def test_two_owned_intakes_cannot_be_combined(showcase):
     response = await client.get(f'/api/v1/intake/{first["id"]}/messages', headers=headers,
                                 params={'session_id': second['session_id']})
     assert response.status_code == 404
-
-

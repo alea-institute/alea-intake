@@ -27,6 +27,7 @@ from starlette.testclient import TestClient
 
 from app.models.audio import AudioRecording, Transcript
 from app.models.intake import Intake, IntakeParty, IntakeSession, Message
+from app.models.user import Role, User
 from app.services.asr.providers.base import TranscriptionResult
 
 
@@ -34,10 +35,11 @@ from app.services.asr.providers.base import TranscriptionResult
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _make_jwt(user_id: int = 1, secret: str = "test-secret-key-for-testing-only-not-production") -> str:
+def _make_jwt(user_id: int, secret: str = "test-secret-key-for-testing-only-not-production") -> str:
     """Create a minimal JWT token for WebSocket auth."""
     payload = {
         "sub": str(user_id),
+        "type": "access",
         "exp": datetime.now(timezone.utc) + timedelta(hours=1),
     }
     return pyjwt.encode(payload, secret, algorithm="HS256")
@@ -68,7 +70,7 @@ async def _setup_db_with_session(engine):
         await conn.run_sync(_shared_meta.create_all)
         await conn.run_sync(_tenant_meta.create_all)
 
-    # Seed org + intake + session
+    # Seed org + active staff user + intake + session
     from app.models.shared import Organization
 
     async with engine.connect() as conn:
@@ -87,6 +89,17 @@ async def _setup_db_with_session(engine):
             db.add(org)
             await db.flush()
 
+            user = User(
+                email="testuser@example.com",
+                hashed_password="$placeholder_hash$",
+                full_name=b"Test User",
+                role=Role.PROFESSIONAL.value,
+                is_active=True,
+                org_id=org.id,
+            )
+            db.add(user)
+            await db.flush()
+
             intake = Intake(org_id=org.id, status="active", session_mode="multi_session")
             db.add(intake)
             await db.flush()
@@ -96,7 +109,7 @@ async def _setup_db_with_session(engine):
             await db.flush()
 
             await db.commit()
-            return session.id, intake.id
+            return session.id, intake.id, user.id
 
 
 FAKE_AUDIO = base64.b64encode(b"fake audio data for testing").decode()
@@ -132,7 +145,7 @@ def _voice_test_env():
     engine_module._engine = test_engine
 
     loop = asyncio.new_event_loop()
-    session_id, intake_id = loop.run_until_complete(_setup_db_with_session(test_engine))
+    session_id, intake_id, user_id = loop.run_until_complete(_setup_db_with_session(test_engine))
     loop.close()
 
     mock_asr_instance = MagicMock()
@@ -148,6 +161,7 @@ def _voice_test_env():
         yield {
             "session_id": session_id,
             "intake_id": intake_id,
+            "user_id": user_id,
             "engine": test_engine,
             "mock_asr": mock_asr_instance,
             "mock_conv": mock_conv_instance,
@@ -176,7 +190,7 @@ class TestVoiceUploadFlow:
     def test_voice_upload_triggers_transcription_and_transcript_ready(self):
         """voice_upload stores AudioRecording, runs ASR, and sends transcript_ready."""
         with _voice_test_env() as env:
-            token = _make_jwt()
+            token = _make_jwt(env["user_id"])
             test_app = _make_ws_test_app()
 
             with patch("app.routers.intake.ASRService", return_value=env["mock_asr"]), \
@@ -212,7 +226,7 @@ class TestVoiceUploadFlow:
     def test_transcript_approve_creates_record_and_sends_system_message(self):
         """transcript_approve updates status to 'approved' and triggers LLM response."""
         with _voice_test_env() as env:
-            token = _make_jwt()
+            token = _make_jwt(env["user_id"])
             test_app = _make_ws_test_app()
 
             with patch("app.routers.intake.ASRService", return_value=env["mock_asr"]), \
@@ -251,7 +265,7 @@ class TestVoiceUploadFlow:
     def test_transcript_edit_updates_text_and_sends_system_message(self):
         """transcript_edit updates transcript text to edited version and triggers LLM."""
         with _voice_test_env() as env:
-            token = _make_jwt()
+            token = _make_jwt(env["user_id"])
             test_app = _make_ws_test_app()
 
             env["mock_conv"].generate_response = AsyncMock(
