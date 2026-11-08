@@ -345,10 +345,13 @@ class TestPromptSchemaContracts:
     def test_extraction_prompt_names_required_fields(self):
         from app.services.extraction.fact_extraction import EXTRACTION_SYSTEM_PROMPT
 
+        # Offsets come from a verbatim source_quote; models cannot count characters.
         for field in ("assertion", "fact_type", "entity_type", "value",
-                      "source_start", "source_end", "facts", "entities"):
+                      "source_quote", "facts", "entities"):
             assert f'"{field}"' in EXTRACTION_SYSTEM_PROMPT, field
         assert "json" in EXTRACTION_SYSTEM_PROMPT.lower()
+        # Live models returned bare-string entities when the shape was ambiguous.
+        assert "never a bare string" in EXTRACTION_SYSTEM_PROMPT
 
     def test_stage_prompts_mention_json(self):
         """Every direct json_async stage prompt must contain the word 'json'."""

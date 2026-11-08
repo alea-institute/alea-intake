@@ -130,18 +130,17 @@ async def test_nonreference_model_still_analyzes(client, monkeypatch):
     monkeypatch.setenv("ALEA_REFERENCE_MODEL", "reference-model")
     monkeypatch.setattr("app.services.folio.folio_service.get_folio", lambda: None)
     monkeypatch.setattr("app.services.extraction.backfill.backfill_intake_facts", AsyncMock(return_value=0))
-    trigger = AsyncMock(return_value=SimpleNamespace(id=8, status="converged"))
-    monkeypatch.setattr("app.services.analysis.trigger.AnalysisTrigger.manual_trigger", trigger)
-    monkeypatch.setattr(
-        "app.services.analysis.stages.deadline_detect.DeadlineDetectStage.detect_and_persist",
-        AsyncMock(return_value=[]),
-    )
+    start = MagicMock()
+    monkeypatch.setattr("app.services.analysis.background.start_analysis", start)
     response = await client.post(
         "/api/v1/analysis/1/analyze", headers={"X-LLM-API-Key": "visitor-key", "X-LLM-Model": "other-model"}
     )
     assert response.status_code == 202, response.text
     assert response.json()["is_reference_model"] is False
-    trigger.assert_awaited_once()
+    assert response.json()["status"] == "running"
+    start.assert_called_once()
+    # The visitor's service (key + model) is what the background job runs with.
+    assert start.call_args.args[2].model == "other-model"
 
 
 async def test_visitor_key_reaches_structured_stages(monkeypatch, caplog):

@@ -18,6 +18,17 @@ def _is_sqlite() -> bool:
     return "sqlite" in str(get_engine().url)
 
 
+def tenant_schema_map(tenant_schema: str | None) -> dict[str, str | None]:
+    """Schema translation for a tenant; shared by request and background sessions.
+
+    SQLite and single-tenant both live in the default/public schema (no named
+    schemas). Only multi-tenant on a schema-aware backend routes to tenant_{slug}.
+    """
+    if _is_sqlite() or not is_multi_tenant():
+        return {"tenant": None, "shared": None}
+    return {"tenant": tenant_schema, "shared": "shared"}
+
+
 async def get_tenant_session(request: Request) -> AsyncGenerator[AsyncSession, None]:
     """Yield an AsyncSession routed to the tenant's schema via schema_translate_map.
 
@@ -25,15 +36,8 @@ async def get_tenant_session(request: Request) -> AsyncGenerator[AsyncSession, N
     Maps the logical 'tenant' schema name to the actual tenant_{org_slug} schema.
     For SQLite, schemas are mapped to None (default schema).
     """
-    tenant_schema = getattr(request.state, "tenant_schema", None)
+    schema_map = tenant_schema_map(getattr(request.state, "tenant_schema", None))
     engine = get_engine()
-
-    # SQLite and single-tenant both live in the default/public schema (no named
-    # schemas). Only multi-tenant on a schema-aware backend routes to tenant_{slug}.
-    if _is_sqlite() or not is_multi_tenant():
-        schema_map = {"tenant": None, "shared": None}
-    else:
-        schema_map = {"tenant": tenant_schema, "shared": "shared"}
 
     async with engine.connect() as conn:
         conn = await conn.execution_options(schema_translate_map=schema_map)

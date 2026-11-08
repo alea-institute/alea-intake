@@ -97,27 +97,37 @@ class AnalysisOrchestrator:
         intake_id: int,
         session_id: int,
         ws_manager: Any | None = None,
+        run: AnalysisRun | None = None,
+        commit_progress: bool = False,
     ) -> AnalysisRun:
         """Execute the full analysis loop.
 
-        1. Create AnalysisRun record
+        1. Create AnalysisRun record (or adopt ``run``, created by the caller)
         2. Loop: run iteration until convergence or hard cap
         3. On convergence: update AnalysisRun status
         4. Return AnalysisRun with final state
+
+        ``commit_progress`` commits after each iteration so status pollers on
+        other connections see progress; background runs own their session.
         """
         # Load facts for this intake
         await self._load_facts(intake_id)
 
-        # Create AnalysisRun record
-        run = AnalysisRun(
-            intake_id=intake_id,
-            status="running",
-            trigger_type="manual",
-            current_iteration_number=0,
-            max_iterations=self._analysis_config.max_iterations,
-        )
+        if run is None:
+            run = AnalysisRun(
+                intake_id=intake_id,
+                status="running",
+                trigger_type="manual",
+                current_iteration_number=0,
+                max_iterations=self._analysis_config.max_iterations,
+            )
+        else:
+            run.status = "running"
+            run.max_iterations = self._analysis_config.max_iterations
         self._session.add(run)
         await self._session.flush()
+        if commit_progress:
+            await self._session.commit()
 
         # Main iteration loop
         converged = False
@@ -140,6 +150,8 @@ class AnalysisOrchestrator:
             iteration.completed_at = datetime.now(timezone.utc)
             self._session.add(iteration)
             await self._session.flush()
+            if commit_progress:
+                await self._session.commit()
 
             if converged:
                 break

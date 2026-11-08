@@ -61,97 +61,73 @@ async def trigger_analysis(
     user: User = Depends(get_current_active_user),
     llm_service: LLMService = Depends(get_request_llm_service),
 ) -> dict[str, Any]:
-    """Manual analysis trigger. Returns 202 Accepted with run_id.
+    """Manual analysis trigger. Returns 202 Accepted with run_id at once.
 
-    Creates or returns an existing running analysis for this intake.
-    The analysis runs in the background via the orchestrator.
+    Creates a ``running`` AnalysisRun and starts fact backfill, the
+    orchestrator, deadline detection, and safety screening in the background
+    (see ``app.services.analysis.background``). Clients poll ``/status`` until
+    a terminal status (converged, max_iterations, or failed). A run already in
+    flight for this intake is returned instead of starting a second one.
     """
-    from app.services.analysis.orchestrator import AnalysisOrchestrator
-    from app.services.analysis.trigger import AnalysisTrigger
-    from app.services.extraction.backfill import backfill_intake_facts
+    from app.config import get_settings
+    from app.db.session import tenant_schema_map
+    from app.services.analysis import background
 
-    # Resolve FOLIO + embedding singletons (loaded at startup) for concept
-    # resolution during extraction; degrade gracefully if unavailable (e.g. tests).
-    folio = None
-    embedding_service = None
-    try:
-        from app.services.folio.folio_service import get_folio
-
-        folio = get_folio()
-    except Exception:  # pragma: no cover - startup-dependent
-        logger.warning("FOLIO unavailable for extraction; skipping concept resolution", exc_info=True)
-    try:
-        from app.services.embedding.service import EmbeddingService
-
-        embedding_service = EmbeddingService.get_instance()
-    except Exception:  # pragma: no cover - startup-dependent
-        logger.warning("EmbeddingService unavailable for extraction", exc_info=True)
-
-    # Backfill facts from ingested messages before analysis. Without this the
-    # orchestrator's _load_facts() returns [] and analysis yields nothing.
-    try:
-        n_facts = await backfill_intake_facts(
-            db, intake_id, llm_service, folio=folio, embedding_service=embedding_service
+    existing = (
+        await db.execute(
+            select(AnalysisRun)
+            .where(AnalysisRun.intake_id == intake_id, AnalysisRun.status == "running")
+            .order_by(AnalysisRun.created_at.desc())
         )
-        logger.info("Pre-analysis fact backfill created %d facts for intake %d", n_facts, intake_id)
-    except Exception:
-        logger.warning("Pre-analysis fact backfill failed for intake %d", intake_id, exc_info=True)
+    ).scalars().all()
+    for stale in existing:
+        if background.is_in_flight(stale.id):
+            return _accepted(stale, llm_service)
+    for stale in existing:
+        # Nothing runs it (e.g. a restart killed its task): fail it visibly
+        # rather than leave pollers waiting forever.
+        stale.status = background.FAILED_STATUS
 
-    orchestrator = AnalysisOrchestrator(
-        db_session=db,
-        llm_service=llm_service,
-        folio=folio,
-        embedding_service=embedding_service,
+    run = AnalysisRun(
+        intake_id=intake_id,
+        status="running",
+        trigger_type="manual",
+        current_iteration_number=0,
+        max_iterations=10,
     )
-    trigger = AnalysisTrigger(db_session=db, orchestrator=orchestrator)
+    db.add(run)
+    await db.flush()
 
-    run = await trigger.manual_trigger(intake_id=intake_id, session_id=0)
+    showcase = get_settings().showcase_mode
+    release = None
+    if showcase:
+        from app.showcase import reserve_analysis
 
-    # Detect + hedge time-sensitive deadlines / SOL for this run. Runs after the
-    # run exists (so Deadline rows carry run_id) and degrades gracefully -- an
-    # LLM/parse failure yields zero deadlines and never fails the analysis.
+        release = reserve_analysis(request.app)
     try:
-        from app.services.analysis.stages.deadline_detect import DeadlineDetectStage
-
-        deadline_stage = DeadlineDetectStage(llm_service=llm_service, db_session=db)
-        deadlines = await deadline_stage.detect_and_persist(
-            intake_id=intake_id, run_id=run.id
+        # The job reads the run on its own connection: commit first.
+        await db.commit()
+        background.start_analysis(
+            run.id,
+            intake_id,
+            llm_service,
+            tenant_schema_map(getattr(request.state, "tenant_schema", None)),
+            user_id=user.id if showcase else None,
+            app=request.app if showcase else None,
+            release=release,
         )
-        logger.info("Deadline detection produced %d deadlines for intake %d", len(deadlines), intake_id)
-    except Exception:
-        logger.warning("Deadline detection failed for intake %d", intake_id, exc_info=True)
+    except BaseException:
+        if release is not None:
+            release()
+        raise
+    return _accepted(run, llm_service)
 
-    # Decoupled safety screening (SAFETY CRITICAL, BUG-15). The DV/self-harm
-    # screening previously ran only on the live-message WebSocket path, never on
-    # an analysis run -- so a DV narrative surfaced zero safety alerts. Mirror the
-    # decoupled deadline call: run the EXISTING screening matcher over the
-    # narrative after the run exists. Deterministic (keyword/regex, no LLM) and
-    # degrades gracefully. The output layer re-derives these deterministically at
-    # assembly time; here we surface them at trigger time so a fired alert is
-    # observable in the run logs even before a memo is generated.
-    try:
-        from app.services.output.data_assembler import gather_safety_alerts
 
-        safety_alerts = await gather_safety_alerts(db, intake_id)
-        if safety_alerts:
-            # Log counts + severity tiers only -- protocol NAMES (e.g. "Domestic
-            # Violence") are a sensitive-category disclosure keyed to an
-            # identifiable intake and do not belong in application logs.
-            logger.warning(
-                "Safety screening flagged %d protocol(s) for intake %d (severity: %s)",
-                len(safety_alerts),
-                intake_id,
-                ", ".join(sorted({a.severity_tier for a in safety_alerts})),
-            )
-        else:
-            logger.info("Safety screening produced 0 alerts for intake %d", intake_id)
-    except Exception:
-        logger.warning("Safety screening failed for intake %d", intake_id, exc_info=True)
-
+def _accepted(run: AnalysisRun, llm_service: LLMService) -> dict[str, Any]:
     return {
         "run_id": run.id,
         "status": run.status,
-        "message": "Analysis triggered",
+        "message": "Analysis started",
         "is_reference_model": llm_service.is_reference_model,
     }
 
