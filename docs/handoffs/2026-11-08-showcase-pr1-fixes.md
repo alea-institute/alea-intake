@@ -8,40 +8,32 @@ topic: showcase-pr1-fixes
 Ship PR1 of `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md` (units U1-U11). The simplification pass is committed (`767906a`). A full `ce-code-review` returned **Not ready**. Two Codex workers are applying its findings. Next: merge their branches, re-verify, open PR1, then do the gated deploy.
 
 ## State
-- **Branch (pushed):** `feat/2026-11-08-0337-feat-public-showcase-launch-plan-pr1` at `3fa443a`.
-- **Round-1 fixes merged.** They close the first review's findings: IDOR identifiers, transcript scoping, standard-mode socket, the per-guest lock, log privacy, corrupt PDF, test isolation, sweeper resilience, proxy headers, and the frontend erase, polling, timeout, keepalive, and Suspense issues.
-  - **Real-browser fix:** a regression appeared only in a real browser. Late i18n loads suspended the page and aborted analysis. Local Suspense boundaries now prevent it.
-- **Verified at `3fa443a`:**
-  - **Backend:** 1416 passed / 3 skipped.
-  - **Frontend:** vitest 233 passed; the build succeeded.
-  - **Browser:** the Playwright smoke passed, and the 390 px and 1280 px screenshots were inspected.
-- **Re-review of the fix round: Not ready.**
-  - **#1 P0:** Content-Type case and `+json` variants bypass the body ownership checks in `backend/app/showcase.py`.
-  - **#2 P1:** local erase waits on a slow server erase.
-  - **#3 P2:** erase queues behind an inline analysis holding the guest lock.
-  - **#4 P2:** a timeout retry duplicates the narrative.
-  - **#5 P2:** `persona_run` passes on a timed-out narrative.
-  - **Pre-existing P1:** the standard-mode socket has no session-ownership check.
-- **Decisions (best practice, made by the agent):**
-  - **Erase preempts:** erase cancels in-flight guest tasks through a per-guest registry.
-  - **Local wipe first:** the browser wipes local data first, then sends a 10 s bounded server erase.
-  - **Completion contract:** delivery means `message_ack`, shared by the browser and `persona_run`.
-- **Round-2 workers:** branches `fix/pr1-review2-backend` and `fix/pr1-review2-frontend`. Task specs: cockpit `agents/tasks/alea-intake-pr1-fix2-{backend,frontend}.md`.
+- **PR1 open (draft):** https://github.com/alea-institute/alea-intake/pull/3, branch `feat/2026-11-08-0337-feat-public-showcase-launch-plan-pr1` at `b6dd460`, pushed. Draft on purpose: any merge to master auto-deploys publicly.
+- **Review fixes:** four review rounds, all findings fixed with regression tests (round summary in the PR body).
+- **Verified at `b6dd460`:**
+  - **Backend:** 1483 passed / 3 skipped on two full runs.
+  - **Frontend:** 258 vitest tests passed; the build succeeds.
+  - **Browser:** the Playwright smoke passed at 390 and 1280 px.
+  - **Lint:** ruff clean on changed files (`test_voice_intake.py`'s 9 findings already exist on master).
+- **Deploy box disk:** at 87%. Build cache pruned (about 1 GB); no dangling images. The remaining reclaimable space is mostly Coolify's previous app images kept for rollback, left in place on purpose.
+- **Unrelated box issue:** a Plausible container has been unhealthy for 3 months (pre-existing, not this work).
 
 ## Next
-1. **Merge:** merge the round-2 branches into the PR1 branch.
-2. **Verify:** rerun the full backend suite, vitest, the build, ruff, and the Playwright smoke at 390 and 1280 px.
-3. **Re-review:** run a focused re-review of the round-2 commits.
-4. **Ship:** open PR1 with `ce-commit-push-pr`.
-5. **Deploy:** run the gated deploy once the Coolify write token arrives (`docs/DEV-DEPLOY-RUNBOOK.md`, including `ALEA_FORWARDED_ALLOW_IPS`; `scripts/verify-showcase.sh --mode gated`).
+1. **Coolify write token (Damien):** waiting on him. Steps were given inline: create it in Keys & Tokens with read/write/deploy, then save it on the box with the prompting one-liner to `~/.coolify-token-write`.
+2. **Gated deploy, once the token exists:**
+   - **Coolify config:** set the showcase env vars on app `alea-intake` (names in `docs/DEV-DEPLOY-RUNBOOK.md`, including `ALEA_FORWARDED_ALLOW_IPS`), widen the healthcheck, set a memory limit, and add the `intake.dev.openlegalstandard.org` domain.
+   - **Deploy and verify:** deploy the PR1 branch behind the preview gate, run `scripts/verify-showcase.sh --mode gated`, measure peak RAM (the box has 7 GB total, about 1 GB available), and run the retention test against real Postgres.
+   - **Ship:** mark PR3 ready and merge.
+3. **After the LLM-key decision** (Cockpit ask `alea-intake-2026-11-08-1051-showcase-llm-key-budget`, q1, re-asked inline 2026-11-08): run the live persona campaign, regression recordings, and the reference-model comparison. Then PR2 (deadline rules) per the plan.
 
 ## Open with Damien
 - **Coolify write token.**
-- **LLM key and budget:** Cockpit ask `alea-intake-2026-11-08-1051-showcase-llm-key-budget`.
-- **Landing-page copy approval:** gates PR3.
+- **LLM key and budget (q1):** a hard block on live runs only.
+- **Disk space, possibly:** if the new image pushes disk past 90%, choose between Coolify's image-retention cleanup setting and a larger disk.
+- **Landing-page copy (PR3):** draft it in a Claude Doc first.
 
 ## Gotchas
 - **Earlier gotchas:** everything in `docs/handoffs/2026-11-08-showcase-pr1-review.md` still applies.
-- **Worktree symlinks:** the worker worktrees symlink `backend/.venv` and `frontend/node_modules`. Never stage those symlinks, and remove the worktrees after merging.
-- **Codex sandbox:** it cannot commit when the repo's `.git` is mounted read-only under synchronous `codex-run.sh`, so the orchestrator commits those edits. It also cannot finish aiosqlite tests, so rerun suites outside it.
-- **Isolated test runs:** several backend modules fail when run alone without `ALEA_SECRET_KEY`. This predates PR1; the full suite sets it through import order.
+- **Codex sandbox:** under `codex-run.sh` it cannot commit (read-only `.git`), so the orchestrator commits those edits. It also cannot finish aiosqlite tests, so rerun suites outside it.
+- **Real browser vs mocks:** a regression appeared only in a real browser. Late i18n loads with `useSuspense` suspended the page and aborted analysis. Always run the Playwright smoke after showcase frontend changes.
+- **Isolated test runs:** several backend modules fail when run alone without `ALEA_SECRET_KEY`. This predates PR1.
