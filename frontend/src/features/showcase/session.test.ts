@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw'
 import { server } from '@/test/msw/server'
 import { createSessionKeepalive, sendStory } from './session'
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); sessionStorage.clear() })
-it('waits for the committed system response before starting analysis',async()=>{
+it('waits for a system response after ack when it arrives before the deadline',async()=>{
  let socket: {onopen?:()=>void;onmessage?:(e:{data:string})=>void;send:ReturnType<typeof vi.fn>;close:ReturnType<typeof vi.fn>}
  class Socket { onopen?:()=>void;onmessage?:(e:{data:string})=>void;send=vi.fn();close=vi.fn();constructor(){socket=this} }
  vi.stubGlobal('WebSocket',Socket)
@@ -66,4 +66,72 @@ it('throttles authenticated intake keepalive to once per minute, including failu
  clock.mockReturnValue(160000)
  await Promise.all([keepalive(), keepalive()]); expect(calls).toBe(2)
  clock.mockRestore()
+})
+
+class DeliverySocket {
+ static instances: DeliverySocket[] = []
+ onopen?: () => void
+ onmessage?: (e: {data: string}) => void
+ onclose?: (e: {code: number}) => void
+ onerror?: () => void
+ send = vi.fn()
+ close = vi.fn()
+ constructor() { DeliverySocket.instances.push(this) }
+ frame(message: unknown) { this.onmessage?.({data: JSON.stringify(message)}) }
+}
+function deliverySocket() {
+ DeliverySocket.instances = []
+ vi.stubGlobal('WebSocket', DeliverySocket)
+}
+it('resolves after ack even if the system response never arrives, and skips resending a delivered story', async () => {
+ vi.useFakeTimers(); deliverySocket()
+ const pending = sendStory(2,3,'Already stored story.')
+ const socket = DeliverySocket.instances[0]
+ socket.onopen?.()
+ socket.frame({type:'message_ack'})
+ const marker = Object.keys(sessionStorage).find(key => key.startsWith('showcase-story:2:'))
+ expect(marker).toBeDefined()
+ expect(marker).not.toContain('Already stored story.')
+ expect(JSON.parse(sessionStorage.getItem(marker!)!)).toMatchObject({delivered:true})
+ const completed = expect(pending).resolves.toBeUndefined()
+ await vi.advanceTimersByTimeAsync(120000)
+ await completed
+ await sendStory(2,3,'Already stored story.')
+ expect(DeliverySocket.instances).toHaveLength(1)
+ expect(socket.close).toHaveBeenCalledOnce()
+})
+it('keeps the same client id across retries before ack, scoped to session and story', async () => {
+ deliverySocket()
+ const first = sendStory(2,3,'Retry me.')
+ const a = DeliverySocket.instances[0]; a.onopen?.()
+ const failed = expect(first).rejects.toBeInstanceOf(TypeError)
+ a.onerror?.(); await failed
+ const retry = sendStory(2,3,'Retry me.')
+ const b = DeliverySocket.instances[1]; b.onopen?.()
+ expect(JSON.parse(b.send.mock.calls[1][0]).client_id).toBe(JSON.parse(a.send.mock.calls[1][0]).client_id)
+ b.frame({type:'message_ack'}); b.frame({type:'system_message'}); await retry
+ for (const [session, text] of [[3,'Retry me.'], [2,'Changed story.']] as const) {
+   const pending = sendStory(session,3,text)
+   const socket = DeliverySocket.instances.at(-1)!
+   socket.onopen?.()
+   expect(JSON.parse(socket.send.mock.calls[1][0]).client_id).not.toBe(JSON.parse(a.send.mock.calls[1][0]).client_id)
+   socket.frame({type:'message_ack'}); socket.frame({type:'system_message'}); await pending
+ }
+})
+it('ignores malformed frames and requires ack even if a system response arrives', async () => {
+ vi.useFakeTimers(); deliverySocket()
+ const pending = sendStory(2,3,'Unacknowledged story.')
+ const socket = DeliverySocket.instances[0]; socket.onopen?.()
+ for (const data of ['invalid json', 'null', '[]']) expect(() => socket.onmessage?.({data})).not.toThrow()
+ socket.frame({type:'message_ack',client_id:'another-story'})
+ socket.frame({type:'system_message'})
+ const failed = expect(pending).rejects.toBeInstanceOf(TypeError)
+ await vi.advanceTimersByTimeAsync(120000); await failed
+})
+it('maps close code 4004 to an expired session', async () => {
+ deliverySocket()
+ const pending = sendStory(2,3,'Expired story.')
+ const failed = expect(pending).rejects.toMatchObject({status:410})
+ DeliverySocket.instances[0].onclose?.({code:4004})
+ await failed
 })

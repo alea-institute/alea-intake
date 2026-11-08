@@ -8,7 +8,7 @@ import { ThemeProvider } from '@/shared/components/ThemeProvider'
 import { loadThemeFonts } from '@/shared/i18n/themes'
 import type { VisualizationData } from '@/features/visualization/types'
 import { Results, type ResultsData } from './Results'
-import { createSessionKeepalive, defaultModels, json, readKey, referenceModel, request, RequestError, sendStory, TERMINAL_ANALYSIS_STATUSES } from './session'
+import { createSessionKeepalive, defaultModels, isStoryDelivered, json, readKey, referenceModel, request, RequestError, sendStory, TERMINAL_ANALYSIS_STATUSES } from './session'
 import scenarios from './scenarios.json'
 import './showcase.css'
 
@@ -33,7 +33,6 @@ export function ShowcasePage() {
   const [erase,setErase] = useState(false)
   const [idle,setIdle] = useState(false)
   const [expired,setExpired] = useState(false)
-  const [ending,setEnding] = useState(false)
   const [eraseFailed,setEraseFailed] = useState(false)
   const [iterationLimit,setIterationLimit] = useState(false)
   const [session,setSession] = useState<{id:number;session_id:number;party_id:number} | null>(()=>JSON.parse(sessionStorage.getItem('showcase-intake') || 'null'))
@@ -63,19 +62,33 @@ export function ShowcasePage() {
   }
   async function end(expire=false) {
     if(erasing.current) return
-    erasing.current=true;setEnding(true);setEraseFailed(false);generation.current++
+    const intake=session
+    const token=sessionStorage.getItem('showcase-token')
+    erasing.current=true;setEraseFailed(false)
+    const run=++generation.current
     analysisController.current?.abort()
-    let failed=false
+    sessionStorage.clear()
+    setSession(null);setState('');setError('');setIterationLimit(false);setNonReference(false);setReset(n=>n+1);setStory('');setPdf(undefined);setResult(undefined);setViz(undefined);setMemo('');setKey({key:'',provider:'openai',model:defaultModels.openai});setConsent(false);setErase(false);setIdle(false);setExpired(expire);setBusy(false);qc.clear();lastActive.current=Date.now()
+    erasing.current=false
+    if(!intake) return
+    const controller=new AbortController()
+    let timer: ReturnType<typeof setTimeout> | undefined
     try {
-      if(session) await request(`/api/v1/intake/${session.id}/end-session`,{method:'POST'})
-    } catch(e) {
-      failed=!(e instanceof RequestError && [401,404].includes(e.status))
+      const deadline=new Promise<never>((_,reject)=>{
+        timer=setTimeout(()=>{controller.abort();reject(new TypeError('network'))},10000)
+      })
+      const response=await Promise.race([
+        fetch(`/api/v1/intake/${intake.id}/end-session`,{method:'POST',headers:token?{Authorization:`Bearer ${token}`}:{},signal:controller.signal}),
+        deadline,
+      ])
+      if(!response.ok && ![401,404].includes(response.status)) throw new RequestError(response.status)
+    } catch {
+      if(run===generation.current) setEraseFailed(true)
     } finally {
-      for(const name of ['showcase-token','showcase-intake','showcase-key','showcase-story']) sessionStorage.removeItem(name)
-      setSession(null);setState('');setError('');setEraseFailed(failed);setIterationLimit(false);setNonReference(false);setReset(n=>n+1);setStory('');setPdf(undefined);setResult(undefined);setViz(undefined);setMemo('');setKey({key:'',provider:'openai',model:defaultModels.openai});setConsent(false);setErase(false);setIdle(false);setExpired(expire);setBusy(false);qc.clear();lastActive.current=Date.now()
-      erasing.current=false;setEnding(false)
+      clearTimeout(timer)
     }
   }
+
   const keyValid = key.provider==='google' ? /^AIza[\w-]{15,}$/.test(key.key) : key.provider==='anthropic' ? /^sk-ant-[\w-]{8,}$/.test(key.key) : /^sk-[\w-]{8,}$/.test(key.key)
   async function analyze() {
     setError('')
@@ -105,7 +118,8 @@ export function ShowcasePage() {
       if(!current) return
       qc.setQueryData(['intake',String(current.session_id),'progress'],{stage:1,totalStages:3,stageName:t('story'),completeness:0.1,iteration:1})
       if(pdf) {const form=new FormData();form.append('file',pdf);form.append('session_id',String(current.session_id));form.append('party_id',String(current.party_id));await request(`/api/v1/intake/${current.id}/document`,{method:'POST',body:form,signal:controller.signal})}
-      if(story.trim()||state) await sendStory(current.session_id,current.party_id,[story,state?`State confirmed by visitor: ${state}.`:''].filter(Boolean).join('\n\n'),controller.signal)
+      const narrative=[story,state?`State confirmed by visitor: ${state}.`:''].filter(Boolean).join('\n\n')
+      if((story.trim()||state) && !isStoryDelivered(current.session_id,narrative)) await sendStory(current.session_id,current.party_id,narrative,controller.signal)
       let status=await runJson(`/api/v1/analysis/${current.id}/analyze`,{})
       setNonReference(status.is_reference_model===false)
       while(!TERMINAL_ANALYSIS_STATUSES.includes(status.status)) {
@@ -124,6 +138,7 @@ export function ShowcasePage() {
       const detected=data.jurisdiction || data.claims.find((c:{jurisdiction?:string})=>states.includes(c.jurisdiction||''))?.jurisdiction
       if(!state && states.includes(detected)) setState(detected)
     } catch(e) {
+      if(run===generation.current && e instanceof RequestError && e.status===410) { void end(true); return }
       if(run===generation.current) setError(e instanceof RequestError ? e.status===401?'rejected':e.status===429?'quota':'failed':e instanceof TypeError?'network':'failed')
     } finally {if(run===generation.current) setBusy(false)}
   }
@@ -133,7 +148,7 @@ export function ShowcasePage() {
     <header className="showcase-banner"><div role="note">{t('banner')}</div></header>
     <main id="main-content"><header><h1>{t('title')}</h1><p>{t('intro')}</p></header>
     {eraseFailed&&<div role="alert">{t('eraseError',{defaultValue:'Local data was erased. The server could not confirm erasure; its session will expire automatically.'})}</div>}
-    {ending ? <p role="status">{t('pendingErase')}</p> : expired ? <section><h2>{t('expired')}</h2><Button onClick={()=>{setExpired(false);lastActive.current=Date.now()}}>{t('fresh')}</Button></section> : <>
+    {expired ? <section><h2>{t('expired')}</h2><Button onClick={()=>{setExpired(false);lastActive.current=Date.now()}}>{t('fresh')}</Button></section> : <>
     {idle&&<aside role="alert"><p>{t('idle')}</p><button disabled={!memo} onClick={exportMemo}>{t('export')}</button><button onClick={()=>{lastActive.current=Date.now();setIdle(false);void keepalive?.().catch(()=>{})}}>{t('keep')}</button></aside>}
     <section className="showcase-inputs"><fieldset><legend>{t('key')}</legend><div className="key-fields">
       <label>{t('provider')}<select value={key.provider} onChange={e=>{const provider=e.target.value;setKey({...key,provider,model:models[provider][0]})}}>{Object.entries(providers).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>

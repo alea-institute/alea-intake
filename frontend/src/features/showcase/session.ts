@@ -41,11 +41,27 @@ export function createSessionKeepalive(intakeId: number, sessionId: number) {
   }
 }
 
+// FNV-1a identifies a story without retaining its text in the delivery ledger.
+function storyStorageKey(sessionId: number, story: string): string {
+  let hash = 0xcbf29ce484222325n
+  for (const byte of new TextEncoder().encode(story)) {
+    hash = BigInt.asUintN(64, (hash ^ BigInt(byte)) * 0x100000001b3n)
+  }
+  return `showcase-story:${sessionId}:${hash.toString(16).padStart(16, '0')}`
+}
+export function isStoryDelivered(sessionId: number, story: string): boolean {
+  return JSON.parse(sessionStorage.getItem(storyStorageKey(sessionId, story)) || 'null')?.delivered === true
+}
 export function sendStory(sessionId: number, partyId: number, story: string, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) { reject(signal.reason); return }
+    const storageKey = storyStorageKey(sessionId, story)
+    const delivery = JSON.parse(sessionStorage.getItem(storageKey) || 'null') || {clientId: crypto.randomUUID(), delivered: false}
+    if (delivery.delivered) { resolve(); return }
+    sessionStorage.setItem(storageKey, JSON.stringify(delivery))
     const ws = new WebSocket(intakeSocketUrl(sessionId))
     let settled = false
+    let systemReceived = false
     const finish = (error?: Error) => {
       if (settled) return
       settled = true
@@ -57,16 +73,26 @@ export function sendStory(sessionId: number, partyId: number, story: string, sig
       else resolve()
     }
     const abort = () => finish(signal?.reason ?? new DOMException('Aborted', 'AbortError'))
-    const timer = setTimeout(() => finish(new TypeError('network')), 120000)
+    const timer = setTimeout(() => finish(delivery.delivered ? undefined : new TypeError('network')), 120000)
     signal?.addEventListener('abort', abort, {once:true})
-    ws.onopen = () => { ws.send(JSON.stringify(authFrame(sessionStorage.getItem('showcase-token')!))); ws.send(JSON.stringify({type:'text_message', content: story, party_id: partyId, client_id: crypto.randomUUID()})) }
+    ws.onopen = () => { ws.send(JSON.stringify(authFrame(sessionStorage.getItem('showcase-token')!))); ws.send(JSON.stringify({type:'text_message', content: story, party_id: partyId, client_id: delivery.clientId})) }
     ws.onmessage = e => {
-      const msg = JSON.parse(e.data)
-      if (msg.type === 'system_message') finish()
-      if (msg.type === 'error') finish(new RequestError(msg.status || 500))
+      let msg
+      try { msg = JSON.parse(e.data) } catch { return }
+      if (!msg || typeof msg !== 'object') return
+      if (msg.type === 'message_ack' && (!msg.client_id || msg.client_id === delivery.clientId)) {
+        delivery.delivered = true
+        sessionStorage.setItem(storageKey, JSON.stringify(delivery))
+        if (systemReceived) finish()
+      }
+      if (msg.type === 'system_message') {
+        systemReceived = true
+        if (delivery.delivered) finish()
+      }
+      if (msg.type === 'error') finish(delivery.delivered ? undefined : new RequestError(msg.status || 500))
     }
-    ws.onerror = () => finish(new TypeError('network'))
-    ws.onclose = e => finish(e.code === 4001 || e.code === 4003 ? new RequestError(401) : new TypeError('network'))
+    ws.onerror = () => finish(delivery.delivered ? undefined : new TypeError('network'))
+    ws.onclose = e => finish(e.code === 4004 ? new RequestError(410) : e.code === 4001 || e.code === 4003 ? new RequestError(401) : delivery.delivered ? undefined : new TypeError('network'))
   })
 }
 
