@@ -2,22 +2,24 @@
 topic: public-showcase-brainstorm
 ---
 
-# Handoff — alea-intake public showcase (PR1 in progress)
+# Handoff — alea-intake public showcase (PR1 built; review and deploy next)
 
 ## State
-- Plan: `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md` (19 units, 3 PRs).
-- Branch `feat/2026-11-08-0337-feat-public-showcase-launch-plan-pr1` (pushed). Done and committed: PDF swap + CPU torch (U3, U4 code), tracked `uv.lock`, calibration (U1), BYOK (U5), expansion study (U2, recommends no change), replay harness (U9, recordings pending), guest mode + ownership + limits (U6). Backend suite 1350 passed.
-- Image smoke: builds, boots in ~70 s, 645 MiB idle, no nvidia packages. Peak-under-analysis RAM still unmeasured (needs an LLM key).
-- In flight: U7 (purge, TTL sweeper, redaction) and U8 (frontend showcase flow) as Codex workers in `~/worktrees/alea-intake-pr1-u7` / `-u8`.
+- Plan: `docs/plans/2026-11-08-0337-feat-public-showcase-launch-plan.md`.
+- Branch `feat/2026-11-08-0337-feat-public-showcase-launch-plan-pr1` (pushed, 13 commits): PDF swap + CPU torch, tracked uv.lock, calibration, BYOK, expansion study, replay harness, guest mode + ownership + limits, retention purge + redaction, frontend showcase flow, persona harness, Dockerfile build args, preview gate + probe + runbook. Backend 1377 passed; frontend 220 passed; Playwright e2e green at 390 and 1280 px (needs a local config pointing at system Chrome: Playwright cannot download browsers on Ubuntu 26.04).
+- In flight: a simplification-fix worker (uncommitted changes in the main checkout) that fixes an undefined `admit()` in the showcase WebSocket loop plus reuse/efficiency/comment cleanups. Verify, then commit.
+- Live deploy target already exists: Coolify app `alea-intake` on hetzner-dev (`alea-intake.dev.openlegalstandard.org`, auto-deploys `master`). A showcase DB role/database exists on the shared Postgres (isolation verified). Merging PR1 to master deploys publicly, so set the Coolify env and gate first.
 
 ## Next
-1. Integrate U7 and U8 (review diffs, full suites, screenshots), then U10 (Coolify deploy behind access gate) and U11 (persona harness on BYOK/guest).
-2. Open PR1; then PR2 (rules as data, Minnesota rule set, state scoping, UAT matrix) and PR3 (launch).
+1. Verify and commit the simplification fixes; run `ce-code-review` on the PR1 diff; apply findings; open PR1.
+2. With a Coolify write token: set env (showcase mode, build flag, DB settings, preview passphrase), healthcheck, memory limit, domains; deploy PR1 branch behind the gate; `scripts/verify-showcase.sh --mode gated`; merge.
+3. Live runs after the LLM-key decision; then PR2 and PR3 per the plan.
 
 ## Open with Damien
-- Spend: LLM key and budget for live runs — filed as Cockpit ask `alea-intake-2026-11-08-1051-showcase-llm-key-budget` (hard block). Blocks only live runs.
-- Landing-page copy approval gates the PR3 merge.
+- Coolify write token (the box token is read-only).
+- LLM key and budget for live runs (Cockpit ask `alea-intake-2026-11-08-1051-showcase-llm-key-budget`).
+- Landing-page copy approval gates PR3.
 
 ## Gotchas
-- `codex-run.sh` accepts a run only when the worker writes the named out-file; say so in the prompt.
-- Codex sandboxes cannot finish SQLite async tests or reach the network; rerun suites in the main checkout.
+- Background Codex work now must use `agents/worker-wrapper.sh` (global hook enforces). `codex-run.sh` accepts a run only when the worker writes the named out-file.
+- Codex sandboxes cannot finish SQLite async tests, bind ports, or reach the network; rerun suites in the main checkout.
